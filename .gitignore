@@ -12,3 +12,6 @@ public/tutorials/adjust-a-block/
 public/tutorials/mono-sho/
 src/data/tutorials/adjust-a-block.json
 src/data/tutorials/mono-sho.json
+
+.vercel
+.env*
