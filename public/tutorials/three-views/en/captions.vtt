@@ -1,0 +1,101 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the project of the second tutorial.
+
+2
+00:00:04.000 --> 00:00:10.000
+The project opens on the Graph page. Above the graph, Blocks, Folded and Table are three views of the same project.
+
+3
+00:00:10.000 --> 00:00:13.000
+Click the arrow at the top right to fold the settings panel for now.
+
+4
+00:00:13.000 --> 00:00:20.000
+Blocks shows the whole chain, left to right, in three bands: Preprocessing, Linear processing and Composition. Post comes last.
+
+5
+00:00:20.000 --> 00:00:27.000
+Each block is a card: its name, a summary line of its settings, and a bar on its left edge, green when the block is up to date. Click a card to select it.
+
+6
+00:00:27.000 --> 00:00:35.000
+The palette on the left lists the blocks that can be added, in groups: Sources, Frames, Image, Post and Composition. A block is dragged onto the chain or double-clicked, and a block that cannot be added here is greyed.
+
+7
+00:00:35.000 --> 00:00:39.000
+Click the zoom box: it offers fixed sizes, and Show all.
+
+8
+00:00:39.000 --> 00:00:43.000
+Ctrl and the mouse wheel zoom the graph.
+
+9
+00:00:43.000 --> 00:00:46.000
+Click Show all: the whole graph fits in the window.
+
+10
+00:00:46.000 --> 00:00:49.000
+Click Folded.
+
+11
+00:00:49.000 --> 00:00:57.000
+Folded draws each stack as one card: its name, its number of sessions and lights, its stacking method and a row of dots. Astrometry, Gradient, Denoise, Color and Post stay as they were.
+
+12
+00:00:57.000 --> 00:01:00.000
+Click Table.
+
+13
+00:01:00.000 --> 00:01:08.000
+Table: one row per session, under the name of its stack. The files are in the Lights, Darks, Flats and Bias columns, then come the settings of the stack. The Common row on top serves every session.
+
+14
+00:01:08.000 --> 00:01:11.000
+Click Add session: a second row arrives.
+
+15
+00:01:11.000 --> 00:01:18.000
+The new session is empty: no lights, darks, flats or bias. With two sessions, the Common row offers cells for darks, flats and bias shared by both.
+
+16
+00:01:18.000 --> 00:01:21.000
+Click Undo in the notice: the session is removed and the project is as it was.
+
+17
+00:01:21.000 --> 00:01:29.000
+Add stack starts another stack at the bottom of the table, with one session: that is how a project holds several workflows. + columns, the Files list and Only differences sit beside it.
+
+18
+00:01:29.000 --> 00:01:32.000
+Click a session’s cell, then the settings button on the right edge.
+
+19
+00:01:32.000 --> 00:01:39.000
+The settings panel on the right lists what the session holds, with the Open frames button to add or change its frames.
+
+20
+00:01:39.000 --> 00:01:42.000
+Click Blocks again.
+
+21
+00:01:42.000 --> 00:01:48.000
+It is the same project and the same chain: the views only change how it is shown.
+
+22
+00:01:48.000 --> 00:01:51.000
+Click a block, then the settings button on the right edge.
+
+23
+00:01:51.000 --> 00:01:58.000
+The panel shows the settings of the selected block: here the rule and the thresholds of Selection.
+
+24
+00:01:58.000 --> 00:02:03.000
+The GPU list above the graph chooses what computes: Automatic, or the processor alone.
+
+25
+00:02:03.000 --> 00:02:09.000
+Run starts the computation. It is greyed here: everything is already up to date.

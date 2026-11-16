@@ -1,0 +1,597 @@
+---
+// A guided, playable imitation of FLOAT's Graph page and of Post: the visitor builds a graph from a blank page down to
+// the star separation, runs it, changes a setting, then finishes the image in Post. Only the recommended action is
+// possible at each step. Names, texts, colours, states and behaviours are the application's (graphcore: rules,
+// layout, placement, post; client/graphview; client/post3); nothing is computed here.
+import { routes, type Lang } from '../i18n/ui';
+import Picture from './Picture.astro';
+interface Props { lang: Lang; home?: boolean }
+const { lang, home = false } = Astro.props;
+const fr = lang === 'fr';
+
+const palette = [
+  { g: 'Sources', items: [['session', 'Session'], ['image', 'Image']] },
+  { g: fr ? 'Brutes' : 'Frames', items: [['calibration', 'Calibration'], ['registration', fr ? 'Alignement' : 'Registration'], ['selection', fr ? 'Sélection' : 'Selection'], ['crop', fr ? 'Recadrage' : 'Crop'], ['stacking', fr ? 'Empilement' : 'Stacking']] },
+  { g: 'Image', items: [['astrometry', fr ? 'Astrométrie' : 'Astrometry'], ['gradient', 'Gradient'], ['deconv', fr ? 'Déconvolution' : 'Deconvolution'], ['denoise', fr ? 'Débruitage' : 'Denoise'], ['color', fr ? 'Couleur' : 'Color']] },
+  { g: 'Post', items: [['stars', fr ? 'Étoiles/fond' : 'Stars/background'], ['synth', fr ? 'Étoiles de synthèse' : 'Synthetic stars']] },
+  { g: 'Composition', items: [['combination', fr ? 'Combinaison' : 'Combination'], ['combine', fr ? 'Combiner calques' : 'Combine layers']] },
+];
+const names: Record<string, string> = Object.fromEntries(palette.flatMap((p) => p.items));
+
+const t = fr ? {
+  names, row: 'Session 1', pill: 'référence', post: 'Post',
+  layers: ['aucun calque', '1 calque'], running: 'En cours', run: 'Exécuter',
+  bands: ['PRÉTRAITEMENT', 'TRAITEMENT LINÉAIRE', 'COMPOSITION'],
+  sum: {
+    session: '1348 × 13 s', calibration: 'standard', registration: 'image de réf. : la plus nette',
+    stackingTail: ' · sans Sélection : toutes les images empilées, même poids', drizzle: 'drizzle auto', classic: 'classique',
+    astrometry: 'résout le champ · Gaia DR3', denoise: 'réseau pré-entraîné', color: 'étoiles Gaia · balance auto',
+    stars: 'neuronal', combine: 'étoiles en Écran',
+  },
+  inputs: ['Fond de ciel', 'Étoiles', 'Étoiles de synthèse'],
+  tips: { first: 'Workflow : Session/Image', calibration: 'Calibration de « Session 1 »', other: '{lab} ici, dans « Session 1 »' },
+  method: 'Méthode d’empilement', opts: { auto: 'Automatique', drizzle: 'Drizzle Bayer', classic: 'Classique' },
+  apply: 'Appliquer', variant: 'Essayer variante', reset: 'Réinitialiser',
+  layerName: 'Session 1 · Combiner calques', kids: ['Étoiles seules', 'Image sans étoiles'], local: 'Contraste local',
+  parts: ['Graphe', 'Post'], done: 'Terminé',
+  say: [
+    'Maintenez le clic sur <b>Session</b>, dans la palette à gauche, glissez-le sur le canevas et relâchez. Un double-clic le pose aussi.',
+    'De la même façon, glissez <b>Calibration</b>. Le bloc s’insère dans la chaîne et se relie tout seul.',
+    'Puis <b>Alignement</b>.',
+    'Puis <b>Empilement</b>. Le fil vers Post se tire tout seul depuis le dernier bloc qui produit une image.',
+    '<b>Astrométrie</b> : le bloc Couleur en a besoin avant lui.',
+    '<b>Débruitage</b> : la séparation des étoiles en a besoin avant elle.',
+    '<b>Couleur</b>.',
+    'Et <b>Étoiles/fond</b> : il sépare l’image en image sans étoiles et étoiles seules, et un bloc Combiner calques les réunit pour Post.',
+    'Cliquez <b>Exécuter</b>. Chaque bloc calcule, puis garde son résultat.',
+    'Changez d’avis : cliquez le bloc <b>Empilement</b> pour ouvrir ses réglages.',
+    'Choisissez <b>Classique</b> comme méthode d’empilement.',
+    'Le changement attend, en brouillon. Cliquez <b>Appliquer</b>.',
+    'Empilement et la suite sont à refaire (bande orange) ; Calibration et Alignement sont gardés (bande verte). Cliquez <b>Exécuter</b> : seuls cinq blocs recalculent.',
+    'Ouvrez <b>Post</b>.',
+    'Le résultat du workflow est un calque, étoiles et image sans étoiles à part. Déplacez <b>Saturation</b>.',
+    'Ajoutez un filtre sur le calque : cliquez <b>Filtre</b>.',
+    'Choisissez <b>Contraste local</b>.',
+    'Rien n’a été écrit dans l’image : cliquez l’œil du filtre pour le couper.',
+    'Cliquez <b>Exporter…</b>',
+  ],
+  end: `C’est toute la chaîne : les brutes, le graphe, la séparation des étoiles, Post, l’export. Dans FLOAT, chaque étape reste ouverte : changez un réglage, et seule la suite est recalculée. La suite, sur de vraies images : les <a href="${routes.learn.fr}">tutoriels</a>.`,
+} : {
+  names, row: 'Session 1', pill: 'reference', post: 'Post',
+  layers: ['no layer', '1 layer'], running: 'Running', run: 'Run',
+  bands: ['PREPROCESSING', 'LINEAR PROCESSING', 'COMPOSITION'],
+  sum: {
+    session: '1348 × 13 s', calibration: 'standard', registration: 'reference frame: sharpest',
+    stackingTail: ' · no Selection: every frame is stacked, same weight', drizzle: 'drizzle auto', classic: 'classic',
+    astrometry: 'solves the field · Gaia DR3', denoise: 'pretrained network', color: 'Gaia stars · auto balance',
+    stars: 'neural', combine: 'stars in Screen',
+  },
+  inputs: ['Background', 'Stars', 'Synthetic stars'],
+  tips: { first: 'Workflow: Session/Image', calibration: 'Calibration of “Session 1”', other: '{lab} here, in “Session 1”' },
+  method: 'Stacking method', opts: { auto: 'Automatic', drizzle: 'Bayer drizzle', classic: 'Classic' },
+  apply: 'Apply', variant: 'Try variant', reset: 'Reset',
+  layerName: 'Session 1 · Combine layers', kids: ['Stars alone', 'Starless image'], local: 'Local contrast',
+  parts: ['Graph', 'Post'], done: 'Done',
+  say: [
+    'Press and hold <b>Session</b> in the palette on the left, drag it onto the canvas and release. A double-click places it too.',
+    'In the same way, drag <b>Calibration</b>. The block is inserted into the chain and wired on its own.',
+    'Then <b>Registration</b>.',
+    'Then <b>Stacking</b>. The wire to Post is drawn on its own from the last block that produces an image.',
+    '<b>Astrometry</b>: the Color block needs it first.',
+    '<b>Denoise</b>: the star separation needs it first.',
+    '<b>Color</b>.',
+    'And <b>Stars/background</b>: it splits the image into the starless image and the stars alone, and a Combine layers block brings them together for Post.',
+    'Click <b>Run</b>. Each block computes, then keeps its result.',
+    'A change of mind: click the <b>Stacking</b> block to open its settings.',
+    'Choose <b>Classic</b> as the stacking method.',
+    'The change waits as a draft. Click <b>Apply</b>.',
+    'Stacking and what follows must be computed again (orange band); Calibration and Registration are kept (green band). Click <b>Run</b>: only five blocks compute again.',
+    'Open <b>Post</b>.',
+    'The workflow’s result is a layer, with the stars and the starless image apart. Move <b>Saturation</b>.',
+    'Add a filter on the layer: click <b>Filter</b>.',
+    'Choose <b>Local contrast</b>.',
+    'Nothing was written into the image: click the filter’s eye to switch it off.',
+    'Click <b>Export…</b>',
+  ],
+  end: `That is the whole chain: the frames, the graph, the star separation, Post, the export. In FLOAT every step stays open: change a setting, and only what follows is computed again. Next, on real frames: the <a href="${routes.learn.en}">tutorials</a>.`,
+};
+const sliders = fr
+  ? [['sky', 'Ciel'], ['contrast', 'Contraste'], ['faint', 'Tons faibles'], ['saturation', 'Saturation']]
+  : [['sky', 'Sky'], ['contrast', 'Contrast'], ['faint', 'Faint tones'], ['saturation', 'Saturation']];
+const filters = fr
+  ? [['curves', 'Courbes'], ['levels', 'Niveaux'], ['local', 'Contraste local'], ['balance', 'Balance des couleurs'], ['noise', 'Réduction du bruit']]
+  : [['curves', 'Curves'], ['levels', 'Levels'], ['local', 'Local contrast'], ['balance', 'Color balance'], ['noise', 'Noise reduction']];
+---
+<div class="gt" data-t={JSON.stringify(t)}>
+  <div class="gt-coach">
+    <span class="gt-count"></span>
+    <p class="gt-say" aria-live="polite"></p>
+    <a class="gt-dl btn" href={routes.download[lang]} hidden>{fr ? 'Télécharger FLOAT' : 'Download FLOAT'}</a>
+    <button type="button" class="gt-auto">{fr ? 'Le faire pour moi' : 'Do it for me'}</button>
+    <button type="button" class="gt-restart">{fr ? 'Recommencer' : 'Start again'}</button>
+  </div>
+
+  <div class="gt-win" translate="no">
+    <div class="gt-top">
+      <span class="gt-proj">{fr ? 'Nouveau projet' : 'New project'}</span>
+      <div class="gt-tabs">
+        <button type="button" data-tab="graph" class="on">{fr ? 'Graphe' : 'Graph'}</button>
+        <span>{fr ? 'Inspection' : 'Inspect'}</span>
+        <button type="button" data-tab="post">Post</button>
+        <span>{fr ? 'Rapport' : 'Report'}</span>
+      </div>
+      <button type="button" class="gt-run">▶ {t.run}</button>
+    </div>
+
+    <div class="gt-graph">
+      <div class="gt-pal">
+        <h3>{fr ? 'Blocs' : 'Blocks'}</h3>
+        {palette.map((p) => (
+          <>
+            <h4>{p.g}</h4>
+            {p.items.map(([k, n]) => <button type="button" class="gt-item" data-b={k}>{n}</button>)}
+          </>
+        ))}
+      </div>
+      <div class="gt-canvas">
+        <div class="gt-blank">
+          <b>{fr ? 'Page vierge' : 'Blank page'}</b>
+          {fr ? 'Construire le workflow depuis la palette à gauche : glisser ou double-cliquer un bloc.' : 'Build the workflow from the palette on the left: drag or double-click a block.'}
+        </div>
+        <div class="gt-layer"></div>
+      </div>
+      <div class="gt-panel" hidden></div>
+    </div>
+
+    <div class="gt-post" hidden>
+      <div class="gt-layers">
+        <h3>{fr ? 'Calques' : 'Layers'}</h3>
+        <div class="gt-rows"></div>
+        <button type="button" class="gt-addf">{fr ? 'Filtre' : 'Filter'} ▾</button>
+        <div class="gt-menu" hidden>
+          {filters.map(([k, n]) => <button type="button" data-f={k}>{n}</button>)}
+        </div>
+      </div>
+      <div class="gt-stage">
+        <div class="gt-bar"><span class="gt-toast" hidden>{fr ? 'Exporté · TIFF 16 bits' : 'Exported · TIFF 16-bit'}</span><button type="button" class="gt-export">{fr ? 'Exporter…' : 'Export…'}</button></div>
+        <Picture src="/images/pleiades.jpg" alt={fr ? 'Les Pléiades' : 'The Pleiades'} width={2704} height={2296} sizes="(min-width: 56rem) 40vw, 100vw" />
+        <small>{fr ? 'Aperçu simulé' : 'Simulated preview'}</small>
+      </div>
+      <div class="gt-props">
+        <h3>{fr ? 'Propriétés' : 'Properties'}</h3>
+        {sliders.map(([k, n]) => (
+          <label><span>{n}</span><input type="range" class="gt-sl" data-k={k} min="0" max="4" step="0.1" value="2" /></label>
+        ))}
+      </div>
+    </div>
+    <svg class="gt-spot" aria-hidden="true" hidden>
+      <defs><mask id="gt-mask"><rect width="100%" height="100%" fill="#fff" /><rect class="h1" rx="8" fill="#000" /><rect class="h2" rx="9" fill="#000" /></mask></defs>
+      <rect width="100%" height="100%" fill="#07080b" fill-opacity="0.5" mask="url(#gt-mask)" />
+    </svg>
+    <span class="gt-n n1" aria-hidden="true" hidden>1</span><span class="gt-n n2" aria-hidden="true" hidden>2</span>
+    <div class="gt-demo" aria-hidden="true" hidden><span></span><svg viewBox="0 0 16 22" width="15" height="21"><path d="M1 1v16l4.2-3.6 2.7 6.4 2.6-1.1-2.7-6.3H13z" fill="#f4f5f7" stroke="#15171c" stroke-width="1.2" stroke-linejoin="round" /></svg></div>
+  </div>
+  {!home && <p class="gt-narrow">{fr
+    ? 'La visite guidée demande un écran plus large.'
+    : 'The guided tour needs a wider screen.'}</p>}
+</div>
+
+<style is:global>
+  .gt { margin: 1.5rem 0 2.5rem; }
+  .gt [hidden] { display: none !important; }
+  .gt-coach { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; font-family: var(--sans); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 0.7rem 0; min-height: 3.6rem; }
+  .gt-count { font-family: var(--mono); font-size: 0.85rem; color: var(--orange-ink); white-space: nowrap; }
+  .gt-say { flex: 1 1 24rem; margin: 0; font-size: 1.05rem; line-height: 1.4; }
+  .gt-coach button { font: inherit; font-size: 0.85rem; background: none; border: 1.5px solid var(--ink); color: var(--ink); padding: 0.3rem 0.8rem; cursor: pointer; }
+  .gt-coach button:hover { background: var(--paper-2); }
+  .gt-coach .btn { padding: 0.4rem 0.9rem; font-size: 0.9rem; }
+
+  .gt-win { --acc: #5ea1ff; background: #15171c; color: #d8dce4; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; line-height: 1.3; margin-top: 0.9rem; user-select: none; -webkit-user-select: none; position: relative; overflow: hidden; }
+  .gt-win button { font: inherit; color: inherit; }
+  .gt-top { display: flex; align-items: center; gap: 1.5rem; padding: 8px 14px; border-bottom: 1px solid #262a33; }
+  .gt-proj { font-weight: 700; color: #e8ebf0; }
+  .gt-tabs { display: flex; gap: 1.4rem; flex: 1; justify-content: center; }
+  .gt-tabs > * { background: none; border: 0; padding: 4px 2px; color: #8b93a1; border-bottom: 2px solid transparent; }
+  .gt-tabs span { color: #555b66; }
+  .gt-tabs .on { color: #e8ebf0; border-bottom-color: var(--acc); }
+  .gt-run { background: var(--acc); color: #0d1320 !important; font-weight: 700 !important; border: 0; border-radius: 4px; padding: 5px 14px; }
+  .gt-win :disabled, .gt-win .off { opacity: 0.4; pointer-events: none; }
+
+  .gt-graph { display: flex; min-height: 320px; }
+  .gt-pal { width: 140px; flex: none; background: #1c1f26; padding: 8px; }
+  .gt-win h3 { font-family: inherit; line-height: inherit; margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #e8ebf0; }
+  .gt-pal h4 { margin: 7px 0 3px; font-family: inherit; line-height: inherit; font-size: 10px; font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; color: #8b93a1; }
+  .gt-item { display: block; width: 100%; text-align: left; background: #232831; border: 1px solid #353b47; border-radius: 6px; padding: 3px 8px; margin-bottom: 2px; cursor: grab; touch-action: none; }
+  .gt-item.off { background: #1e2128; color: #555b66; opacity: 1; }
+  .gt-canvas { flex: 1; min-width: 0; position: relative; overflow: hidden; }
+  .gt-canvas.cutl { -webkit-mask-image: linear-gradient(to right, transparent, #000 40px); mask-image: linear-gradient(to right, transparent, #000 40px); }
+  .gt-canvas.cutr { -webkit-mask-image: linear-gradient(to left, transparent, #000 40px); mask-image: linear-gradient(to left, transparent, #000 40px); }
+  .gt-canvas.cutl.cutr { -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); }
+  .gt-blank { position: absolute; left: 0; right: 0; bottom: 14%; text-align: center; color: #8b93a1; padding: 0 1rem; }
+  .gt-blank b { display: block; color: #e8ebf0; font-size: 15px; margin-bottom: 4px; }
+  .gt-layer { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .gt-layer svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+  .gt-band { position: absolute; background: #191c22; border-radius: 6px; font-size: 10px; white-space: nowrap; overflow: hidden; letter-spacing: 0.05em; color: #6b7280; padding: 5px 8px; font-weight: 600; }
+  .gt-card { position: absolute; width: 120px; height: 54px; background: #22262e; border: 1px solid #3a4150; border-radius: 7px; overflow: hidden; padding: 6px 8px 0 12px; }
+  .gt-card b { display: block; font-size: 13px; color: #e8ebf0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gt-card small { display: block; font-size: 11px; color: #8b93a1; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gt-card i { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #5d6470; }
+  .gt-card.done i { background: #5fbf7f; } .gt-card.stale i { background: #e6a23c; } .gt-card.running i { background: var(--acc); }
+  .gt-card em { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--acc); }
+  .gt-card.src i, .gt-card.postb i, .gt-card.comb i { display: none; }
+  .gt-card u { text-decoration: none; display: inline-block; margin-top: 5px; font-size: 10px; line-height: 1.4; color: var(--acc); border: 1px solid var(--acc); border-radius: 8px; padding: 0 6px; }
+  .gt-card.postb { border: 2px solid var(--acc); background: #2b3446; }
+  .gt-card.sel { background: #2b3446; border: 2px solid var(--acc); }
+  .gt-card.pick { cursor: pointer; }
+  .gt-card.comb { width: 204px; height: 72px; padding: 0 8px 0 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 10px; overflow: visible; }
+  .gt-card.comb > div { padding-top: 6px; min-width: 0; }
+  .gt-card.comb ul { list-style: none; margin: 0; padding: 9px 0 0 12px; font-size: 11px; color: #d8dce4; }
+  .gt-card.comb li { margin: 0; height: 18px; line-height: 18px; white-space: nowrap; }
+  .gt-card.comb li:last-child { color: #8b93a1; }
+  .gt-dot { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #15171c; border: 1.5px solid #4a5263; }
+  .gt-ghost { position: absolute; width: 120px; height: 54px; border: 1.5px dashed #4a5263; border-radius: 7px; }
+  .gt-ghost.over { border-color: var(--acc); background: #1d2633; }
+  .gt-tip { position: absolute; background: #262a33; border: 1px solid var(--acc); border-radius: 4px; padding: 3px 8px; font-size: 12px; white-space: nowrap; color: #e8ebf0; }
+  .gt-drag { position: fixed; z-index: 30; pointer-events: none; width: 120px; background: #232831; border: 1px solid #5ea1ff; border-radius: 6px; padding: 4px 8px; color: #d8dce4; font: 13px 'Segoe UI', system-ui, sans-serif; transform: translate(-50%, -50%); }
+  .gt-demo { position: absolute; z-index: 7; left: 0; top: 0; pointer-events: none; width: 120px; background: #232831; border: 1px solid #5ea1ff; border-radius: 6px; padding: 3px 8px; color: #e8ebf0; }
+  .gt-demo svg { position: absolute; right: 12px; top: 14px; }
+  .gt-spot { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+  .gt-n { position: absolute; z-index: 6; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #e8ebf0; color: #15171c; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center; pointer-events: none; }
+
+  .gt-panel { flex: none; width: min(300px, 36%); background: #1c1f26; padding: 12px; border-left: 1px solid #262a33; }
+  .gt-draft { background: #2a2316; border: 1px solid #e6a23c; padding: 8px; margin-bottom: 12px; }
+  .gt-draft p { margin: 0 0 8px; }
+  .gt-draft button, .gt-seg button, .gt-addf, .gt-export, .gt-menu button { background: #232831; border: 1px solid #353b47; border-radius: 4px; padding: 4px 10px; margin: 0 4px 4px 0; }
+  .gt-draft .gt-apply { background: var(--acc); color: #0d1320; border-color: var(--acc); font-weight: 700; }
+  .gt-panel label { display: block; color: #8b93a1; margin-bottom: 6px; }
+  .gt-seg { display: flex; flex-wrap: wrap; }
+  .gt-seg .on { background: #2b3446; border-color: var(--acc); color: #e8ebf0; opacity: 1; }
+
+  .gt-post { display: grid; grid-template-columns: 230px minmax(0, 1fr) 240px; }
+  .gt-layers, .gt-props { background: #1c1f26; padding: 10px; position: relative; }
+  .gt-row { display: flex; align-items: center; gap: 6px; height: 26px; white-space: nowrap; }
+  .gt-row img { width: 30px; height: 20px; object-fit: cover; }
+  .gt-row b { color: #e8ebf0; font-size: 12px; overflow: hidden; text-overflow: ellipsis; }
+  .gt-row.f { margin-left: 24px; padding-left: 8px; border-left: 2px solid #4a5366; }
+  .gt-row.f.hid span { color: #555b66; }
+  .gt-eye { background: none; border: 0; width: 22px; height: 22px; padding: 0; cursor: pointer; flex: none; }
+  .gt-eye::before { content: ''; display: block; width: 12px; height: 12px; margin: auto; border-radius: 50%; border: 2px solid #d8dce4; background: radial-gradient(#d8dce4 0 2.5px, transparent 3px); }
+  .gt-eye.shut::before { border-color: #555b66; background: none; }
+  .gt-addf { margin-top: 10px; }
+  .gt-menu { position: absolute; left: 10px; z-index: 5; background: #262a33; border: 1px solid #353b47; padding: 4px; display: grid; gap: 2px; min-width: 170px; }
+  .gt-menu button { text-align: left; margin: 0; border-color: transparent; background: none; }
+  .gt-stage { position: relative; min-width: 0; }
+  .gt-bar { display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 6px 10px; }
+  .gt-toast { color: #5fbf7f; }
+  .gt-stage img { display: block; width: 100%; height: clamp(300px, 52vh, 520px); object-fit: contain; background: #0f1114; }
+  .gt-stage small { position: absolute; left: 10px; bottom: 6px; font-size: 11px; color: #8b93a1; }
+  .gt-props label { display: block; margin-bottom: 10px; }
+  .gt-props span { display: block; color: #8b93a1; margin-bottom: 2px; }
+  .gt-props input { width: 100%; accent-color: #5ea1ff; margin: 0; }
+
+  /* the one thing to do now */
+  .gt .gt-target { opacity: 1 !important; pointer-events: auto !important; }
+  .gt-win .gt-item.gt-target, .gt-win .gt-seg .gt-target, .gt-win .gt-addf.gt-target, .gt-win .gt-export.gt-target, .gt-win .gt-menu .gt-target { border-color: #5ea1ff; color: #e8ebf0; background: #272c36; }
+  .gt-win .gt-ghost.gt-target { border-color: #5ea1ff; }
+  .gt-win .gt-card.gt-target { background: #272c36; border-color: #5ea1ff; }
+  .gt-win .gt-tabs .gt-target { color: #e8ebf0; border-bottom-color: #5ea1ff; }
+  .gt-win .gt-eye.gt-target::before { border-color: #5ea1ff; }
+  .gt-narrow { display: none; font-family: var(--sans); font-size: 0.95rem; color: var(--muted); border-left: 3px solid var(--orange); padding-left: 0.8rem; }
+  .gt-only-narrow { display: none; }
+  #try { scroll-margin-top: 5rem; }
+  @media (max-width: 52rem) {
+    .gt-coach, .gt-win { display: none; }
+    .gt-narrow, .gt-only-narrow { display: block; }
+    .gt-intro, .gt-try { display: none; }
+    .gt { margin: 0; }
+  }
+</style>
+
+<script>
+  const CHAIN = ['session', 'calibration', 'registration', 'stacking', 'astrometry', 'denoise', 'color', 'stars'];
+  const IMAGE_OUT = ['stacking', 'astrometry', 'denoise', 'color'];       // blocks whose image output can feed Post
+  const X0 = 24, DX = 132, Y = 64, W = 120, H = 54;
+  const COMBX = X0 + 7 * DX + W + 46, COMBW = 204, POSTX = COMBX + COMBW + 38, CW = POSTX + W + 22, CH = 190;
+  type Step = { a: string; arg?: string; target: string; part: number };
+  const STEPS: Step[] = [
+    ...CHAIN.map((k) => ({ a: 'place', arg: k, target: `.gt-item[data-b="${k}"], .gt-ghost`, part: 0 })),
+    { a: 'run', target: '.gt-run', part: 0 },
+    { a: 'select', target: '.gt-card[data-b="stacking"]', part: 0 },
+    { a: 'method', target: '.gt-seg [data-v="classic"]', part: 0 },
+    { a: 'apply', target: '.gt-apply', part: 0 },
+    { a: 'run', target: '.gt-run', part: 0 },
+    { a: 'tab', target: '.gt-tabs [data-tab="post"]', part: 1 },
+    { a: 'sat', target: '.gt-sl[data-k="saturation"]', part: 1 },
+    { a: 'addf', target: '.gt-addf', part: 1 },
+    { a: 'pick', target: '.gt-menu [data-f="local"]', part: 1 },
+    { a: 'eye', target: '.gt-row.f:not(.k) .gt-eye', part: 1 },
+    { a: 'export', target: '.gt-export', part: 1 },
+  ];
+
+  document.querySelectorAll<HTMLElement>('.gt').forEach((root) => {
+    const T = JSON.parse(root.dataset.t!);
+    const $ = <E extends Element = HTMLElement>(s: string) => root.querySelector<E>(s)!;
+    const win = $('.gt-win'), canvas = $('.gt-canvas'), layer = $('.gt-layer'), panel = $('.gt-panel');
+    const spot = $<SVGSVGElement>('.gt-spot'), demo = $('.gt-demo');
+    let step = 0, placed: string[] = [], st: Record<string, string> = {}, prog: Record<string, number> = {};
+    let method = 'auto', draft = '', selected = false, busy = false, touched = false;
+    let tab = 'graph', sat = 2, filter = '', menu = false, exported = false, over = false;
+    let anim: Animation | null = null;
+
+    const setText = (el: HTMLElement, v: string) => { if (el.textContent !== v) el.textContent = v; };
+    const xOf = (k: string) => X0 + CHAIN.indexOf(k) * DX;
+    const cur = () => STEPS[step] as Step | undefined;
+    const has = (k: string) => placed.includes(k);
+
+    function summary(k: string) {
+      if (st[k] === 'running') return `${T.running} · ${Math.round(prog[k] || 0)} %`;
+      if (k === 'stacking') return (method === 'classic' ? T.sum.classic : T.sum.drizzle) + T.sum.stackingTail;
+      return T.sum[k];
+    }
+    function card(k: string) {
+      if (k === 'session')
+        return `<div class="gt-card src" data-b="session" style="left:${xOf(k)}px;top:${Y}px"><b>${T.row}</b><u>${T.pill}</u></div>`;
+      const s = st[k] || 'pending';
+      const sel = k === 'stacking' && selected ? ' sel' : '';
+      const bar = s === 'running' ? `<em style="width:${prog[k] || 0}%"></em>` : '';
+      return `<div class="gt-card ${s}${sel}" data-b="${k}" style="left:${xOf(k)}px;top:${Y}px"><i></i><b>${T.names[k]}</b><small>${summary(k)}</small>${bar}</div>`;
+    }
+    // a wire with rounded elbows, as the application draws them
+    const wire = (x1: number, y1: number, x2: number, y2: number, c = '#9aa3b2') => {
+      if (Math.abs(y2 - y1) < 1) return `<path d="M${x1} ${y1} H${x2}" stroke="${c}"/>`;
+      const m = (x1 + x2) / 2, d = Math.sign(y2 - y1), r = Math.min(8, Math.abs(y2 - y1) / 2);
+      return `<path d="M${x1} ${y1} H${m - r} Q${m} ${y1} ${m} ${y1 + d * r} V${y2 - d * r} Q${m} ${y2} ${m + r} ${y2} H${x2}" stroke="${c}"/>`;
+    };
+
+    function drawGraph() {
+      const mid = Y + H / 2, stars = has('stars'), c = cur();
+      let svg = '', html = '';
+      const band = (x1: number, x2: number, name: string) => `<div class="gt-band" style="left:${x1}px;top:${Y - 26}px;width:${x2 - x1}px;height:${H + 46}px">${name}</div>`;
+      const pre = placed.filter((k) => CHAIN.indexOf(k) <= 3), lin = placed.filter((k) => CHAIN.indexOf(k) > 3);
+      if (pre.length) html += band(X0 - 10, xOf(pre[pre.length - 1]) + W + 10, T.bands[0]);
+      if (lin.length) html += band(xOf(lin[0]) - 10, xOf(lin[lin.length - 1]) + W + 10, T.bands[1]);
+      if (stars) html += band(COMBX - 14, COMBX + COMBW + 10, T.bands[2]);
+      for (let i = 1; i < placed.length; i++) svg += wire(xOf(placed[i - 1]) + W, mid, xOf(placed[i]), mid);
+      const last = [...placed].reverse().find((k) => IMAGE_OUT.includes(k));
+      if (stars) {
+        const sx = xOf('stars') + W;
+        svg += wire(sx, Y + 18, COMBX, Y + 18, '#7aa2d6') + wire(sx, Y + 36, COMBX, Y + 36, '#e0c45c');
+        svg += wire(COMBX + COMBW, Y + 36, POSTX, mid);
+      } else if (last) svg += wire(xOf(last) + W, mid, POSTX, mid);
+      html += `<svg width="${CW}" height="${CH}" stroke-width="2.2" fill="none">${svg}</svg>`;
+      html += placed.map(card).join('');
+      if (stars) {
+        const dot = (x: number, y: number, c = '') => `<span class="gt-dot" style="left:${x}px;top:${y}px${c ? `;border-color:${c};background:${c}` : ''}"></span>`;
+        html += `<div class="gt-card comb" style="left:${COMBX}px;top:${Y}px"><ul>${T.inputs.map((n: string) => `<li>${n}</li>`).join('')}</ul><div><b>${T.names.combine}</b><small>${T.sum.combine}</small></div></div>`;
+        html += dot(xOf('stars') + W, Y + 18, '#7aa2d6') + dot(xOf('stars') + W, Y + 36, '#e0c45c');
+        html += dot(COMBX, Y + 18, '#7aa2d6') + dot(COMBX, Y + 36, '#e0c45c') + dot(COMBX, Y + 54);
+      }
+      if (c?.a === 'place') {
+        const tip = c.arg === 'session' ? T.tips.first : c.arg === 'calibration' ? T.tips.calibration : T.tips.other.replace('{lab}', T.names[c.arg!]);
+        html += `<div class="gt-ghost${over ? ' over' : ''}" style="left:${xOf(c.arg!)}px;top:${Y}px"></div>`;
+        html += `<div class="gt-tip" style="left:${xOf(c.arg!)}px;top:${Y + H + 14}px">${tip}</div>`;
+      }
+      html += `<div class="gt-card postb" style="left:${POSTX}px;top:${Y}px"><b>${T.post}</b><small>${T.layers[last || stars ? 1 : 0]}</small></div>`;
+      layer.innerHTML = html;
+      layer.style.width = CW + 'px';
+      layer.style.height = CH + 'px';
+      const k = Math.max(0.8, Math.min(1, (canvas.clientWidth + (panel.hidden ? 0 : panel.offsetWidth)) / CW));
+      const seen = canvas.clientWidth / k;                     // the width of the drawing that shows
+      const from = c?.a === 'place' ? xOf(c.arg!) + W / 2 - seen / 2            // the place of the block to drop
+        : c && ['select', 'method', 'apply'].includes(c.a) ? xOf('stacking') - DX - 14
+        : step > CHAIN.length ? xOf('calibration') - 14         // after the first run: what is kept, what is to redo
+        : CW;                                                   // else the end of the chain, up to Post
+      const start = Math.max(0, Math.min(CW - seen, from));
+      layer.style.transform = `translate(${-start * k}px, 0) scale(${k})`;
+      canvas.classList.toggle('cutl', start > 1);
+      canvas.classList.toggle('cutr', start + seen < CW - 1);
+      $('.gt-blank').hidden = placed.length > 0;
+      mark();
+    }
+
+    function drawPanel() {
+      panel.hidden = !selected || tab !== 'graph';
+      if (panel.hidden) return;
+      const shown = draft || method;
+      panel.innerHTML =
+        (draft ? `<div class="gt-draft"><p>${T.method} : ${T.opts[method]} → ${T.opts[draft]}</p>
+          <button type="button" class="gt-apply">${T.apply}</button><button type="button" disabled>${T.variant}</button><button type="button" disabled>${T.reset}</button></div>` : '') +
+        `<h3>${T.names.stacking}</h3><label>${T.method}</label><div class="gt-seg">` +
+        ['auto', 'drizzle', 'classic'].map((v) => `<button type="button" data-v="${v}" class="${v === shown ? 'on' : 'off'}">${T.opts[v]}</button>`).join('') + '</div>';
+    }
+
+    function drawPost() {
+      $('.gt-graph').hidden = tab !== 'graph';
+      $('.gt-post').hidden = tab !== 'post';
+      root.querySelectorAll<HTMLElement>('.gt-tabs [data-tab]').forEach((b) => b.classList.toggle('on', b.dataset.tab === tab));
+      $('.gt-rows').innerHTML =
+        `<div class="gt-row"><span class="gt-eye off"></span><img src="/images/pleiades-480.webp" width="30" height="20" alt=""><b>${T.layerName}</b></div>` +
+        (filter ? `<div class="gt-row f${filter === 'off' ? ' hid' : ''}"><button type="button" class="gt-eye${filter === 'off' ? ' shut' : ''}" aria-label="${T.local}"></button><span>${T.local}</span></div>` : '') +
+        T.kids.map((n: string) => `<div class="gt-row f k"><span class="gt-eye off"></span><span>${n}</span></div>`).join('');
+      $('.gt-menu').hidden = !menu;
+      $('.gt-toast').hidden = !exported;
+      $<HTMLImageElement>('.gt-stage img').style.filter =
+        `saturate(${(1 + (sat - 2) * 0.45).toFixed(2)}) contrast(${filter === 'on' ? 1.22 : 1})`;
+    }
+
+    // only the step's target answers; everything else in the window is inert
+    function mark() {
+      root.querySelectorAll('.gt-target').forEach((e) => e.classList.remove('gt-target'));
+      const c = cur();
+      root.querySelectorAll<HTMLElement>('.gt-item').forEach((e) => e.classList.toggle('off', !(c?.a === 'place' && c.arg === e.dataset.b)));
+      const on = (sel: string, yes: boolean) => root.querySelectorAll<HTMLElement>(sel).forEach((e) => e.classList.toggle('off', !yes));
+      on('.gt-run', c?.a === 'run'); on('.gt-addf', c?.a === 'addf'); on('.gt-export', c?.a === 'export');
+      on('.gt-tabs [data-tab]', c?.a === 'tab'); on('.gt-menu button', false);
+      root.querySelectorAll<HTMLInputElement>('.gt-sl').forEach((e) => (e.disabled = !(c?.a === 'sat' && e.dataset.k === 'saturation')));
+      root.querySelectorAll<HTMLElement>('.gt-card[data-b="stacking"]').forEach((e) => {
+        const pick = c?.a === 'select';
+        e.classList.toggle('pick', pick);
+        // the card to open is a button for the keyboard too (the "Do it for me" button does it as well)
+        if (pick) { e.tabIndex = 0; e.setAttribute('role', 'button'); }
+      });
+      if (c && !busy) root.querySelectorAll(c.target).forEach((e) => e.classList.add('gt-target'));
+      if (c) {
+        const inPart = STEPS.filter((s) => s.part === c.part), n = inPart.indexOf(c) + 1;
+        setText($('.gt-count'), `${T.parts[c.part]} · ${n} / ${inPart.length}`);
+      } else setText($('.gt-count'), T.done);
+      // written only when it changes: the page announces each new instruction once, not at every redraw
+      const say = $('.gt-say'), msg = c ? T.say[step] : T.end;
+      if (say.dataset.msg !== msg) { say.dataset.msg = msg; say.innerHTML = msg; }
+      const auto = $<HTMLButtonElement>('.gt-auto');
+      const lost = !c && document.activeElement === auto;
+      auto.hidden = !c;
+      $('.gt-dl').hidden = !!c;
+      if (lost) $('.gt-dl').focus();                           // the button that was pressed goes away: focus follows
+      // what cannot be done now is dimmed and, for the keyboard and screen readers, skipped and announced as unavailable
+      root.querySelectorAll<HTMLButtonElement>('.gt-win button').forEach((e) => {
+        const dead = (e.classList.contains('off') || e.disabled) && !e.classList.contains('gt-target');
+        e.tabIndex = dead ? -1 : 0;
+        if (dead) e.setAttribute('aria-disabled', 'true'); else e.removeAttribute('aria-disabled');
+      });
+      hint();
+    }
+
+    // the first block only: the window dims except the block to take (1) and the place to drop it (2), and a card
+    // makes the journey on its own until the visitor's first drag. After that, the application's own signs suffice.
+    function hint() {
+      const c = cur();
+      const item = step === 0 && c?.a === 'place' ? root.querySelector(`.gt-item[data-b="${c.arg}"]`) : null;
+      const ghost = root.querySelector('.gt-ghost');
+      const n1 = $('.gt-n.n1'), n2 = $('.gt-n.n2');
+      anim?.cancel(); anim = null;
+      const show = !!item && !!ghost && !busy && win.offsetParent !== null;
+      spot.toggleAttribute('hidden', !show); n1.hidden = n2.hidden = !show;
+      if (!show) { demo.hidden = true; return; }
+      const w = win.getBoundingClientRect(), a = item!.getBoundingClientRect(), g = ghost!.getBoundingClientRect();
+      const hole = (sel: string, r: DOMRect, pad: number) => {
+        const h = spot.querySelector(sel)!;
+        h.setAttribute('x', String(r.left - w.left - pad)); h.setAttribute('y', String(r.top - w.top - pad));
+        h.setAttribute('width', String(r.width + 2 * pad)); h.setAttribute('height', String(r.height + 2 * pad));
+      };
+      hole('.h1', a, 5); hole('.h2', g, 7);
+      n1.style.left = a.right - w.left + 5 + 'px'; n1.style.top = a.top - w.top - 5 + 'px';
+      n2.style.left = g.right - w.left + 7 + 'px'; n2.style.top = g.top - w.top - 7 + 'px';
+      demo.hidden = touched;
+      if (demo.hidden) return;
+      demo.querySelector('span')!.textContent = T.names[c!.arg!];
+      const from = `translate(${a.left - w.left}px, ${a.top - w.top}px)`;
+      const to = `translate(${g.left - w.left}px, ${g.top - w.top + 14}px)`;
+      anim = demo.animate(
+        [{ transform: from, opacity: 0 }, { transform: from, opacity: 1, offset: 0.14 }, { transform: from, opacity: 1, offset: 0.26 }, { transform: to, opacity: 1, offset: 0.72 }, { transform: to, opacity: 0, offset: 0.9 }, { transform: to, opacity: 0 }],
+        { duration: 3000, iterations: Infinity, easing: 'ease-in-out' });
+    }
+
+    function draw() { drawPost(); drawPanel(); drawGraph(); }
+    function next() { step++; draw(); }
+
+    function run() {
+      const todo = placed.filter((k) => k !== 'session' && st[k] !== 'done');
+      busy = true;
+      $('.gt-run').textContent = `${T.running}…`;
+      let i = 0, p = 0;
+      const tick = () => {
+        const k = todo[i];
+        p += 16;
+        st[k] = 'running'; prog[k] = Math.min(100, p);
+        if (p >= 100) { st[k] = 'done'; i++; p = 0; }
+        if (i >= todo.length) { busy = false; $('.gt-run').textContent = `▶ ${T.run}`; next(); return; }
+        drawGraph();
+        setTimeout(tick, 70);
+      };
+      tick();
+    }
+
+    function act(a: string, arg?: string) {
+      const c = cur();
+      if (!c || busy || c.a !== a || (c.arg && c.arg !== arg)) return;
+      if (a === 'place') { placed.push(arg!); st[arg!] = 'pending'; over = false; next(); }
+      else if (a === 'run') run();
+      else if (a === 'select') { selected = true; next(); }
+      else if (a === 'method') { draft = 'classic'; next(); }
+      else if (a === 'apply') { method = 'classic'; draft = ''; selected = false; for (const k of CHAIN.slice(3)) st[k] = 'stale'; next(); }
+      else if (a === 'tab') { tab = 'post'; next(); }
+      else if (a === 'sat') next();
+      else if (a === 'addf') { menu = true; next(); }
+      else if (a === 'pick') { menu = false; filter = 'on'; next(); }
+      else if (a === 'eye') { filter = 'off'; next(); }
+      else if (a === 'export') { exported = true; next(); }
+    }
+
+    // --- gestures ---
+    const inRect = (el: Element, x: number, y: number) => {
+      const r = el.getBoundingClientRect();
+      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+    };
+    root.addEventListener('pointerdown', (e) => {
+      const c = cur();
+      if (!c || busy || c.a !== 'place' || !(e.target as HTMLElement).closest(`.gt-item[data-b="${c.arg}"]`)) return;
+      e.preventDefault();                                     // a block carried from the palette
+      touched = true; hint();
+      const ghost = document.createElement('div');
+      ghost.className = 'gt-drag'; ghost.textContent = T.names[c.arg!];
+      document.body.append(ghost);
+      const move = (ev: PointerEvent) => {
+        ghost.style.left = ev.clientX + 'px'; ghost.style.top = ev.clientY + 'px';
+        const o = inRect(canvas, ev.clientX, ev.clientY);
+        if (o !== over) { over = o; drawGraph(); }
+      };
+      const up = (ev: PointerEvent) => {
+        window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up);
+        ghost.remove();
+        if (inRect(canvas, ev.clientX, ev.clientY)) act('place', c.arg); else { over = false; drawGraph(); }
+      };
+      move(e);
+      window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+    });
+    root.addEventListener('dblclick', (e) => {
+      const it = (e.target as HTMLElement).closest<HTMLElement>('.gt-item');
+      if (it) act('place', it.dataset.b);
+    });
+    root.addEventListener('keydown', (e) => {
+      const el = e.target as HTMLElement;
+      const it = el.closest<HTMLElement>('.gt-item');
+      if (it && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); act('place', it.dataset.b); return; }
+      if ((e.key === 'Enter' || e.key === ' ') && el.matches('.gt-card.pick')) { e.preventDefault(); act('select'); }
+    });
+    root.addEventListener('click', (e) => {
+      const el = e.target as HTMLElement;
+      if (el.closest('.gt-restart')) return reset();
+      if (el.closest('.gt-auto')) return auto();
+      if (el.closest('.gt-run')) act('run');
+      else if (el.closest('.gt-card[data-b="stacking"]')) act('select');
+      else if (el.closest('.gt-seg [data-v="classic"]')) act('method');
+      else if (el.closest('.gt-apply')) act('apply');
+      else if (el.closest('.gt-tabs [data-tab="post"]')) act('tab');
+      else if (el.closest('.gt-addf')) act('addf');
+      else if (el.closest('.gt-menu [data-f="local"]')) act('pick');
+      else if (el.closest('.gt-row.f:not(.k) .gt-eye')) act('eye');
+      else if (el.closest('.gt-export')) act('export');
+    });
+    root.addEventListener('input', (e) => {
+      const s = e.target as HTMLInputElement;
+      if (!s.classList.contains('gt-sl')) return;
+      sat = parseFloat(s.value); drawPost();
+    });
+    root.addEventListener('change', (e) => {
+      const s = e.target as HTMLInputElement;
+      if (s.classList.contains('gt-sl') && Math.abs(sat - 2) >= 0.4) act('sat');
+    });
+
+    function auto() {
+      const c = cur();
+      if (!c || busy) return;
+      touched = true;
+      if (c.a === 'sat') { sat = 3.2; $<HTMLInputElement>('.gt-sl[data-k="saturation"]').value = '3.2'; }
+      act(c.a, c.arg);
+    }
+    function reset() {
+      if (busy) return;
+      step = 0; placed = []; st = {}; prog = {}; method = 'auto'; draft = ''; selected = false; touched = false;
+      tab = 'graph'; sat = 2; filter = ''; menu = false; exported = false; over = false;
+      root.querySelectorAll<HTMLInputElement>('.gt-sl').forEach((s) => (s.value = '2'));
+      draw();
+    }
+    new ResizeObserver(() => drawGraph()).observe(canvas);
+    draw();
+  });
+</script>

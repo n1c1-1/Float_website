@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import { blocks, blockUrl, ui, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const views = import.meta.glob('./blocks/*.astro');
+const written = (key: string) => `./blocks/${key}En.astro` in views && `./blocks/${key}Fr.astro` in views;
+---
+<Base lang={lang} page="blocks" title={ui[lang].blocks}
+  description={fr ? 'Les blocs du graphe de traitement de FLOAT, dans l’ordre d’un workflow : la méthode, ses réglages et ses limites.' : 'The blocks of FLOAT’s processing graph, in the order of a workflow: the method, its settings and its limits.'}>
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <p class="kicker">{fr ? 'Le graphe' : 'The graph'}</p>
+    <h1>{ui[lang].blocks}</h1>
+    <p class="measure">{fr
+      ? 'Les blocs du graphe, dans l’ordre d’un workflow. La page de chaque bloc donne la méthode, ses réglages, sa source et ses limites.'
+      : 'The blocks of the graph, in the order of a workflow. Each block’s page gives the method, its settings, its source and its limits.'}</p>
+    <div class="tbl-wrap measure" style="max-width: 60rem">
+      <table class="tbl">
+        <caption><b>{fr ? 'Tableau 1.' : 'Table 1.'}</b>{fr ? 'Les blocs, dans l’ordre d’un workflow.' : 'The blocks, in the order of a workflow.'}</caption>
+        <tbody>
+          {blocks.map((b, i) => (
+            <tr>
+              <th scope="row"><span class="secnum">{i + 1}</span>{written(b.key) ? <a href={blockUrl(b, lang)}>{b[lang]}</a> : b[lang]}</th>
+              <td>{b.desc[lang]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Base>

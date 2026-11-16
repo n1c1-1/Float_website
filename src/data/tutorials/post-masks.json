@@ -1,0 +1,569 @@
+{
+  "slug": "post-masks",
+  "slugFr": "post-masques",
+  "section": "post",
+  "order": 3,
+  "title": {
+    "en": "Post: masks",
+    "fr": "Post : masques"
+  },
+  "summary": {
+    "en": "A brush mask paints the real stars back at the centre of the Synthetic stars row, and its settings are tried: view, feather, density, invert, show and hide, undo and clear. A luminance mask then limits Dehaze to the dark tones of the sky, and both masks are kept with the project.",
+    "fr": "Un masque au pinceau repeint les étoiles réelles au centre de la ligne Étoiles de synthèse, et ses réglages sont essayés : vue, progressif, densité, inverser, montrer et cacher, annuler et effacer. Un masque de luminosité limite ensuite Dévoilage aux tons sombres du ciel, et les deux masques sont gardés avec le projet."
+  },
+  "duration": {
+    "en": "About 12 min, with no computing",
+    "fr": "Environ 12 min, sans calcul"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial Repair instead of cropping done: a copy of its finished project (about 2 GB) is the starting point",
+      "Disk space: about 2 GB for the copy"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Réparer au lieu de recadrer fait : une copie de son projet terminé (environ 2 Go) est le point de départ",
+      "Place sur le disque : environ 2 Go pour la copie"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB",
+      "fr": "6,9 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project",
+        "fr": "Ouvrir le projet"
+      },
+      "text": {
+        "en": "On the Home screen click <b>Open project…</b> and choose a copy of the finished project of the tutorial <i>Repair instead of cropping</i>, taken before the mask of its Synthetic stars row. The project opens up to date: nothing is to be computed.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez une copie du projet terminé du tutoriel <i>Réparer au lieu de recadrer</i>, prise avant le masque de sa ligne Étoiles de synthèse. Le projet s’ouvre à jour : rien n’est à calculer."
+      },
+      "check": {
+        "en": "The status bar reads all up to date, and the Run button is greyed.",
+        "fr": "La barre d’état indique tout à jour, et le bouton « Exécuter » est grisé."
+      },
+      "shot": {
+        "en": "/tutorials/post-masks/en/01.png",
+        "fr": "/tutorials/post-masks/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "The diagnosis, before any gesture",
+        "fr": "Le diagnostic, avant tout geste"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The picture is the whole field with healed stain and round stars to the edges. Right, and to leave alone: the field, the healed stain, the colours and the stars outside the centre. Two points are to be corrected, read as in the table.",
+        "fr": "Cliquez sur <b>Post</b>. L’image est le champ entier, tache réparée, étoiles rondes jusqu’aux bords. Ce qui va, et qu’on laisse : le champ, la tache réparée, les couleurs et les étoiles hors du centre. Deux points sont à corriger, lus comme dans le tableau."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "The bright stars of the cluster lose their spikes and look drawn.",
+            "fr": "Les étoiles brillantes de l’amas perdent leurs aigrettes et paraissent dessinées."
+          },
+          "read": {
+            "en": "The Synthetic stars row has no mask: it shows everywhere, so the synthetic stars replace all the real ones. At 100 % on the centre the bright stars have no spikes.",
+            "fr": "La ligne Étoiles de synthèse n’a pas de masque : elle se voit partout, donc les étoiles de synthèse remplacent toutes les réelles. À 100 % sur le centre, les étoiles brillantes n’ont pas d’aigrettes."
+          },
+          "fix": {
+            "en": "Paint the real stars back at the centre with a brush mask.",
+            "fr": "Repeindre les étoiles réelles au centre avec un masque au pinceau."
+          },
+          "step": "paint"
+        },
+        {
+          "problem": {
+            "en": "A veil is left on the sky.",
+            "fr": "Un voile reste sur le ciel."
+          },
+          "read": {
+            "en": "On the exported picture the sky measures 33 to 34: a veil is left. Dehaze alone would also dim the ring.",
+            "fr": "Sur l’image exportée, le ciel mesure 33 à 34 : un voile reste. Dévoilage seul assombrirait aussi l’anneau."
+          },
+          "fix": {
+            "en": "Dehaze under a luminance mask.",
+            "fr": "« Dévoilage » sous un masque de luminosité."
+          },
+          "step": "luminance"
+        }
+      ],
+      "detail": [
+        {
+          "src": "/tutorials/post-masks/details/centre-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "The centre at 100 % with synthetic stars everywhere: the bright stars lose their spikes and look drawn.",
+            "fr": "Le centre à 100 % avec des étoiles de synthèse partout : les étoiles brillantes perdent leurs aigrettes et paraissent dessinées."
+          }
+        },
+        {
+          "src": "/tutorials/post-masks/details/sky-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The sky at 100 % with its veil.",
+            "fr": "Le ciel à 100 % avec son voile."
+          }
+        }
+      ],
+      "check": {
+        "en": "The Synthetic stars row has a white mask thumbnail.",
+        "fr": "La ligne Étoiles de synthèse a une vignette de masque blanche."
+      },
+      "shot": {
+        "en": "/tutorials/post-masks/en/02.png",
+        "fr": "/tutorials/post-masks/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 8.0,
+        "fr": 8.0
+      }
+    },
+    {
+      "id": "brush",
+      "title": {
+        "en": "A brush mask on the Synthetic stars row",
+        "fr": "Un masque au pinceau sur la ligne Étoiles de synthèse"
+      },
+      "text": {
+        "en": "Click the mask thumbnail of the <b>Synthetic stars</b> row: the mask is empty, the row shows everywhere. Click <b>Add to mask</b>: a mask is made of parts of five kinds, H-alpha, Luminance range, Color range, Linear gradient and Brush. Choose <b>Brush</b>: <b>Subtract</b> and <b>Hide</b> are set, so painting hides the row.",
+        "fr": "Cliquez sur la vignette de masque de la ligne <b>Étoiles de synthèse</b> : le masque est vide, la ligne se voit partout. Cliquez sur <b>Ajouter au masque</b> : un masque est fait de parties de cinq sortes, Émission H-alpha, Plage de luminosité, Plage de couleur, Dégradé linéaire et Pinceau. Choisissez <b>Pinceau</b> : <b>Soustraire</b> et <b>Cacher</b> sont réglés, donc peindre masque la ligne."
+      },
+      "why": {
+        "en": "A mask says where a layer acts. White means show, and what is painted with Hide is taken out of the row.",
+        "fr": "Un masque dit où un calque agit. Le blanc veut dire montrer, et ce qui est peint avec Cacher est retiré de la ligne."
+      },
+      "check": {
+        "en": "The brush part appears with Size 60 px and Hardness 50 %.",
+        "fr": "La partie pinceau apparaît avec Taille 60 px et Dureté 50 %."
+      },
+      "shot": {
+        "en": "/tutorials/post-masks/en/03.png",
+        "fr": "/tutorials/post-masks/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 19.0,
+        "fr": 19.0
+      }
+    },
+    {
+      "id": "paint",
+      "title": {
+        "en": "Paint the centre",
+        "fr": "Peindre le centre"
+      },
+      "text": {
+        "en": "Drag <b>Size</b> to the far right, as large as it goes, here 1,200 px, and <b>Hardness</b> to 0, then paint one stroke across the centre of the field: the real stars come back there, and outside it the round synthetic stars replace the comet-shaped ones.",
+        "fr": "Faites glisser <b>Taille</b> tout à droite, aussi grande que possible, ici 1 200 px, et <b>Dureté</b> à 0, puis peignez un seul coup de pinceau au centre du champ : les étoiles réelles y reviennent, et en dehors les étoiles rondes de synthèse remplacent celles en forme de comète."
+      },
+      "why": {
+        "en": "The coma grows from the centre outwards: it is already visible at 1,000 px from the corners, along the whole left edge. Painting the four corners would leave half of the comet-shaped stars in place, whereas painting the one zone where the optics are good is a single gesture and covers all the rest. Hardness 0 fades the edge of the stroke, so nothing shows where it ends.",
+        "fr": "La coma grandit du centre vers l’extérieur : elle est déjà visible à 1 000 px des coins, le long de tout le bord gauche. Peindre les quatre coins laisserait en place la moitié des étoiles en forme de comète, alors que peindre la seule zone où l’optique est bonne est un seul geste et couvre tout le reste. Une dureté de 0 estompe le bord du coup de pinceau, donc rien ne montre où il finit."
+      },
+      "check": {
+        "en": "At 100 % the centre keeps its real stars with their spikes; on the fitted view nothing shows where the stroke fades.",
+        "fr": "À 100 % le centre garde ses étoiles réelles avec leurs aigrettes ; sur la vue ajustée, rien ne montre où le coup de pinceau s’estompe."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/post-masks/details/centre-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The centre at 100 % with the real stars.",
+            "fr": "Le centre à 100 % avec les étoiles réelles."
+          }
+        },
+        {
+          "src": "/tutorials/post-masks/details/centre-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right",
+            "fr": "Juste"
+          },
+          "caption": {
+            "en": "After the stroke: the real stars are kept at the centre.",
+            "fr": "Après le coup de pinceau : les étoiles réelles sont gardées au centre."
+          }
+        },
+        {
+          "src": "/tutorials/post-masks/details/centre-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "With synthetic stars everywhere: the bright stars lose their spikes.",
+            "fr": "Avec des étoiles de synthèse partout : les étoiles brillantes perdent leurs aigrettes."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/post-masks/en/04.png",
+        "fr": "/tutorials/post-masks/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 34.0,
+        "fr": 34.0
+      }
+    },
+    {
+      "id": "see",
+      "title": {
+        "en": "See the mask",
+        "fr": "Voir le masque"
+      },
+      "text": {
+        "en": "Press <b>M</b> to see the mask in grey: white shows the synthetic stars, black hides them. Press <b>M</b> again to leave.",
+        "fr": "Appuyez sur <b>M</b> pour voir le masque en gris : le blanc montre les étoiles de synthèse, le noir les cache. Appuyez de nouveau sur <b>M</b> pour quitter."
+      },
+      "check": {
+        "en": "A black disc at the centre, white around it, with a soft edge.",
+        "fr": "Un disque noir au centre, du blanc autour, au bord doux."
+      },
+      "shot": {
+        "en": "/tutorials/post-masks/en/05.png",
+        "fr": "/tutorials/post-masks/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 48.0,
+        "fr": 48.0
+      }
+    },
+    {
+      "id": "dose",
+      "title": {
+        "en": "Feather and Density",
+        "fr": "Progressif et Densité"
+      },
+      "text": {
+        "en": "Under <b>Whole mask</b>, drag <b>Feather</b> to the right to soften the edge of the mask, to see, then press <b>Ctrl+Z</b>. Drag <b>Density</b> down: the hidden part lets the row through again; press <b>Ctrl+Z</b> to bring it back to 100 %.",
+        "fr": "Sous <b>Masque entier</b>, faites glisser <b>Progressif</b> vers la droite pour adoucir le bord du masque, pour voir, puis appuyez sur <b>Ctrl+Z</b>. Faites glisser <b>Densité</b> vers le bas : la partie cachée laisse repasser la ligne ; appuyez sur <b>Ctrl+Z</b> pour la remettre à 100 %."
+      },
+      "check": {
+        "en": "Feather reads 0 px and Density 100 % again.",
+        "fr": "« Progressif » indique de nouveau 0 px et « Densité » 100 %."
+      },
+      "shot": {
+        "en": "/tutorials/post-masks/en/06.png",
+        "fr": "/tutorials/post-masks/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 53.0,
+        "fr": 53.0
+      }
+    },
+    {
+      "id": "invert",
+      "title": {
+        "en": "Invert",
+        "fr": "Inverser"
+      },
+      "text": {
+        "en": "Tick <b>Invert</b>: the synthetic stars show at the centre only. Untick it to go back.",
+        "fr": "Cochez <b>Inverser</b> : les étoiles de synthèse ne se voient plus qu’au centre. Décochez-la pour revenir."
+      },
+      "check": {
+        "en": "The box is unticked again and the picture is as painted.",
+        "fr": "La case est décochée et l’image est telle que peinte."
+      },
+      "shot": {
+        "en": "/tutorials/post-masks/en/07.png",
+        "fr": "/tutorials/post-masks/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 61.0,
+        "fr": 61.0
+      }
+    },
+    {
+      "id": "showhide",
+      "title": {
+        "en": "Show and Hide",
+        "fr": "Montrer et Cacher"
+      },
+      "text": {
+        "en": "Click <b>Show</b>, then drag across the sky: this stroke gives the synthetic stars back there. Press <b>Ctrl+Z</b> to undo the stroke and click <b>Hide</b> again.",
+        "fr": "Cliquez sur <b>Montrer</b>, puis faites glisser sur le ciel : ce coup de pinceau y rend les étoiles de synthèse. Appuyez sur <b>Ctrl+Z</b> pour annuler le coup de pinceau et cliquez de nouveau sur <b>Cacher</b>."
+      },
+      "check": {
+        "en": "The stroke is gone, the status bar names the change undone.",
+        "fr": "Le coup de pinceau a disparu, la barre d’état nomme le changement annulé."
+      },
+      "shot": {
+        "en": "/tutorials/post-masks/en/08.png",
+        "fr": "/tutorials/post-masks/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 68.0,
+        "fr": 68.0
+      }
+    },
+    {
+      "id": "clear",
+      "title": {
+        "en": "Clear all and take it back",
+        "fr": "Tout effacer et reprendre"
+      },
+      "text": {
+        "en": "Click <b>Clear all</b>: every stroke goes and the row shows everywhere again. Press <b>Ctrl+Z</b>: the brush mask is back.",
+        "fr": "Cliquez sur <b>Tout effacer</b> : chaque coup de pinceau disparaît et la ligne se voit de nouveau partout. Appuyez sur <b>Ctrl+Z</b> : le masque au pinceau est de retour."
+      },
+      "check": {
+        "en": "The stars at the centre are real again after Ctrl+Z.",
+        "fr": "Les étoiles du centre sont de nouveau réelles après Ctrl+Z."
+      },
+      "shot": {
+        "en": "/tutorials/post-masks/en/09.png",
+        "fr": "/tutorials/post-masks/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 76.0,
+        "fr": 76.0
+      }
+    },
+    {
+      "id": "dehaze",
+      "title": {
+        "en": "Dehaze on the starless image",
+        "fr": "Dévoilage sur l’image sans étoiles"
+      },
+      "text": {
+        "en": "Click <b>Starless image</b>, then <b>Filter</b>, open <b>Contrast</b> and choose <b>Dehaze</b>. Drag <b>Amount</b> to about 0.25 and <b>Scale</b> to about 256 px, until the veil of the sky goes and the faint edges of the ring stand out from a darker background.",
+        "fr": "Cliquez sur <b>Image sans étoiles</b>, puis sur <b>Filtre</b>, ouvrez <b>Contraste</b> et choisissez <b>Dévoilage</b>. Faites glisser <b>Quantité</b> jusqu’à environ 0,25 et <b>Échelle</b> jusqu’à environ 256 px, jusqu’à ce que le voile du ciel disparaisse et que les bords faibles de l’anneau ressortent d’un fond plus sombre."
+      },
+      "why": {
+        "en": "Dehaze takes away a large-scale veil, the residual light of the sky that the flats and the gradient did not remove. The sky goes from 33 to 26.",
+        "fr": "Dévoilage retire un voile à grande échelle, la lumière résiduelle du ciel que les flats et le gradient n’ont pas retirée. Le ciel passe de 33 à 26."
+      },
+      "check": {
+        "en": "The sky is darker, the ring is at its previous brightness only once the mask is added.",
+        "fr": "Le ciel est plus sombre ; l’anneau garde sa luminosité une fois le masque ajouté."
+      },
+      "pitfall": {
+        "en": "At Amount 0.7 the sky falls to 10, almost black, and the faint outskirts vanish.",
+        "fr": "À « Quantité » 0,7 le ciel tombe à 10, presque noir, et les bords faibles disparaissent."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/post-masks/details/sky-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The sky at 100 % before Dehaze.",
+            "fr": "Le ciel à 100 % avant Dévoilage."
+          }
+        },
+        {
+          "src": "/tutorials/post-masks/details/sky-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right",
+            "fr": "Juste"
+          },
+          "caption": {
+            "en": "With Amount 0.25: a darker sky, the faint arc kept.",
+            "fr": "Avec « Quantité » 0,25 : un ciel plus sombre, l’arc faible gardé."
+          }
+        },
+        {
+          "src": "/tutorials/post-masks/details/sky-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "At 0.7: the sky is almost black and the faint outskirts vanish.",
+            "fr": "À 0,7 : le ciel est presque noir et les bords faibles disparaissent."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/post-masks/en/10.png",
+        "fr": "/tutorials/post-masks/fr/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 85.0,
+        "fr": 85.0
+      }
+    },
+    {
+      "id": "luminance",
+      "title": {
+        "en": "A luminance mask on Dehaze",
+        "fr": "Un masque de luminosité sur Dévoilage"
+      },
+      "text": {
+        "en": "With Dehaze selected, click the mask button under the list, then <b>Add to mask</b> and <b>Luminance range</b>. Drag <b>From</b> to 0 %, <b>To</b> to 25 % and <b>Feather</b> to about 8 px. Press <b>M</b> to see it: white is where Dehaze acts, on the dark tones.",
+        "fr": "Dévoilage étant sélectionné, cliquez sur le bouton de masque sous la liste, puis sur <b>Ajouter au masque</b> et <b>Plage de luminosité</b>. Faites glisser <b>De</b> à 0 %, <b>À</b> à 25 % et <b>Progressif</b> jusqu’à environ 8 px. Appuyez sur <b>M</b> pour le voir : le blanc est l’endroit où Dévoilage agit, sur les tons sombres."
+      },
+      "why": {
+        "en": "Without the mask, Dehaze also lowers the nebula: its brightest 5 % go from 145 to 132 and the ring loses its glow. With the mask, Dehaze acts only on the dark tones and the nebula stays at 146. The range 0 to 25 % selects the sky and the faint tones, not the ring.",
+        "fr": "Sans le masque, Dévoilage assombrit aussi la nébuleuse : ses 5 % les plus brillants passent de 145 à 132 et l’anneau perd son éclat. Avec le masque, Dévoilage n’agit que sur les tons sombres et la nébuleuse reste à 146. La plage de 0 à 25 % choisit le ciel et les tons faibles, pas l’anneau."
+      },
+      "check": {
+        "en": "The sky reads 26, 25 and 25 on the exported picture, neutral.",
+        "fr": "Le ciel mesure 26, 25 et 25 sur l’image exportée, neutre."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/post-masks/details/mask-without.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Without the mask",
+            "fr": "Sans le masque"
+          },
+          "caption": {
+            "en": "The nebula dimmed by Dehaze.",
+            "fr": "La nébuleuse assombrie par Dévoilage."
+          }
+        },
+        {
+          "src": "/tutorials/post-masks/details/mask-with.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "With the mask",
+            "fr": "Avec le masque"
+          },
+          "caption": {
+            "en": "The nebula kept.",
+            "fr": "La nébuleuse gardée."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/post-masks/en/11.png",
+        "fr": "/tutorials/post-masks/fr/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 101.0,
+        "fr": 101.0
+      }
+    },
+    {
+      "id": "save",
+      "title": {
+        "en": "Kept with the project",
+        "fr": "Gardé avec le projet"
+      },
+      "text": {
+        "en": "Press <b>Ctrl+S</b>: the masks are saved with the project. Open <b>File</b> and click <b>Close project</b>, then click the project on the Home screen and <b>Post</b>. The masks are still there, and a click on a thumbnail opens its parts, still editable.",
+        "fr": "Appuyez sur <b>Ctrl+S</b> : les masques sont enregistrés avec le projet. Ouvrez <b>Fichier</b> et cliquez sur <b>Fermer projet</b>, puis cliquez sur le projet de l’écran d’accueil et sur <b>Post</b>. Les masques sont toujours là, et un clic sur une vignette ouvre ses parties, toujours modifiables."
+      },
+      "check": {
+        "en": "The thumbnails of both masks are listed with their parts.",
+        "fr": "Les vignettes des deux masques sont listées avec leurs parties."
+      },
+      "shot": {
+        "en": "/tutorials/post-masks/en/12.png",
+        "fr": "/tutorials/post-masks/fr/12.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 127.0,
+        "fr": 127.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/post-masks/result.jpg",
+    "w": 2000,
+    "h": 1319,
+    "caption": {
+      "en": "The exported picture: real stars at the centre, round synthetic stars outside it, and a darker sky under the Dehaze mask.",
+      "fr": "L’image exportée : des étoiles réelles au centre, des étoiles rondes de synthèse en dehors, et un ciel plus sombre sous le masque de Dévoilage."
+    }
+  },
+  "blocks": [
+    "Post"
+  ],
+  "next": "post-versions",
+  "video": {
+    "en": {
+      "src": "/tutorials/post-masks/en/video.mp4",
+      "captions": "/tutorials/post-masks/en/captions.vtt",
+      "chapters": "/tutorials/post-masks/en/chapters.vtt",
+      "poster": "/tutorials/post-masks/en/poster.jpg",
+      "seconds": 143.0
+    },
+    "fr": {
+      "src": "/tutorials/post-masks/fr/video.mp4",
+      "captions": "/tutorials/post-masks/fr/captions.vtt",
+      "chapters": "/tutorials/post-masks/fr/chapters.vtt",
+      "poster": "/tutorials/post-masks/fr/poster.jpg",
+      "seconds": 143.0
+    }
+  }
+}

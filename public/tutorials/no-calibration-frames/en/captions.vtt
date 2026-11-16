@@ -1,0 +1,225 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.000
+On the Home screen, click New project.
+
+2
+00:00:03.000 --> 00:00:06.000
+The project opens on a blank page: click From template.
+
+3
+00:00:06.000 --> 00:00:09.000
+In the Color tab, click Color full.
+
+4
+00:00:09.000 --> 00:00:13.000
+Click Add lights and choose the 580 lights: nothing else, no darks and no flats.
+
+5
+00:00:13.000 --> 00:00:18.000
+Click Open frames: the Darks and Flats zones read none, optional.
+
+6
+00:00:18.000 --> 00:00:21.000
+Click the Calibration step.
+
+7
+00:00:21.000 --> 00:00:28.000
+In the Darks tab, the window says what Calibration does without darks.
+
+8
+00:00:28.000 --> 00:00:34.000
+In the Flats tab, it says what stays in the image without flats.
+
+9
+00:00:34.000 --> 00:00:37.000
+Click the Session 1 step, then the Sessions tab.
+
+10
+00:00:37.000 --> 00:00:44.000
+The Checks list says it too: no darks, no flats, and the black level used in their place.
+
+11
+00:00:44.000 --> 00:00:47.000
+Click Graph to go back to the workflow.
+
+12
+00:00:47.000 --> 00:00:51.000
+Click the project block and type NGC 7000 in Target: the position is found.
+
+13
+00:00:51.000 --> 00:00:54.000
+Click Run. The button gives the time the run should take.
+
+14
+00:00:54.000 --> 00:00:58.000
+Name the project NGC 7000, pick its folder with Browse…, then click Save.
+
+15
+00:00:58.000 --> 00:01:02.000
+The run starts: it lists its blocks and the time each should take.
+
+16
+00:01:02.000 --> 00:01:06.000
+On the graph, each block shows its progress.
+
+17
+00:01:06.000 --> 00:01:11.000
+Not shown in real time: the whole run took 46 min 44 s on a graphics card (RTX 4060 Ti).
+
+18
+00:01:11.000 --> 00:01:14.000
+Click Inspect, then the Calibration step.
+
+19
+00:01:14.000 --> 00:01:22.000
+The Calibration measures give what was done instead: the hot pixels found in the lights, the black level used as dark, no flat divided.
+
+20
+00:01:22.000 --> 00:01:25.000
+Click Post.
+
+21
+00:01:25.000 --> 00:01:31.000
+Post shows the image as the workflow gives it. Before any gesture, look at what is wrong, and what is already right.
+
+22
+00:01:31.000 --> 00:01:37.000
+At 100 %, the corners fall to near black and the edges are black: Crop will take them off.
+
+23
+00:01:37.000 --> 00:01:43.000
+The sky is cyan-green, the dark lanes look teal: Dehaze and a Color balance under a mask will correct it.
+
+24
+00:01:43.000 --> 00:01:51.000
+The sky is lighter around the centre, a veil the flats would have removed: Dehaze will lift it. The nebula looks a little flat: Contrast and Faint tones will bring it out.
+
+25
+00:01:51.000 --> 00:01:57.000
+Over the Milky Way, the stars are dense and cover the gas: the star sliders will quieten them.
+
+26
+00:01:57.000 --> 00:02:04.000
+Already right, to leave alone: the red of the nebula and its structure, the colour of the stars, and the noise, which Denoise has done.
+
+27
+00:02:04.000 --> 00:02:07.000
+Click Crop.
+
+28
+00:02:07.000 --> 00:02:10.000
+Drag the top-left handle in, then the bottom-right one: about 5080 × 3600 px, NGC 7000 and the Pelican in the frame.
+
+29
+00:02:10.000 --> 00:02:13.000
+Click Apply.
+
+30
+00:02:13.000 --> 00:02:16.000
+Drag Contrast to the right until the Wall and the Pelican’s edge stand out: here +0.8.
+
+31
+00:02:16.000 --> 00:02:19.000
+Drag Faint tones to the right until the faint gas comes up: here +0.6.
+
+32
+00:02:19.000 --> 00:02:22.000
+Click the Starless image row.
+
+33
+00:02:22.000 --> 00:02:25.000
+Click Filter, then Contrast, then Dehaze.
+
+34
+00:02:25.000 --> 00:02:28.000
+Drag Amount until the sky’s light veil is gone without swallowing the faint gas: here about 0.25.
+
+35
+00:02:28.000 --> 00:02:31.000
+Leave Scale wide so that only the large veil is taken: here about 256 px.
+
+36
+00:02:31.000 --> 00:02:34.000
+Click Filter, then Color, then Color balance.
+
+37
+00:02:34.000 --> 00:02:37.000
+Drag Temperature to the right and Green / magenta to the left, to the ends of the sliders: +1 and −1.
+
+38
+00:02:37.000 --> 00:02:44.000
+On the whole image the same balance warms the nebula too: it must act on the dark tones only.
+
+39
+00:02:44.000 --> 00:02:47.000
+Click the mask button, then Add to mask, then Luminance range.
+
+40
+00:02:47.000 --> 00:02:50.000
+Set the range from 0 to about 22 %, so that only the sky is in the mask.
+
+41
+00:02:50.000 --> 00:02:53.000
+Soften the mask edge with the feather: here about 8 px.
+
+42
+00:02:53.000 --> 00:03:00.000
+Under the mask, the sky is neutral and the nebula keeps its red.
+
+43
+00:03:00.000 --> 00:03:03.000
+A little green remains: click Filter, then Color, then Green removal.
+
+44
+00:03:03.000 --> 00:03:06.000
+Drag Amount until the sky has no green left: here about 0.6.
+
+45
+00:03:06.000 --> 00:03:09.000
+The mask is not copied from one filter to the next: draw it again the same way, with the mask button, Add to mask, Luminance range, from 0 to 22 %, feather 8.
+
+46
+00:03:09.000 --> 00:03:12.000
+Set the range from 0 to about 22 %, so that only the sky is in the mask.
+
+47
+00:03:12.000 --> 00:03:15.000
+Soften the mask edge with the feather: here about 8 px.
+
+48
+00:03:15.000 --> 00:03:22.000
+With both filters under the mask, the sky is neutral and the nebula keeps its red.
+
+49
+00:03:22.000 --> 00:03:25.000
+Click the top layer, then drag the star sliders gently: Strength −0.5, Small stars −1.0, Star size −0.5, Star color +0.3.
+
+50
+00:03:25.000 --> 00:03:32.000
+The dense star field lets the gas show through.
+
+51
+00:03:32.000 --> 00:03:36.000
+Click Export…
+
+52
+00:03:36.000 --> 00:03:39.000
+Choose JPEG in Format.
+
+53
+00:03:39.000 --> 00:03:44.000
+Check the file, on the tutorial drive, then click Export.
+
+54
+00:03:44.000 --> 00:03:47.000
+Click Export.
+
+55
+00:03:47.000 --> 00:03:52.000
+The image is written, with its processing history beside it.
+
+56
+00:03:52.000 --> 00:03:57.000
+Save the project with Ctrl+S.

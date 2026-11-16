@@ -1,0 +1,249 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import Figure from '../../components/Figure.astro';
+import Chart from '../../components/Chart.astro';
+import { registrationFigure } from '../../data/charts/figures';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Registration" title="Alignement"
+  description="Le bloc Alignement de FLOAT : détection des étoiles, appariement par triangles, polynôme cubique ajusté à chaque image, image de référence, mesures prises sur chaque image, et plusieurs sessions alignées ensemble.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Alignement</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il trouve les étoiles de chaque image et calcule comment chaque image doit être décalée, tournée et légèrement déformée pour se poser exactement sur une image de référence ; au passage, il mesure la netteté et la transparence de chaque image.</dd></div><div><dt>Ce qu’on voit</dt><dd>Dans Inspecter, un graphique de la taille des étoiles et de la transparence de chaque image au long de la nuit, avec l’image de référence, les images alignées, l’erreur d’alignement et la dérive ; dans le Rapport, la taille des étoiles et la dérive du champ.</dd></div><div><dt>Ce qui se règle</dt><dd>En général rien : les valeurs par défaut conviennent à la plupart des nuits. Baissez le Seuil détection (à 5) pour des images très courtes ou faibles, pauvres en étoiles, et Paires min pour les champs très clairsemés.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>La détection des étoiles</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Ce qui est mesuré sur chaque image</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>L’image de référence</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>L’appariement et le polynôme</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Les images qui ne s’apparient pas d’emblée</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Plusieurs sessions</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Réglages</a></li>
+      <li><a href="#s9"><span class="secnum">9</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Alignement trouve les étoiles de chaque image calibrée, choisit une image comme
+    référence et ajuste pour chacune des autres un polynôme cubique à 10 termes qui place ses pixels du capteur sur la
+    référence. La même passe mesure, pour chaque image, la taille et la rondeur de ses étoiles, son bruit et sa
+    transparence ; les blocs Sélection et Empilement utilisent ces mesures. Les images qui ne peuvent pas être
+    appariées avec assez d’étoiles sont écartées, chacune avec sa raison.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Calibration</span></li><li class="here"><span>Alignement</span></li><li><span>Sélection</span></li>
+    <li><span>Empilement</span></li><li><span>Astrométrie</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</h2>
+    <p>Le bloc reçoit les images calibrées de la session, encore en mosaïque du capteur. Il ne les rééchantillonne
+    pas. Il écrit, pour chaque image, les coefficients de son polynôme, le nombre de paires d’étoiles appariées avec la
+    référence et le résidu de l’ajustement, avec les mesures de la section 3. Le bloc <a href="/fr/blocs/empilement/">Empilement</a> dépose les pixels
+    bruts à travers ces polynômes.</p>
+    <p>Il trace aussi un graphique de la transparence et de la taille des étoiles de chaque image au long de la nuit, et
+    indique l’image de référence, le nombre d’images alignées, le résidu médian en pixels et la dérive du champ au
+    cours de la nuit.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>La détection des étoiles</h2>
+    <aside class="note"><b>Pourquoi 2 × 2.</b> La moyenne de chaque carré de 2 × 2 pixels réunit le rouge, les deux
+    verts et le bleu en une seule valeur : les étoiles sont cherchées sur un plan sans mosaïque. Un carré qui contient
+    un pixel saturé ou manquant est masqué.</aside>
+    <p>Chaque image est réduite en <b>super-pixels de 2 × 2</b>. Le fond est estimé sur des cases de 64 super-pixels et
+    soustrait. Les étoiles sont les sources qui dépassent le <b>Seuil détection</b> (8 sigmas par défaut) sur au moins
+    4 pixels, séparées si elles se touchent, écartées si l’extraction les signale ou si elles couvrent 200 pixels ou
+    plus. Les <b>2500</b> plus brillantes sont gardées. Pour un capteur à mosaïque X-Trans, les couleurs sont d’abord
+    égalisées, car ses cases contiennent des mélanges inégaux de couleurs.</p>
+    <p>Chaque étoile reçoit une position affinée par un centre pondéré, un rayon à mi-flux, et son flux dans quatre
+    ouvertures circulaires de 3, 5, 8 et 12 super-pixels de rayon, chacune avec un anneau de fond. Les positions sont
+    écrites en coordonnées du capteur.</p>
+    <p>La détection tourne en parallèle, une image par tâche. Les catalogues terminés sont enregistrés toutes les 50
+    images et au moins toutes les 15 s : un arrêt ou un plantage les conserve, et l’exécution suivante repart
+    d’eux.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Ce qui est mesuré sur chaque image</h2>
+    <aside class="note"><b>Pourquoi une seconde taille.</b> Un rayon à mi-flux sur des super-pixels de 2 × 2 surestime
+    environ du double la largeur des étoiles sous-échantillonnées. L’ajustement de Moffat, sur les échantillons d’une
+    couleur à leur vraie position, non : sur des étoiles de Moffat synthétiques de largeur connue (1,3 à 5 px, β de 2,5
+    à 4,5, échantillonnées au centre des pixels, pics de 400 à 4000 fois le bruit), il est à 2 % près sur un plan et
+    à 3 % près sur une couleur d’une mosaïque.<a class="cite" href="#ref-1">[1]</a></aside>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les mesures de chaque image.</caption>
+        <thead><tr><th>Mesure</th><th>Comment</th><th>Utilisée par</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Taille des étoiles (FWHM), grossière</th><td>Quatre fois le rayon à mi-flux médian, en super-pixels, des 300 étoiles les plus brillantes, prises comme gaussiennes, en pixels du capteur.</td><td>L’image de référence ; la netteté dans le poids.</td></tr>
+          <tr><th scope="row">Taille des étoiles (FWHM), Moffat</th><td>Un profil de Moffat elliptique est ajusté à 150 étoiles au plus, isolées et non saturées, sur les échantillons verts à la résolution native. Une étoile est gardée si sa rondeur vaut au moins 0,5, son beta au moins 1,5 et son résidu au plus 0,2 de son amplitude. La valeur de l’image est la médiane de la moyenne géométrique des deux axes. Pas de valeur sous 10 étoiles.</td><td>La règle de l’échelle drizzle ; le filtre de taille d’étoiles du bloc <a href="/fr/blocs/selection/">Sélection</a>.</td></tr>
+          <tr><th scope="row">Rondeur</th><td>Petit axe sur grand axe de l’ajustement de Moffat (1 est rond), médiane des étoiles. Mesurée aussi, grossièrement, sur les détections.</td><td>Le filtre de rondeur du bloc Sélection.</td></tr>
+          <tr><th scope="row">Bruit</th><td>Deux super-pixels voisins ne diffèrent que par leur bruit, car le ciel et les objets plus grands que quelques pixels s’annulent. Le bruit vaut 1,4826 fois l’écart absolu médian de ces différences, divisé par √2.</td><td>Le poids de l’image.</td></tr>
+          <tr><th scope="row">Transparence</th><td>Médiane du rapport de flux, image sur référence, des étoiles appariées à 1,5 px près à travers le polynôme, dans une ouverture fixe. Il faut au moins 10 étoiles.</td><td>Le poids ; le filtre de transparence.</td></tr>
+          <tr><th scope="row">Paires et résidu</th><td>Le nombre d’étoiles appariées avec la référence, et la racine de la moyenne des carrés de leur écart restant, en pixels.</td><td>Garder ou écarter l’image.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>L’ouverture de la transparence est la plus petite des quatre qui vaut au moins trois rayons à mi-flux des plus
+    grosses étoiles (90e centile de la nuit). Elle contient alors presque toute la lumière d’une étoile, quelle que
+    soit la turbulence. Un flux compté seulement au-dessus du seuil de détection suit la turbulence : sur un jeu
+    d’essai, une image aux étoiles de 5,3 px donnait 0,78 pour 0,91 et son poids était réduit.</p>
+    <p>La figure 1 montre les deux tailles pour chaque pose d’une nuit&nbsp;: les étoiles rapetissent au fil de la nuit, et
+    la taille grossière, 1,4 fois celle de Moffat en début de nuit et 2,3 fois en fin de nuit, ne suit qu’en partie
+    ce changement.</p>
+
+    <Figure lang={lang} n={1}>
+      <Chart slot="body" {...registrationFigure(lang)} />
+      Taille des étoiles (FWHM) de chaque pose, en pixels du capteur, en fonction du temps écoulé depuis la première
+      pose. Données&nbsp;: les Pléiades, 1348 poses de 13 s. En noir, la taille grossière, 4,75 px en médiane des
+      30 premières minutes et 4,19 px des 30 dernières&nbsp;; en orange, l’ajustement de Moffat, 3,31 px puis 1,81 px.
+      Quatre valeurs grossières et deux de Moffat au-dessus de 6 px sortent du graphique&nbsp;; la pose non alignée n’a pas
+      de valeur.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>L’image de référence</h2>
+    <p>La référence est l’<b>image la plus nette du milieu de la nuit</b> : parmi les images qui contiennent au moins le
+    nombre médian d’étoiles, celles situées entre 30 % et 70 % de la session dans l’ordre du temps sont retenues, et
+    celle dont la taille d’étoiles grossière est la plus petite l’emporte. Si aucune image du milieu ne convient,
+    l’ensemble des images assez riches en étoiles est utilisé.</p>
+    <p>Une image d’un autre champ dans le dossier n’alignerait presque aucune des autres. Si la référence aligne moins
+    de la moitié des images, les images suivantes par netteté sont essayées à tour de rôle, cinq au plus, et celle qui
+    en aligne le plus est gardée. Une image déjà alignée par une référence essayée n’est pas essayée de nouveau. Une
+    session alignée sur sa première référence ne paie jamais cette recherche. Quand une autre référence est utilisée,
+    le journal le dit.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>L’appariement et le polynôme</h2>
+    <aside class="note"><b>Dix termes.</b> Avec des coordonnées u et v ramenées entre -1 et 1 sur l’image : 1, u, v,
+    u², uv, v², u³, u²v, uv², v³, un polynôme pour x et un pour y. Les trois premiers seuls forment une application
+    affine.</aside>
+    <p>Le cas habituel est une dérive du champ. Le décalage entre une image et la référence est trouvé par un <b>vote
+    sur les différences</b> entre les positions de leurs étoiles, par cases de 2 px dans 400 px, d’abord avec les 150
+    étoiles les plus brillantes, puis avec 400 et avec 1000, car dans un champ dense les détections les plus
+    brillantes changent d’une image à l’autre. Un pic ne compte que s’il dépasse de 8 sigmas de Poisson les paires de
+    hasard. Si aucun ne le fait, le vote est fait sur la moitié de l’image. Le décalage est affiné sur les plus proches
+    voisines.</p>
+    <p>À partir de cette première estimation, l’ajustement se fait en 7 passes. Les trois premières sont une
+    <b>application affine</b>, avec la tolérance de départ (4 px), qui étend les appariements de l’endroit où
+    l’estimation est juste à tout le champ. Les quatre suivantes ajustent le <b>polynôme cubique</b>, la tolérance
+    d’appariement diminuant avec les résidus, à quatre fois leur dispersion robuste sans descendre sous 0,8 px. Il faut
+    au moins 30 étoiles appariées. La passe affine vient d’abord parce qu’un polynôme cubique ajusté sur une estimation
+    juste seulement près du centre s’était accroché à un tiers des étoiles, avec 6 px d’écart sur les bords, pour une
+    rotation de 0,7 degré et un changement d’échelle de 0,2 %.</p>
+    <p>Un polynôme d’ordre 3, plutôt qu’une rotation et un décalage, absorbe la rotation de champ, la réfraction et la
+    distorsion optique jusqu’à une fraction de pixel.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Les images qui ne s’apparient pas d’emblée</h2>
+    <p>Quand le décalage apparie moins de 30 % des étoiles, le bloc essaie d’autres voies, dans cet ordre.</p>
+    <ul>
+      <li><strong>Une rotation du champ</strong>, comme en fait une monture azimutale : un vote sur les différences de
+      position pour chaque angle d’essai, de -45 à 45 degrés par pas de 0,5. L’ajustement tourné est gardé s’il
+      apparie plus d’étoiles avec un petit résidu.</li>
+      <li><strong>Une rotation de 180°</strong>, après un retournement au méridien ou une caméra remise dans l’autre sens.
+      L’angle de la dernière image trouvée tournée est essayé d’abord pour les suivantes, car une série le
+      partage.</li>
+      <li><strong>Un angle quelconque</strong>, comme quand une caméra a tourné dans son adaptateur entre deux nuits
+      (82 degrés sur un jeu d’essai). Les triangles de chaque étoile et de ses plus proches voisines sont appariés par
+      leur forme, qu’une rotation, un décalage ou un changement d’échelle ne modifie pas.<a class="cite" href="#ref-2">[2]</a><a class="cite" href="#ref-3">[3]</a><a class="cite" href="#ref-4">[4]</a>
+      Chaque transformation que proposent les triangles est notée sur les étoiles qu’elle amène à 2 px d’une étoile de
+      référence, et la meilleure lance l’ajustement. Les triangles viennent des 50 étoiles les plus brillantes, puis de
+      150 et de 300 tant qu’aucun ajustement ne tient. L’image est acceptée sur la même part d’étoiles appariées et le
+      même résidu qu’une rotation de 180°.</li>
+      <li><strong>La corrélation de phase</strong>, quand les étoiles ne donnent aucun vote net (un champ dense) : le
+      décalage est lu sur les images elles-mêmes, réduites quatre fois, le ciel retiré, les étoiles les plus
+      brillantes écrêtées et une fenêtre de Hann appliquée ; il est accepté quand le pic vaut au moins 0,1. Le
+      polynôme est ensuite ajusté comme avant.<a class="cite" href="#ref-5">[5]</a></li>
+      <li><strong>Un champ clairsemé</strong>, quand l’image médiane contient moins de 100 étoiles : l’appariement par
+      triangles seul, avec une similitude (rotation, échelle, décalage : quatre inconnues, car un polynôme suivrait le
+      bruit d’aussi peu d’étoiles) ajustée par moindres carrés.<a class="cite" href="#ref-6">[6]</a> Elle doit
+      apparier au moins Paires min étoiles, avec un résidu sous 1 px et une échelle à 5 % près de 1. Le journal dit
+      combien d’images ont été alignées ainsi.</li>
+    </ul>
+    <p>Une image appariée sur moins de paires d’étoiles que <b>Paires min</b> est écartée. L’est aussi une image dont le
+    résidu dépasse de loin celui des autres : plus de 8 fois la médiane, et au moins 2,5 px, ce qui désigne un faux
+    appariement et non une image plus floue. Le journal donne, pour 30 images écartées au plus, la raison : aucune
+    étoile (une image noire ou couverte), trop peu d’étoiles pour apparier, trop peu de paires d’étoiles avec la
+    référence, ou un résidu trop grand.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Plusieurs sessions</h2>
+    <p>Quand un projet compte plusieurs sessions, chacune est calibrée avec ses propres masters. Une étape de
+    jonction met ensuite leurs images calibrées, une session après l’autre, dans un seul ensemble sur une seule échelle
+    d’intensité (la plus basse des sessions), et le bloc Alignement lit cet ensemble comme il lit une session. Toutes
+    les images, de toutes les sessions, sont donc alignées sur <b>une seule image de référence</b> et empilées
+    ensemble.</p>
+    <p>Les sessions doivent partager le capteur : même largeur, même hauteur et même mosaïque, sinon la jonction
+    s’arrête avec une erreur. Le niveau de saturation de l’ensemble est, à chaque pixel, le plus bas de ceux des
+    sessions. Les résultats propres des sessions restent tels quels. La jonction demande au moins deux
+    sessions.</p>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Les réglages du bloc.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Seuil détection</th><td class="n">8 σ</td><td class="n">3 – 50</td><td>Signification minimale des étoiles utilisées pour l’alignement. À baisser (5) pour des images très courtes ou très faibles avec peu d’étoiles ; à monter dans les champs denses de la Voie lactée pour ne garder que les étoiles nettes.</td></tr>
+          <tr><th scope="row">Étoiles par image</th><td class="n">2500</td><td class="n">100 – 20&nbsp;000</td><td>Les étoiles les plus brillantes gardées par image pour l’appariement et le polynôme.</td></tr>
+          <tr><th scope="row">Paires min</th><td class="n">10</td><td class="n">3 – 200</td><td>Le moins de paires d’étoiles qu’une image doit apparier avec la référence pour être gardée. À baisser pour les champs très clairsemés ; à monter pour être plus strict.</td></tr>
+          <tr><th scope="row">Aligner brutes</th><td>activé</td><td>activé, désactivé</td><td>Désactivé quand le bloc est coupé : les images sont prises pour déjà alignées et chacune reste où elle est. Les étoiles sont toujours mesurées, pour pondérer et sélectionner les images.</td></tr>
+          <tr><th scope="row">Calculs parallèles</th><td>automatique</td><td class="n">1 – 64</td><td>Les processus du processeur utilisés pour détecter les étoiles. La valeur automatique est le nombre de cœurs moins deux, 12 au plus.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Avec Aligner brutes désactivé, chaque image reçoit l’application identité. Son résidu et sa transparence sont
+    quand même calculés, ses étoiles étant appariées à celles de la référence à 3 px près, et la transparence vaut 1
+    quand moins de 5 étoiles s’apparient.</p>
+  </section>
+
+  <section>
+    <h2 id="s9"><span class="secnum">9</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Trop peu d’étoiles arrête le bloc.</strong> Si l’image médiane contient moins d’étoiles que Paires
+      min, le bloc s’arrête et conseille de baisser le seuil de détection ou de vérifier la mise au point et
+      l’exposition.</li>
+      <li><strong>Un champ clairsemé reçoit une similitude, non un polynôme.</strong> Avec peu d’étoiles, une rotation,
+      une échelle et un décalage sont tout ce que les données permettent ; les termes de distorsion sont nuls. La
+      recherche d’une rotation n’inclut pas l’image en miroir.</li>
+      <li><strong>Une rotation n’est cherchée que si le décalage échoue.</strong> Une image à moins de 45 degrés de la
+      référence que le décalage ou la recherche de rotation aligne, ou écarte, n’est pas confiée à la recherche d’angle
+      quelconque, pour que son sort ne change pas.</li>
+      <li><strong>Les paires de hasard d’un champ dense.</strong> Sur un jeu d’essai de 1800 étoiles par image, 330
+      paires de hasard à 6,5 px l’emportaient sur 138 vraies à 0,3 px. L’ajustement tourné n’est donc gardé que
+      s’il apparie plus d’étoiles avec un petit résidu, et le contrôle du résidu de la section 6 a été ajouté.</li>
+      <li><strong>Les mesures de Moffat peuvent manquer.</strong> Avec moins de 10 étoiles isolées et non saturées dans
+      une image, sa taille d’étoiles de Moffat n’a pas de valeur ; les filtres ne jugent alors pas cette image
+      sur elle.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Moffat, A. F. J. 1969, <i lang="en">A Theoretical Investigation of Focal Stellar Images in the Photographic Emulsion and Application to Photographic Photometry</i>, A&amp;A 3, 455. <a href="https://ui.adsabs.harvard.edu/abs/1969A%26A.....3..455M/abstract">ADS 1969A&amp;A.....3..455M</a></li>
+      <li id="ref-2">Valdes, F. et al. 1995, <i lang="en">FOCAS Automatic Catalog Matching Algorithms</i>, PASP 107, 1119. <a href="https://doi.org/10.1086/133667">doi:10.1086/133667</a></li>
+      <li id="ref-3">Groth, E. J. 1986, <i lang="en">A pattern-matching algorithm for two-dimensional coordinate lists</i>, AJ 91, 1244. <a href="https://doi.org/10.1086/114099">doi:10.1086/114099</a></li>
+      <li id="ref-4">Beroiz, M., Cabral, J. B. &amp; Sanchez, B. 2020, <i lang="en">Astroalign: A Python module for astronomical image registration</i>, Astronomy and Computing 32, 100384. <a href="https://arxiv.org/abs/1909.02946">arXiv:1909.02946</a></li>
+      <li id="ref-5">Kuglin, C. D. &amp; Hines, D. C. 1975, <i lang="en">The phase correlation image alignment method</i>, IEEE Conference on Cybernetics and Society.</li>
+      <li id="ref-6">Umeyama, S. 1991, <i lang="en">Least-squares estimation of transformation parameters between two point patterns</i>, IEEE Transactions on Pattern Analysis and Machine Intelligence 13, 376. <a href="https://doi.org/10.1109/34.88573">doi:10.1109/34.88573</a></li>
+    </ol>
+  </section>
+</Doc>

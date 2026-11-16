@@ -1,0 +1,101 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet du deuxième tutoriel.
+
+2
+00:00:04.000 --> 00:00:10.000
+Le projet s’ouvre sur la page Graphe. Au-dessus du graphe, Blocs, Replié et Tableau sont trois vues du même projet.
+
+3
+00:00:10.000 --> 00:00:13.000
+Cliquez sur la flèche en haut à droite pour replier pour l’instant le panneau de réglages.
+
+4
+00:00:13.000 --> 00:00:20.000
+Blocs montre toute la chaîne, de gauche à droite, en trois bandes : Prétraitement, Traitement linéaire et Composition. Post vient en dernier.
+
+5
+00:00:20.000 --> 00:00:27.000
+Chaque bloc est une carte : son nom, une ligne de résumé de ses réglages, et une barre sur son bord gauche, verte quand le bloc est à jour. Cliquez sur une carte pour la sélectionner.
+
+6
+00:00:27.000 --> 00:00:35.000
+La palette à gauche liste les blocs que l’on peut ajouter, par groupes : Sources, Brutes, Image, Post et Composition. Un bloc se fait glisser sur la chaîne ou se double-clique, et un bloc qui ne peut pas être ajouté ici est grisé.
+
+7
+00:00:35.000 --> 00:00:39.000
+Cliquez sur la case de zoom : elle propose des tailles fixes, et Tout afficher.
+
+8
+00:00:39.000 --> 00:00:43.000
+Ctrl et la molette zooment le graphe.
+
+9
+00:00:43.000 --> 00:00:46.000
+Cliquez sur « Tout afficher » : le graphe entier tient dans la fenêtre.
+
+10
+00:00:46.000 --> 00:00:49.000
+Cliquez sur « Replié ».
+
+11
+00:00:49.000 --> 00:00:57.000
+Replié dessine chaque empilement comme une seule carte : son nom, son nombre de sessions et de brutes, sa méthode d’empilement et une rangée de points. Astrométrie, Gradient, Débruitage, Couleur et Post restent comme avant.
+
+12
+00:00:57.000 --> 00:01:00.000
+Cliquez sur « Tableau ».
+
+13
+00:01:00.000 --> 00:01:08.000
+Tableau : une ligne par session, sous le nom de son empilement. Les fichiers sont dans les colonnes Brutes, Darks, Flats et Offsets, puis viennent les réglages de l’empilement. La ligne Commun, en haut, sert à toutes les sessions.
+
+14
+00:01:08.000 --> 00:01:11.000
+Cliquez sur « Ajouter session » : une seconde ligne arrive.
+
+15
+00:01:11.000 --> 00:01:18.000
+La nouvelle session est vide : ni brutes, ni darks, ni flats, ni offsets. Avec deux sessions, la ligne Commun offre des cases pour les darks, les flats et les offsets partagés par les deux.
+
+16
+00:01:18.000 --> 00:01:21.000
+Cliquez sur « Annuler » dans la notification : la session est retirée et le projet est comme avant.
+
+17
+00:01:21.000 --> 00:01:29.000
+Ajouter empilement démarre un autre empilement en bas du tableau, avec une session : c’est ainsi qu’un projet contient plusieurs workflows. + colonnes, la liste Fichiers et Écarts seulement sont à côté.
+
+18
+00:01:29.000 --> 00:01:32.000
+Cliquez sur la case d’une session, puis sur le bouton de réglages au bord droit.
+
+19
+00:01:32.000 --> 00:01:39.000
+Le panneau de réglages à droite liste ce que contient la session, avec le bouton « Ouvrir images » pour ajouter ou changer ses images.
+
+20
+00:01:39.000 --> 00:01:42.000
+Cliquez de nouveau sur « Blocs ».
+
+21
+00:01:42.000 --> 00:01:48.000
+C’est le même projet et la même chaîne : les vues ne changent que la façon de les montrer.
+
+22
+00:01:48.000 --> 00:01:51.000
+Cliquez sur un bloc, puis sur le bouton de réglages au bord droit.
+
+23
+00:01:51.000 --> 00:01:58.000
+Le panneau montre les réglages du bloc sélectionné : ici la règle et les seuils de Sélection.
+
+24
+00:01:58.000 --> 00:02:03.000
+La liste GPU au-dessus du graphe choisit ce qui calcule : Automatique, ou le processeur seul.
+
+25
+00:02:03.000 --> 00:02:09.000
+Exécuter lance le calcul. Il est grisé ici : tout est déjà à jour.

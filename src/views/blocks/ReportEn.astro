@@ -1,0 +1,243 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Report" title="Report"
+  description="The Report tab of FLOAT: the record of a processing, with the shooting details, the night frame by frame, the figures measured by each block, the recipe, and how to copy or export it.">
+
+  <p class="kicker">Block</p>
+  <h1>Report</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it is</dt><dd>The record of a processing, set out as a short scientific report: what was shot, what was measured, what was done.</dd></div><div><dt>What it shows</dt><dd>The shooting details, the star size and sky of every frame through the night, the figures each block measured, and the settings that were changed.</dd></div><div><dt>What can be exported</dt><dd>The whole report as a PDF or a PNG, the shooting details as text, and any section or night card as a picture.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>What the report is for</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>The first page</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>The night, frame by frame</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>One section per block</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Recipe and appendix</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Copy and export</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Contents, section by section</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Report tab sets the measures of a workflow out as a short scientific report: the
+    shooting details, the star size, signal and sky level of each frame, the figures each block measured, the settings
+    that were changed. It computes nothing of its own. Every number is a fact a block already wrote, and the report
+    names the block it comes from. It is read in the tab as a PDF, exported as PDF or PNG, and its parts can be copied
+    as text or as pictures for a forum.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Stars/background</span></li><li><span>Post</span></li>
+    <li class="here"><span>Report</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>What the report is for</h2>
+    <aside class="note"><b>No path, no folder name.</b> A setting whose value names a place on a disk is left out, so
+    that a report can be shared as it is.</aside>
+    <p>A processed picture does not say what was shot, what the sky was like that night, or what was done to get it.
+    The report is that record: what was shot, what was measured, what was done. It is made to be kept with the project
+    or posted with the picture.</p>
+    <p>It is a document, not a dashboard: a white page, numbered sections, tables with thin rules, black figures with
+    their captions. The tables are the blocks’ own facts, the same ones Inspect shows. The figures are drawn for the
+    report; Inspect keeps its interactive charts.</p>
+    <p>The tab has two parts. On the left, a form for what the files do not say, and the buttons that copy. On the
+    right, the report itself in a PDF reader: what is seen is what is exported. It zooms with − and +, with Ctrl and the
+    mouse wheel, and Fit width returns to the page width. When the project holds several workflows, a list above the
+    form chooses which one the report describes.</p>
+    <p>Until the workflow has been run, the report says so and shows nothing else. If a block is outdated (a night was
+    added since the last run), the report is made from the results it had and says so in red italics, instead of
+    claiming nothing is computed.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>The first page</h2>
+    <aside class="note"><b>Why the date is typed.</b> A camera’s clock may be wrong, so the date is never read from the
+    files. It appears only when it was entered.</aside>
+    <p>The first page opens like a journal article. It holds the target’s name (the project’s target, else its name),
+    the name of the workflow and of the <a href="/blocks/post/">Post</a> version when there are several, and one line of position: the centre of
+    the field in right ascension and declination (ICRS), the size of the field and the scale in arcseconds per pixel,
+    all three from the <a href="/blocks/astrometry/">Astrometry</a> block. Then comes the final image, as Post last
+    showed it (figure 1 of the report), and one small line with the program’s name, “Processing report” and the date.</p>
+    <p>Two tables follow.</p>
+    <p><strong>Table 1, Acquisition</strong> lists the shooting details in the order of a forum post. Each row appears
+    only when known.</p>
+    <ul>
+      <li>Camera, with its Gain or ISO speed. Both come from the frames’ headers; Gain is written when the header names
+      a gain (an astronomy camera) and ISO otherwise.</li>
+      <li>Instrument, Mount, Filter, Location and Date. The files do not say them: they are typed in the form on the
+      left of the tab, kept in the project, and the Project block’s form edits the same values. Undo takes an entry
+      back.</li>
+      <li>Frames: the frames kept, grouped by exposure (for example 90 × 180 s), with their total exposure to the
+      second. Darks, Flats and Bias: their numbers.</li>
+      <li>Sampling, the scale of the final pixels, when it is not already the one of the line under the title.</li>
+    </ul>
+    <p>The focal length, the star size and the field are left out of this table when they are given elsewhere on the
+    page.</p>
+    <p><strong>Table 2, Figures measured on the frames of this session</strong> gives, for each figure, its value
+    and how it was measured. A figure is listed only when the block that measures it has run. Table 1 of this page
+    lists them.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The figures of the head of the report, and the block each comes from.</caption>
+        <thead><tr><th>Figure</th><th>Value</th><th>How it is measured</th><th>Block</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Focal length, measured</th><td>in mm</td><td>From the solved sky: the number of stars used and the residual of the fit, in arcseconds.</td><td>Astrometry</td></tr>
+          <tr><th scope="row">Star FWHM, measured</th><td>median, in arcseconds</td><td>Median star width, Moffat fit, over the frames kept, with the best frame. Given in pixels when the scale on the sky is not known.</td><td><a href="/blocks/registration/">Registration</a></td></tr>
+          <tr><th scope="row">Field drift</th><td>in arcseconds</td><td>How far the field moved on the sensor during the session (tracking and deliberate shifts), with the rate per minute when the first and last times are known.</td><td>Registration</td></tr>
+          <tr><th scope="row">Colours offset, corrected</th><td>in pixels</td><td>The larger of the red and blue offsets from green, with both, and the number of stars they were measured on. Listed only when the correction was applied.</td><td><a href="/blocks/stacking/">Stacking</a></td></tr>
+          <tr><th scope="row">Sky noise</th><td>÷ n</td><td>The noise of the green channel before Denoise over the noise after it, each 1.4826 times the median absolute deviation of the linear image minus its Gaussian blur (σ 2 px).</td><td><a href="/blocks/denoise/">Denoise</a></td></tr>
+          <tr><th scope="row">Sky gradient, removed</th><td>in %</td><td>The spread of the sky across the field against its level, modelled on a number of samples.</td><td><a href="/blocks/gradient/">Gradient</a></td></tr>
+          <tr><th scope="row">Gaia DR3 stars in the field</th><td>a count</td><td>The stars of the catalogue in the field, and how many of them have their measured spectrum.</td><td>Catalogs (the stage the Color block reads)</td></tr>
+          <tr><th scope="row">Sensor response, rebuilt</th><td>a count</td><td>The stars whose spectra rebuilt the sensor’s colour response (section 4).</td><td><a href="/blocks/color/">Color</a></td></tr>
+          <tr><th scope="row">Transparency changes</th><td>in %</td><td>The signal of the stars from frame to frame: the gap between the tenth and the ninetieth percentile, over the ninetieth.</td><td>Registration</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>The night, frame by frame</h2>
+    <aside class="note"><b>Minutes since the first frame.</b> The horizontal axis counts from the session’s first frame,
+    never by the clock, which may be wrong. Without usable times it counts the frame numbers.</aside>
+    <p>Each session of the workflow has one figure, with up to three panels on one horizontal axis. Every point is a
+    frame.</p>
+    <ul>
+      <li><strong>FWHM:</strong> the star size, from the Moffat fit, in arcseconds when the scale on the sky is known,
+      else in pixels.</li>
+      <li><strong>Relative signal (%):</strong> the signal of the stars in the frame relative to the best ones (100 is
+      the best tenth, and a frame can go a little above).</li>
+      <li><strong>Sky level (ADU):</strong> the sky level of the frame after calibration. The panel is drawn only when
+      the calibration’s statistics are there.</li>
+    </ul>
+    <p>The frames kept are black dots. The frames left out are open grey circles. The size, the signal and the times
+    come from the <a href="/blocks/registration/">Registration</a> block, the sky level from <a href="/blocks/calibration/">Calibration</a>. The frames
+    left out are the ones of the <a href="/blocks/selection/">Selection</a> block, or those excluded by hand.</p>
+    <p>When the project has several sessions, each gets its own figure, titled with its name. A small table of the
+    session’s figures goes with it: Frames kept, Total exposure, Median, Best and Worst FWHM (the median also in pixels
+    when it is in arcseconds), and Median roundness. With a single session it is shown only if the roundness was
+    measured.</p>
+    <p>The same figure exists as a night card: the picture with a heading (“Night card”, the target, the session’s
+    name when there are several) and a foot of the same figures, made to be posted with the final image. <a href="/blocks/post/">Post</a>’s Export
+    writes it next to the exported picture, as a PNG, one per session. When the picture’s facts are known, the card also
+    states what the whole picture is made of: its number of frames and total exposure, then the same for each session
+    or workflow when there are several.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>One section per block</h2>
+    <aside class="note"><b>Figures hidden.</b> A few figures of the blocks are not shown, because a reader has no use
+    for them: the star size range, the cache size, the flat minimum, the integration, the stacked exposure and the drift
+    in pixels. The star size of 2 × 2 super-pixels is also left out: it overestimates undersampled stars, and the
+    report quotes the Moffat fit’s.</aside>
+    <p>After the first page, the report has one numbered section for each block of the workflow, in the order of the
+    chain: <a href="/blocks/calibration/">Calibration</a>, <a href="/blocks/registration/">Registration</a>, <a href="/blocks/selection/">Selection</a>, <a href="/blocks/stacking/">Stacking</a>, <a href="/blocks/astrometry/">Astrometry</a>, <a href="/blocks/gradient/">Gradient</a>, <a href="/blocks/denoise/">Denoise</a>, <a href="/blocks/color/">Color</a>, <a href="/blocks/stars/">Stars/background</a>.
+    A block the workflow does not have has no section. Each section opens with one sentence on what the block does.
+    If the block has not run, or is outdated, its state is written under that sentence.</p>
+    <p>Then come the block’s figures, one row each, with the meaning of the figure beside it. These are the figures
+    Inspect shows for the block, so a reader of the report does not need the manual. Two sections add a figure.</p>
+    <h3>Registration: drift and residual</h3>
+    <p>A figure of two panels against the frame number. The upper one gives the offset of each frame from the
+    reference frame, in x (solid line) and in y (dashed), in arcseconds when the scale is known, else in pixels. The
+    lower one gives the alignment residual of each frame, in pixels. The figure is left out when no offset was
+    measured.</p>
+    <h3>Color: approximate spectral response of the sensor</h3>
+    <p>A figure of the red, green and blue curves of the sensor, relative to their maximum, against wavelength in
+    nm. The positions of Hβ (486.1 nm), [OIII] (500.7 nm) and Hα (656.3 nm) are marked with dotted lines. Its caption
+    gives the number of stars used.</p>
+    <p>The curves are rebuilt from the Color block’s measure of its stars in the camera’s
+    colours, and from the Gaia XP spectra of the same stars. A star’s flux in a channel is the integral of its
+    spectrum times the channel’s curve, and each curve is a non-negative sum of smooth Gaussians (a centre every 15 nm
+    from 380 to 1000 nm), with a penalty on its roughness, as in the recovery of camera sensitivities from known
+    spectra.<a class="cite" href="#ref-1">[1]</a> The stars the fit cannot explain are rejected over four passes. The
+    curves change no colour: they are a diagnostic. The computation takes about a second and nothing is stored. It needs
+    at least 50 colour stars, and the catalogue’s spectra; without them the figure is left out.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Recipe and appendix</h2>
+    <p><strong>Recipe</strong> is the section after the last block. It writes the chain as a line, for example
+    Calibration → Registration → Stacking, and below it a table of the settings that differ from the defaults, as
+    “block · setting” and its value. When nothing was changed, it says that all the settings are the defaults.
+    Values that are not plain (a number, a text, yes or no) and values that name a place on a disk are left out.</p>
+    <p><strong>Appendix: settings</strong> follows, with one small table of settings per block. It lists the changed
+    settings, and the unchanged ones except those of the advanced level, which change nothing a reader needs. Of the
+    two stacking methods, it lists only the settings of the one that ran. The appendix pieces have no title of their
+    own, so they are not offered as pictures to copy.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Copy and export</h2>
+    <p>Everything that leaves the tab is made from what the reader shows.</p>
+    <ul>
+      <li><strong>Copy text.</strong> The shooting details as plain text, shown in the box of the form: the target, then
+      one line per known detail (“Camera: …”, “Mount: …”, “Frames: …”, “Processing: FLOAT”), nothing for what is
+      unknown. A list chooses the language of this text, French or English, whatever the language of the screen.</li>
+      <li><strong>Copy image.</strong> A list chooses the part, and the button puts it on the clipboard as a picture:
+      the session card (the first page), the night cards, then each numbered section. Pictures are made at twice the
+      page’s size.</li>
+      <li><strong>Export PDF.</strong> The whole report, on A4 pages, with a foot on each page (the title, the
+      program’s name, the page number). A piece that does not fit the rest of a page goes whole to the next one; none
+      is cut.</li>
+      <li><strong>Export PNG.</strong> The whole report as one tall picture.</li>
+    </ul>
+    <p>Both exports propose a file named after the target, ending in <i>_report</i>, in the project’s folder. The
+    status line says when the file is written. The figures use a decimal comma in French.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Contents, section by section</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>What the report holds, in the order it is read.</caption>
+        <thead><tr><th>Part</th><th>What it holds</th><th>Where it comes from</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Head</th><td>Target, position, field and scale; the final image.</td><td><a href="/blocks/astrometry/">Astrometry</a>; <a href="/blocks/post/">Post</a></td></tr>
+          <tr><th scope="row">Table 1, Acquisition</th><td>Camera, instrument, mount, filter, location, date, frames and exposure, darks, flats, bias, sampling.</td><td>The frames’ headers and inventory; the form of the tab</td></tr>
+          <tr><th scope="row">Table 2, Figures measured</th><td>Up to nine figures, each with how it was measured.</td><td>Table 1 of this page</td></tr>
+          <tr><th scope="row">The night, frame by frame</th><td>Star size, relative signal and sky level of each frame, per session.</td><td><a href="/blocks/registration/">Registration</a>; <a href="/blocks/calibration/">Calibration</a></td></tr>
+          <tr><th scope="row">Calibration to Stars/background</th><td>A sentence, the state, and the figures of each block of the workflow, each with its meaning.</td><td>Each block’s own facts</td></tr>
+          <tr><th scope="row">Drift and residual</th><td>Offset and residual of each frame, in Registration’s section.</td><td>Registration</td></tr>
+          <tr><th scope="row">Spectral response</th><td>Red, green and blue curves, in Color’s section.</td><td><a href="/blocks/color/">Color</a>; Catalogs</td></tr>
+          <tr><th scope="row">Recipe</th><td>The chain, and the settings changed from the defaults.</td><td>The stages’ saved settings</td></tr>
+          <tr><th scope="row">Appendix: settings</th><td>The settings of each block, except the advanced ones left at their default.</td><td>The stages’ saved settings</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>It measures nothing.</strong> The report reads the files the blocks wrote. A figure that was not
+      measured is not listed, and a section of a block that has not run says so.</li>
+      <li><strong>Details the files do not give stay empty until typed.</strong> Instrument, mount, filter, location
+      and date are never guessed. The pasted text holds only what is known.</li>
+      <li><strong>The spectral response is approximate.</strong> Star spectra are broad and alike, so different curves
+      explain the same stars about equally well. On synthetic stars the shapes come back close to the true ones, but
+      the response at the Hα line came out 0.76 for a true 0.59, about 30 % off. No error band is drawn: neither
+      resampling the stars nor varying the smoothing measured that error.</li>
+      <li><strong>Sizes in pixels without a scale.</strong> If the scale on the sky is not known, the star size is
+      given in pixels, and the figures say so.</li>
+      <li><strong>Outdated results.</strong> After a change to the workflow, the report shows the results the blocks
+      had at their last run until the workflow is run again.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Finlayson, G., Hordley, S. &amp; Hubel, P. 1998, <i>Recovering device sensitivities with quadratic programming</i>, IS&amp;T/SID Color Imaging Conference 6, 90. <a href="https://doi.org/10.2352/cic.1998.6.1.art00020">doi:10.2352/cic.1998.6.1.art00020</a></li>
+    </ol>
+  </section>
+</Doc>

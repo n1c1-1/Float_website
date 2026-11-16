@@ -1,0 +1,233 @@
+---
+// A measurement figure drawn at build time as inline SVG, in the style of a scientific article: thin black axes,
+// outward ticks, sans-serif labels, the series in ink, deep blue and orange, or in red, green and blue for the
+// channels of a sensor (told apart by their line style as well). No client script. Two layouts are drawn, one for a
+// narrow column and one for a wide one, and the container's width picks one, so that the labels keep their size.
+import type { Lang } from '../i18n/ui';
+
+type Text = string | { en: string; fr: string };
+type Colour = 'ink' | 'blue' | 'orange' | 'red' | 'green' | 'chblue' | 'muted';
+type Dash = 'solid' | 'dashed' | 'dotted';
+interface Axis { label: Text; min?: number; max?: number; ticks?: number[]; digits?: number; grid?: boolean }
+interface Series {
+  type: 'line' | 'scatter' | 'step';
+  x: number[];                       // a step series: the n + 1 edges of its n bins
+  y: (number | null)[];
+  colour: Colour;
+  dash?: Dash;
+  label?: Text;
+  r?: number;                        // a scatter's marker radius
+  hollow?: boolean;                  // a scatter's markers as rings (told apart in black and white)
+  width?: number;
+  opacity?: number;
+}
+interface Ref { axis: 'x' | 'y'; value: number; label?: Text; anchor?: 'start' | 'end'; row?: number }
+interface Props {
+  lang: Lang;
+  x: Axis;
+  y: Axis;
+  series: Series[];
+  refs?: Ref[];
+  legend?: 'tl' | 'tr' | 'bl' | 'br' | 'none' | [number, number];
+  title: Text;                       // what the chart shows, for screen readers
+  aspect?: number;                   // height / width of the wide layout (default 0.5)
+}
+const { lang, x, y, series, refs = [], legend = 'tr', title, aspect = 0.5 } = Astro.props;
+
+const COLOURS: Record<Colour, string> = {
+  ink: '#1b1e24', blue: '#14304f', orange: '#e0812b', red: '#b0281f', green: '#5aa33f', chblue: '#2a5db0',
+  muted: '#5a6270',
+};
+const DASH: Record<Dash, string | undefined> = { solid: undefined, dashed: '6 3.5', dotted: '1.6 2.6' };
+const T = (t: Text | undefined) => (t === undefined ? '' : typeof t === 'string' ? t : t[lang]);
+
+function niceStep(span: number, n: number): number {
+  const raw = span / Math.max(1, n);
+  const p = Math.pow(10, Math.floor(Math.log10(raw)));
+  const f = raw / p;
+  return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * p;
+}
+function range(ax: Axis, vals: number[]): [number, number] {
+  let lo = ax.min ?? Math.min(...vals);
+  let hi = ax.max ?? Math.max(...vals);
+  if (!(hi > lo)) { lo -= 1; hi += 1; }
+  return [lo, hi];
+}
+function ticksOf(ax: Axis, lo: number, hi: number, n: number): number[] {
+  if (ax.ticks) return ax.ticks;
+  const s = niceStep(hi - lo, n);
+  const out: number[] = [];
+  for (let v = Math.ceil(lo / s - 1e-9) * s; v <= hi + s * 1e-9; v += s) out.push(Number(v.toPrecision(12)));
+  return out;
+}
+function digitsOf(ax: Axis, ticks: number[]): number {
+  if (ax.digits !== undefined) return ax.digits;
+  let d = 0;
+  for (const t of ticks) {
+    const s = String(t);
+    if (s.includes('.')) d = Math.max(d, s.split('.')[1].length);
+  }
+  return Math.min(d, 4);
+}
+function fmt(v: number, d: number): string {
+  let s = Math.abs(v).toFixed(d);
+  const [i, f] = s.split('.');
+  const grouped = i.length > 4 ? i.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : i;
+  s = f ? grouped + (lang === 'fr' ? ',' : '.') + f : grouped;
+  return (v < 0 && Number(s.replace(',', '.').replace(/ /g, '')) !== 0 ? '−' : '') + s;
+}
+
+const xs = series.flatMap((s) => s.x).filter(Number.isFinite);
+const ys = series.flatMap((s) => s.y).filter((v): v is number => v !== null && Number.isFinite(v));
+const [x0, x1] = range(x, xs);
+const [y0, y1] = range(y, ys);
+
+let uid = (globalThis as any).__floatChartId = ((globalThis as any).__floatChartId ?? 0) + 1;
+
+interface Layout { key: string; W: number; H: number; ml: number; mr: number; mt: number; mb: number; nx: number; ny: number }
+const layouts: Layout[] = [
+  { key: 'narrow', W: 360, H: Math.round(360 * Math.max(aspect, 0.62)), ml: 48, mr: 10, mt: 10, mb: 42, nx: 4, ny: 5 },
+  { key: 'wide', W: 620, H: Math.round(620 * aspect), ml: 58, mr: 16, mt: 12, mb: 46, nx: 7, ny: 6 },
+];
+
+function draw(L: Layout) {
+  const pw = L.W - L.ml - L.mr;
+  const ph = L.H - L.mt - L.mb;
+  const sx = (v: number) => L.ml + ((v - x0) / (x1 - x0)) * pw;
+  const sy = (v: number) => L.mt + ph - ((v - y0) / (y1 - y0)) * ph;
+  const xt = ticksOf(x, x0, x1, L.nx).filter((v) => v >= x0 - 1e-9 && v <= x1 + 1e-9);
+  const yt = ticksOf(y, y0, y1, L.ny).filter((v) => v >= y0 - 1e-9 && v <= y1 + 1e-9);
+  const xd = digitsOf(x, xt);
+  const yd = digitsOf(y, yt);
+  const paths = series.map((s) => {
+    const c = COLOURS[s.colour];
+    if (s.type === 'scatter') {
+      const r = s.r ?? 1.8;
+      const pts: string[] = [];
+      s.x.forEach((xv, i) => {
+        const yv = s.y[i];
+        if (yv === null || !Number.isFinite(yv) || !Number.isFinite(xv)) return;
+        pts.push(`M${(sx(xv) - r).toFixed(1)} ${sy(yv).toFixed(1)}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`);
+      });
+      return { d: pts.join(''), fill: s.hollow ? 'none' : c, stroke: s.hollow ? c : 'none', sw: s.hollow ? 0.9 : 0,
+               dash: undefined, op: s.opacity ?? (s.hollow ? 0.9 : 0.75) };
+    }
+    let d = '';
+    if (s.type === 'step') {
+      s.y.forEach((yv, i) => {
+        if (yv === null) return;
+        const a = sx(s.x[i]), b = sx(s.x[i + 1]), h = sy(yv);
+        d += (i === 0 || s.y[i - 1] === null ? `M${a.toFixed(1)} ${h.toFixed(1)}` : `V${h.toFixed(1)}`) + `H${b.toFixed(1)}`;
+      });
+    } else {
+      let pen = false;
+      s.x.forEach((xv, i) => {
+        const yv = s.y[i];
+        if (yv === null || !Number.isFinite(yv)) { pen = false; return; }
+        d += `${pen ? 'L' : 'M'}${sx(xv).toFixed(1)} ${sy(yv).toFixed(1)}`;
+        pen = true;
+      });
+    }
+    return { d, fill: 'none', stroke: c, sw: s.width ?? 1.6, dash: DASH[s.dash ?? 'solid'], op: s.opacity ?? 1 };
+  });
+  const refLines = refs.map((r) => {
+    if (r.axis === 'y') {
+      const v = sy(r.value);
+      const end = (r.anchor ?? 'end') === 'end';
+      return { x1: L.ml, x2: L.ml + pw, y1: v, y2: v, tx: end ? L.ml + pw - 3 : L.ml + 4, ty: v - 4,
+               anchor: end ? 'end' : 'start', label: T(r.label) };
+    }
+    const v = sx(r.value);
+    return { x1: v, x2: v, y1: L.mt, y2: L.mt + ph, tx: v + 3, ty: L.mt + 11 + 13 * (r.row ?? 0), anchor: 'start', label: T(r.label) };
+  });
+  const items = series.filter((s) => s.label);
+  const lw = Math.max(0, ...items.map((s) => T(s.label).length)) * 6.3 + 34;
+  const lh = 16;
+  // the narrow layout: the legend under the axis title, where it hides no data; the wide one: a corner, or [x, y],
+  // where the legend's top left corner sits, as fractions of the plot
+  const below = L.key === 'narrow' && legend !== 'none' && items.length > 0;
+  const H = below ? L.H + items.length * lh + 6 : L.H;
+  const lx = below ? L.ml - 4 : Array.isArray(legend) ? Math.min(L.ml + legend[0] * pw, L.ml + pw - lw - 4)
+    : legend === 'tl' || legend === 'bl' ? L.ml + 8 : L.ml + pw - lw - 4;
+  const ly = below ? L.H + 2 : Array.isArray(legend) ? Math.min(L.mt + legend[1] * ph, L.mt + ph - items.length * lh - 6)
+    : legend === 'tl' || legend === 'tr' ? L.mt + 6 : L.mt + ph - items.length * lh - 6;
+  return { L, H, pw, ph, sx, sy, xt, yt, xd, yd, paths, refLines, items, lx, ly, lw, lh };
+}
+const views = layouts.map(draw);
+const label = T(title);
+---
+<div class="chart">
+  {views.map((v) => (
+    <svg class={`chart-${v.L.key}`} viewBox={`0 0 ${v.L.W} ${v.H}`} role="img" aria-label={label}
+         xmlns="http://www.w3.org/2000/svg">
+      <defs><clipPath id={`clip-${uid}-${v.L.key}`}><rect x={v.L.ml} y={v.L.mt} width={v.pw} height={v.ph} /></clipPath></defs>
+      {(y.grid ?? false) && v.yt.map((t) => (
+        <line class="grid" x1={v.L.ml} x2={v.L.ml + v.pw} y1={v.sy(t)} y2={v.sy(t)} />
+      ))}
+      <g clip-path={`url(#clip-${uid}-${v.L.key})`}>
+        {v.refLines.map((r) => <line class="ref" x1={r.x1} x2={r.x2} y1={r.y1} y2={r.y2} />)}
+        {v.paths.map((p) => (
+          <path d={p.d} fill={p.fill} stroke={p.stroke} stroke-width={p.sw} stroke-dasharray={p.dash}
+                opacity={p.op} stroke-linejoin="round" stroke-linecap={p.dash ? 'butt' : 'round'} />
+        ))}
+      </g>
+      {v.refLines.map((r) => r.label && <text class="reflabel" x={r.tx} y={r.ty} text-anchor={r.anchor}>{r.label}</text>)}
+      <g class="axis">
+        <line x1={v.L.ml} x2={v.L.ml + v.pw} y1={v.L.mt + v.ph} y2={v.L.mt + v.ph} />
+        <line x1={v.L.ml} x2={v.L.ml} y1={v.L.mt} y2={v.L.mt + v.ph} />
+        {v.xt.map((t) => (
+          <g>
+            <line x1={v.sx(t)} x2={v.sx(t)} y1={v.L.mt + v.ph} y2={v.L.mt + v.ph + 4} />
+            <text class="tick" x={v.sx(t)} y={v.L.mt + v.ph + 16} text-anchor="middle">{fmt(t, v.xd)}</text>
+          </g>
+        ))}
+        {v.yt.map((t) => (
+          <g>
+            <line x1={v.L.ml - 4} x2={v.L.ml} y1={v.sy(t)} y2={v.sy(t)} />
+            <text class="tick" x={v.L.ml - 7} y={v.sy(t) + 4} text-anchor="end">{fmt(t, v.yd)}</text>
+          </g>
+        ))}
+      </g>
+      <text class="title" x={v.L.ml + v.pw / 2} y={v.L.H - 6} text-anchor="middle">{T(x.label)}</text>
+      <text class="title" transform={`translate(13 ${v.L.mt + v.ph / 2}) rotate(-90)`} text-anchor="middle">{T(y.label)}</text>
+      {legend !== 'none' && v.items.length > 0 && (
+        <g class="legend">
+          <rect x={v.lx - 4} y={v.ly - 2} width={v.lw} height={v.items.length * v.lh + 4} class="legend-bg" />
+          {v.items.map((s, i) => {
+            const cy = v.ly + i * v.lh + v.lh / 2;
+            const c = COLOURS[s.colour];
+            return (
+              <g>
+                {s.type === 'scatter'
+                  ? <circle cx={v.lx + 10} cy={cy} r={Math.max(2.6, s.r ?? 1.8)} fill={s.hollow ? 'none' : c}
+                            stroke={s.hollow ? c : 'none'} stroke-width="1.1" />
+                  : <line x1={v.lx} x2={v.lx + 22} y1={cy} y2={cy} stroke={c} stroke-width={s.width ?? 1.6}
+                          stroke-dasharray={DASH[s.dash ?? 'solid']} />}
+                <text class="leg" x={v.lx + 28} y={cy + 4}>{T(s.label)}</text>
+              </g>
+            );
+          })}
+        </g>
+      )}
+    </svg>
+  ))}
+</div>
+
+<style>
+  .chart { container-type: inline-size; background: #fff; padding: 0.6rem 0.4rem 0.2rem; line-height: 0; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart .chart-wide { display: none; }
+  @container (min-width: 520px) {
+    .chart .chart-narrow { display: none; }
+    .chart .chart-wide { display: block; max-width: 760px; margin: 0 auto; }
+  }
+  .chart text { font-family: var(--sans); font-size: 12px; fill: #1b1e24; font-variant-numeric: tabular-nums; }
+  .chart .tick { fill: #1b1e24; }
+  .chart .title { font-size: 12.5px; }
+  .chart .leg { font-size: 12px; }
+  .chart .reflabel { font-size: 11px; fill: #5a6270; }
+  .chart .axis line { stroke: #1b1e24; stroke-width: 1; shape-rendering: crispEdges; }
+  .chart .grid { stroke: #eceef1; stroke-width: 1; shape-rendering: crispEdges; }
+  .chart .ref { stroke: #8a919c; stroke-width: 1; stroke-dasharray: 2 2.5; }
+  .chart .legend-bg { fill: #fff; opacity: 0.88; }
+</style>

@@ -1,0 +1,37 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:08.000
+Open the project
+
+2
+00:00:08.000 --> 00:00:25.000
+The diagnosis in Inspect
+
+3
+00:00:25.000 --> 00:00:40.000
+Start a variant at Gradient
+
+4
+00:00:40.000 --> 00:00:49.000
+Add the Deconvolution block
+
+5
+00:00:49.000 --> 00:01:05.000
+Run the variant
+
+6
+00:01:05.000 --> 00:01:29.000
+Compare in Inspect
+
+7
+00:01:29.000 --> 00:02:03.000
+Compare in Post
+
+8
+00:02:03.000 --> 00:02:16.000
+The difference is at 100 %
+
+9
+00:02:16.000 --> 00:02:35.000
+Delete the variant

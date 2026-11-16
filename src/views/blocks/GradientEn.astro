@@ -1,0 +1,197 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Gradient" title="Gradient"
+  description="The Gradient block of FLOAT: three models of the sky gradient (polynomial, RBF, automatic), the samples of sky, the H-alpha survey that keeps samples off the nebulosity, and the settings.">
+
+  <p class="kicker">Block</p>
+  <h1>Gradient</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It takes off the uneven glow that light pollution and the Moon spread over the image, so that the sky background is even from one edge to the other.</dd></div><div><dt>What it shows</dt><dd>In Inspect, the stack with the gradient removed, with the size of the gradient (in % of the sky level) and the number of sky samples used; the same figure in the Report.</dd></div><div><dt>What can be set</dt><dd>The Method: Polynomial (the default) suits most fields, Automatic follows more complex gradients; and the Surface degree (2), raised to 3 or 4 for wide fields.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>What goes in, what comes out</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Polynomial</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>RBF</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Automatic</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>The H-alpha survey as a guide</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Settings</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Gradient block models the smooth sky that light pollution and the Moon add to the
+    stack, and the vignetting of the sky background, and removes it from what every later block reads. It offers three models: a
+    polynomial surface fitted on blocks of sky, a thin-plate spline through samples of sky, and an automatic surface
+    fitted on every pixel that does not look like an object. Only the variation of the sky across the field is
+    removed, not its level. An H-alpha survey of the field, when there is one, keeps the samples away from the
+    nebulosity.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Selection</span></li><li><span>Stacking</span></li><li><span>Astrometry</span></li>
+    <li class="here"><span>Gradient</span></li><li><span>Deconvolution</span></li><li><span>Denoise</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>What goes in, what comes out</h2>
+    <aside class="note"><b>Why on the stack.</b> The block works on the linear stack, in the camera’s colours, before
+    the colour calibration. The later blocks (denoising, colour, star removal, the output) then see a flat sky.</aside>
+    <p>The block reads the stack and the map of how many frames cover each pixel. Pixels that fewer than 60 % of the
+    typical number of frames cover, and that reach the border of the stack, are left out; so are the areas
+    excluded in the editor.</p>
+    <p>It writes the sky’s variation for each of the three colours, with a median of 0 over the covered field, and the
+    level of the sky it leaves in place. Later blocks subtract the variation from the stack and the half-stacks A
+    and B alike (section 5 of the <a href="/blocks/stacking/#s5">Stacking</a> page), so both share the same sky. The
+    sky’s level is kept on purpose: the noise models of the later blocks rely on it.</p>
+    <p>FLOAT also reports how large the gradient was: the spread of the removed surface across the field (from its 1st
+    to its 99th percentile), as a percentage of the sky’s level. The block’s preview shows the stack with the gradient removed.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Polynomial</h2>
+    <p>A polynomial of the pixel position, fitted for each colour on samples of sky.<a class="cite" href="#ref-1">[1]</a> With no sample placed, the field
+    is cut into blocks; the side of the grid is the “Samples per side” setting, and each cell of the grid holds about
+    4 × 4 blocks. The median of a block is one sample.</p>
+    <p>The samples of sky are found on the luminance, over the whole field, in a loop. The surface is fitted on the
+    samples; the samples that lie more than 2.5 sigmas above it are left out; the surface is fitted again, until the
+    set no longer changes. The sigma is the scatter between neighbouring samples, so it measures the noise and the
+    fine structure of the sky, not the objects, which change slowly from one block to the next. Samples below the
+    surface are all kept: the sky is there.</p>
+    <aside class="note"><b>A large object.</b> An object that fills most of the field, a large galaxy for example, is
+    left out whole and the surface passes under it.</aside>
+    <p>Each colour is then fitted on those samples, leaving out, in turn, the ones farther than 2.5 sigmas from its own
+    surface. A block counts as a sample only if the stack covers it at 99 % or more. Under 10 such blocks, or with
+    fewer than three times as many samples as the surface has terms, the block stops and says so: lower the degree or
+    the number of samples.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>RBF</h2>
+    <p>A thin-plate spline (a radial basis function) through the samples of
+    sky.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a> The surface passes near every sample,
+    so it can follow a gradient of any shape; it also depends on where the samples are. The “Surface smoothing”
+    setting sets how near: at 0 the surface passes through every sample, higher it passes near them and is
+    smoother.</p>
+    <p>With no sample placed, the samples are a regular grid with “Samples per side” points along the shorter side of
+    the image, a square box around each. The samples kept are the ones not above a degree-2 surface through them
+    by more than 2.5 sigmas, found as in section 2. The coordinates and the values of each colour are rescaled before the fit, so that the
+    smoothing means the same on every image.</p>
+    <p>The samples of the polynomial and of the RBF can also be placed by hand in the editor, and areas excluded
+    there, as ellipses or painted strokes. Placed samples are always kept as placed.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Automatic</h2>
+    <p>A model with no samples, after the automatic method of background extraction of
+    Siril.<a class="cite" href="#ref-1">[1]</a> It works on each colour apart, on a copy of the stack reduced 4 times by block means
+    (“Working reduction”), with the image scaled to 0 to 1 between its darkest and its brightest pixels (0.01th and
+    99.99th percentiles of the covered field, with 20 % of headroom above). The background is first fitted on every
+    pixel; then, for at most 20 rounds, until fewer than 1 pixel in 10,000 changes:</p>
+    <ul>
+      <li>the residual is the image minus the background; a pixel is kept when its residual lies between the median
+      minus 4 sigmas and the median plus 2 sigmas, sigma being 1.4826 times the median absolute deviation of the
+      residual over the whole covered field. Bright structures go first;</li>
+      <li>with “Structure protection”, a smooth mask grown around the pixels whose residual exceeds the “Protection
+      threshold” (0.05, on the 0 to 1 image) is left out too. “Protection growth” sets how far the mask grows. With
+      “Noise protection” other than 0, the threshold is that many times the noise of the sky instead;</li>
+      <li>never fewer than 2 % of the pixels are kept;</li>
+      <li>the background is fitted again on the kept pixels.</li>
+    </ul>
+    <p>The surface is built by filling the rejected areas from the kept pixels with repeated low-pass filters (three
+    running box blurs that match a Gaussian<a class="cite" href="#ref-3">[3]</a>), then filtering once more. The radius of the filter is “Model scale”
+    percent of the shorter side of the reduced image, 5 by default. A last low-pass, of “Model smoothness” times that
+    radius, smooths the model; it is brought back to full size by bilinear interpolation. At the edges of the image,
+    each blur continues the image along its slope, so that the surface does not sag towards the border.</p>
+    <p>With “Plane first”, a stiff polynomial (a plane by default) is fitted and removed first, and the flexible model
+    works on what it leaves. This helps on gradients as strong as the objects themselves: a bright urban sky, a strong
+    Moon gradient.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>The H-alpha survey as a guide</h2>
+    <aside class="note"><b>Never during a run.</b> A survey is fetched once by the Get survey button of the Gradient
+    editor, or by the download for offline use in the settings, and kept on disk. A run only reads it.</aside>
+    <p>Where an H-alpha survey covers the field, FLOAT reprojects it onto the stack and uses it to choose
+    the samples: with “Away from emission” on, the samples the block chooses (none placed) never sit where the survey
+    shows nebulosity. The faint extensions of an emission nebula are then not taken for sky. The survey only says where
+    not to sample; the sky model never reads its values.</p>
+    <p>The survey is scaled so that its sky is 0 and its bright emission 1 (1st and 99.5th percentiles of the field). A
+    sample sits on emission when the median of that level in its box is above 0.02. The survey is used only if its
+    range is at least 12 times its own noise; one that shows only noise leaves every sample. It is not used either
+    when it would leave less than 5 % of the covered field for the samples, or too little sky for the fit: the block
+    then chooses its samples on the image alone, and says so in the log. The automatic model takes no samples, so the
+    survey does not act on it.</p>
+    <p>With the survey setting on “auto”, FLOAT uses NSNS when it covers at least 95 % of the field, otherwise the
+    all-sky Finkbeiner map.<a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-5">[5]</a> The setting can
+    also name one of them, or “none”. A field that was not identified by the <a href="/blocks/astrometry/">Astrometry</a> block has no survey.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The settings of the block. The survey settings belong to the H-alpha reference step that feeds it.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Method</th><td>Polynomial</td><td>Polynomial, RBF, Automatic</td><td>How the sky gradient is modelled (sections 2 to 4).</td></tr>
+          <tr><th scope="row">Surface degree</th><td class="n">2</td><td class="n">1 – 5</td><td>Degree of the polynomial. 3 or 4 for wide fields with complex gradients; a high degree on a field filled with nebula can take a part of it for sky.</td></tr>
+          <tr><th scope="row">Samples per side</th><td class="n">16</td><td class="n">4 – 64</td><td>With no sample placed. Polynomial: the field is cut into 4 times this many blocks per side. RBF: this many samples along the shorter side. More, smaller blocks find sky in a crowded field; fewer, larger ones average more noise.</td></tr>
+          <tr><th scope="row">Object rejection</th><td class="n">2.5 σ</td><td class="n">1 – 10</td><td>Samples farther from the surface than this are taken as objects and left out, in turn.</td></tr>
+          <tr><th scope="row">Surface smoothing</th><td class="n">0.5</td><td class="n">0 – 1</td><td>RBF: 0, the surface passes through every sample; higher, it passes near them, smoother.</td></tr>
+          <tr><th scope="row">Away from emission</th><td>on</td><td>on, off</td><td>The samples the block chooses stay off the nebulosity the H-alpha survey shows. Samples placed by hand are always kept.</td></tr>
+          <tr><th scope="row">Model scale</th><td class="n">5</td><td class="n">1 – 10</td><td>Automatic: the scale below which variations are taken as objects rather than gradient. Higher keeps only the large gradients; lower follows more local ones and may take large faint objects for sky.</td></tr>
+          <tr><th scope="row">Model smoothness</th><td class="n">1</td><td class="n">0 – 5</td><td>Automatic: extra smoothing of the final model (0: none).</td></tr>
+          <tr><th scope="row">Structure protection</th><td>on</td><td>on, off</td><td>Automatic: masks the extended bright structures so that the model does not take them in.</td></tr>
+          <tr><th scope="row">Protection threshold</th><td class="n">0.05</td><td class="n">0 – 1</td><td>Automatic: brightness above the model, on the image scaled to 0 to 1, at which a pixel is taken as a structure. Lower protects more.</td></tr>
+          <tr><th scope="row">Protection growth</th><td class="n">0.5</td><td class="n">0 – 1</td><td>Automatic: how far the protection mask grows around the structures.</td></tr>
+          <tr><th scope="row">Noise protection</th><td class="n">0</td><td class="n">0 – 50</td><td>Automatic: when not 0, the protection threshold is this many times the noise of the sky, which suits a faint nebula in a field where bright stars set the range.</td></tr>
+          <tr><th scope="row">Plane first</th><td>off</td><td>on, off</td><td>Automatic: a stiff polynomial is fitted and removed before the flexible model.</td></tr>
+          <tr><th scope="row">Plane-first degree</th><td class="n">1</td><td class="n">1 – 6</td><td>Degree of that polynomial (1: a plane).</td></tr>
+          <tr><th scope="row">Working reduction</th><td class="n">4 ×</td><td class="n">1, 2, 4, 8</td><td>Automatic: the model is computed on a copy reduced this many times: faster, coarser. The scale of the background itself does not change.</td></tr>
+          <tr><th scope="row">Sample points</th><td>none</td><td>placed in the editor</td><td>The samples placed on the image. Empty: the block’s own grid.</td></tr>
+          <tr><th scope="row">Excluded ellipses, Excluded strokes</th><td>none</td><td>drawn in the editor</td><td>Areas that never enter any of the three models.</td></tr>
+          <tr><th scope="row">H-alpha survey</th><td>auto</td><td>auto, nsns, finkbeiner, none</td><td>Which survey guides the samples (section 5).</td></tr>
+          <tr><th scope="row">NSNS coverage</th><td class="n">0.95</td><td class="n">0 – 1</td><td>Below this fraction of the field covered by NSNS, “auto” switches to Finkbeiner.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>The polynomial and the automatic model trade against each other.</strong> The polynomial keeps faint,
+      very wide structures best but follows only gradients of its own shape. The automatic model removes complex
+      gradients best, and with them part of the faintest wide structures.</li>
+      <li><strong>A model that looks only at the image cannot tell a very wide faint cloud from a gradient.</strong>
+      A lower model scale, a high degree and Plane first each can take part of a large faint or bright object
+      for sky.</li>
+      <li><strong>The RBF depends on where its samples are.</strong> It is best with samples placed by hand.</li>
+      <li><strong>Frames stacked without alignment.</strong> When too little of the stack is covered by all the frames,
+      the block cannot model the sky and asks for <a href="/blocks/registration/">Registration</a> to be placed before <a href="/blocks/stacking/">Stacking</a>.</li>
+      <li><strong>The survey is a guide, not a reference.</strong> It does not exist for every field, and it is not used
+      when the field was not identified. A method that fitted the survey as part of the true sky, with a gain, was
+      tried and removed: it did not make the surface more flexible, and on a field with little H-alpha and much dust the
+      fitted gain ran away and attributed to the survey light that was not its own.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Siril documentation (version 1.5.0), <i>Background Extraction</i>: “Sample-based method” (RBF, Polynomial) and “Automatic (sample-free) method”. <a href="https://siril.readthedocs.io/en/latest/processing/background.html">siril.readthedocs.io</a></li>
+      <li id="ref-2">Bookstein, F. L. 1989, <i>Principal warps: thin-plate splines and the decomposition of deformations</i>, IEEE Transactions on Pattern Analysis and Machine Intelligence 11, 567. <a href="https://doi.org/10.1109/34.24792">doi:10.1109/34.24792</a></li>
+      <li id="ref-3">Wells, W. M. 1986, <i>Efficient Synthesis of Gaussian Filters by Cascaded Uniform Filters</i>, IEEE Transactions on Pattern Analysis and Machine Intelligence 8, 234. <a href="https://doi.org/10.1109/TPAMI.1986.4767776">doi:10.1109/TPAMI.1986.4767776</a></li>
+      <li id="ref-4">Ziegenbalg, S. 2025, <i>Northern Sky Narrowband Survey (NSNS)</i>, DR0.2, H-alpha, intensity calibrated with WHAM data; northern sky, HiPS pixels of 6.4″ made from 5″ data; read as HiPS <i>simg.de/P/NSNS/DR0_2/halpha</i>. <a href="https://www.simg.de/nebulae3/dr0_2/">simg.de/nebulae3</a></li>
+      <li id="ref-5">Finkbeiner, D. P. 2003, <i>A Full-Sky H-alpha Template for Microwave Foreground Prediction</i>, ApJS 146, 407 (all sky, 6 arcminutes; read as HiPS <i>CDS/P/Finkbeiner</i>). <a href="https://arxiv.org/abs/astro-ph/0301558">arXiv:astro-ph/0301558</a></li>
+    </ol>
+  </section>
+</Doc>

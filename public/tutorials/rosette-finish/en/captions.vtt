@@ -1,0 +1,137 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the project of the third tutorial.
+
+2
+00:00:04.000 --> 00:00:08.000
+The project opens up to date: nothing is to be computed.
+
+3
+00:00:08.000 --> 00:00:11.000
+Click Post.
+
+4
+00:00:11.000 --> 00:00:17.000
+Post shows the whole field of the third tutorial. Before any gesture, look at what is left to finish.
+
+5
+00:00:17.000 --> 00:00:24.000
+A veil still lies on the sky: it measures 33 to 34 on a 0 to 255 scale, and the aim is about 26. The faint edges of the ring do not stand out from it. Dehaze will lift it.
+
+6
+00:00:24.000 --> 00:00:30.000
+The ring is pink and magenta, a little pale. Saturation will make it more vivid, without pushing it towards red.
+
+7
+00:00:30.000 --> 00:00:37.000
+At full size, the fine structure of the gas, the folds and the edges of the dark globules, is a little soft. Multiscale sharpening will bring it out.
+
+8
+00:00:37.000 --> 00:00:44.000
+What is right stays as it is: the neutral sky, the denoised gas, the round stars and the repaired stain. No colour balance and no noise reduction are needed.
+
+9
+00:00:44.000 --> 00:00:47.000
+Click the Starless image row: every filter of this tutorial goes there.
+
+10
+00:00:47.000 --> 00:00:50.000
+Click Filter, then Contrast, then Dehaze.
+
+11
+00:00:50.000 --> 00:00:53.000
+Drag Amount to the right until the veil lifts without darkening the ring, here 0.25.
+
+12
+00:00:53.000 --> 00:00:56.000
+Drag Scale to the right, to 256 px or the nearest value the slider gives: here 257 px.
+
+13
+00:00:56.000 --> 00:01:02.000
+The sky is deeper, but the ring has also lost some of its glow: Dehaze acts everywhere on the picture.
+
+14
+00:01:02.000 --> 00:01:05.000
+Click Add mask.
+
+15
+00:01:05.000 --> 00:01:08.000
+Click Add to mask, then Luminance range.
+
+16
+00:01:08.000 --> 00:01:11.000
+Drag To to about 25 %, with From at 0 %: the range selects the sky and the faint tones, not the ring.
+
+17
+00:01:11.000 --> 00:01:14.000
+Drag Feather to the right, to 8 px, so that the edge of the mask fades.
+
+18
+00:01:14.000 --> 00:01:20.000
+The red tint covers what the mask hides: the ring. Dehaze now acts only on the sky and the faint tones.
+
+19
+00:01:20.000 --> 00:01:26.000
+At 100 %, the faint edges of the ring stand out from a darker sky, and the ring keeps its glow.
+
+20
+00:01:26.000 --> 00:01:29.000
+Click Filter, then Color, then Saturation.
+
+21
+00:01:29.000 --> 00:01:32.000
+Drag Strength to the right until the ring is more vivid but still pink and magenta, here 20 %.
+
+22
+00:01:32.000 --> 00:01:38.000
+At 100 %, the red and the pink of the ring are more vivid, and the sky stays a neutral grey.
+
+23
+00:01:38.000 --> 00:01:41.000
+Click Filter, then Detail, then Multiscale sharpening.
+
+24
+00:01:41.000 --> 00:01:44.000
+Drag the 4 px scale to 0.3.
+
+25
+00:01:44.000 --> 00:01:47.000
+Drag the 8 px scale to 0.4.
+
+26
+00:01:47.000 --> 00:01:50.000
+Drag the 16 px scale to 0.3, and leave 1 px and 2 px at 0.
+
+27
+00:01:50.000 --> 00:01:58.000
+At 100 %, the folds and the edges of the globules are crisper. On the whole picture the change is slight: this part is for the full-size picture, a print or a viewer who zooms in.
+
+28
+00:01:58.000 --> 00:02:01.000
+Click Filter, then Noise.
+
+29
+00:02:01.000 --> 00:02:08.000
+Multiscale noise reduction and Noise reduction stay unused: Denoise already did their work, and one noise reduction is enough.
+
+30
+00:02:08.000 --> 00:02:12.000
+Click Export…
+
+31
+00:02:12.000 --> 00:02:15.000
+Choose JPEG in Format.
+
+32
+00:02:15.000 --> 00:02:18.000
+Click Export.
+
+33
+00:02:18.000 --> 00:02:23.000
+The image is written, with its processing history beside it.
+
+34
+00:02:23.000 --> 00:02:27.000
+The image is exported. Press Ctrl+S to keep the project.

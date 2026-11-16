@@ -1,0 +1,141 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the project of the tutorial The full processing: stars apart.
+
+2
+00:00:04.000 --> 00:00:08.000
+The project opens up to date: nothing is to be computed.
+
+3
+00:00:08.000 --> 00:00:11.000
+Click Post.
+
+4
+00:00:11.000 --> 00:00:18.000
+Before any gesture: the dark globules and the folds of the ring are flat, and the ring could be a little more vivid.
+
+5
+00:00:18.000 --> 00:00:23.000
+Click the combined layer: it holds two rows, Stars and Starless image.
+
+6
+00:00:23.000 --> 00:00:28.000
+The stars are added over the starless image in Screen mode.
+
+7
+00:00:28.000 --> 00:00:34.000
+Click Stars: its sliders, Strength and Small stars, act on the stars only.
+
+8
+00:00:34.000 --> 00:00:40.000
+Click Starless image: its filters apply to it only, before the stars are put back.
+
+9
+00:00:40.000 --> 00:00:45.000
+Click Filter: the families are Stretch, Contrast, Color, Detail, Noise and Combine.
+
+10
+00:00:45.000 --> 00:00:48.000
+Open Contrast.
+
+11
+00:00:48.000 --> 00:00:51.000
+Choose Local contrast.
+
+12
+00:00:51.000 --> 00:00:57.000
+Drag Strength to about 0.5, with Scale left at 40 px: the globules and the folds stand out.
+
+13
+00:00:57.000 --> 00:01:00.000
+Click Filter again.
+
+14
+00:01:00.000 --> 00:01:03.000
+Open Color.
+
+15
+00:01:03.000 --> 00:01:06.000
+Choose Saturation.
+
+16
+00:01:06.000 --> 00:01:12.000
+Drag Strength to about +20 %, all hues: the red and pink of the ring get more vivid.
+
+17
+00:01:12.000 --> 00:01:16.000
+Click the eye of Saturation: the filter is switched off.
+
+18
+00:01:16.000 --> 00:01:20.000
+Click the eye again: the filter is back, with its setting.
+
+19
+00:01:20.000 --> 00:01:24.000
+The same with Local contrast: the globules go flat when it is off.
+
+20
+00:01:24.000 --> 00:01:28.000
+Click a filter: its settings are still there and can be changed.
+
+21
+00:01:28.000 --> 00:01:32.000
+Drag Strength further, to see.
+
+22
+00:01:32.000 --> 00:01:35.000
+Select Saturation.
+
+23
+00:01:35.000 --> 00:01:39.000
+Click the trash button: the filter is deleted.
+
+24
+00:01:39.000 --> 00:01:43.000
+Press Ctrl+Z: the filter is back, with its setting.
+
+25
+00:01:43.000 --> 00:01:48.000
+Click Duplicate (Ctrl+J): the chosen filter is copied, here Local contrast.
+
+26
+00:01:48.000 --> 00:01:52.000
+Click the trash button: the copy is deleted.
+
+27
+00:01:52.000 --> 00:01:57.000
+Click the combined layer: Star blend mode reads Screen.
+
+28
+00:01:57.000 --> 00:02:02.000
+Drag Opacity of Local contrast to about 55 %: the filter acts by half.
+
+29
+00:02:02.000 --> 00:02:06.000
+Press Ctrl+Z: Opacity is back at 100 %.
+
+30
+00:02:06.000 --> 00:02:10.000
+Press Ctrl+S: the layers and their filters are saved with the project.
+
+31
+00:02:10.000 --> 00:02:13.000
+Open File, then click Close project.
+
+32
+00:02:13.000 --> 00:02:17.000
+The Home screen lists the project.
+
+33
+00:02:17.000 --> 00:02:20.000
+Click the project to open it again.
+
+34
+00:02:20.000 --> 00:02:23.000
+Click Post.
+
+35
+00:02:23.000 --> 00:02:29.000
+The filters are still there; a click on one opens its settings, still editable.

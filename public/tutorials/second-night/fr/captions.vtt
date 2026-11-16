@@ -1,0 +1,149 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet du premier tutoriel.
+
+2
+00:00:04.000 --> 00:00:09.000
+Le projet s’ouvre à jour : une nuit, 436 brutes, 1,8 h de pose.
+
+3
+00:00:09.000 --> 00:00:12.000
+Cliquez sur « Post ».
+
+4
+00:00:12.000 --> 00:00:18.000
+Post montre l’image du premier tutoriel. Avant tout geste, regardez ce que plus de lumière pourrait donner.
+
+5
+00:00:18.000 --> 00:00:25.000
+À 100 %, dans le gaz faible, un grain : la lumière d’une seule nuit, 1,8 h, est tout ce dont l’image est faite.
+
+6
+00:00:25.000 --> 00:00:28.000
+Cliquez sur « Graphe ».
+
+7
+00:00:28.000 --> 00:00:31.000
+Cliquez sur la carte du premier bloc du workflow, pour que la palette agisse sur ce workflow.
+
+8
+00:00:31.000 --> 00:00:34.000
+Dans la palette, double-cliquez sur « Session ».
+
+9
+00:00:34.000 --> 00:00:42.000
+La fenêtre indique : Session 2 ajoutée à « Couleur minimal » : elle s’empile avec ses sessions, et Calibration ajoutée : son empilement est calibré ensemble. C’est une seconde session du même workflow.
+
+10
+00:00:42.000 --> 00:00:45.000
+Cliquez sur « Tableau ».
+
+11
+00:00:45.000 --> 00:00:51.000
+Le Tableau liste les sessions de l’empilement : la nouvelle est vide, et nommée Session 2 comme la première, Session 1.
+
+12
+00:00:51.000 --> 00:00:54.000
+Cliquez sur le nom de la nouvelle session et appuyez sur F2, puis tapez sa nuit.
+
+13
+00:00:54.000 --> 00:00:57.000
+La seconde session est nommée 28 Dec 2024, la nuit de ses images.
+
+14
+00:00:57.000 --> 00:01:00.000
+Nommez de la même façon la première session : 29 Dec 2024.
+
+15
+00:01:00.000 --> 00:01:03.000
+Cliquez sur « Inspection », la nouvelle session étant sélectionnée.
+
+16
+00:01:03.000 --> 00:01:06.000
+Dans le groupe Brutes, cliquez sur +.
+
+17
+00:01:06.000 --> 00:01:10.000
+Cliquez sur « Ajouter dossier… » et choisissez le dossier de la nuit du 28 décembre : 358 brutes.
+
+18
+00:01:10.000 --> 00:01:16.000
+Les 358 brutes de la seconde nuit sont ajoutées : 15 s, ISO 4000, 1,5 h de pose.
+
+19
+00:01:16.000 --> 00:01:19.000
+Dans le groupe Darks, cliquez sur +.
+
+20
+00:01:19.000 --> 00:01:23.000
+Choisissez « Prendre celles de « 29 Dec 2024 » ».
+
+21
+00:01:23.000 --> 00:01:26.000
+Faites de même dans le groupe Flats.
+
+22
+00:01:26.000 --> 00:01:34.000
+Les darks et les flats sont ceux de la première nuit, partagés avec elle : un seul master chacun. Les deux nuits viennent du même appareil, avec les mêmes réglages et le même télescope, à un jour d’écart.
+
+23
+00:01:34.000 --> 00:01:38.000
+Cliquez sur « Exécuter ». Le bouton donne la durée prévue du calcul.
+
+24
+00:01:38.000 --> 00:01:46.000
+La fenêtre « Exécuter projet » liste ce qui est calculé : la calibration des images, l’alignement, l’empilement et les blocs qui suivent.
+
+25
+00:01:46.000 --> 00:01:52.000
+Non montré en temps réel : le calcul a duré 38 min sur une carte graphique RTX 4060 Ti (16 Go).
+
+26
+00:01:52.000 --> 00:01:59.000
+Calibration 12,6 min pour les 794 images des deux nuits, alignement 2,4 min, empilement 22,3 min, le reste moins de 1 min.
+
+27
+00:01:59.000 --> 00:02:03.000
+Le projet à deux nuits est ouvert : sur l’écran d’accueil, « Ouvrir projet… ».
+
+28
+00:02:03.000 --> 00:02:11.000
+Sélection indique 754 images sur 794 gardées. Les deux nuits sont tournées de 178° et s’alignent avec un résidu de 0,29 px.
+
+29
+00:02:11.000 --> 00:02:14.000
+Cliquez sur « Rapport ».
+
+30
+00:02:14.000 --> 00:02:21.000
+Le rapport indique 754 images de 15 s, 3 h 08 de pose, contre 1,8 h avec une nuit.
+
+31
+00:02:21.000 --> 00:02:24.000
+Cliquez sur « Post ».
+
+32
+00:02:24.000 --> 00:02:31.000
+Post est inchangé : le même calque, les mêmes curseurs. À la taille ajustée, l’image est la même.
+
+33
+00:02:31.000 --> 00:02:39.000
+À 100 %, le même gaz faible a moins de grain : le bruit est plus bas de 3 à 12 %.
+
+34
+00:02:39.000 --> 00:02:43.000
+Cliquez sur « Exporter… ».
+
+35
+00:02:43.000 --> 00:02:46.000
+Choisissez « JPEG » dans « Format ».
+
+36
+00:02:46.000 --> 00:02:49.000
+Cliquez sur « Exporter ».
+
+37
+00:02:49.000 --> 00:02:54.000
+L’image est écrite, avec l’historique du traitement à côté.

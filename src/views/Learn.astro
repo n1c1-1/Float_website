@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import GraphTour from '../components/GraphTour.astro';
+import type { Lang } from '../i18n/ui';
+import TutorialItem from '../components/TutorialItem.astro';
+import { tutorials, inSection, levelNames } from '../data/tutorials';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const hasTutorials = tutorials.length > 0;
+const levels = [1, 2, 3, 4].map((n) => ({ n, list: inSection('path', n) })).filter((l) => l.list.length);
+const post = inSection('post');
+
+const steps = fr
+  ? [
+      { h: 'Nouveau projet', img: '1-home.png', w: 640, ht: 320, small: true, alt: 'La page Accueil de FLOAT',
+        p: 'Accueil liste les projets des dossiers suivis ; Nouveau projet ouvre un graphe vide.',
+        cap: 'La page Accueil.' },
+      { h: 'Choisir un modèle', img: '2-templates.png', w: 1204, ht: 640, alt: 'La galerie des modèles',
+        p: 'Couleur complet est le workflow recommandé pour une caméra couleur ; Page vierge part de rien, et l’on peut ajouter des blocs depuis la palette à gauche à tout moment.',
+        cap: 'La galerie des modèles.' },
+      { h: 'Choisir les images', img: '3-frames.png', w: 1600, ht: 299, wide: true, alt: 'Les images d’une session',
+        p: 'Dans Inspection, le bloc Session prend les dossiers des brutes, des darks et des flats ; le tableau les lit et les vérifications disent s’il manque quelque chose.',
+        cap: 'Les images d’une session.' },
+      { h: 'Exécuter', img: '4-run.png', w: 742, ht: 470, small: true, alt: 'La fenêtre Exécuter',
+        p: 'La fenêtre liste les blocs à calculer, chacun avec la durée attendue, et suit l’exécution ; Arrêter la termine et les blocs terminés sont conservés.',
+        cap: 'La fenêtre Exécuter.' },
+      { h: 'Lire le graphe', img: '5-graph.png', w: 1400, ht: 219, wide: true, alt: 'Le graphe après une exécution',
+        p: 'Un bloc vert est calculé et conservé ; quand un réglage change, seuls les blocs qui le suivent sont calculés de nouveau.',
+        cap: 'Le graphe après une exécution.' },
+      { h: 'Ajuster dans Post', img: '6-post.png', w: 1000, ht: 525, small: true, alt: 'La page Post',
+        p: 'Le résultat de chaque workflow est un calque ; les curseurs et les filtres s’appliquent par-dessus et se modifient à tout moment. Exporter écrit l’image finale.',
+        cap: 'La page Post.' },
+    ]
+  : [
+      { h: 'New project', img: '1-home.png', w: 640, ht: 320, small: true, alt: 'FLOAT’s Home page',
+        p: 'Home lists the projects of the watched folders; New project opens an empty graph.',
+        cap: 'The Home page.' },
+      { h: 'Choose a template', img: '2-templates.png', w: 1204, ht: 640, alt: 'The template gallery',
+        p: 'Color full is the recommended workflow for a colour camera; Blank page starts from nothing, and blocks can be added from the palette on the left at any time.',
+        cap: 'The template gallery.' },
+      { h: 'Choose the frames', img: '3-frames.png', w: 1600, ht: 299, wide: true, alt: 'The frames of a session',
+        p: 'In Inspect, the Session block takes the folders of the lights, darks and flats; the table reads them and the health check says whether anything is missing.',
+        cap: 'The frames of a session.' },
+      { h: 'Run', img: '4-run.png', w: 742, ht: 470, small: true, alt: 'The Run window',
+        p: 'The window lists the blocks to compute, each with the duration expected, and follows the run; Stop ends it and the finished blocks are kept.',
+        cap: 'The Run window.' },
+      { h: 'Read the graph', img: '5-graph.png', w: 1400, ht: 219, wide: true, alt: 'The graph after a run',
+        p: 'A green block is computed and kept; when a setting changes, only the blocks after it are computed again.',
+        cap: 'The graph after a run.' },
+      { h: 'Adjust in Post', img: '6-post.png', w: 1000, ht: 525, small: true, alt: 'The Post page',
+        p: 'The result of each workflow is a layer; the sliders and filters are applied on top and can be changed at any time. Export writes the final image.',
+        cap: 'The Post page.' },
+    ];
+---
+<Base lang={lang} page="learn" title={fr ? 'Apprendre' : 'Learn'}
+  description={hasTutorials ? (fr ? 'Les tutoriels de FLOAT, du débutant à l’expert : une vidéo sous-titrée et un texte illustré pour chacun.' : 'FLOAT’s tutorials, from beginner to expert: a subtitled video and an illustrated text for each.') : fr ? 'Les premiers pas dans FLOAT en six étapes : nouveau projet, modèle, images, exécution, graphe et Post.' : 'First steps in FLOAT in six steps: new project, template, frames, run, graph and Post.'}>
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <p class="kicker">{hasTutorials ? (fr ? 'Tutoriels' : 'Tutorials') : (fr ? 'Premiers pas' : 'First steps')}</p>
+    <h1>{fr ? 'Apprendre' : 'Learn'}</h1>
+    {!hasTutorials && <>
+    <p class="meta">{fr ? 'Six étapes, du nouveau projet à l’image exportée' : 'Six steps, from a new project to the exported image'}</p>
+    <p class="measure">{fr
+      ? 'Nouveau projet → choisir un modèle → choisir les images → Exécuter. Les captures d’écran montrent l’interface en anglais.'
+      : 'New project → choose a template → choose the frames → Run.'}</p>
+    </>}
+
+
+    {hasTutorials && (<>
+      {levels.length > 0 && (
+        <section class="sec">
+          <h2>{fr ? 'Le parcours, du débutant à l’expert' : 'The path, from beginner to expert'}</h2>
+          {levels.map((l) => (
+            <div class="level">
+              <h3><span class="secnum">{l.n}</span>{levelNames[l.n][lang]}</h3>
+              <ol class="tlist">{l.list.map((t) => <TutorialItem t={t} lang={lang} />)}</ol>
+            </div>
+          ))}
+        </section>
+      )}
+      {post.length > 0 && (
+        <section class="sec">
+          <h2>Post</h2>
+          <p class="measure">{fr ? 'Tout le monde utilise Post, quel que soit son niveau : ces tutoriels ne suivent pas le parcours et se lisent dans l’ordre que l’on veut.' : 'Everyone uses Post, whatever the level: these tutorials do not follow the path and can be read in any order.'}</p>
+          <ol class="tlist">{post.map((t) => <TutorialItem t={t} lang={lang} />)}</ol>
+        </section>
+      )}
+    </>)}
+
+    <section class="sec">
+      <h2>{fr ? 'Construire un graphe, ici même' : 'Build a graph, right here'}</h2>
+      <p class="measure">{fr
+        ? 'Une reproduction de la page Graphe et de Post, guidée pas à pas : on part d’une page vierge, on pose les blocs, on exécute, on change un réglage, on finit l’image. Rien n’est calculé ici ; les noms, les gestes et les états sont ceux de FLOAT.'
+        : 'A replica of the Graph page and of Post, guided step by step: start from a blank page, place the blocks, run, change a setting, finish the image. Nothing is computed here; the names, actions and states are those of FLOAT.'}</p>
+      <GraphTour lang={lang} />
+    </section>
+
+    {!hasTutorials && steps.map((s, i) => (
+      <section class="sec">
+        <h2><span class="secnum">{i + 1}</span>{s.h}</h2>
+        {s.wide
+          ? <>
+              <p class="measure">{s.p}</p>
+              <Figure lang={lang} n={i + 1} src={`/images/guide/${s.img}`} plate zoom width={s.w} height={s.ht} alt={s.alt}>{s.cap}</Figure>
+            </>
+          : <div class="split">
+              <p>{s.p}</p>
+              <div style={s.small ? `max-width: ${s.w}px` : undefined}>
+                <Figure lang={lang} n={i + 1} src={`/images/guide/${s.img}`} plate zoom width={s.w} height={s.ht} alt={s.alt}>{s.cap}</Figure>
+              </div>
+            </div>}
+      </section>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .level { margin-top: 1.6rem; }
+  .level h3 { font-family: var(--sans); margin-top: 0; }
+  .tlist { list-style: none; padding: 0; margin: 0 0 1rem; max-width: 60rem; }
+</style>

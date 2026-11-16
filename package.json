@@ -1,0 +1,19 @@
+{
+  "name": "astro-float-site",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/typo-fr.mjs && node scripts/sitemap-pairs.mjs",
+    "preview": "astro preview",
+    "release": "node scripts/update-release.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.5",
+    "@fontsource-variable/source-code-pro": "^5.0.0",
+    "@fontsource-variable/source-sans-3": "^5.0.0",
+    "@fontsource-variable/source-serif-4": "^5.0.0",
+    "astro": "^5.0.0"
+  }
+}

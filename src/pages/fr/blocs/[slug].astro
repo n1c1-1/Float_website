@@ -1,0 +1,12 @@
+---
+// Une page par bloc : la vue src/views/blocks/<key>Fr.astro, dès qu'elle existe.
+import { blocks } from '../../../i18n/ui';
+export function getStaticPaths() {
+  const views = import.meta.glob('../../../views/blocks/*Fr.astro', { eager: true }) as Record<string, { default: any }>;
+  return blocks
+    .filter((b) => views[`../../../views/blocks/${b.key}Fr.astro`])
+    .map((b) => ({ params: { slug: b.slug.fr }, props: { View: views[`../../../views/blocks/${b.key}Fr.astro`].default } }));
+}
+const { View } = Astro.props;
+---
+<View />

@@ -1,0 +1,37 @@
+---
+// An image with its smaller copies (AVIF, WebP; made by scripts/make-images.mjs) as srcset, and the original as the
+// fallback and as the file the zoom viewer opens. An image with no copies is a plain <img>.
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  src: string; alt?: string; width?: number; height?: number; eager?: boolean; sizes?: string;
+  zoom?: string; title?: string;
+}
+const { src, alt = '', width, height, eager = false, sizes = '(min-width: 56rem) 62vw, 100vw', zoom, title } = Astro.props;
+
+const publicDir = path.resolve(process.cwd(), 'public');
+const base = src.replace(/\.[^./]+$/, '');
+const dir = path.join(publicDir, path.dirname(base));
+const name = path.basename(base);
+// copies are named <name>-<width>.avif / .webp
+const found: [number, string][] = [];
+if (fs.existsSync(dir)) {
+  for (const f of fs.readdirSync(dir)) {
+    const ext = path.extname(f).slice(1);
+    const w = Number(f.slice(name.length + 1, f.length - ext.length - 1));
+    if ((ext === 'avif' || ext === 'webp') && f.startsWith(name + '-') && Number.isInteger(w) && w > 0) found.push([w, ext]);
+  }
+}
+const set = (ext: string) => found.filter((m) => m[1] === ext).map((m) => m[0]).sort((a, b) => a - b).map((w) => `${base}-${w}.${ext} ${w}w`).join(', ');
+const avif = set('avif'), webp = set('webp');
+---
+{avif || webp
+  ? <picture>
+      {avif && <source type="image/avif" srcset={avif} sizes={sizes} />}
+      {webp && <source type="image/webp" srcset={webp} sizes={sizes} />}
+      <img src={src} alt={alt} width={width} height={height} loading={eager ? 'eager' : 'lazy'} decoding={eager ? 'auto' : 'async'}
+           fetchpriority={eager ? 'high' : undefined} data-zoom={zoom} title={title} />
+    </picture>
+  : <img src={src} alt={alt} width={width} height={height} loading={eager ? 'eager' : 'lazy'} decoding={eager ? 'auto' : 'async'}
+         data-zoom={zoom} title={title} />}

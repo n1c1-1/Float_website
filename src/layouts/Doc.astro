@@ -1,0 +1,37 @@
+---
+import Base from './Base.astro';
+import { blocks, blockUrl, ui, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang; page: string; title: string; description: string; current: string }
+const { lang, page, title, description, current } = Astro.props;
+const t = ui[lang];
+// a block is linked once its two views exist
+const views = import.meta.glob('../views/blocks/*.astro');
+const written = (key: string) => `../views/blocks/${key}En.astro` in views && `../views/blocks/${key}Fr.astro` in views;
+// the page's own address in each language (the block's, not the index of the blocks')
+const own = blocks.find((b) => b.key === current);
+const paths = own ? { en: blockUrl(own, 'en'), fr: blockUrl(own, 'fr') } : undefined;
+---
+<Base lang={lang} page={page} title={title} description={description} paths={paths}>
+  <div class="doc">
+    <nav class="side" aria-label={t.blocks}>
+      <div class="in">
+        <h2>{t.blocks}</h2>
+        <ol>
+          {blocks.map((b) => (
+            <li>
+              {written(b.key)
+                ? <a href={blockUrl(b, lang)} aria-current={b.key === current ? 'page' : undefined}>{b[lang]}</a>
+                : <span title={t.soon}>{b[lang]}</span>}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </nav>
+    <div class="col">
+      <article class="article">
+        <slot />
+      </article>
+    </div>
+  </div>
+</Base>

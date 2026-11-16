@@ -1,0 +1,9 @@
+---
+// One page per tutorial manifest (src/data/tutorials/*.json).
+import V from '../../views/Tutorial.astro';
+import { tutorials } from '../../data/tutorials';
+export function getStaticPaths() {
+  return tutorials.map((t) => ({ params: { slug: t.slug }, props: { slug: t.slug } }));
+}
+---
+<V lang="en" slug={Astro.props.slug} />

@@ -1,0 +1,226 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import Figure from '../../components/Figure.astro';
+import DrizzleDemo from '../../components/DrizzleDemo.astro';
+import Chart from '../../components/Chart.astro';
+import { coverageFigure, rejectionFigure } from '../../data/charts/figures';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Stacking" title="Stacking"
+  description="The Stacking block of FLOAT: Bayer drizzle or Classic stack, how the drizzle scale and drop size are chosen, outlier rejection, the two half-stacks, with the published sources.">
+
+  <p class="kicker">Block</p>
+  <h1>Stacking</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It adds up the aligned frames of the night into one image, each frame counting by its quality, and leaves out satellite trails, planes and cosmic rays.</dd></div><div><dt>What it shows</dt><dd>In Inspect, the stack, its two half-stacks and the weight of every frame, with the frames stacked, the stacked exposure and the share of rejected pixels; in the Report, the stacking figures and the colour offset corrected.</dd></div><div><dt>What can be set</dt><dd>The Stacking method and the Drizzle scale, which FLOAT proposes with their reason, and the Rejection threshold (3&nbsp;σ); the proposed values suit most nights.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>What goes in, what comes out</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Bayer drizzle</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Scale and drop size</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Outlier rejection</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Two half-stacks</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>The Classic method</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Settings</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Stacking block combines the registered frames of a session into one image. It offers two
+    methods: a Bayer drizzle, which drops every raw colour pixel at its registered position without debayering or
+    interpolation, and a Classic stack, which debayers and interpolates each frame first. FLOAT measures the frames
+    and proposes the method, the drizzle scale and the drop size, each with the reason for the choice; every value can
+    still be set by hand.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Calibration</span></li><li><span>Registration</span></li><li><span>Selection</span></li>
+    <li class="here"><span>Stacking</span></li><li><span>Astrometry</span></li><li><span>Gradient</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>What goes in, what comes out</h2>
+    <aside class="note"><b>The weight of a frame</b> is (transparency / noise)² × sharpness. A frame is left out only
+    when its weight is under 5 % of the best one; the weights handle the others, so almost every frame is kept.</aside>
+    <p>The block receives the calibrated frames, the registration of each one (a cubic polynomial that maps its sensor
+    pixels onto the reference frame), the size of its stars, and the weight the <a href="/blocks/selection/">Selection</a> block gave it.</p>
+    <p>It writes the stack, two half-stacks made of separate frames, the coverage map of each colour, and for every frame its
+    weight or the reason it was left out. Inspect shows all of them.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Bayer drizzle</h2>
+    <p>A colour sensor records one colour per pixel: in each cell of 2 × 2 pixels, one red, two green, one blue.
+    Debayering fills in the two missing colours of every pixel by interpolation. The Bayer drizzle skips that step.
+    Each raw sample is dropped onto the output grid where the registration of its frame puts it, as a small square,
+    and only into its own colour. The value of an output pixel is the weighted mean of the drops that touch
+    it.<a class="cite" href="#ref-1">[1]</a></p>
+    <aside class="note"><b>To try.</b> No shift at all, with any number of frames: the holes never fill. Then red at
+    2× with 15 frames, and with 150.</aside>
+    <p>The method depends on the frames being shifted against each other. Red and blue each hold a quarter of the
+    samples: one frame alone leaves three output pixels in four empty in those colours. The shifts between frames,
+    from dithering or from the drift of the mount, are what fills the grid.</p>
+    <p>The red and blue images of the stars are registered on the green one for the whole night, against lateral
+    chromatic aberration and atmospheric dispersion. The offset of each colour is a quadratic surface over the field,
+    fitted on the isolated, unsaturated stars of the first mean (at least 50, well above the noise and under half the
+    saturation); the red and blue samples are then dropped where the green ones of the same star fall. The offsets at
+    the centre and in the corners are given in the log and in the Report.</p>
+
+    <Figure lang={lang} n={1} wide>
+      <DrizzleDemo slot="body" lang={lang} />
+      The coverage of the output grid by the samples of one colour. Heavy lines: sensor pixels; fine lines: output
+      pixels. Orange squares: the drops of the first frame; dots: the centres of the drops of the other frames (up to
+      60 frames). The darker an output pixel, the more drop area it received; a hatched one received none. A simplified
+      model of what the block computes: shifts only, drawn at random, on a patch of 12 × 12 sensor pixels.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Scale and drop size</h2>
+    <aside class="note"><q>Statistics performed on the drizzled weight image in the region of interest should yield an
+    RMS value (standard deviation) that is less than 20% of the median value.</q><br />DrizzlePac Handbook,
+    §7.3.<a class="cite" href="#ref-2">[2]</a></aside>
+    <p>Before it stacks, FLOAT computes the map of figure 1 from the real registration of the frames the selection
+    keeps, on a grid of small patches of the field. It then applies the rule of the DrizzlePac Handbook: the standard
+    deviation of the weight map must stay under 20 % of its median. The variation is measured for each colour; red
+    and blue decide.</p>
+    <ul>
+      <li>A scale of 1.5 or 2 is proposed only if the stars are undersampled (a width under 2 pixels) and the rule
+      holds at that scale. Drizzle restores detail only in that case.<a class="cite" href="#ref-1">[1]</a></li>
+      <li>The drop size is then the smallest value, in steps of 0.05 from 1 / scale upwards, that keeps the rule.</li>
+      <li>At scale 1, the drop size is 1.</li>
+    </ul>
+    <p>The estimate takes about 0.5 s for 100 frames and 1.5 s for 300, on one processor core. After the stack, the
+    same statistic is measured on the weight map actually obtained.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The method FLOAT proposes, by the series of frames.</caption>
+        <thead><tr><th>Series</th><th>Proposed</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Colour sensor, fewer than 15 frames</td><td>Classic</td><td>Too few frames for the red and blue samples to cover the grid.</td></tr>
+          <tr><td>Colour sensor, red or blue coverage varying by 20 % or more at 1×</td><td>Classic</td><td>The 20 % rule does not hold.<a class="cite" href="#ref-2">[2]</a></td></tr>
+          <tr><td>Colour sensor, enough well-shifted frames</td><td>Bayer drizzle, at the scale the rule gives</td><td>The rule holds.</td></tr>
+          <tr><td>Colour sensor, stars under 2 px, coverage holding at 1.5× or 2×</td><td>Bayer drizzle at 1.5× or 2×</td><td>Undersampled stars: the finer grid restores detail.<a class="cite" href="#ref-1">[1]</a></td></tr>
+          <tr><td>Monochrome sensor</td><td>Classic; drizzle only with stars under 2 px, 15 frames and the coverage holding at 1.5× or 2×</td><td>No colour mosaic: drizzle only adds detail when the stars are undersampled.</td></tr>
+          <tr><td>Frames already in colour (JPEG, PNG, TIFF)</td><td>Classic</td><td>No mosaic of raw samples to drop.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Figure 2 shows the weight map obtained on a real night: with stars of 2.1 px the scale stayed at 1, and the
+    coverage of each colour varies by 1.5 to 3.1 %, far under the 20 % of the rule.</p>
+
+    <Figure lang={lang} n={2}>
+      <Chart slot="body" {...coverageFigure(lang)} />
+      Distribution of the weight map of the stack, each colour over its median, in bins of 0.01, on the field without
+      a tenth on each side. Data: the Pleiades, 1344 of 1348 frames of 13 s, Bayer drizzle at scale 1 with drops of
+      1 pixel. The legend gives the variation of each colour (standard deviation over median); the estimate made
+      before the stack was 2.5, 1.1 and 2.5 %.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Outlier rejection</h2>
+    <p>Satellites, planes, cosmic rays and hot pixels are left out sample by sample. The Bayer drizzle has three ways
+    of finding them.</p>
+    <h3>On the raw pixels</h3>
+    <p>A sigma clipping against the spread measured at each output point. A first pass keeps the weighted mean and
+    standard deviation of the samples dropped there; a second leaves out the samples farther than the threshold
+    (3 standard deviations) and measures both again; a third judges every sample against these values and deposits the
+    ones kept. There is no noise model: the spread is the one the frames show at that point. This follows the principle of Siril’s sigma
+    clipping, with the weighted mean as centre.<a class="cite" href="#ref-3">[3]</a></p>
+    <p>Figure 3 shows what this rejection took from each frame of a long series: a few hundredths of a percent of the
+    samples, most of them above the mean, with a few frames standing out.</p>
+
+    <Figure lang={lang} n={3}>
+      <Chart slot="body" {...rejectionFigure(lang)} />
+      Share of the samples of each stacked frame left out by the rejection on the raw pixels, against the time since
+      the first frame. Data: the Pleiades, 1344 frames of 13 s, threshold 5 standard deviations (the default when this
+      stack was made). Blue: samples above the mean (median 0.029 % per frame); orange: below it (0.007 %). Five frames
+      lose more than 0.1 %, the most 0.20 %.
+    </Figure>
+    <h3>By frame count</h3>
+    <aside class="note"><b>Why 11 values.</b> Among N values, the standard deviation includes the outlier itself, so
+    the outlier can stand at most (N − 1) / √N deviations from the mean (the deviation taken with N − 1): 2.85 for
+    10 values, 3.02 for 11.<a class="cite" href="#ref-4">[4]</a></aside>
+    <p>With N values, one outlier can reach at most (N − 1) / √N standard deviations: under 3 below 11 values. In a
+    Bayer drizzle, red and blue hold about a quarter of the frames at a point, so a sigma clipping at 3 can run short
+    of values. The values of every frame are then kept for each output point, and the rejection is chosen by their
+    number: percentile clipping, winsorized sigma clipping, or linear fit clipping. FLOAT proposes this way when the
+    colours hold too few values per point.</p>
+    <h3>From the Classic stack’s rejection</h3>
+    <p>The rejection of the Classic method runs on the debayered, registered frames, and what it rejects in a frame is
+    left out of that frame’s drops on the same output pixels.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Two half-stacks</h2>
+    <p>The frames are dealt alternately, in blocks of 20, to two half-stacks A and B built the same way. Both show the
+    same sky; the noise of their frames is independent. Their difference gives the noise of the stack: with equal
+    weights, the noise of the stack is half the standard deviation of A − B (in general, that deviation times
+    √(w<sub>A</sub> w<sub>B</sub>) / (w<sub>A</sub> + w<sub>B</sub>), w being the sum of the frame weights of each
+    half). The <a href="/blocks/denoise/">Denoise</a> block uses them as a pair: a network that predicts one half from
+    the other keeps only what both contain.<a class="cite" href="#ref-5">[5]</a></p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>The Classic method</h2>
+    <p>Each frame is debayered with RCD,<a class="cite" href="#ref-6">[6]</a> the colours balanced before and the
+    balance taken off after, as raw converters do. It is resampled onto the reference grid with Lanczos-4, clamped to
+    hold back the dark rings Lanczos-4 draws around bright stars. The frames are then combined with a rejection chosen
+    by their number: percentile clipping under 6 frames, winsorized sigma clipping from 6 to 15, linear fit clipping
+    from 16. The combination itself can be chosen: the weighted mean of what the rejection keeps (the default), the median, the maximum (star trails, meteors and satellites are kept), the minimum, or the sum. The four last reject nothing and give every frame the same weight.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The main settings of the block. “Automatic” values are shown in FLOAT with their reason.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Stacking method</th><td>automatic</td><td>Bayer drizzle, Classic</td><td>Classic suits few or barely shifted frames, whose red and blue pixels leave holes in a drizzle.</td></tr>
+          <tr><th scope="row">Drizzle scale</th><td>automatic</td><td class="n">1 – 3 ×</td><td>Output resolution relative to the sensor. Higher values cost memory and add noise.</td></tr>
+          <tr><th scope="row">Drop size</th><td>automatic</td><td class="n">0.3 – 1</td><td>Size of the deposited drop relative to the input pixel. Smaller drops are sharper but noisier, with a risk of holes.</td></tr>
+          <tr><th scope="row">Rejection (drizzle)</th><td>automatic</td><td>On the raw pixels, By frame count, From the classic stack’s rejection</td><td>How outliers are found (section 4).</td></tr>
+          <tr><th scope="row">Rejection threshold</th><td class="n">3 σ</td><td class="n">2 – 20</td><td>Higher keeps more samples; lower removes more trails but may eat star cores in poor seeing.</td></tr>
+          <tr><th scope="row">Half-stack block</th><td class="n">20 frames</td><td class="n">1 – 200</td><td>The size of the blocks of frames dealt in turn to the half-stacks A and B.</td></tr>
+          <tr><th scope="row">Combination (Classic)</th><td>mean</td><td>mean, median, maximum, minimum, sum</td><td>With the Classic method: how the values of the frames at each pixel make the stack.</td></tr>
+          <tr><th scope="row">Pattern removal</th><td>off</td><td>on, off</td><td>Measures the sensor’s fixed pattern and subtracts it from every frame (section 8).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>Pattern removal is off by default.</strong> It measures the fixed pattern of the sensor as the median
+      of the frames in sensor coordinates, and subtracts it, against the streaks known as walking noise. On some stacks
+      the estimate also held the tracks of the faint stars across the sensor, and subtracting it drew the very streaks
+      it was meant to remove.</li>
+      <li><strong>No Bayer drizzle for frames already in colour.</strong> A JPEG, PNG or TIFF frame has no mosaic of
+      raw samples to drop: the Classic method is used (<a href={`${release.repo}/issues/57`}>issue 57</a>).</li>
+      <li><strong>Few frames at a point, no rejection.</strong> Where fewer than three frames cover a point, at the
+      edges of the field, nothing is rejected.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Fruchter, A. S. &amp; Hook, R. N. 2002, <i>Drizzle: A Method for the Linear Reconstruction of Undersampled Images</i>, PASP 114, 144. <a href="https://arxiv.org/abs/astro-ph/9808087">arXiv:astro-ph/9808087</a></li>
+      <li id="ref-2"><i>The DrizzlePac Handbook</i>, version 3, Space Telescope Science Institute, §7.3 “Inspecting Drizzled Products after User Reprocessing”. <a href="https://hst-docs.stsci.edu/drizzpac">hst-docs.stsci.edu/drizzpac</a></li>
+      <li id="ref-3">Siril documentation, <i>Stacking</i>, “Rejection algorithms”. <a href="https://siril.readthedocs.io/en/stable/preprocessing/stacking.html">siril.readthedocs.io</a></li>
+      <li id="ref-4">Samuelson, P. A. 1968, <i>How Deviant Can You Be?</i>, JASA 63, 1522. <a href="https://doi.org/10.1080/01621459.1968.10480944">doi:10.1080/01621459.1968.10480944</a></li>
+      <li id="ref-5">Lehtinen, J. et al. 2018, <i>Noise2Noise: Learning Image Restoration without Clean Data</i>, ICML. <a href="https://arxiv.org/abs/1803.04189">arXiv:1803.04189</a></li>
+      <li id="ref-6">Sanz Rodríguez, L., <i>Ratio Corrected Demosaicing (RCD)</i>, release 2.3. <a href="https://github.com/LuisSR/RCD-Demosaicing">github.com/LuisSR/RCD-Demosaicing</a></li>
+    </ol>
+  </section>
+</Doc>

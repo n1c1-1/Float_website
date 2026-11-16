@@ -1,0 +1,149 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the project of the first tutorial.
+
+2
+00:00:04.000 --> 00:00:09.000
+The project opens up to date: one night, 436 lights, 1.8 h of light.
+
+3
+00:00:09.000 --> 00:00:12.000
+Click Post.
+
+4
+00:00:12.000 --> 00:00:18.000
+Post shows the picture of the first tutorial. Before any gesture, look at what more light could give.
+
+5
+00:00:18.000 --> 00:00:25.000
+At 100 %, in the faint gas, a grain: the light of one night, 1.8 h, is what the picture is made of.
+
+6
+00:00:25.000 --> 00:00:28.000
+Click Graph.
+
+7
+00:00:28.000 --> 00:00:31.000
+Click the card of the workflow’s first block, so that the palette works on that workflow.
+
+8
+00:00:31.000 --> 00:00:34.000
+In the palette, double-click Session.
+
+9
+00:00:34.000 --> 00:00:42.000
+The window says: Session 2 added to “Color minimal”: it stacks with its sessions, and Calibration added: its stack is calibrated together. It is a second session of the same workflow.
+
+10
+00:00:42.000 --> 00:00:45.000
+Click Table.
+
+11
+00:00:45.000 --> 00:00:51.000
+The Table lists the sessions of the stack: the new one is empty, and named Session 2 like the first, Session 1.
+
+12
+00:00:51.000 --> 00:00:54.000
+Click the new session’s name and press F2, then type its night.
+
+13
+00:00:54.000 --> 00:00:57.000
+The second session is named 28 Dec 2024, the night of its frames.
+
+14
+00:00:57.000 --> 00:01:00.000
+Name the first session the same way: 29 Dec 2024.
+
+15
+00:01:00.000 --> 00:01:03.000
+Click Inspect, with the new session selected.
+
+16
+00:01:03.000 --> 00:01:06.000
+In the Lights group, click +.
+
+17
+00:01:06.000 --> 00:01:10.000
+Click Add folder… and choose the folder of the night of 28 December: 358 lights.
+
+18
+00:01:10.000 --> 00:01:16.000
+The 358 lights of the second night are added: 15 s, ISO 4000, 1.5 h of light.
+
+19
+00:01:16.000 --> 00:01:19.000
+In the Darks group, click +.
+
+20
+00:01:19.000 --> 00:01:23.000
+Choose Use the frames of “29 Dec 2024”.
+
+21
+00:01:23.000 --> 00:01:26.000
+Do the same in the Flats group.
+
+22
+00:01:26.000 --> 00:01:34.000
+The darks and the flats are those of the first night, shared with it: one master each. The two nights come from the same camera, with the same settings and the same telescope, a day apart.
+
+23
+00:01:34.000 --> 00:01:38.000
+Click Run. The button gives the estimate of the computation.
+
+24
+00:01:38.000 --> 00:01:46.000
+The Run project window lists what is computed: the calibration of the frames, the registration, the stacking and the blocks that follow.
+
+25
+00:01:46.000 --> 00:01:52.000
+Not shown in real time: the computation took 38 min on an RTX 4060 Ti graphics card (16 GB).
+
+26
+00:01:52.000 --> 00:01:59.000
+Calibration 12.6 min for the 794 frames of the two nights, registration 2.4 min, stacking 22.3 min, the rest under 1 min.
+
+27
+00:01:59.000 --> 00:02:03.000
+The two-night project is opened: on the Home screen, Open project….
+
+28
+00:02:03.000 --> 00:02:11.000
+Selection reads 754 of 794 frames kept. The two nights are turned by 178° and register with a residual of 0.29 px.
+
+29
+00:02:11.000 --> 00:02:14.000
+Click Report.
+
+30
+00:02:14.000 --> 00:02:21.000
+The report reads 754 frames of 15 s, 3 h 08 of light, against 1.8 h with one night.
+
+31
+00:02:21.000 --> 00:02:24.000
+Click Post.
+
+32
+00:02:24.000 --> 00:02:31.000
+Post is unchanged: the same layer, the same sliders. At the fitted size the picture is the same.
+
+33
+00:02:31.000 --> 00:02:39.000
+At 100 %, the same faint gas has less grain: the noise is 3 to 12 % lower.
+
+34
+00:02:39.000 --> 00:02:43.000
+Click Export…
+
+35
+00:02:43.000 --> 00:02:46.000
+Choose JPEG in Format.
+
+36
+00:02:46.000 --> 00:02:49.000
+Click Export.
+
+37
+00:02:49.000 --> 00:02:54.000
+The image is written, with its processing history beside it.

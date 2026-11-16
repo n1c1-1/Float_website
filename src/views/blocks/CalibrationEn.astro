@@ -1,0 +1,264 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Calibration" title="Calibration"
+  description="The Calibration block of FLOAT: the session and the frames it takes, the inventory, master dark, flat and bias, hot and defective pixels, flats from another night, several sessions, with the settings and limits.">
+
+  <p class="kicker">Block</p>
+  <h1>Calibration</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It cleans every raw frame with the darks and flats: it takes off the camera’s own signal, evens out the vignetting and the dust shadows, and repairs the hot and dead pixels.</dd></div><div><dt>What it shows</dt><dd>In Inspect, the master dark and the master flat, with the flat minimum, the share of excluded pixels and the sky noise; in the Report, the calibration frames used and these figures.</dd></div><div><dt>What can be set</dt><dd>Usually nothing: the defaults suit. Flat scale (about 40 px) for flats borrowed from another night, and the Hot pixel threshold if too many pixels are excluded.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>The session and its frames</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>The inventory</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Master dark and bias</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Master flat, and flats from another night</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Defective pixels</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Calibrating each light</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Several sessions, frames in colour, an image as source</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Settings</a></li>
+      <li><a href="#s9"><span class="secnum">9</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Calibration block turns the raw frames of a session into frames ready to register. It
+    builds the master dark, bias and flat from the calibration frames, finds the hot, cold and dusty pixels, then
+    subtracts the dark and divides by the flat for every light. The frames stay raw Bayer mosaics: nothing is
+    debayered here. Before it, the inventory lists the frames, checks that they agree and reads their metadata.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li class="here"><span>Calibration</span></li><li><span>Registration</span></li><li><span>Selection</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>The session and its frames</h2>
+    <p>A session is one night with one camera: the folders of its frames, set in the Session block. It takes five kinds
+    of frames, and only the lights are required.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The frames a session takes.</caption>
+        <thead><tr><th>Kind</th><th>What it is for</th><th>Without it</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Lights</th><td>The frames of the target. At least one folder is needed.</td><td>The run stops: no light frame found.</td></tr>
+          <tr><th scope="row">Darks</th><td>The thermal signal and the hot pixels of the sensor, at the exposure of the lights.</td><td>The master bias, or the black level, stands for the dark. No dark removes the hot pixels; the search in the lights finds them (section 5).</td></tr>
+          <tr><th scope="row">Flats</th><td>The vignetting and the dust.</td><td>The flat is all ones: nothing is corrected.</td></tr>
+          <tr><th scope="row">Bias</th><td>The offset of the sensor.</td><td>The black level read from the frames is used.</td></tr>
+          <tr><th scope="row">Flat darks</th><td>What is taken off the flats before they are averaged.</td><td>The bias, else the black level, is taken off the flats.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The frames are camera raw files (ARW, CR2, CR3, NEF, DNG, ORF, RW2, PEF, SRW, RAF), FITS files (FIT, FITS, FTS,
+    also compressed as FZ or GZ), or frames already in colour (JPEG, PNG, TIFF). In a folder that holds raw or FITS
+    frames, the JPEG, PNG and TIFF files beside them are not taken for frames. A master, a calibration frame another
+    program already stacked, can stand in for the frames of its kind (section 3).</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>The inventory</h2>
+    <aside class="note"><b>Frame limit.</b> Set to N, the inventory keeps N lights spaced evenly over the session, so
+    that drift, transparency and sky changes stay representative. 0 keeps all of them. It serves to try the whole
+    workflow on a subset.</aside>
+    <p>The inventory lists the frames of the five kinds and reads each one’s metadata: size, colour pattern, exposure,
+    ISO or gain, time, camera, focal length, pixel size, black and white levels, pointing and object name. Many
+    automatic settings further down the workflow read these values. It also computes the integration time, the sum of
+    the exposures when the lights have several.</p>
+    <p>It checks the set before anything is computed, and stops with the reason when:</p>
+    <ul>
+      <li>a folder is not there (its disk may not be plugged in);</li>
+      <li>there is no light frame, or none can be read;</li>
+      <li>a kind mixes camera raw or FITS frames with JPEG, PNG or TIFF images: a stack takes one kind;</li>
+      <li>darks, flats, bias or flat darks have another size than the lights;</li>
+      <li>calibration frames are already in colour while the lights are a mosaic, or the other way round, or, for
+      frames in colour, reach another white level (another bit depth): a dark is taken off and a flat divided by,
+      value for value.</li>
+    </ul>
+    <p>Two cases do not stop it. A file that cannot be read (empty or damaged) is left out and named in the log. A
+    light whose size or colour pattern differs from the majority of the lights is ignored, with a warning. A sensor
+    with no colour pattern is read as monochrome. For FITS frames whose header has no saturation level, a plateau of
+    clipped pixels found in a few frames gives it: a 14-bit camera saved in 16-bit FITS saturates at 16383, not at
+    65535. When the header declares an overscan, only the useful area is kept.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Master dark and bias</h2>
+    <p>The master bias is the median of the bias frames. The master dark is the median of the dark frames. A master
+    given as such (a file whose header says how many frames it stacks) is used as it is, not stacked again. Several
+    masters of a kind are averaged, weighted by the frames each holds, and the single frames given beside a master
+    are left out, since the master holds them already.</p>
+    <aside class="note"><b>Exposure and gain.</b> Two exposures within 5 % of each other count as one: a camera writes
+    299.99 s for 300 s. A gain or an exposure that a header does not record is no mismatch.</aside>
+    <p>The lights are grouped by exposure and gain, and each group gets the dark that fits it. Darks are never
+    averaged across exposures.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The dark each group of lights receives.</caption>
+        <thead><tr><th>Case</th><th>Dark used</th></tr></thead>
+        <tbody>
+          <tr><td>Darks of the lights’ exposure and gain</td><td>These darks, as they are.</td></tr>
+          <tr><td>No such darks, a bias or a known black level, darks of the same gain</td><td>The darks of the nearest exposure. Their thermal signal (the dark minus the bias, or minus the black level) is multiplied by the ratio of the exposures, and the bias is put back. The scale factor is shown in the log.</td></tr>
+          <tr><td>No such darks, no bias, no black level</td><td>No dark. Without a bias to tell the thermal signal from the offset, scaling would scale the offset too. The log says so.</td></tr>
+          <tr><td>No dark at all</td><td>The master bias, else the black level. The log warns that no dark removes the hot pixels; the search in the lights finds them (section 5).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>When the master dark’s level is far under the bias (under half of it), FLOAT warns that its bias was taken off
+    already: it then does not take the lights’ off.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Master flat, and flats from another night</h2>
+    <p>The flat darks are taken off each flat. Without flat darks it is the bias, and without a bias the black level,
+    never a dark’s thermal signal. Several flat darks of different exposures are not averaged: those of the flats’
+    exposure are used, else the nearest.</p>
+    <p>Each flat is then divided by its central level (the median of its central 400 × 400 pixels). The flats are
+    averaged without the values farther than 3 robust standard deviations (1.4826 times the median absolute
+    deviation) from the median of that pixel. The master flat is normalised to 1
+    at the centre, for each position of the colour pattern separately.</p>
+    <aside class="note"><b>Flat scale.</b> At 40 px, about, the dust donuts go and the vignetting stays. At 0 the whole
+    flat is used.</aside>
+    <p>Flat frames can be borrowed from another night of the same optics. They hold the vignetting of the instrument
+    but not this night’s dust. The setting Flat scale then keeps only the scales of the master flat larger than the
+    value: each colour plane is smoothed with a Gaussian whose standard deviation σ is that value, in sensor pixels.</p>
+    <p>A flat that has no light left at its centre once the flat dark is taken off stops the run and is named. A
+    master flat is taken as already calibrated: nothing is taken off it, and the flat darks given beside it are not
+    used. When the flats go under the level they are corrected with, FLOAT warns that their bias was taken off
+    already and is taken off again.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Defective pixels</h2>
+    <p>A pixel is excluded when one of these holds. Each excluded pixel is then replaced by the mean of its
+    same-colour neighbours that are neither excluded nor saturated.<a class="cite" href="#ref-1">[1]</a></p>
+    <ul>
+      <li><strong>Hot in the dark.</strong> Its dark signal at the lights’ exposure (its value in the master dark above
+      the dark’s median) exceeds the setting Hot pixel threshold times the sky noise of one calibrated light, both in
+      ADU.</li>
+      <li><strong>Cold or dusty in the flat.</strong> In its colour plane, its flat response differs from the median
+      of its 9 × 9 neighbourhood by more than the setting Flat defect threshold (30 % by default).</li>
+      <li><strong>Unlit.</strong> Its flat is under a tenth of the median flat: an overscan, a dead column.</li>
+      <li><strong>Hot in the lights.</strong> A search in the lights themselves, with two methods (below).</li>
+    </ul>
+    <h3>Persistence</h3>
+    <p>The default. It takes 40 lights spread over the session, calibrated, and keeps for each pixel the lower quartile
+    of its values. A defect is bright in every frame; a star covers a given pixel in some frames only. A pixel is
+    flagged when it stands out from the median of its 5 × 5 same-colour neighbours by more than 5 times the noise of
+    one frame. A saturated defect lights its four nearest neighbours by crosstalk, so the candidates and their eight
+    neighbours are replaced before the stars are looked for.</p>
+    <p>Stars are found as Source Extractor does,<a class="cite" href="#ref-2">[2]</a> through the sep
+    library,<a class="cite" href="#ref-3">[3]</a> at 5 sigma of the background noise, on at
+    least 5 pixels, and only round objects count (axis ratio under 2). A candidate under such a star in the lower
+    quartile, where the frames hardly moved, is not judged: the stack’s rejection takes it.</p>
+    <h3>Per frame</h3>
+    <p>Siril’s cosmetic correction without darks, applied to each light with its default settings (hot sigma 3).
+    It is made for a Bayer sensor.<a class="cite" href="#ref-1">[1]</a> The pixels it finds are replaced by the mean of
+    their same-colour neighbours, before the saturated pixels are marked, so that a saturated defect is corrected
+    and not taken for a star’s core.</p>
+    <p>On an X-Trans sensor, Per frame is replaced by Persistence when the session has 15 lights or more, and the
+    search is off below that. Persistence itself needs 15 lights.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Calibrating each light</h2>
+    <p>Each light becomes (raw − dark) / flat, with the dark of its exposure group. Pixels at or above the saturation
+    level (97.6 % of the white level by default) are marked saturated, so that the stack treats them apart and does
+    not average clipped values. An excluded pixel is never marked saturated, even if it clips: a hot pixel taken for
+    the core of a bright star drew the drift of the mount in the stack.</p>
+    <p>The calibrated frames are written as 16-bit floats on the scratch disk, scaled so that the brightest valid
+    value stays inside that range. They stay raw mosaics. For each frame, the level and the noise are measured on the
+    four positions of the colour pattern (the red, green and blue samples on an X-Trans sensor). A frame with fewer
+    than half of its samples usable, for instance a white frame taken to mark the start of a series, has no
+    statistics: <a href="/blocks/selection/">Selection</a> leaves it out.</p>
+    <p>The frames are calibrated in parallel, by processes, and the work resumes frame by frame after an interruption.
+    When the masters of an earlier result were made with the same settings, only the calibrated frames are
+    rebuilt. Masters identical to those of another session are kept on the disk once.</p>
+    <p>With Apply calibration off, the frames are taken as they are, as when they come already calibrated: only the
+    black level is taken off, with no dark, no flat and no excluded pixel.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Several sessions, frames in colour, an image as source</h2>
+    <p><strong>Several sessions.</strong> A project can hold several sessions. Each is inventoried and calibrated with
+    its own masters, then the Sessions block joins them into one set of calibrated frames that <a href="/blocks/registration/">Registration</a> and
+    <a href="/blocks/stacking/">Stacking</a> read as one session’s. The sessions must have the same sensor size and colour pattern, or the run
+    stops. The joined set uses the lowest scale of the sessions, and a pixel is saturated in it where it is
+    saturated in any session.</p>
+    <p><strong>Frames already in colour.</strong> JPEG, PNG and TIFF frames are not debayered: the dark and the flat are
+    applied colour by colour, the frames are registered on their luminance and stacked with the Classic method. Hot
+    pixels are not searched in the lights, since demosaicing has spread them. A stretched frame is not linear, which
+    is the case of every JPEG: the dark and flat corrections are then approximate, and FLOAT says so.</p>
+    <p><strong>An image as source.</strong> The Image block starts a workflow from an image file instead of a session:
+    FITS, TIFF, PNG or JPEG, normally a linear stack. It is written as the result of the Stacking block, and the
+    blocks after it read it as a stack. A monochrome image is given its one channel three times. Values in the range 0
+    to 1 are multiplied by 65535, to the scale of a 16-bit sensor. The image has no half-stacks, so <a href="/blocks/denoise/">Denoise</a> is greyed.
+    A file that is missing, damaged or not of its format is refused with the reason before the run. With Already
+    stretched, the image goes to <a href="/blocks/post/">Post</a> as it is.</p>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 3.</b>The settings of the Calibration block, and those of the inventory and of the Image block.</caption>
+        <thead><tr><th>Setting</th><th>Default</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Hot pixel threshold</th><td class="n">0.6 × sky noise</td><td class="n">0.1 – 10</td><td>A pixel whose dark signal exceeds this fraction of a light’s sky noise is excluded.</td></tr>
+          <tr><th scope="row">Flat defect threshold</th><td class="n">0.3</td><td class="n">0.05 – 0.9</td><td>Pixels whose flat response differs from their neighbourhood by more than this fraction are excluded.</td></tr>
+          <tr><th scope="row">Hot pixels (lights)</th><td>on</td><td>on, off</td><td>Also look for hot pixels in the lights, besides the darks’. Darks taken at another temperature miss pixels that are hot only when the sensor is warmer.</td></tr>
+          <tr><th scope="row">Hot pixels</th><td>Persistence</td><td>Persistence, Per frame</td><td>How they are found in the lights (section 5).</td></tr>
+          <tr><th scope="row">Flat scale</th><td class="n">0 px</td><td class="n">0 – 500</td><td>Keep only the scales of the master flat larger than this (the σ of a Gaussian). 0 keeps the whole flat.</td></tr>
+          <tr><th scope="row">Saturation level</th><td class="n">0.976 × white level</td><td class="n">0.5 – 1</td><td>Raw values above this fraction of the white level are marked saturated.</td></tr>
+          <tr><th scope="row">Apply calibration</th><td>on</td><td>on, off</td><td>Off, the frames are taken as they are (section 6).</td></tr>
+          <tr><th scope="row">Parallel workers</th><td class="n">automatic</td><td class="n">1 – 64</td><td>The number of processes that calibrate frames in parallel. Automatic: the number of CPU cores minus two, at most 12.</td></tr>
+          <tr><th scope="row">Frame limit</th><td class="n">0</td><td class="n">0 or more</td><td>Inventory. Use only N lights, evenly spaced over the session. 0 uses all.</td></tr>
+          <tr><th scope="row">Image file</th><td>none</td><td>FITS, TIFF, PNG, JPEG</td><td>Image block. The image the workflow starts from.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s9"><span class="secnum">9</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>Without darks, hot pixels are not removed by a dark.</strong> The log warns of it. The search in the
+      lights is what remains, and it needs 15 lights or more with Persistence.</li>
+      <li><strong>Without flats, nothing is corrected.</strong> The vignetting and the dust stay, and the sky model of
+      the <a href="/blocks/gradient/">Gradient</a> block flattens the vignetting of the sky background.</li>
+      <li><strong>Flats from another night correct the vignetting only.</strong> The dust of that night is not this
+      night’s: Flat scale keeps the large scales.</li>
+      <li><strong>Darks of another exposure are scaled only above a bias or a known black level.</strong> Otherwise the
+      lights go without dark. Two masters of 300 s and 60 s once averaged into one of 180 s, then scaled with a black
+      level of 0, put the calibrated sky below zero.</li>
+      <li><strong>Frames in colour are approximate.</strong> Stretched frames are not linear, and no hot pixel is
+      searched in them.</li>
+      <li><strong>The first Persistence threshold was too low.</strong> Set in sigmas of the lower quartile’s
+      residual, which is a third of a frame’s noise, it flagged 178,000 pixels in a Sony A7S session at ISO 4000, 110,000
+      of them within 2 to 5 sigmas of a frame. It is now in sigmas of one frame’s noise.</li>
+      <li><strong>Stars once lost flux to the search.</strong> The cores of bright stars were flagged, 10 to 26 % of their
+      flux on a Sony A7S series, where the frames hardly moved. These pixels are now left to the stack’s rejection.</li>
+      <li><strong>A saturated defect was taken for a star.</strong> It lights its four nearest neighbours by crosstalk,
+      which a lone-pixel condition read as a star. That condition was removed.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Siril documentation, <i>Cosmetic Correction</i>. <a href="https://siril.readthedocs.io/en/stable/processing/cc.html">siril.readthedocs.io</a></li>
+      <li id="ref-2">Bertin, E. &amp; Arnouts, S. 1996, <i>SExtractor: Software for source extraction</i>, A&amp;AS 117, 393. <a href="https://doi.org/10.1051/aas:1996164">doi:10.1051/aas:1996164</a></li>
+      <li id="ref-3">Barbary, K. 2016, <i>SEP: Source Extractor as a library</i>, Journal of Open Source Software 1(6), 58. <a href="https://doi.org/10.21105/joss.00058">doi:10.21105/joss.00058</a></li>
+    </ol>
+  </section>
+</Doc>

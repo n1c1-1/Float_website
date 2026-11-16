@@ -1,0 +1,28 @@
+{
+  "slug": "_sample", "slugFr": "_exemple", "section": "path", "level": 1, "order": 99,
+  "title": { "en": "Sample tutorial", "fr": "Tutoriel d’exemple" },
+  "summary": { "en": "Three steps to try the tutorial page. Nothing here is published.", "fr": "Trois étapes pour essayer la page d’un tutoriel. Rien ici n’est publié." },
+  "duration": { "en": "10 min", "fr": "10 min" },
+  "needs": { "en": ["FLOAT installed", "A folder of raw frames"], "fr": ["FLOAT installé", "Un dossier d’images brutes"] },
+  "data": { "name": "Sample set", "author": "Author", "licence": "CC BY 4.0", "url": "https://example.org/", "size": "1 GB" },
+  "video": {
+    "en": { "src": "/tutorials/_sample/en/video.mp4", "captions": "/tutorials/_sample/en/captions.vtt", "chapters": "/tutorials/_sample/en/chapters.vtt", "poster": "/tutorials/_sample/en/poster.jpg", "seconds": 90 },
+    "fr": { "src": "/tutorials/_sample/fr/video.mp4", "captions": "/tutorials/_sample/fr/captions.vtt", "chapters": "/tutorials/_sample/fr/chapters.vtt", "poster": "/tutorials/_sample/fr/poster.jpg", "seconds": 90 }
+  },
+  "steps": [
+    { "id": "home", "title": { "en": "New project", "fr": "Nouveau projet" },
+      "text": { "en": "<b>Home</b> lists the projects; <b>New project</b> opens an empty graph.", "fr": "<b>Accueil</b> liste les projets ; <b>Nouveau projet</b> ouvre un graphe vide." },
+      "shot": { "en": "/images/guide/1-home.png", "fr": "/images/guide/1-home.png" }, "w": 640, "h": 320, "at": { "en": 0, "fr": 0 },
+      "check": { "en": "An empty graph.", "fr": "Un graphe vide." } },
+    { "id": "templates", "title": { "en": "Choose a template", "fr": "Choisir un modèle" },
+      "text": { "en": "Pick <b>Colour full</b> in the gallery.", "fr": "Choisir <b>Couleur complet</b> dans la galerie." },
+      "shot": { "en": "/images/guide/2-templates.png", "fr": "/images/guide/2-templates.png" }, "w": 1204, "h": 640, "at": { "en": 30, "fr": 30 },
+      "pitfall": { "en": "Do not start from a blank page for a first run.", "fr": "Ne pas partir d’une page vierge pour un premier essai." } },
+    { "id": "run", "title": { "en": "Run", "fr": "Exécuter" },
+      "text": { "en": "The window lists the blocks to compute.", "fr": "La fenêtre liste les blocs à calculer." },
+      "shot": { "en": "/images/guide/4-run.png", "fr": "/images/guide/4-run.png" }, "w": 742, "h": 470, "at": { "en": 60, "fr": 60 },
+      "check": { "en": "Blocks turn green.", "fr": "Les blocs passent au vert." }, "pitfall": { "en": "Closing the window does not stop the run.", "fr": "Fermer la fenêtre n’arrête pas l’exécution." } }
+  ],
+  "blocks": ["Calibration", "Stacking", "Nothing"],
+  "next": null
+}

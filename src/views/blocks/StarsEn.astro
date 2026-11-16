@@ -1,0 +1,183 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Stars" title="Stars/background"
+  description="The Stars/background block of FLOAT: a network takes the stars off the linear image, giving the starless image and the stars alone, which add up to the original; how Post uses them; the Synthetic stars block; settings and limits.">
+
+  <p class="kicker">Block</p>
+  <h1>Stars/background</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It separates the stars from the rest of the image, so that each can be stretched on its own.</dd></div><div><dt>What it shows</dt><dd>Two images, the starless image and the stars alone, which reach Post as one layer with its own star sliders.</dd></div><div><dt>What can be set</dt><dd>The block itself has no setting; in Post, Stars makes the stars brighter or fainter and Star size shrinks or grows them, and the defaults already tone them down a little.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>What goes in, what comes out</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>The network</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>The two images in Post</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Synthetic stars</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Settings</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Stars/background block separates the stars from the rest of the image. A network works
+    on the linear image and returns two images: the starless image and the stars alone. They add up to the original
+    image, pixel for pixel. Post then stretches each on its own and puts the stars back. The Synthetic stars block, which
+    comes after it, redraws the detected stars with one shape: the one measured in the image, or the instrument’s.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Denoise</span></li><li><span>Color</span></li>
+    <li class="here"><span>Stars/background</span></li><li><span>Post</span></li><li><span>Report</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>What goes in, what comes out</h2>
+    <aside class="note"><b>The sum is exact.</b> The stars alone are computed as the image minus the starless image, in the
+    units of the image that went in. Nothing is lost or added by the separation.</aside>
+    <p>The block takes the linear image the chain has produced up to <a href="/blocks/color/">Color</a>: the stack with its sky gradient removed,
+    denoised, white balanced, its sky taken off. It writes the starless image, the stars alone and the map of the
+    covered pixels, with the statistics <a href="/blocks/post/">Post</a> needs to stretch both. A before and after preview shows the two on one stretch.</p>
+    <p>A monochrome image stays grey: the starless image is the mean of the three channels, repeated. The pixels
+    without data are left as they were.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>The network</h2>
+    <p>The network is NAFNet,<a class="cite" href="#ref-1">[1]</a> an image restoration network. The networks used for
+    denoising, deconvolution and star separation ship with the program, and the code that trained them is in the
+    repository. The block has no setting: the
+    network is applied as it is.</p>
+    <p>It works on the linear image, each channel minus its background and divided by a noise unit. The noise unit is the
+    noise of the half-stacks before denoising, carried through the colour matrix and averaged over the three colours; an
+    image without half-stacks takes the spread of its own sky. The network sees a fixed asinh stretch of that image,
+    which is undone exactly on the way out.</p>
+    <p>The image goes through the network in tiles of 1024 pixels with an overlap of 256, blended with a smooth window
+    (an image smaller than a tile uses tiles of 256 with an overlap of 64). The channel attention of the network averages
+    over a window of 256 pixels instead of over the whole tile, as the Test-time Local Converter does,<a class="cite" href="#ref-2">[2]</a>
+    so that a larger tile sees what the network was trained on. On a card with little free memory, the tiles go through
+    fewer at a time, then are cut smaller.</p>
+    <p>The network leaves a regular grid, at multiples of 1/16 cycle per pixel. Where it stands out in the spectrum of the
+    starless image, it is notched out, and the number of peaks taken off is recorded. The network runs in seconds on a
+    graphics card and a few minutes on a processor.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>The two images in Post</h2>
+    <aside class="note"><b>Two layers, or one recombined.</b> The two images reach <a href="/blocks/post/">Post</a> as two layers, or a block that
+    recombines them takes them as they are; its settings are those of its layer in Post.</aside>
+    <p>Each image is stretched on its own, then the stars go back on top.</p>
+    <ul>
+      <li><strong>The starless image</strong> takes the automatic stretch of the Output with the statistics of the
+      whole image, not its own: without the stars’ grain they would stretch it much harder, and recombined it would not
+      look like the stack.</li>
+      <li><strong>The stars</strong> take black at 0, since their background is the starless image’s, and the white and the
+      midtone of the whole image. The Stars setting moves the midtone.</li>
+    </ul>
+    <p>Because the stars are apart, stretching them less is the star reduction: no reduction is needed on the recombined
+    image. Three more settings act on the stars alone. <strong>Star size</strong> grows the stars by a round grey dilation or
+    shrinks them by a round grey erosion, one pixel at a time alternating a cross and a square, through a mask of the
+    stars when it shrinks, so that the grain between the stars of a dense field is not eroded into filaments.
+    <strong>Small stars</strong> fades the stars narrower than a number of times the typical star of the image (their median
+    width at half height); the support of the stars is opened by reconstruction,<a class="cite" href="#ref-3">[3]</a> so that
+    the wider stars stay exactly as they were. <strong>Star color</strong> sets their saturation around the luminance.</p>
+    <p>The recombination is Screen, 1 − (1 − a)(1 − b); Linear dodge (add), a + b, clipped; or Lighten, the larger of
+    the two.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Synthetic stars</h2>
+    <p>The Synthetic stars block comes after Stars/background. It reads the stars alone, detects the stars at 8 noise
+    units above the sky, and draws them again, each with its own flux, colour and position, and one shape for all. It
+    writes a stars-alone image in the layout of the Stars/background block, so <a href="/blocks/post/">Post</a> uses it in the same way. Adding stars
+    can only put light on the starless image, never take any from it. Two methods give the shape.</p>
+    <h3>Image shape</h3>
+    <p>The shape is the median of the isolated, unsaturated stars near the centre of the field (within 35 % of the
+    distance to the corner), each centred and normalised, over at least 5 stars. The brightest stars (the top 0.2 %) and
+    the saturated ones, with a peak above 60 % of the brightest, stay real, with their light and a very soft edge: their
+    spikes are not within the reach of the shape. In Post, the drawn stars replace the real ones, and the mask of the
+    layer says where the real ones stay, the centre for example.</p>
+    <h3>Instrument PSF</h3>
+    <aside class="note"><b>For a missed focus or a bad tracking.</b> Every star is replaced, so the real shape no longer
+    matters.</aside>
+    <p>Every star takes the theoretical shape of the instrument. It is computed from the aperture: the squared modulus of
+    the Fourier transform of the pupil,<a class="cite" href="#ref-4">[4]</a> with the central obstruction and the spider, for each colour, averaged over five
+    wavelengths of its band (590 to 680 nm for red, 500 to 570 for green, 420 to 500 for blue), then blurred by the
+    seeing, a Moffat profile<a class="cite" href="#ref-5">[5]</a> of the Star width. The spikes come out of the computation, and their strength follows each
+    star’s flux. The saturated stars take their light from the Gaia catalogue: the image’s zero point is fitted on the
+    unsaturated stars matched to Gaia, and the colour ratios are those of the 30 unsaturated stars of the nearest
+    BP−RP colour.</p>
+    <p>The shape only depends on the focal length and the pixel size through their ratio, the plate scale. It comes
+    from the <a href="/blocks/astrometry/">Astrometry</a> block, or from the focal length and pixel size known for the target; the pixel size is taken as
+    3.76 µm when unknown. Without a scale the block stops and asks for the Astrometry block.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The settings of the stars in Post, which act on the two images of the block.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Stars</th><td class="n">0.6</td><td class="n">0.2 – 5</td><td>How strongly the stars are stretched: 1 is the stretch of the whole image; less makes them fainter and smaller, more brighter.</td></tr>
+          <tr><th scope="row">Star size</th><td class="n">−1 px</td><td class="n">−3 – 3 px</td><td>Below 0 the stars are shrunk by this radius (a grey erosion), above 0 grown (a grey dilation).</td></tr>
+          <tr><th scope="row">Small stars</th><td class="n">0</td><td class="n">0 – 2</td><td>The small stars taken away: those narrower than this many times the typical star of the image. 0 keeps all.</td></tr>
+          <tr><th scope="row">Star color</th><td class="n">1.2</td><td class="n">0 – 3</td><td>Colour saturation of the stars around their luminance, after their stretch.</td></tr>
+          <tr><th scope="row">Blend</th><td>Screen</td><td>Screen, Linear dodge (add), Lighten</td><td>How the stars go back on the starless image.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The settings of the Synthetic stars block. All but Method act only with Instrument PSF.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Method</th><td>Image shape</td><td>Image shape, Instrument PSF</td><td>Image shape: the stars take the shape measured at the centre of the field. Instrument PSF: every star takes the theoretical shape of the instrument.</td></tr>
+          <tr><th scope="row">Type</th><td>Newtonian</td><td>Newtonian, Refractor, Schmidt-Cassegrain, Photo lens</td><td>The kind of optics: it says what stands in the light’s way.</td></tr>
+          <tr><th scope="row">Diameter</th><td class="n">150 mm</td><td class="n">over 10 – 2000 mm</td><td>The diameter of the aperture.</td></tr>
+          <tr><th scope="row">Obstruction</th><td class="n">33 %</td><td class="n">0 – 70 %</td><td>The diameter of the central obstruction, as a share of the aperture’s. Used by Newtonian and Schmidt-Cassegrain only.</td></tr>
+          <tr><th scope="row">Spider arms</th><td class="n">4</td><td class="n">0 – 6</td><td>The arms of the spider: 4 give a cross of spikes. Used by Newtonian only.</td></tr>
+          <tr><th scope="row">Spider width</th><td class="n">1.5 mm</td><td class="n">0.1 – 20 mm</td><td>The width of the spider’s arms: wider arms make brighter spikes.</td></tr>
+          <tr><th scope="row">Spider angle</th><td class="n">0°</td><td class="n">−180 – 180°</td><td>The direction of the spikes on the image.</td></tr>
+          <tr><th scope="row">Star width</th><td class="n">2.5 px</td><td class="n">1 – 8 px</td><td>The width at half height of the stars drawn: the turbulence added to the diffraction.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>Halos cut by the tiles.</strong> With tiles of the training size, a large halo was cut along a tile
+      boundary: the tile holding the core took it off, its neighbour, which only saw halo, left it. The tiles are now larger
+      than the largest halos met, 280 pixels around M45 (<a href={`${release.repo}/issues/45`}>issue 45</a>).</li>
+      <li><strong>The network’s own grid.</strong> It leaves a regular pattern in the starless image, which is notched out
+      where it stands out.</li>
+      <li><strong>One shape for all the stars.</strong> Synthetic stars gives every star the same shape, so a shape that
+      changes across the field is not reproduced; with Image shape, it is the shape of the centre.</li>
+      <li><strong>The brightest and saturated stars stay real</strong> with Image shape. Their spikes and halos are not
+      redrawn.</li>
+      <li><strong>Saturated stars and the catalogue.</strong> With Instrument PSF, the light of saturated stars comes from
+      the Gaia catalogue; without it, they keep the flux measured in an aperture.</li>
+      <li><strong>No star found, no change.</strong> With no star to measure, the stars are left as they are and the block
+      says so.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Chen, L., Chu, X., Zhang, X. &amp; Sun, J. 2022, <i>Simple Baselines for Image Restoration</i> (NAFNet), ECCV 2022. <a href="https://arxiv.org/abs/2204.04676">arXiv:2204.04676</a></li>
+      <li id="ref-2">Chu, X., Chen, L., Chen, C. &amp; Lu, X. 2022, <i>Improving Image Restoration by Revisiting Global Information Aggregation</i> (Test-time Local Converter), ECCV 2022. <a href="https://arxiv.org/abs/2112.04491">arXiv:2112.04491</a></li>
+      <li id="ref-3">Vincent, L. 1993, <i>Morphological grayscale reconstruction in image analysis: applications and efficient algorithms</i>, IEEE Transactions on Image Processing 2, 176. <a href="https://doi.org/10.1109/83.217222">doi:10.1109/83.217222</a></li>
+      <li id="ref-4">Goodman, J. W. 2005, <i>Introduction to Fourier Optics</i>, 3rd ed., Roberts &amp; Company (the image of a point source as the squared modulus of the Fourier transform of the pupil).</li>
+      <li id="ref-5">Moffat, A. F. J. 1969, <i>A Theoretical Investigation of Focal Stellar Images in the Photographic Emulsion and Application to Photographic Photometry</i>, A&amp;A 3, 455. <a href="https://ui.adsabs.harvard.edu/abs/1969A%26A.....3..455M">ADS:1969A&amp;A.....3..455M</a></li>
+    </ol>
+  </section>
+</Doc>

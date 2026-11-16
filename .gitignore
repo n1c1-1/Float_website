@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+
+# tutorial production: paths of this machine
+tools/tutorials/local.json
+# tutorial production tools: internal, not part of the site
+tools/
+# hidden tutorials (drafts), not published yet
+public/tutorials/adjust-a-block/
+public/tutorials/mono-sho/
+src/data/tutorials/adjust-a-block.json
+src/data/tutorials/mono-sho.json

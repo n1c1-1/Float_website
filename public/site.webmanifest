@@ -1,0 +1,15 @@
+{
+  "name": "FLOAT",
+  "short_name": "FLOAT",
+  "description": "FLOAT, FLOw for AsTrophotography",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#fbfbf9",
+  "theme_color": "#fbfbf9",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/float.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

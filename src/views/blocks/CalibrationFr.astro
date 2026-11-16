@@ -1,0 +1,275 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Calibration" title="Calibration"
+  description="Le bloc Calibration de FLOAT : la session et les images qu’elle prend, l’inventaire, master de dark, de flat et d’offset, pixels chauds et défectueux, flats d’une autre nuit, plusieurs sessions, avec les réglages et les limites.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Calibration</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il nettoie chaque brute avec les darks et les flats : il retire le signal propre de l’appareil, corrige le vignetage et les ombres de poussière, et répare les pixels chauds et morts.</dd></div><div><dt>Ce qu’on voit</dt><dd>Dans Inspecter, le master de dark et le master de flat, avec le minimum du flat, la part de pixels exclus et le bruit du fond de ciel ; dans le Rapport, les images de calibration utilisées et ces valeurs.</dd></div><div><dt>Ce qui se règle</dt><dd>En général rien : les valeurs par défaut conviennent. Échelle flat (environ 40 px) pour des flats empruntés à une autre nuit, et le Seuil pixels chauds si trop de pixels sont exclus.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>La session et ses images</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>L’inventaire</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Master de dark et d’offset</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Master de flat, et flats d’une autre nuit</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Pixels défectueux</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Calibrer chaque brute</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Plusieurs sessions, images en couleur, une image comme source</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Réglages</a></li>
+      <li><a href="#s9"><span class="secnum">9</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Calibration prépare les brutes d’une session pour l’alignement. Il construit le master
+    de dark, d’offset et de flat à partir des images de calibration, trouve les pixels chauds, froids et poussiéreux,
+    puis soustrait le dark et divise par le flat pour chaque brute. Les images restent des mosaïques Bayer brutes&nbsp;: rien
+    n’est dématricé ici. Avant lui, l’inventaire liste les images, vérifie qu’elles s’accordent et lit leurs
+    métadonnées.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li class="here"><span>Calibration</span></li><li><span>Alignement</span></li><li><span>Sélection</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>La session et ses images</h2>
+    <p>Une session est une nuit avec une caméra&nbsp;: les dossiers de ses images, réglés dans le bloc Session. Elle prend
+    cinq sortes d’images, et seules les brutes sont obligatoires.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les images que prend une session.</caption>
+        <thead><tr><th>Sorte</th><th>À quoi elle sert</th><th>Sans elle</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Brutes</th><td>Les images de la cible. Un dossier au moins est nécessaire.</td><td>Le calcul s’arrête&nbsp;: aucune brute trouvée.</td></tr>
+          <tr><th scope="row">Darks</th><td>Le signal thermique et les pixels chauds du capteur, à la pose des brutes.</td><td>Le master d’offset, ou le niveau de noir, tient lieu de dark. Aucun dark ne retire les pixels chauds ; la recherche dans les brutes les trouve (section 5).</td></tr>
+          <tr><th scope="row">Flats</th><td>Le vignetage et la poussière.</td><td>Le flat ne contient que des 1&nbsp;: rien n’est corrigé.</td></tr>
+          <tr><th scope="row">Offsets</th><td>Le décalage du capteur.</td><td>Le niveau de noir lu dans les images est utilisé.</td></tr>
+          <tr><th scope="row">Darks de flat</th><td>Ce qu’on retire des flats avant de les moyenner.</td><td>L’offset, sinon le niveau de noir, est retiré des flats.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Les images sont des fichiers bruts d’appareil (ARW, CR2, CR3, NEF, DNG, ORF, RW2, PEF, SRW, RAF), des fichiers
+    FITS (FIT, FITS, FTS, aussi compressés en FZ ou GZ), ou des images déjà en couleur (JPEG, PNG, TIFF). Dans un
+    dossier qui contient des images brutes ou FITS, les fichiers JPEG, PNG et TIFF à côté ne sont pas pris pour des
+    images. Un master, une image de calibration qu’un autre programme a déjà empilée, peut tenir lieu des images de sa
+    sorte (section 3).</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>L’inventaire</h2>
+    <aside class="note"><b>Limite brutes.</b> Réglée à N, l’inventaire garde N brutes réparties régulièrement sur la
+    session, si bien que la dérive, la transparence et les changements du ciel restent représentatifs. 0 les garde
+    toutes. Elle sert à essayer tout le workflow sur un sous-ensemble.</aside>
+    <p>L’inventaire liste les images des cinq sortes et lit les métadonnées de chacune&nbsp;: taille, motif de couleur, pose,
+    ISO ou gain, heure, caméra, focale, taille du pixel, niveaux de noir et de blanc, pointage et nom de l’objet. Bien
+    des réglages automatiques plus loin dans le workflow lisent ces valeurs. Il calcule aussi le temps d’intégration,
+    la somme des poses quand les brutes en ont plusieurs.</p>
+    <p>Il vérifie l’ensemble avant tout calcul, et s’arrête en donnant la raison quand&nbsp;:</p>
+    <ul>
+      <li>un dossier est absent (son disque n’est peut-être pas branché)&nbsp;;</li>
+      <li>il n’y a aucune brute, ou aucune n’est lisible&nbsp;;</li>
+      <li>une sorte mêle des images brutes ou FITS à des images JPEG, PNG ou TIFF&nbsp;: un empilement prend une seule
+      sorte&nbsp;;</li>
+      <li>des darks, flats, offsets ou darks de flat ont une autre taille que les brutes&nbsp;;</li>
+      <li>les images de calibration sont déjà en couleur alors que les brutes sont une mosaïque, ou l’inverse, ou, pour
+      des images en couleur, atteignent un autre niveau de blanc (une autre profondeur de bits)&nbsp;: un dark se retire et
+      un flat se divise valeur pour valeur.</li>
+    </ul>
+    <p>Deux cas ne l’arrêtent pas. Un fichier illisible (vide ou abîmé) est écarté et nommé dans le journal. Une brute
+    dont la taille ou le motif de couleur diffère de ceux de la majorité des brutes est ignorée, avec un
+    avertissement. Un capteur sans motif de couleur est lu comme monochrome. Pour des images FITS dont l’en-tête ne
+    donne pas le niveau de saturation, un plateau de pixels écrêtés trouvé dans quelques images le donne&nbsp;: une caméra
+    de 14 bits enregistrée en FITS de 16 bits sature à 16383, non à 65535. Quand l’en-tête déclare un overscan, seule
+    la zone utile est gardée.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Master de dark et d’offset</h2>
+    <p>Le master d’offset est la médiane des images d’offset. Le master de dark est la médiane des darks. Un master
+    donné comme tel (un fichier dont l’en-tête dit combien d’images il empile) est utilisé tel quel, sans être
+    empilé de nouveau. Plusieurs masters d’une sorte sont moyennés, pondérés par le nombre d’images de chacun, et les
+    images seules données à côté d’un master sont écartées, puisque le master les contient déjà.</p>
+    <aside class="note"><b>Pose et gain.</b> Deux poses à 5 % l’une de l’autre comptent pour une&nbsp;: une caméra écrit
+    299,99 s pour 300 s. Un gain ou une pose que l’en-tête n’enregistre pas ne fait pas de désaccord.</aside>
+    <p>Les brutes sont groupées par pose et gain, et chaque groupe reçoit le dark qui lui convient. Les darks ne sont
+    jamais moyennés d’une pose à l’autre.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Le dark que reçoit chaque groupe de brutes.</caption>
+        <thead><tr><th>Cas</th><th>Dark utilisé</th></tr></thead>
+        <tbody>
+          <tr><td>Darks de la pose et du gain des brutes</td><td>Ces darks, tels quels.</td></tr>
+          <tr><td>Pas de tels darks, un offset ou un niveau de noir connu, des darks du même gain</td><td>Les darks de la pose la plus proche. Leur signal thermique (le dark moins l’offset, ou moins le niveau de noir) est multiplié par le rapport des poses, et l’offset est remis. Le facteur apparaît dans le journal.</td></tr>
+          <tr><td>Pas de tels darks, ni offset, ni niveau de noir</td><td>Aucun dark. Sans offset pour distinguer le signal thermique du décalage, la mise à l’échelle mettrait aussi le décalage à l’échelle. Le journal le dit.</td></tr>
+          <tr><td>Aucun dark</td><td>Le master d’offset, sinon le niveau de noir. Le journal avertit qu’aucun dark ne retire les pixels chauds ; la recherche dans les brutes les trouve (section 5).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Quand le niveau du master de dark est bien sous l’offset (sous sa moitié), FLOAT avertit que son offset a déjà
+    été retiré&nbsp;: il ne retire donc pas celui des brutes.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Master de flat, et flats d’une autre nuit</h2>
+    <p>Les darks de flat sont retirés de chaque flat. Sans darks de flat, c’est l’offset, et sans offset le niveau de
+    noir, jamais le signal thermique d’un dark. Des darks de flat de poses différentes ne sont pas moyennés&nbsp;: on
+    prend ceux de la pose des flats, sinon les plus proches.</p>
+    <p>Chaque flat est ensuite divisé par son niveau central (la médiane de ses 400 × 400 pixels du centre). Les flats
+    sont moyennés sans les valeurs à plus de 3 écarts-types robustes (1,4826 fois l’écart absolu médian) de la
+    médiane de ce pixel. Le master de flat est normalisé à 1 au
+    centre, pour chaque position du motif de couleur séparément.</p>
+    <aside class="note"><b>Échelle flat.</b> Vers 40 px, les cernes de poussière disparaissent et le vignetage reste. À 0,
+    tout le flat est utilisé.</aside>
+    <p>Des flats peuvent être empruntés à une autre nuit avec les mêmes optiques. Ils contiennent le vignetage de
+    l’instrument mais pas la poussière de cette nuit. Le réglage Échelle flat ne garde alors que les échelles du master
+    de flat plus grandes que la valeur&nbsp;: chaque plan de couleur est lissé par une gaussienne d’écart-type σ égal à cette
+    valeur, en pixels du capteur.</p>
+    <p>Un flat qui n’a plus de lumière en son centre une fois le dark de flat retiré arrête le calcul et est nommé. Un
+    master de flat est pris pour déjà calibré&nbsp;: rien n’en est retiré, et les darks de flat donnés à côté ne servent
+    pas. Quand les flats passent sous le niveau avec lequel ils sont corrigés, FLOAT avertit que leur offset avait déjà
+    été retiré et l’est de nouveau.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Pixels défectueux</h2>
+    <p>Un pixel est exclu quand l’une de ces conditions est vraie. Chaque pixel exclu est ensuite remplacé par la
+    moyenne de ses voisins de même couleur qui ne sont ni exclus ni saturés.<a class="cite" href="#ref-1">[1]</a></p>
+    <ul>
+      <li><strong>Chaud dans le dark.</strong> Son signal d’obscurité à la pose des brutes (sa valeur dans le master de
+      dark au-dessus de la médiane du dark) dépasse le réglage Seuil pixels chauds fois le bruit du ciel d’une brute
+      calibrée, les deux en ADU.</li>
+      <li><strong>Froid ou poussiéreux dans le flat.</strong> Dans son plan de couleur, sa réponse au flat diffère de la
+      médiane de son voisinage de 9 × 9 de plus que le réglage Seuil défauts flat (30 % par défaut).</li>
+      <li><strong>Non éclairé.</strong> Son flat est sous le dixième du flat médian&nbsp;: un overscan, une colonne
+      morte.</li>
+      <li><strong>Chaud dans les brutes.</strong> Une recherche dans les brutes elles-mêmes, avec deux méthodes
+      (ci-dessous).</li>
+    </ul>
+    <h3>Persistance</h3>
+    <p>La méthode par défaut. Elle prend 40 brutes réparties sur la session, calibrées, et garde pour chaque pixel le
+    quartile inférieur de ses valeurs. Un défaut est brillant dans toutes les images&nbsp;; une étoile ne couvre un pixel
+    donné que dans certaines. Un pixel est marqué quand il dépasse la médiane de ses voisins de même couleur sur 5 × 5
+    de plus de 5 fois le bruit d’une image. Un défaut saturé éclaire ses quatre plus proches voisins par diaphonie&nbsp;:
+    les candidats et leurs huit voisins sont donc remplacés avant la recherche des étoiles.</p>
+    <p>Les étoiles sont trouvées comme le fait Source Extractor,<a class="cite" href="#ref-2">[2]</a> par la
+    bibliothèque sep,<a class="cite" href="#ref-3">[3]</a> à 5 sigmas du bruit du fond,
+    sur 5 pixels au moins, et seuls les objets ronds comptent (rapport des axes sous 2). Un candidat sous une telle
+    étoile dans le quartile inférieur, là où les images ont à peine bougé, n’est pas jugé&nbsp;: le rejet de l’empilement
+    s’en charge.</p>
+    <h3>Pose par pose</h3>
+    <p>La correction cosmétique de Siril sans darks, appliquée à chaque brute avec ses réglages par défaut (sigma chaud
+    3). Elle est faite pour un capteur Bayer.<a class="cite" href="#ref-1">[1]</a> Les pixels qu’elle trouve sont
+    remplacés par la moyenne de leurs voisins de même couleur, avant que les pixels saturés soient marqués, si bien
+    qu’un défaut saturé est corrigé et non pris pour le cœur d’une étoile.</p>
+    <p>Sur un capteur X-Trans, Pose par pose est remplacée par Persistance quand la session compte 15 brutes ou plus, et
+    la recherche est désactivée en dessous. La persistance elle-même demande 15 brutes.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Calibrer chaque brute</h2>
+    <p>Chaque brute devient (brute − dark) / flat, avec le dark de son groupe de pose. Les pixels au niveau de
+    saturation ou au-dessus (97,6 % du niveau de blanc par défaut) sont marqués saturés, pour que l’empilement les
+    traite à part et ne moyenne pas des valeurs écrêtées. Un pixel exclu n’est jamais marqué saturé, même s’il écrête&nbsp;:
+    un pixel chaud pris pour le cœur d’une étoile brillante dessinait la dérive de la monture dans l’empilement.</p>
+    <p>Les images calibrées sont écrites en flottants de 16 bits sur le disque de travail, mises à l’échelle pour que la
+    plus forte valeur valide reste dans cette plage. Elles restent des mosaïques brutes. Pour chaque image, le niveau et
+    le bruit sont mesurés sur les quatre positions du motif de couleur (les échantillons rouges, verts et bleus sur un
+    capteur X-Trans). Une image dont moins de la moitié des échantillons sont utilisables, par exemple une image
+    blanche prise pour marquer le début d’une série, n’a pas de statistiques&nbsp;: la <a href="/fr/blocs/selection/">Sélection</a> l’écarte.</p>
+    <p>Les images sont calibrées en parallèle, par processus, et le travail reprend image par image après une
+    interruption. Quand les masters d’un résultat antérieur ont été faits avec les mêmes réglages, seules les images
+    calibrées sont refaites. Des masters identiques à ceux d’une autre session ne sont gardés qu’une fois sur le
+    disque.</p>
+    <p>Avec Appliquer calibration désactivé, les images sont prises telles quelles, comme lorsqu’elles arrivent déjà
+    calibrées&nbsp;: seul le niveau de noir est retiré, sans dark, sans flat et sans pixel exclu.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Plusieurs sessions, images en couleur, une image comme source</h2>
+    <p><strong>Plusieurs sessions.</strong> Un projet peut contenir plusieurs sessions. Chacune est inventoriée et
+    calibrée avec ses propres masters, puis le bloc Sessions les réunit en un seul ensemble d’images calibrées que
+    <a href="/fr/blocs/alignement/">l’Alignement</a> et <a href="/fr/blocs/empilement/">l’Empilement</a> lisent comme celles d’une seule session. Les sessions doivent avoir la même taille de
+    capteur et le même motif de couleur, sinon le calcul s’arrête. L’ensemble réuni prend la plus petite échelle des
+    sessions, et un pixel y est saturé là où il l’est dans l’une des sessions.</p>
+    <p><strong>Images déjà en couleur.</strong> Les images JPEG, PNG et TIFF ne sont pas dématricées&nbsp;: le dark et le flat
+    sont appliqués couleur par couleur, les images sont alignées sur leur luminance et empilées par la méthode
+    classique. Les pixels chauds ne sont pas cherchés dans les brutes, puisque le dématriçage les a étalés. Une image
+    étirée n’est pas linéaire, ce qui est le cas de tout JPEG&nbsp;: les corrections de dark et de flat sont alors
+    approximatives, et FLOAT le dit.</p>
+    <p><strong>Une image comme source.</strong> Le bloc Image démarre un workflow d’un fichier image au lieu d’une
+    session&nbsp;: FITS, TIFF, PNG ou JPEG, normalement un empilement linéaire. Il est écrit comme le résultat du bloc
+    Empilement, et les blocs suivants le lisent comme un empilement. Une image monochrome reçoit son unique canal trois
+    fois. Les valeurs entre 0 et 1 sont multipliées par 65535, à l’échelle d’un capteur de 16 bits. L’image n’a pas de
+    demi-empilements&nbsp;: <a href="/fr/blocs/debruitage/">Débruitage</a> est donc grisé. Un fichier absent, abîmé ou qui n’est pas de son format est refusé
+    avec la raison avant le calcul. Avec Déjà étirée, l’image va à <a href="/fr/blocs/post/">Post</a> telle quelle.</p>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 3.</b>Les réglages du bloc Calibration, et ceux de l’inventaire et du bloc Image.</caption>
+        <thead><tr><th>Réglage</th><th>Défaut</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Seuil pixels chauds</th><td class="n">0,6 × bruit du ciel</td><td class="n">0,1 – 10</td><td>Un pixel dont le signal d’obscurité dépasse cette fraction du bruit du ciel d’une brute est exclu.</td></tr>
+          <tr><th scope="row">Seuil défauts flat</th><td class="n">0,3</td><td class="n">0,05 – 0,9</td><td>Les pixels dont la réponse au flat diffère de leur voisinage de plus de cette fraction sont exclus.</td></tr>
+          <tr><th scope="row">Pixels chauds (brutes)</th><td>activé</td><td>activé, désactivé</td><td>Cherche aussi les pixels chauds dans les brutes, en plus de ceux des darks. Des darks pris à une autre température manquent les pixels qui ne sont chauds que quand le capteur est plus chaud.</td></tr>
+          <tr><th scope="row">Pixels chauds</th><td>Persistance</td><td>Persistance, Pose par pose</td><td>Comment on les trouve dans les brutes (section 5).</td></tr>
+          <tr><th scope="row">Échelle flat</th><td class="n">0 px</td><td class="n">0 – 500</td><td>Ne garde que les échelles du master de flat plus grandes que cette valeur (le σ d’une gaussienne). 0 garde tout le flat.</td></tr>
+          <tr><th scope="row">Niveau saturation</th><td class="n">0,976 × niveau de blanc</td><td class="n">0,5 – 1</td><td>Les valeurs brutes au-dessus de cette fraction du niveau de blanc sont marquées saturées.</td></tr>
+          <tr><th scope="row">Appliquer calibration</th><td>activé</td><td>activé, désactivé</td><td>Désactivé, les images sont prises telles quelles (section 6).</td></tr>
+          <tr><th scope="row">Calculs parallèles</th><td class="n">automatique</td><td class="n">1 – 64</td><td>Le nombre de processus qui calibrent les images en parallèle. Automatique&nbsp;: le nombre de cœurs du processeur moins deux, au plus 12.</td></tr>
+          <tr><th scope="row">Limite brutes</th><td class="n">0</td><td class="n">0 ou plus</td><td>Inventaire. N’utilise que N brutes, réparties régulièrement sur la session. 0 les utilise toutes.</td></tr>
+          <tr><th scope="row">Fichier image</th><td>aucun</td><td>FITS, TIFF, PNG, JPEG</td><td>Bloc Image. L’image dont part le workflow.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s9"><span class="secnum">9</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Sans darks, aucun dark ne retire les pixels chauds.</strong> Le journal l’avertit. Reste la
+      recherche dans les brutes, qui demande 15 brutes ou plus avec la Persistance.</li>
+      <li><strong>Sans flats, rien n’est corrigé.</strong> Le vignetage et la poussière restent, et le modèle de ciel du
+      bloc <a href="/fr/blocs/gradient/">Gradient</a> aplanit le vignetage du fond de ciel.</li>
+      <li><strong>Des flats d’une autre nuit ne corrigent que le vignetage.</strong> La poussière de l’autre nuit n’est
+      pas celle de cette nuit&nbsp;: Échelle flat garde les grandes échelles.</li>
+      <li><strong>Des darks d’une autre pose ne sont mis à l’échelle qu’au-dessus d’un offset ou d’un niveau de noir
+      connu.</strong> Sinon les brutes vont sans dark. Deux masters de 300 s et de 60 s, moyennés une fois en un de
+      180 s puis mis à l’échelle avec un niveau de noir de 0, mettaient le ciel calibré sous zéro.</li>
+      <li><strong>Les images en couleur sont approximatives.</strong> Les images étirées ne sont pas linéaires, et aucun
+      pixel chaud n’y est cherché.</li>
+      <li><strong>Le premier seuil de la Persistance était trop bas.</strong> Réglé en sigmas du résidu du quartile
+      inférieur, qui vaut un tiers du bruit d’une image, il marquait 178&nbsp;000 pixels dans une session Sony A7S à
+      4000 ISO, dont 110&nbsp;000 à 2 à 5 sigmas d’une image. Il est maintenant en sigmas du bruit d’une image.</li>
+      <li><strong>Des étoiles ont perdu du flux dans la recherche.</strong> Les cœurs d’étoiles brillantes étaient
+      marqués, 10 à 26 % de leur flux sur une série Sony A7S, là où les images avaient à peine bougé. Ces pixels sont
+      maintenant laissés au rejet de l’empilement.</li>
+      <li><strong>Un défaut saturé était pris pour une étoile.</strong> Il éclaire ses quatre plus proches voisins par
+      diaphonie, ce qu’une condition de pixel isolé lisait comme une étoile. Cette condition a été retirée.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Documentation de Siril, <i lang="en">Cosmetic Correction</i>. <a href="https://siril.readthedocs.io/en/stable/processing/cc.html">siril.readthedocs.io</a></li>
+      <li id="ref-2">Bertin, E. &amp; Arnouts, S. 1996, <i lang="en">SExtractor: Software for source extraction</i>, A&amp;AS 117, 393. <a href="https://doi.org/10.1051/aas:1996164">doi:10.1051/aas:1996164</a></li>
+      <li id="ref-3">Barbary, K. 2016, <i lang="en">SEP: Source Extractor as a library</i>, Journal of Open Source Software 1(6), 58. <a href="https://doi.org/10.21105/joss.00058">doi:10.21105/joss.00058</a></li>
+    </ol>
+  </section>
+</Doc>

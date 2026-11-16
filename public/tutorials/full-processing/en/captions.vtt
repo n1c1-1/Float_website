@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the project of the first tutorial.
+
+2
+00:00:04.000 --> 00:00:09.000
+The project opens up to date: the status bar says all up to date, nothing is to be computed.
+
+3
+00:00:09.000 --> 00:00:12.000
+Click Post.
+
+4
+00:00:12.000 --> 00:00:17.000
+Post shows the image of the first tutorial. Before any gesture, look at what is still wrong.
+
+5
+00:00:17.000 --> 00:00:22.000
+At 100 %, the sky is grainy: the Denoise block will smooth it.
+
+6
+00:00:22.000 --> 00:00:28.000
+The stars are many and crowd the ring: the Stars/background block separates them, then the stars’ sliders quieten them.
+
+7
+00:00:28.000 --> 00:00:34.000
+The folds of the ring and the dark globules lack relief: Local contrast on the starless image will bring it.
+
+8
+00:00:34.000 --> 00:00:37.000
+Click Graph.
+
+9
+00:00:37.000 --> 00:00:40.000
+In the palette, double-click Denoise: the block joins the workflow.
+
+10
+00:00:40.000 --> 00:00:45.000
+Denoise sits in the chain before Color: it cleans the stack before anything is stretched.
+
+11
+00:00:45.000 --> 00:00:48.000
+Then double-click Stars/background, which was greyed until Denoise existed.
+
+12
+00:00:48.000 --> 00:00:54.000
+A Combine layers block has appeared by itself in the Composition area, wired to Post.
+
+13
+00:00:54.000 --> 00:00:58.000
+Click Run. The button says how long it should take: about 1 minute.
+
+14
+00:00:58.000 --> 00:01:04.000
+The list shows every block: those before the change are up to date and are not computed again.
+
+15
+00:01:04.000 --> 00:01:09.000
+Not shown in real time: the run takes about 1 minute on a graphics card (RTX 4060 Ti) that nothing else is using.
+
+16
+00:01:09.000 --> 00:01:15.000
+Only the blocks that follow the change were computed: Denoise and Stars/background, the first ones were kept.
+
+17
+00:01:15.000 --> 00:01:18.000
+Click Post.
+
+18
+00:01:18.000 --> 00:01:24.000
+One layer, Color minimal · Combine layers, replaces the plain one, with two rows: Stars and Starless image.
+
+19
+00:01:24.000 --> 00:01:27.000
+The new layer starts from zero: drag Sky to the left again, to about −1.5.
+
+20
+00:01:27.000 --> 00:01:30.000
+Drag Faint tones to the right again, to about +1.
+
+21
+00:01:30.000 --> 00:01:36.000
+The same sky at 100 %: the grain is gone. Denoise acted on the stack, before the stretch.
+
+22
+00:01:36.000 --> 00:01:41.000
+The filament at the left of the ring is smooth too, and its faint glow is kept.
+
+23
+00:01:41.000 --> 00:01:44.000
+Drag Strength a little to the left: the stars over the ring take less light, here −0.5.
+
+24
+00:01:44.000 --> 00:01:47.000
+Drag Small stars to the left: the swarm of tiny stars thins out, here −1.
+
+25
+00:01:47.000 --> 00:01:50.000
+Click the Starless image row.
+
+26
+00:01:50.000 --> 00:01:53.000
+Click Filter, then Contrast, then Local contrast.
+
+27
+00:01:53.000 --> 00:01:56.000
+Drag Strength to the right until the globules and the folds stand out, here 0.5; leave Scale as it is.
+
+28
+00:01:56.000 --> 00:02:02.000
+The dark globules and the folds of the ring stand out from the gas, and the stars are untouched.
+
+29
+00:02:02.000 --> 00:02:06.000
+Click Export…
+
+30
+00:02:06.000 --> 00:02:09.000
+Choose JPEG in Format.
+
+31
+00:02:09.000 --> 00:02:12.000
+Click Export.
+
+32
+00:02:12.000 --> 00:02:17.000
+The image is written, with its processing history beside it.
+
+33
+00:02:17.000 --> 00:02:21.000
+The image is exported. Press Ctrl+S to keep the project.

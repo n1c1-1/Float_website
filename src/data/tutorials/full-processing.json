@@ -1,0 +1,747 @@
+{
+  "slug": "full-processing",
+  "slugFr": "traitement-complet",
+  "section": "path",
+  "level": 2,
+  "order": 1,
+  "title": {
+    "en": "The full processing: stars apart",
+    "fr": "Le traitement complet : les étoiles à part"
+  },
+  "summary": {
+    "en": "You open the project of the first tutorial and add two blocks to its workflow, Denoise and Stars/background: the run computes only what follows them, about a minute. In Post you quieten the stars, thin the tiny ones and give the starless image its local contrast, then you export.",
+    "fr": "Vous ouvrez le projet du premier tutoriel et ajoutez deux blocs à son workflow, Débruitage et Étoiles/fond : l’exécution ne calcule que ce qui les suit, environ une minute. Dans Post, vous calmez les étoiles, éclaircissez les petites et donnez à l’image sans étoiles son contraste local, puis vous exportez."
+  },
+  "duration": {
+    "en": "About 10 min, of which 1 min of computing, measured on a PC with an RTX 4060 Ti graphics card (16 GB)",
+    "fr": "Environ 10 min, dont 1 min de calcul, mesurées sur un PC avec une carte graphique RTX 4060 Ti (16 Go)"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial My first image done: its finished project (1.1 GB, with its cache of calibrated frames beside it) is the starting point",
+      "Disk space: a few GB more for the results of the two new blocks"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Ma première image fait : son projet terminé (1,1 Go, avec son cache d’images calibrées à côté) est le point de départ",
+      "Place sur le disque : quelques Go de plus pour les résultats des deux nouveaux blocs"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB",
+      "fr": "6,9 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "video": {
+    "fr": {
+      "src": "/tutorials/full-processing/fr/video.mp4",
+      "captions": "/tutorials/full-processing/fr/captions.vtt",
+      "chapters": "/tutorials/full-processing/fr/chapters.vtt",
+      "poster": "/tutorials/full-processing/fr/poster.jpg",
+      "seconds": 141.0
+    },
+    "en": {
+      "src": "/tutorials/full-processing/en/video.mp4",
+      "captions": "/tutorials/full-processing/en/captions.vtt",
+      "chapters": "/tutorials/full-processing/en/chapters.vtt",
+      "poster": "/tutorials/full-processing/en/poster.jpg",
+      "seconds": 141.0
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project",
+        "fr": "Ouvrir le projet"
+      },
+      "text": {
+        "en": "On the Home screen click <b>Open project…</b> and choose the finished project of the first tutorial, or a copy of its folder. The project opens up to date: nothing is to be computed.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez le projet terminé du premier tutoriel, ou une copie de son dossier. Le projet s’ouvre à jour : rien n’est à calculer."
+      },
+      "check": {
+        "en": "The status bar reads all up to date, and the Run button is greyed.",
+        "fr": "La barre d’état indique tout à jour, et le bouton « Exécuter » est grisé."
+      },
+      "pitfall": {
+        "en": "The project is saved in its own folder: work on a copy of it if you want to keep the result of the first tutorial as it was.",
+        "fr": "Le projet est enregistré dans son propre dossier : travaillez sur une copie si vous voulez garder tel quel le résultat du premier tutoriel."
+      },
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/01.png",
+        "en": "/tutorials/full-processing/en/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 0.0,
+        "en": 0.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "Diagnosis in Post",
+        "fr": "Le diagnostic dans Post"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The layer is the result of the first tutorial. Before any gesture, look at what is right and what is wrong. Right, and to leave alone: the colours, the sky level and the crop set at level 1. Wrong: three points, each with the block or the gesture that corrects it.",
+        "fr": "Cliquez sur <b>Post</b>. Le calque est le résultat du premier tutoriel. Avant tout geste, regardez ce qui va et ce qui ne va pas. Ce qui va, et qu’on laisse : les couleurs, le niveau du ciel et le recadrage réglés au niveau 1. Ce qui ne va pas : trois points, chacun avec le bloc ou le geste qui le corrige."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "At 100 % the sky is grainy.",
+            "fr": "À 100 %, le ciel est granuleux."
+          },
+          "read": {
+            "en": "Zoom to 100 % (Ctrl and the mouse wheel over the picture, or the Zoom menu) on the dark sky in the upper part of the picture: a fine coloured speckle lies on the sky and on the faint gas.",
+            "fr": "Zoomez à 100 % (Ctrl et la molette au-dessus de l’image, ou le menu Zoom) sur le ciel sombre dans la partie haute de l’image : un fin grain coloré recouvre le ciel et le gaz faible."
+          },
+          "fix": {
+            "en": "Add the Denoise block.",
+            "fr": "Ajouter le bloc Débruitage."
+          },
+          "step": "denoise"
+        },
+        {
+          "problem": {
+            "en": "The stars are many and crowd the ring.",
+            "fr": "Les étoiles sont nombreuses et encombrent l’anneau."
+          },
+          "read": {
+            "en": "Look at the whole picture, then at the cluster at the heart of the ring: the stars cover the gas, and a swarm of tiny stars fills the sky between them.",
+            "fr": "Regardez l’image entière, puis l’amas au cœur de l’anneau : les étoiles recouvrent le gaz, et un essaim de petites étoiles remplit le ciel entre elles."
+          },
+          "fix": {
+            "en": "Add Stars/background, then lower Strength and Small stars.",
+            "fr": "Ajouter Étoiles/fond, puis baisser « Intensité » et « Petites étoiles »."
+          },
+          "step": "stars"
+        },
+        {
+          "problem": {
+            "en": "The folds of the ring and the dark globules lack relief.",
+            "fr": "Les replis de l’anneau et les globules sombres manquent de relief."
+          },
+          "read": {
+            "en": "Zoom to 100 % on the dark globules above the centre of the ring: they melt into the gas around them instead of standing out.",
+            "fr": "Zoomez à 100 % sur les globules sombres au-dessus du centre de l’anneau : ils se fondent dans le gaz autour d’eux au lieu de ressortir."
+          },
+          "fix": {
+            "en": "Add Local contrast on the starless image.",
+            "fr": "Ajouter « Contraste local » sur l’image sans étoiles."
+          },
+          "step": "contrast"
+        }
+      ],
+      "check": {
+        "en": "Level 1’s layer is there, Sky reads −1.5 and Faint tones +1.0. Noise smoothing and the star sliders are greyed: they wait for the blocks that give them something to act on.",
+        "fr": "Le calque du niveau 1 est là, « Ciel » indique −1,5 et « Tons faibles » +1,0. « Lissage du bruit » et les curseurs d’étoiles sont grisés : ils attendent les blocs qui leur donnent de quoi agir."
+      },
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/02.png",
+        "en": "/tutorials/full-processing/en/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 9.0,
+        "en": 9.0
+      }
+    },
+    {
+      "id": "denoise",
+      "title": {
+        "en": "Add Denoise",
+        "fr": "Ajouter Débruitage"
+      },
+      "text": {
+        "en": "Click <b>Graph</b>. In the palette, double-click <b>Denoise</b>: the block takes its place in the chain by itself, between Gradient and Color, with the method <b>Pretrained network</b>. It needs no setting.",
+        "fr": "Cliquez sur <b>Graphe</b>. Dans la palette, double-cliquez sur <b>Débruitage</b> : le bloc prend tout seul sa place dans la chaîne, entre Gradient et Couleur, avec la méthode <b>Réseau pré-entraîné</b>. Il n’a aucun réglage."
+      },
+      "why": {
+        "en": "At level 1, lifting the faint tones lifted the grain too. Denoise removes the noise from the stack before anything is stretched, so the faint tones can then be shown without grain. It is a block of the chain and not a filter of Post: that is why it removes the grain without blurring the stretched picture.",
+        "fr": "Au niveau 1, monter les tons faibles montait aussi le grain. Débruitage retire le bruit de l’empilement avant tout étirement : les tons faibles peuvent ensuite être montrés sans grain. C’est un bloc de la chaîne et non un filtre de Post : voilà pourquoi il retire le grain sans flouter l’image étirée."
+      },
+      "check": {
+        "en": "The status bar reads to run: ≤ 1 min.",
+        "fr": "La barre d’état indique à exécuter : ≤ 1 min."
+      },
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/03.png",
+        "en": "/tutorials/full-processing/en/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 34.0,
+        "en": 34.0
+      }
+    },
+    {
+      "id": "stars",
+      "title": {
+        "en": "Add Stars/background",
+        "fr": "Ajouter Étoiles/fond"
+      },
+      "text": {
+        "en": "Double-click <b>Stars/background</b> in the palette; it was greyed until Denoise existed. Its method is <b>Neural star removal</b>, with no setting. A <b>Combine layers</b> block then appears by itself in the Composition area, wired to Post.",
+        "fr": "Double-cliquez sur <b>Étoiles/fond</b> dans la palette ; il était grisé tant que Débruitage n’existait pas. Sa méthode est <b>Retrait neuronal des étoiles</b>, sans réglage. Un bloc <b>Combiner calques</b> apparaît alors tout seul dans la zone Composition, relié à Post."
+      },
+      "why": {
+        "en": "It splits the picture into two images, the starless gas and the stars alone. From now on each can be treated without harming the other: the stars no longer take the gas’s contrast, and the gas no longer takes the stars’ size.",
+        "fr": "Il sépare l’image en deux, le gaz sans étoiles et les étoiles seules. Chacune se traite désormais sans abîmer l’autre : les étoiles ne prennent plus le contraste du gaz, et le gaz ne prend plus la taille des étoiles."
+      },
+      "check": {
+        "en": "The Run button now reads 1 min: Denoise and Stars/background are to be computed.",
+        "fr": "Le bouton « Exécuter » indique 1 min : Débruitage et Étoiles/fond sont à calculer."
+      },
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/04.png",
+        "en": "/tutorials/full-processing/en/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 45.0,
+        "en": 45.0
+      }
+    },
+    {
+      "id": "run",
+      "title": {
+        "en": "Run",
+        "fr": "Exécuter"
+      },
+      "text": {
+        "en": "Click <b>Run</b>. The <b>Run project</b> window lists every block: Calibration to Gradient, and Color, read up to date and are not computed again; only Denoise and Stars/background are.",
+        "fr": "Cliquez sur <b>Exécuter</b>. La fenêtre <b>Exécuter projet</b> liste chaque bloc : de Calibration à Gradient, et Couleur, sont à jour et ne sont pas recalculés ; seuls Débruitage et Étoiles/fond le sont."
+      },
+      "why": {
+        "en": "This is the way FLOAT works: each block is computed once, and a change only runs again the blocks that follow it. The first tutorial’s run took 35 min; this one takes about 1 min.",
+        "fr": "C’est la façon de travailler de FLOAT : chaque bloc est calculé une fois, et une modification ne relance que les blocs qui la suivent. L’exécution du premier tutoriel a pris 35 min ; celle-ci en prend environ 1."
+      },
+      "pitfall": {
+        "en": "Before a run, look at the graphics card if another program computes on it: the run then takes longer. The times on this page were measured on an RTX 4060 Ti that nothing else was using.",
+        "fr": "Avant une exécution, regardez la carte graphique si un autre programme calcule dessus : l’exécution est alors plus longue. Les durées de cette page ont été mesurées sur une RTX 4060 Ti que rien d’autre n’utilisait."
+      },
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/05.png",
+        "en": "/tutorials/full-processing/en/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 54.0,
+        "en": 54.0
+      }
+    },
+    {
+      "id": "done",
+      "title": {
+        "en": "Only what follows was computed",
+        "fr": "Seul ce qui suit a été calculé"
+      },
+      "text": {
+        "en": "The window ends with <b>2 blocks computed</b> in about 1 min on an RTX 4060 Ti graphics card (16 GB). The run’s log gives the stages: Denoise 0.2 min, the output 0.2 min and the removal of the stars 0.6 min. Calibration, registration and stacking are not in the list: their results were kept.",
+        "fr": "La fenêtre se termine par <b>2 blocs calculés</b> en environ 1 min sur une carte graphique RTX 4060 Ti (16 Go). Le journal de l’exécution donne les étapes : Débruitage 0,2 min, la sortie 0,2 min et le retrait des étoiles 0,6 min. Calibration, alignement et empilement ne sont pas dans la liste : leurs résultats ont été gardés."
+      },
+      "check": {
+        "en": "The status bar reads all up to date and every block of the graph carries its green bar.",
+        "fr": "La barre d’état indique tout à jour et chaque bloc du graphe porte sa barre verte."
+      },
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/06.png",
+        "en": "/tutorials/full-processing/en/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 64.0,
+        "en": 64.0
+      }
+    },
+    {
+      "id": "layer",
+      "title": {
+        "en": "The new layer",
+        "fr": "Le nouveau calque"
+      },
+      "text": {
+        "en": "Close the window and click <b>Post</b>. One layer, <b>Color minimal · Combine layers</b>, now replaces the plain one, with two rows under it, <b>Stars</b> and <b>Starless image</b>. The star sliders, <b>Strength</b>, <b>Small stars</b>, <b>Star size</b> and <b>Star color</b>, are active. The picture looks paler: the layer starts from zero, and the Sky and Faint tones of level 1 are not carried over.",
+        "fr": "Fermez la fenêtre et cliquez sur <b>Post</b>. Un seul calque, <b>Couleur minimal · Combiner calques</b>, remplace maintenant le calque simple, avec deux lignes dessous, <b>Étoiles</b> et <b>Image sans étoiles</b>. Les curseurs d’étoiles, <b>Intensité</b>, <b>Petites étoiles</b>, <b>Taille des étoiles</b> et <b>Couleur des étoiles</b>, sont actifs. L’image paraît plus pâle : le calque repart de zéro, et le « Ciel » et les « Tons faibles » du niveau 1 ne sont pas repris."
+      },
+      "why": {
+        "en": "The stars are now a layer of their own, with their own sliders: each part of the picture is treated without touching the other. Post builds this layer by itself once the Stars/background block is computed.",
+        "fr": "Les étoiles sont maintenant un calque à part, avec leurs propres curseurs : chaque partie de l’image se traite sans toucher à l’autre. Post construit ce calque tout seul quand le bloc Étoiles/fond est calculé."
+      },
+      "pitfall": {
+        "en": "The layer keeps the template’s name, Color minimal, although the workflow now has Denoise and Stars/background.",
+        "fr": "Le calque garde le nom du modèle, Couleur minimal, bien que le workflow ait maintenant Débruitage et Étoiles/fond."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/full-processing/details/stars-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "A star field at 100 % after Denoise, on the plain layer.",
+            "fr": "Un champ d’étoiles à 100 % après Débruitage, sur le calque simple."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/stars-after.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "After",
+            "fr": "Après"
+          },
+          "caption": {
+            "en": "The same field with the stars separated and recombined: they are smaller and quieter, and the gas reads better.",
+            "fr": "Le même champ avec les étoiles séparées puis recombinées : elles sont plus petites et plus calmes, et le gaz se lit mieux."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/07.png",
+        "en": "/tutorials/full-processing/en/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 75.0,
+        "en": 75.0
+      }
+    },
+    {
+      "id": "again",
+      "title": {
+        "en": "Sky and Faint tones again",
+        "fr": "Ciel et Tons faibles à nouveau"
+      },
+      "text": {
+        "en": "In the <b>Starless image</b> group of the layer’s properties, drag <b>Sky</b> to the left, to about −1.5, and <b>Faint tones</b> to the right, to about +1. They are the goals of the first tutorial, on the new layer. Wait until the picture is drawn again after each.",
+        "fr": "Dans le groupe <b>Image sans étoiles</b> des propriétés du calque, faites glisser <b>Ciel</b> vers la gauche, vers −1,5, et <b>Tons faibles</b> vers la droite, vers +1. Ce sont les objectifs du premier tutoriel, sur le nouveau calque. Attendez que l’image soit redessinée après chacun."
+      },
+      "why": {
+        "en": "The sky stays a dark, neutral grey, never black: a black sky swallows the faint edges of the nebula, and a light one looks like fog. The faint tones are the extensions of the nebula, what makes the Rosette a rose and not a disc.",
+        "fr": "Le ciel reste d’un gris sombre et neutre, jamais noir : un ciel noir avale les bords faibles de la nébuleuse, et un ciel clair ressemble à du brouillard. Les tons faibles sont les prolongements de la nébuleuse, ce qui fait de la Rosette une rose et non un disque."
+      },
+      "check": {
+        "en": "The two sliders read −1.5 and +1.0, and the picture is back to the dark sky and the faint filaments of level 1.",
+        "fr": "Les deux curseurs indiquent −1,5 et +1,0, et l’image retrouve le ciel sombre et les filaments faibles du niveau 1."
+      },
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/08.png",
+        "en": "/tutorials/full-processing/en/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 84.0,
+        "en": 84.0
+      }
+    },
+    {
+      "id": "denoised",
+      "title": {
+        "en": "What Denoise did",
+        "fr": "Ce que Débruitage a fait"
+      },
+      "text": {
+        "en": "Zoom to 100 % on the same dark sky as in the diagnosis, then on the filament at the left of the ring. The coloured grain of the sky is gone, the faint glow of the outskirts shows, and the filament is smooth. The noise measured on the sky of the exported picture goes from 5.2 to 1.1 levels.",
+        "fr": "Zoomez à 100 % sur le même ciel sombre que dans le diagnostic, puis sur le filament à gauche de l’anneau. Le grain coloré du ciel a disparu, la faible lueur des abords apparaît, et le filament est lisse. Le bruit mesuré sur le ciel de l’image exportée passe de 5,2 à 1,1 niveaux."
+      },
+      "check": {
+        "en": "The same sliders give the same picture, without the grain.",
+        "fr": "Les mêmes curseurs donnent la même image, sans le grain."
+      },
+      "pitfall": {
+        "en": "Denoise is for pictures, not for measurements: it slightly brightens the faint stars (+8 to +11 % on the bench).",
+        "fr": "Débruitage est fait pour les images, pas pour les mesures : il éclaircit légèrement les étoiles faibles (+8 à +11 % au banc)."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/full-processing/details/denoise-sky-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Sky before",
+            "fr": "Ciel avant"
+          },
+          "caption": {
+            "en": "The sky at 100 % at the end of level 1: a coloured grain.",
+            "fr": "Le ciel à 100 % à la fin du niveau 1 : un grain coloré."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/denoise-sky-after.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Sky after",
+            "fr": "Ciel après"
+          },
+          "caption": {
+            "en": "The same sky after Denoise: the grain is gone and the faint glow of the outskirts appears.",
+            "fr": "Le même ciel après Débruitage : le grain a disparu et la faible lueur des abords apparaît."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/denoise-filament-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Filament before",
+            "fr": "Filament avant"
+          },
+          "caption": {
+            "en": "The filament at the left of the ring, before.",
+            "fr": "Le filament à gauche de l’anneau, avant."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/denoise-filament-after.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Filament after",
+            "fr": "Filament après"
+          },
+          "caption": {
+            "en": "The same filament after Denoise: it is smooth.",
+            "fr": "Le même filament après Débruitage : il est lisse."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/09.png",
+        "en": "/tutorials/full-processing/en/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 90.0,
+        "en": 90.0
+      }
+    },
+    {
+      "id": "strength",
+      "title": {
+        "en": "Stars quieter: Strength",
+        "fr": "Étoiles plus calmes : Intensité"
+      },
+      "text": {
+        "en": "With the layer’s top row selected, drag <b>Strength</b>, in the Stars group, a little to the left until the stars over the ring take less light: the cluster stays but stops covering the gas, here about −0.5.",
+        "fr": "Le calque étant sélectionné sur sa ligne du haut, faites glisser <b>Intensité</b>, dans le groupe Étoiles, un peu vers la gauche jusqu’à ce que les étoiles sur l’anneau prennent moins de lumière : l’amas reste mais ne recouvre plus le gaz, ici environ −0,5."
+      },
+      "why": {
+        "en": "In this field the stars outnumber everything, and the subject is the gas.",
+        "fr": "Dans ce champ, les étoiles sont plus nombreuses que tout, et le sujet est le gaz."
+      },
+      "pitfall": {
+        "en": "Go gently: a field without stars looks fake.",
+        "fr": "Allez-y doucement : un champ sans étoiles paraît faux."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/full-processing/details/strength-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The cluster at 100 % before.",
+            "fr": "L’amas à 100 % avant."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/strength-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right setting",
+            "fr": "Bon réglage"
+          },
+          "caption": {
+            "en": "Strength at about −0.5: the stars take less light and the gas shows.",
+            "fr": "« Intensité » vers −0,5 : les étoiles prennent moins de lumière et le gaz se voit."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/strength-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "Strength at about −1.7: the bright stars become dull dots and the cluster looks faded.",
+            "fr": "« Intensité » vers −1,7 : les étoiles brillantes deviennent des points ternes et l’amas paraît délavé."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/10.png",
+        "en": "/tutorials/full-processing/en/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 101.0,
+        "en": 101.0
+      }
+    },
+    {
+      "id": "small",
+      "title": {
+        "en": "Fewer tiny stars: Small stars",
+        "fr": "Moins de petites étoiles : Petites étoiles"
+      },
+      "text": {
+        "en": "Drag <b>Small stars</b> to the left until the swarm of tiny stars thins out and the faint gas between them shows, here about −1.",
+        "fr": "Faites glisser <b>Petites étoiles</b> vers la gauche jusqu’à ce que l’essaim de petites étoiles s’éclaircisse et que le gaz faible entre elles se voie, ici environ −1."
+      },
+      "why": {
+        "en": "The small stars are the ones that make a picture busy. Taking a share of them away is what most imagers do with a star-rich field. Small stars and Strength are independent: their order does not matter.",
+        "fr": "Les petites étoiles sont celles qui rendent une image chargée. En retirer une part est ce que font la plupart des astrophotographes avec un champ riche en étoiles. « Petites étoiles » et « Intensité » sont indépendants : leur ordre n’importe pas."
+      },
+      "pitfall": {
+        "en": "Do not push it to the far left: grey round dots appear in the sky where the stars were taken away, and the field looks empty.",
+        "fr": "Ne le poussez pas tout à gauche : des points ronds gris apparaissent dans le ciel là où les étoiles ont été retirées, et le champ paraît vide."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/full-processing/details/small-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "A star field at 100 % before.",
+            "fr": "Un champ d’étoiles à 100 % avant."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/small-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right setting",
+            "fr": "Bon réglage"
+          },
+          "caption": {
+            "en": "Small stars at about −1: the swarm thins out and the faint gas shows.",
+            "fr": "« Petites étoiles » vers −1 : l’essaim s’éclaircit et le gaz faible se voit."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/small-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "Small stars at the far left: faint grey round dots appear where the stars were, and the field looks empty.",
+            "fr": "« Petites étoiles » tout à gauche : de faibles points ronds gris apparaissent là où étaient les étoiles, et le champ paraît vide."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/11.png",
+        "en": "/tutorials/full-processing/en/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 104.0,
+        "en": 104.0
+      }
+    },
+    {
+      "id": "contrast",
+      "title": {
+        "en": "Local contrast on the starless image",
+        "fr": "Contraste local sur l’image sans étoiles"
+      },
+      "text": {
+        "en": "Click the <b>Starless image</b> row, then <b>Filter</b>, <b>Contrast</b> and <b>Local contrast</b>. Drag its <b>Strength</b> to the right until the dark globules and the folds of the ring stand out from the gas around them, here about 0.5. Leave <b>Scale</b> at its default, 40 px.",
+        "fr": "Cliquez sur la ligne <b>Image sans étoiles</b>, puis sur <b>Filtre</b>, <b>Contraste</b> et <b>Contraste local</b>. Faites glisser son <b>Intensité</b> vers la droite jusqu’à ce que les globules sombres et les replis de l’anneau ressortent du gaz autour d’eux, ici environ 0,5. Laissez <b>Échelle</b> à sa valeur par défaut, 40 px."
+      },
+      "why": {
+        "en": "The filter goes on the starless image and not on everything: over the stars, the same filter makes them hard, square and haloed. That is the reason the stars were separated.",
+        "fr": "Le filtre se place sur l’image sans étoiles et non sur tout : sur les étoiles, le même filtre les rend dures, carrées et auréolées. C’est la raison pour laquelle les étoiles ont été séparées."
+      },
+      "check": {
+        "en": "The filter appears under the Starless image row, and the stars are untouched.",
+        "fr": "Le filtre apparaît sous la ligne Image sans étoiles, et les étoiles ne sont pas touchées."
+      },
+      "pitfall": {
+        "en": "A Scale of 60 instead of 40 shows no visible difference (0.7 level on average): leave it alone.",
+        "fr": "Une échelle de 60 au lieu de 40 ne montre aucune différence visible (0,7 niveau en moyenne) : laissez-la."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/full-processing/details/contrast-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The globules at 100 % before.",
+            "fr": "Les globules à 100 % avant."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/contrast-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right setting",
+            "fr": "Bon réglage"
+          },
+          "caption": {
+            "en": "Strength at about 0.5: the globules and the folds stand out.",
+            "fr": "« Intensité » vers 0,5 : les globules et les replis ressortent."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/contrast-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "Strength at about 1.2: the globules turn black with dark haloes and the gas becomes blotchy.",
+            "fr": "« Intensité » vers 1,2 : les globules deviennent noirs avec des auréoles sombres et le gaz devient tacheté."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/order-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right place",
+            "fr": "Bon endroit"
+          },
+          "caption": {
+            "en": "The filter on the Starless image row: the stars of the cluster stay soft.",
+            "fr": "Le filtre sur la ligne Image sans étoiles : les étoiles de l’amas restent douces."
+          }
+        },
+        {
+          "src": "/tutorials/full-processing/details/order-wrong.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Wrong place",
+            "fr": "Mauvais endroit"
+          },
+          "caption": {
+            "en": "The same filter over everything, stars included: the stars turn hard, square and haloed.",
+            "fr": "Le même filtre sur tout, étoiles comprises : les étoiles deviennent dures, carrées et auréolées."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/12.png",
+        "en": "/tutorials/full-processing/en/12.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 107.0,
+        "en": 107.0
+      }
+    },
+    {
+      "id": "export",
+      "title": {
+        "en": "Export",
+        "fr": "Exporter"
+      },
+      "text": {
+        "en": "Click <b>Export…</b>, choose <b>JPEG</b> in <b>Format</b> and click <b>Export</b>. The file is named after the project, in its export folder.",
+        "fr": "Cliquez sur <b>Exporter…</b>, choisissez <b>JPEG</b> dans <b>Format</b> et cliquez sur <b>Exporter</b>. Le fichier porte le nom du projet, dans son dossier d’export."
+      },
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/13.png",
+        "en": "/tutorials/full-processing/en/13.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 122.0,
+        "en": 122.0
+      }
+    },
+    {
+      "id": "exported",
+      "title": {
+        "en": "The image is written",
+        "fr": "L’image est écrite"
+      },
+      "text": {
+        "en": "The window says how many files were written: the image and its processing history. Close it. Press Ctrl+S to keep the project with its two new blocks, its new layer and the three settings.",
+        "fr": "La fenêtre dit combien de fichiers ont été écrits : l’image et son historique de traitement. Fermez-la. Appuyez sur Ctrl+S pour garder le projet avec ses deux nouveaux blocs, son nouveau calque et les trois réglages."
+      },
+      "shot": {
+        "fr": "/tutorials/full-processing/fr/14.png",
+        "en": "/tutorials/full-processing/en/14.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 132.0,
+        "en": 132.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/full-processing/result.jpg",
+    "w": 2000,
+    "h": 1429,
+    "caption": {
+      "en": "The Rosette Nebula after the full processing: Denoise, the stars apart, and local contrast on the starless image. The noise measured on the sky goes from 5.2 to 1.1 levels.",
+      "fr": "La nébuleuse de la Rosette après le traitement complet : Débruitage, les étoiles à part, et contraste local sur l’image sans étoiles. Le bruit mesuré sur le ciel passe de 5,2 à 1,1 niveaux."
+    }
+  },
+  "blocks": [
+    "Denoise",
+    "Stars",
+    "Combination",
+    "Post"
+  ],
+  "next": "repair-not-crop"
+}

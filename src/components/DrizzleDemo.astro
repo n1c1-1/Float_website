@@ -1,0 +1,197 @@
+---
+// The coverage of a Bayer drizzle, to manipulate: what the Stacking block computes before it stacks
+// (FLOAT's core/coverage.py), reduced to shifts on a small patch.
+import type { Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = {
+  en: {
+    colour: 'Colour of the samples', r: 'Red', g: 'Green', b: 'Blue',
+    frames: 'Frames', scale: 'Drizzle scale', drop: 'Drop size', dither: 'Shift between frames',
+    px: 'px', variation: 'Coverage variation (standard deviation / median)', empty: 'Output pixels left empty',
+    yes: 'Under 20 %: the rule holds.', no: '20 % or more: the rule does not hold.',
+    none: 'Most output pixels are empty: no median to compare with.',
+    canvas: 'Output grid shaded by the drop area each output pixel received',
+  },
+  fr: {
+    colour: 'Couleur des échantillons', r: 'Rouge', g: 'Vert', b: 'Bleu',
+    frames: 'Images', scale: 'Échelle drizzle', drop: 'Taille goutte', dither: 'Décalage entre images',
+    px: 'px', variation: 'Variation de la couverture (écart-type / médiane)', empty: 'Pixels de sortie restés vides',
+    yes: 'Sous 20 % : la règle est respectée.', no: '20 % ou plus : la règle n’est pas respectée.',
+    none: 'La plupart des pixels de sortie sont vides : pas de médiane à comparer.',
+    canvas: 'Grille de sortie, ombrée selon la surface de gouttes reçue par chaque pixel de sortie',
+  },
+}[lang];
+const dec = lang === 'fr' ? ',' : '.';
+---
+<div class="drz" data-dec={dec} data-yes={t.yes} data-no={t.no} data-none={t.none} data-px={t.px}>
+  <canvas role="img" aria-label={t.canvas}></canvas>
+  <div class="drz-side">
+    <fieldset>
+      <legend>{t.colour}</legend>
+      <div class="seg">
+        <label><input type="radio" name="drz-colour" value="R" checked />{t.r}</label>
+        <label><input type="radio" name="drz-colour" value="G" />{t.g}</label>
+        <label><input type="radio" name="drz-colour" value="B" />{t.b}</label>
+      </div>
+    </fieldset>
+    <div class="row"><label for="drz-frames">{t.frames}</label><output data-for="frames" for="drz-frames"></output>
+      <input id="drz-frames" type="range" data-k="frames" min="1" max="200" step="1" value="30" /></div>
+    <fieldset>
+      <legend>{t.scale}</legend>
+      <div class="seg">
+        <label><input type="radio" name="drz-scale" value="1" />1×</label>
+        <label><input type="radio" name="drz-scale" value="1.5" checked />1{dec}5×</label>
+        <label><input type="radio" name="drz-scale" value="2" />2×</label>
+      </div>
+    </fieldset>
+    <div class="row"><label for="drz-drop">{t.drop}</label><output data-for="drop" for="drz-drop"></output>
+      <input id="drz-drop" type="range" data-k="drop" min="0.3" max="1" step="0.05" value="0.7" /></div>
+    <div class="row"><label for="drz-dither">{t.dither}</label><output data-for="dither" for="drz-dither"></output>
+      <input id="drz-dither" type="range" data-k="dither" min="0" max="4" step="0.25" value="2" /></div>
+    <dl class="drz-read">
+      <dt>{t.variation}</dt><dd data-out="cv"></dd>
+      <dt>{t.empty}</dt><dd data-out="empty"></dd>
+    </dl>
+    <div class="drz-verdict" data-out="verdict" role="status"></div>
+  </div>
+</div>
+
+<script>
+  const PATCH = 12;   // sensor pixels shown, each way
+  const MARGIN = 6;   // sensor pixels around the patch whose drops may fall inside it
+
+  // a fixed sequence of shifts, so that adding frames keeps the ones already there
+  function shifts(n: number): [number, number][] {
+    let a = 0x9e3779b9;
+    const rnd = () => {
+      a |= 0; a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    const out: [number, number][] = [[0, 0]];            // the reference frame
+    for (let i = 1; i < n; i++) out.push([2 * rnd() - 1, 2 * rnd() - 1]);
+    return out;
+  }
+  const ALL = shifts(200);
+  const even = (v: number) => ((v % 2) + 2) % 2 === 0;
+  const isColour = (c: string, i: number, j: number) =>
+    c === 'R' ? even(i) && even(j) : c === 'B' ? !even(i) && !even(j) : even(i) !== even(j);
+
+  document.querySelectorAll<HTMLElement>('.drz').forEach((root) => {
+    const canvas = root.querySelector('canvas')!;
+    const ctx = canvas.getContext('2d')!;
+    const dec = root.dataset.dec!;
+    const fmt = (v: number, d: number) => v.toFixed(d).replace('.', dec);
+    const range = (k: string) => root.querySelector<HTMLInputElement>(`input[data-k="${k}"]`)!;
+    const out = (k: string) => root.querySelector<HTMLElement>(`[data-out="${k}"]`)!;
+    const picked = (name: string) => root.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)!.value;
+
+    function draw() {
+      const colour = picked('drz-colour');
+      const scale = parseFloat(picked('drz-scale'));
+      const n = parseInt(range('frames').value, 10);
+      const pixfrac = parseFloat(range('drop').value);
+      const amp = parseFloat(range('dither').value);
+      root.querySelector<HTMLElement>('output[data-for="frames"]')!.textContent = String(n);
+      root.querySelector<HTMLElement>('output[data-for="drop"]')!.textContent = fmt(pixfrac, 2);
+      root.querySelector<HTMLElement>('output[data-for="dither"]')!.textContent = `± ${fmt(amp, 2)} ${root.dataset.px}`;
+
+      // the weight map: each output pixel adds up the area of the drops that touch it
+      const cells = Math.round(PATCH * scale);
+      const w = new Float64Array(cells * cells);
+      const half = (pixfrac * scale) / 2;               // a drop is pixfrac x scale output pixels wide
+      const centres: [number, number, number][] = [];
+      for (let f = 0; f < n; f++) {
+        const dx = ALL[f][0] * amp, dy = ALL[f][1] * amp;
+        for (let j = -MARGIN; j < PATCH + MARGIN; j++) {
+          for (let i = -MARGIN; i < PATCH + MARGIN; i++) {
+            if (!isColour(colour, i, j)) continue;
+            const cx = (i + 0.5 + dx) * scale, cy = (j + 0.5 + dy) * scale;
+            const x0 = cx - half, x1 = cx + half, y0 = cy - half, y1 = cy + half;
+            if (x1 <= 0 || y1 <= 0 || x0 >= cells || y0 >= cells) continue;
+            centres.push([cx, cy, f]);
+            for (let ky = Math.max(0, Math.floor(y0)); ky < Math.min(cells, Math.ceil(y1)); ky++) {
+              const oy = Math.min(y1, ky + 1) - Math.max(y0, ky);
+              for (let kx = Math.max(0, Math.floor(x0)); kx < Math.min(cells, Math.ceil(x1)); kx++) {
+                w[ky * cells + kx] += oy * (Math.min(x1, kx + 1) - Math.max(x0, kx));
+              }
+            }
+          }
+        }
+      }
+      const sorted = Float64Array.from(w).sort();
+      const median = (sorted[(sorted.length - 1) >> 1] + sorted[sorted.length >> 1]) / 2;
+      let mean = 0, max = 0, empty = 0;
+      for (const v of w) { mean += v; if (v > max) max = v; if (v < 1e-9) empty++; }
+      mean /= w.length;
+      let sd = 0;
+      for (const v of w) sd += (v - mean) ** 2;
+      sd = Math.sqrt(sd / w.length);
+      const cv = median > 1e-9 ? sd / median : Infinity;
+
+      out('cv').textContent = isFinite(cv) ? `${fmt(100 * cv, 0)} %` : '–';
+      out('empty').textContent = `${fmt((100 * empty) / w.length, 0)} %`;
+      const verdict = out('verdict');
+      verdict.textContent = !isFinite(cv) ? root.dataset.none! : cv < 0.2 ? root.dataset.yes! : root.dataset.no!;
+      verdict.classList.toggle('no', !(cv < 0.2));
+
+      // the picture
+      const css = canvas.clientWidth;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.height = Math.round(css * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, css, css);
+      const u = css / cells;                              // one output pixel on screen
+      for (let ky = 0; ky < cells; ky++) {
+        for (let kx = 0; kx < cells; kx++) {
+          const v = w[ky * cells + kx];
+          if (v < 1e-9) {                                 // an empty output pixel: hatched
+            ctx.strokeStyle = '#b9bec6'; ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(kx * u + 2, (ky + 1) * u - 2); ctx.lineTo((kx + 1) * u - 2, ky * u + 2);
+            ctx.stroke();
+          } else {
+            ctx.fillStyle = `rgba(20,48,79,${0.06 + 0.74 * (v / max)})`;   // the site's blue, whatever the colour
+            ctx.fillRect(kx * u, ky * u, u, u);
+          }
+        }
+      }
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1;   // output pixels
+      ctx.beginPath();
+      for (let k = 1; k < cells; k++) {
+        const p = Math.round(k * u) + 0.5;
+        ctx.moveTo(p, 0); ctx.lineTo(p, css); ctx.moveTo(0, p); ctx.lineTo(css, p);
+      }
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(27,30,36,0.55)'; ctx.lineWidth = 1;      // sensor pixels
+      ctx.beginPath();
+      for (let k = 1; k < PATCH; k++) {
+        const p = Math.round(k * scale * u);
+        ctx.moveTo(p, 0); ctx.lineTo(p, css); ctx.moveTo(0, p); ctx.lineTo(css, p);
+      }
+      ctx.stroke();
+      const side = 2 * half * u;
+      for (const [cx, cy, f] of centres) {
+        if (f === 0) {                                    // the first frame's drops, outlined
+          ctx.strokeStyle = '#e0812b'; ctx.lineWidth = 2;
+          ctx.strokeRect(cx * u - side / 2, cy * u - side / 2, side, side);
+        } else if (n <= 60) {                             // the others: their centres
+          ctx.fillStyle = 'rgba(224,129,43,0.9)';
+          ctx.fillRect(cx * u - 1, cy * u - 1, 2, 2);
+        }
+      }
+    }
+
+    // drawn when the figure comes near the screen (not while the page loads), then at every change; also for printing
+    let shown = false;
+    const show = () => { shown = true; draw(); };
+    root.addEventListener('input', show);
+    new ResizeObserver(() => { if (shown) draw(); }).observe(canvas);
+    window.addEventListener('beforeprint', show);
+    new IntersectionObserver((entries, io) => {
+      if (entries.some((e) => e.isIntersecting)) { io.disconnect(); show(); }
+    }, { rootMargin: '400px' }).observe(root);
+  });
+</script>

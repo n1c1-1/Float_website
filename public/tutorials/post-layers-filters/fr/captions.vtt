@@ -1,0 +1,141 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet du tutoriel Le traitement complet : les étoiles à part.
+
+2
+00:00:04.000 --> 00:00:08.000
+Le projet s’ouvre à jour : rien n’est à calculer.
+
+3
+00:00:08.000 --> 00:00:11.000
+Cliquez sur « Post ».
+
+4
+00:00:11.000 --> 00:00:18.000
+Avant tout geste : les globules sombres et les plis de l’anneau sont plats, et l’anneau pourrait être un peu plus vif.
+
+5
+00:00:18.000 --> 00:00:23.000
+Cliquez sur le calque combiné : il contient deux lignes, « Étoiles » et « Image sans étoiles ».
+
+6
+00:00:23.000 --> 00:00:28.000
+Les étoiles sont ajoutées sur l’image sans étoiles en mode Écran.
+
+7
+00:00:28.000 --> 00:00:34.000
+Cliquez sur « Étoiles » : ses curseurs, « Intensité » et « Petites étoiles », n’agissent que sur les étoiles.
+
+8
+00:00:34.000 --> 00:00:40.000
+Cliquez sur « Image sans étoiles » : ses filtres ne s’appliquent qu’à elle, avant que les étoiles soient remises.
+
+9
+00:00:40.000 --> 00:00:45.000
+Cliquez sur « Filtre » : les familles sont Étirement, Contraste, Couleur, Détail, Bruit et Combinaison.
+
+10
+00:00:45.000 --> 00:00:48.000
+Ouvrez « Contraste ».
+
+11
+00:00:48.000 --> 00:00:51.000
+Choisissez « Contraste local ».
+
+12
+00:00:51.000 --> 00:00:57.000
+Faites glisser « Intensité » jusqu’à environ 0,5, avec « Échelle » laissée à 40 px : les globules et les plis ressortent.
+
+13
+00:00:57.000 --> 00:01:00.000
+Cliquez de nouveau sur « Filtre ».
+
+14
+00:01:00.000 --> 00:01:03.000
+Ouvrez « Couleur ».
+
+15
+00:01:03.000 --> 00:01:06.000
+Choisissez « Saturation ».
+
+16
+00:01:06.000 --> 00:01:12.000
+Faites glisser « Intensité » jusqu’à environ +20 %, toutes les teintes : le rouge et le rose de l’anneau deviennent plus vifs.
+
+17
+00:01:12.000 --> 00:01:16.000
+Cliquez sur l’œil de « Saturation » : le filtre est éteint.
+
+18
+00:01:16.000 --> 00:01:20.000
+Cliquez de nouveau sur l’œil : le filtre revient, avec son réglage.
+
+19
+00:01:20.000 --> 00:01:24.000
+De même avec « Contraste local » : les globules s’aplatissent quand il est éteint.
+
+20
+00:01:24.000 --> 00:01:28.000
+Cliquez sur un filtre : ses réglages sont toujours là et peuvent être changés.
+
+21
+00:01:28.000 --> 00:01:32.000
+Faites glisser « Intensité » plus loin, pour voir.
+
+22
+00:01:32.000 --> 00:01:35.000
+Sélectionnez « Saturation ».
+
+23
+00:01:35.000 --> 00:01:39.000
+Cliquez sur la corbeille : le filtre est supprimé.
+
+24
+00:01:39.000 --> 00:01:43.000
+Appuyez sur Ctrl+Z : le filtre revient, avec son réglage.
+
+25
+00:01:43.000 --> 00:01:48.000
+Cliquez sur « Dupliquer » (Ctrl+J) : le filtre choisi est copié, ici « Contraste local ».
+
+26
+00:01:48.000 --> 00:01:52.000
+Cliquez sur la corbeille : la copie est supprimée.
+
+27
+00:01:52.000 --> 00:01:57.000
+Cliquez sur le calque combiné : « Mode de fusion des étoiles » indique Écran.
+
+28
+00:01:57.000 --> 00:02:02.000
+Faites glisser « Opacité » de « Contraste local » jusqu’à environ 55 % : le filtre agit à moitié.
+
+29
+00:02:02.000 --> 00:02:06.000
+Appuyez sur Ctrl+Z : « Opacité » revient à 100 %.
+
+30
+00:02:06.000 --> 00:02:10.000
+Appuyez sur Ctrl+S : les calques et leurs filtres sont enregistrés avec le projet.
+
+31
+00:02:10.000 --> 00:02:13.000
+Ouvrez « Fichier », puis cliquez sur « Fermer projet ».
+
+32
+00:02:13.000 --> 00:02:17.000
+L’écran d’accueil liste le projet.
+
+33
+00:02:17.000 --> 00:02:20.000
+Cliquez sur le projet pour le rouvrir.
+
+34
+00:02:20.000 --> 00:02:23.000
+Cliquez sur « Post ».
+
+35
+00:02:23.000 --> 00:02:29.000
+Les filtres sont toujours là ; un clic sur l’un ouvre ses réglages, toujours modifiables.

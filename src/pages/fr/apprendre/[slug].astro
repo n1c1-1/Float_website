@@ -1,0 +1,9 @@
+---
+// Une page par manifeste de tutoriel (src/data/tutorials/*.json).
+import V from '../../../views/Tutorial.astro';
+import { tutorials } from '../../../data/tutorials';
+export function getStaticPaths() {
+  return tutorials.map((t) => ({ params: { slug: t.slugFr }, props: { slug: t.slug } }));
+}
+---
+<V lang="fr" slug={Astro.props.slug} />

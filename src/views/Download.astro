@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import { release, releaseFileUrl, routes, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const first = fr ? `${routes.learn.fr}premiere-image/` : `${routes.learn.en}first-image/`;
+---
+<Base lang={lang} page="download" title={fr ? 'Télécharger' : 'Download'}
+  description={fr ? 'Télécharger FLOAT pour Windows, ou l’installer depuis les sources sous Windows 11 et Linux.' : 'Download FLOAT for Windows, or install it from the sources on Windows 11 and Linux.'}>
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <p class="kicker">{fr ? 'Installation' : 'Installation'}</p>
+    <h1>{fr ? 'Télécharger' : 'Download'}</h1>
+    <p class="meta">{fr ? `Bêta du ${release.date.fr}` : `Beta of ${release.date.en}`}</p>
+
+    <div class="split even">
+      <div>
+        <h2 style="margin-top: 0"><span class="secnum">1</span>{fr ? 'Avec l’installeur (Windows)' : 'With the installer (Windows)'}</h2>
+        <p>{fr
+          ? 'L’installeur installe FLOAT pour le compte Windows de l’utilisateur, avec tout ce qu’il lui faut : son propre Python, le solveur astrométrique Asterion et son index.'
+          : 'The installer installs FLOAT for the user’s Windows account, with everything it needs: its own Python, the Asterion plate solver and its index.'}</p>
+        <div class="btn-row">
+          <a class="btn" href={releaseFileUrl}>{fr ? 'Télécharger pour Windows (bêta)' : 'Download for Windows (beta)'}<small>{fr ? `${release.file} · ${release.sizeMB} Mo · Windows 64 bits` : `${release.file} · ${release.sizeMB} MB · Windows 64-bit`}</small></a>
+        </div>
+        <p>{fr
+          ? <>Pendant l’installation, il télécharge une fois le catalogue d’étoiles (<span class="num">1,85 Go</span>, vérifié fichier par fichier, reprise possible). Ensuite FLOAT fonctionne hors ligne et ne télécharge jamais rien pendant un traitement.</>
+          : <>During the installation it downloads the star catalogue once (<span class="num">1.85 GB</span>, checked file by file, resumable). After that, FLOAT works offline and never downloads anything while it processes.</>}</p>
+        <p>{fr
+          ? 'Si ce téléchargement échoue, FLOAT démarre quand même, mais l’Astrométrie et les blocs qui la suivent restent indisponibles tant que le catalogue manque ; relancer l’installeur reprend le téléchargement là où il s’est arrêté.'
+          : 'If that download fails, FLOAT still starts, but Astrometry and the blocks after it stay unavailable until the catalogue is there; running the installer again resumes the download where it stopped.'}</p>
+      </div>
+      <div class="tbl-wrap" style="margin-top: 0.4rem">
+        <table class="tbl">
+          <caption><b>{fr ? 'Tableau 1.' : 'Table 1.'}</b>{fr ? 'Ce qu’il faut.' : 'Requirements.'}</caption>
+          <tbody>
+            <tr><th scope="row">{fr ? 'Téléchargement' : 'Download'}</th><td>{fr ? `${release.sizeMB} Mo, puis le catalogue d’étoiles (1,85 Go) pendant l’installation.` : `${release.sizeMB} MB, then the star catalogue (1.85 GB) during the installation.`}</td></tr>
+            <tr><th scope="row">Windows</th><td>{fr ? 'Windows 10 (version 1809 ou plus récente) ou Windows 11, 64 bits. L’installeur travaille dans le compte de l’utilisateur et n’exige pas de droits d’administrateur.' : 'Windows 10 (version 1809 or later) or Windows 11, 64-bit. The installer works within the user account and needs no administrator rights.'}</td></tr>
+            <tr><th scope="row">{fr ? 'Espace disque' : 'Disk space'}</th><td>{fr ? 'L’installeur demande 5 Gio libres, catalogue compris, sans carte NVIDIA ; avec une carte NVIDIA, il vérifie le chiffre exact avant de télécharger.' : 'The installer asks for 5 GiB free, catalogue included, without an NVIDIA card; with an NVIDIA card it checks the exact figure before downloading.'}</td></tr>
+            <tr><th scope="row">{fr ? 'Mémoire' : 'Memory'}</th><td>{fr ? '16 Go de RAM ou plus conseillés. Un empilement plus grand que la mémoire est traité par parties, avec le même résultat au bit près.' : '16 GB of RAM or more recommended. A stack larger than memory is processed in parts, with the same result to the bit.'}</td></tr>
+            <tr><th scope="row">{fr ? 'Carte graphique' : 'GPU'}</th><td>{fr ? 'Accélération par les cartes graphiques NVIDIA (8 Go ou plus) à chaque étape. Sans carte NVIDIA, le processeur seul fait tourner toute la chaîne.' : 'Acceleration by NVIDIA graphics cards (8 GB or more) at every step. Without an NVIDIA card, the processor alone runs the whole chain.'}</td></tr>
+            <tr><th scope="row">{fr ? 'Capteurs' : 'Sensors'}</th><td>{fr ? 'Appareils photo reflex et hybrides, caméras couleur, caméras monochromes avec filtres.' : 'DSLR and mirrorless cameras, one-shot colour cameras, monochrome cameras with filters.'}</td></tr>
+            <tr><th scope="row">{fr ? 'Machines testées' : 'Tested on'}</th><td>{fr ? 'Windows 11 avec une RTX 4060 Ti, une RTX 3070, et un portable sans carte NVIDIA.' : 'Windows 11 with an RTX 4060 Ti, an RTX 3070, and a laptop without an NVIDIA card.'}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <section class="sec">
+      <h2><span class="secnum">2</span>{fr ? 'Vérifier le fichier' : 'Check the file'}</h2>
+      <div class="tbl-wrap measure" style="max-width: 60rem">
+        <table class="tbl">
+          <caption><b>{fr ? 'Tableau 2.' : 'Table 2.'}</b>{fr ? 'Le fichier publié. Le bouton ci-dessus mène à ce fichier précis, celui de la publication nommée ici.' : 'The published file. The button above leads to this very file, the one of the release named here.'}</caption>
+          <tbody>
+            <tr><th scope="row">{fr ? 'Fichier' : 'File'}</th><td class="n">{release.file}</td></tr>
+            <tr><th scope="row">{fr ? 'Publication' : 'Release'}</th><td><a href={`${release.repo}/releases/tag/${release.tag}`}>{release.tag}</a></td></tr>
+            <tr><th scope="row">{fr ? 'Taille' : 'Size'}</th><td class="n">{fr ? `${release.sizeBytes.toLocaleString('fr-FR')} octets` : `${release.sizeBytes.toLocaleString('en-GB')} bytes`}</td></tr>
+            <tr><th scope="row">SHA-256</th><td class="n" style="white-space: normal; word-break: break-all">{release.sha256}</td></tr>
+            <tr><th scope="row">{fr ? 'Licence' : 'Licence'}</th><td>{fr ? 'GPL v3 ; les mentions des composants tiers sont affichées avant l’installation et installées à côté de FLOAT.' : 'GPL v3; the third-party notices are shown before the installation and installed beside FLOAT.'}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">3</span>{fr ? 'Après l’installation' : 'After the installation'}</h2>
+      <ol class="measure">
+        {fr ? <>
+          <li><strong>Lancer FLOAT.</strong></li>
+          <li><strong>Se procurer les images :</strong> les vôtres, ou les images d’exemple citées dans le premier tutoriel.</li>
+          <li><strong>Suivre <a href={first}>Ma première image</a></strong>, du nouveau projet à l’export.</li>
+        </> : <>
+          <li><strong>Start FLOAT.</strong></li>
+          <li><strong>Get the frames:</strong> one’s own, or the example frames named in the first tutorial.</li>
+          <li><strong>Follow <a href={first}>My first image</a></strong>, from a new project to the export.</li>
+        </>}
+      </ol>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">4</span>{fr ? 'Depuis les sources (Windows 11 ou Linux)' : 'From the sources (Windows 11 or Linux)'}</h2>
+      <div class="measure">
+        <p>{fr ? <>Python 3.11 ou 3.12 et <a href="https://docs.astral.sh/uv/">uv</a> :</> : <>Python 3.11–3.12 and <a href="https://docs.astral.sh/uv/">uv</a>:</>}</p>
+        <pre>git clone https://github.com/n1c1-1/FLOAT.git
+cd FLOAT
+uv sync
+uv run float</pre>
+        <p>{fr
+          ? 'Le catalogue d’étoiles s’installe ensuite une fois, depuis Paramètres › Catalogues et astrométrie.'
+          : 'The star catalogue is then installed once from Settings › Catalogs & astrometry.'}</p>
+      </div>
+    </section>
+  </div>
+</Base>

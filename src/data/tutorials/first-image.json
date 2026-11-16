@@ -1,0 +1,721 @@
+{
+  "slug": "first-image",
+  "slugFr": "premiere-image",
+  "section": "path",
+  "level": 1,
+  "order": 1,
+  "title": {
+    "en": "My first image",
+    "fr": "Ma première image"
+  },
+  "summary": {
+    "en": "You create a project from the Color minimal template, give it the lights, darks and flats of the Rosette Nebula and run the workflow. In Post you read what is wrong with the image, correct it with three gestures, Sky, Faint tones and Crop, and export it.",
+    "fr": "Vous créez un projet depuis le modèle « Couleur minimal », lui donnez les brutes, darks et flats de la nébuleuse de la Rosette et exécutez le workflow. Dans Post, vous lisez ce qui ne va pas dans l’image, la corrigez en trois gestes, « Ciel », « Tons faibles » et « Recadrage », et l’exportez."
+  },
+  "duration": {
+    "en": "About 40 min, of which 35 min of computing, measured on a PC with an RTX 4060 Ti graphics card (16 GB)",
+    "fr": "Environ 40 min, dont 35 min de calcul, mesurées sur un PC avec une carte graphique RTX 4060 Ti (16 Go)"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The example frames (6.9 GB): the 436 lights of the night in one folder, the 48 darks and the 62 flats each in their own folder",
+      "Disk space: 12 GB, of which 1.1 GB for the project’s folder and 10.6 GB for the cache of calibrated frames"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Les images d’exemple (6,9 Go) : les 436 brutes de la nuit dans un dossier, les 48 darks et les 62 flats chacun dans son dossier",
+      "Place sur le disque : 12 Go, dont 1,1 Go pour le dossier du projet et 10,6 Go pour le cache des images calibrées"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB",
+      "fr": "6,9 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "video": {
+    "en": {
+      "src": "/tutorials/first-image/en/video.mp4",
+      "captions": "/tutorials/first-image/en/captions.vtt",
+      "chapters": "/tutorials/first-image/en/chapters.vtt",
+      "poster": "/tutorials/first-image/en/poster.jpg",
+      "seconds": 115.0
+    },
+    "fr": {
+      "src": "/tutorials/first-image/fr/video.mp4",
+      "captions": "/tutorials/first-image/fr/captions.vtt",
+      "chapters": "/tutorials/first-image/fr/chapters.vtt",
+      "poster": "/tutorials/first-image/fr/poster.jpg",
+      "seconds": 115.0
+    }
+  },
+  "steps": [
+    {
+      "id": "home",
+      "title": {
+        "en": "Home",
+        "fr": "Accueil"
+      },
+      "text": {
+        "en": "Start FLOAT. The Home screen lists the recent projects; on a first start there are none. Click <b>New project</b>.",
+        "fr": "Lancez FLOAT. L’écran d’accueil liste les projets récents ; au premier lancement, il n’y en a aucun. Cliquez sur <b>Nouveau projet</b>."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/01.png",
+        "fr": "/tutorials/first-image/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "gallery",
+      "title": {
+        "en": "The template",
+        "fr": "Le modèle"
+      },
+      "text": {
+        "en": "The new project opens on a blank page. Click <b>From template</b>, stay on the <b>Color</b> tab and click <b>Color minimal</b>.",
+        "fr": "Le nouveau projet s’ouvre sur une page vierge. Cliquez sur <b>Depuis modèle</b>, restez sur l’onglet <b>Couleur</b> et cliquez sur <b>Couleur minimal</b>."
+      },
+      "why": {
+        "en": "This is the smallest colour workflow: calibration, registration, selection, stacking, astrometry, gradient and colour. It has no denoising and no separation of the stars, so Post works on one single image, which is the right size for a first image.",
+        "fr": "C’est le plus petit workflow couleur : calibration, alignement, sélection, empilement, astrométrie, gradient et couleur. Il n’a ni débruitage ni séparation des étoiles, donc Post travaille sur une seule image, ce qui convient à une première image."
+      },
+      "pitfall": {
+        "en": "<b>Color full</b> sits next to it, marked <b>Recommended</b>: it adds denoising and the separation of the stars, and its image reaches Post as two layers. This tutorial needs the single image of Color minimal.",
+        "fr": "<b>Couleur complet</b> est juste à côté, marqué <b>Conseillé</b> : il ajoute le débruitage et la séparation des étoiles, et son image arrive dans Post en deux calques. Ce tutoriel demande l’image unique de Couleur minimal."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/02.png",
+        "fr": "/tutorials/first-image/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 3.0,
+        "fr": 3.0
+      }
+    },
+    {
+      "id": "lights",
+      "title": {
+        "en": "The lights",
+        "fr": "Les brutes"
+      },
+      "text": {
+        "en": "The template made a workflow and its session, <b>Session 1</b>, with one row per type of frame. Click <b>Add lights</b> and choose the 436 files of the night (Ctrl+A selects them all in the file window).",
+        "fr": "Le modèle a créé un workflow et sa session, <b>Session 1</b>, avec une ligne par type d’image. Cliquez sur <b>Ajouter brutes</b> et choisissez les 436 fichiers de la nuit (Ctrl+A les sélectionne tous dans la fenêtre de fichiers)."
+      },
+      "check": {
+        "en": "The row reads Lights · 436 / 436 used, and the Run button shows a time.",
+        "fr": "La ligne indique Brutes · 436 / 436 utilisées, et le bouton « Exécuter » affiche une durée."
+      },
+      "why": {
+        "en": "The lights are the exposures of the target: here 436 exposures of 15 s, 1.8 hours of light in all.",
+        "fr": "Les brutes sont les poses de la cible : ici 436 poses de 15 s, soit 1,8 h de lumière en tout."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/03.png",
+        "fr": "/tutorials/first-image/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 9.0,
+        "fr": 9.0
+      }
+    },
+    {
+      "id": "darks",
+      "title": {
+        "en": "The darks",
+        "fr": "Les darks"
+      },
+      "text": {
+        "en": "Click <b>Open frames</b>: the files of the session open in <b>Inspect</b>. On the <b>Darks</b> row click <b>+</b>, then <b>Add folder…</b>, and choose the folder of the 48 darks.",
+        "fr": "Cliquez sur <b>Ouvrir images</b> : les fichiers de la session s’ouvrent dans <b>Inspection</b>. Sur la ligne <b>Darks</b>, cliquez sur <b>+</b>, puis sur <b>Ajouter dossier…</b>, et choisissez le dossier des 48 darks."
+      },
+      "check": {
+        "en": "The row reads Darks · 48.",
+        "fr": "La ligne indique Darks · 48."
+      },
+      "why": {
+        "en": "At 15 s and ISO 4000 the sensor adds a signal of its own, and its warm pixels make coloured dots. The darks, taken with the lens covered, measure both so that FLOAT can take them off.",
+        "fr": "À 15 s et 4000 ISO, le capteur ajoute un signal propre, et ses pixels chauds font des points colorés. Les darks, pris objectif fermé, mesurent les deux pour que FLOAT puisse les retirer."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/04.png",
+        "fr": "/tutorials/first-image/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 13.0,
+        "fr": 13.0
+      }
+    },
+    {
+      "id": "flats",
+      "title": {
+        "en": "The flats",
+        "fr": "Les flats"
+      },
+      "text": {
+        "en": "On the <b>Flats</b> row click <b>+</b>, then <b>Add folder…</b>, and choose the folder of the 62 flats.",
+        "fr": "Sur la ligne <b>Flats</b>, cliquez sur <b>+</b>, puis sur <b>Ajouter dossier…</b>, et choisissez le dossier des 62 flats."
+      },
+      "check": {
+        "en": "The row reads Flats · 62.",
+        "fr": "La ligne indique Flats · 62."
+      },
+      "why": {
+        "en": "This telescope on a full-frame sensor lets only about 12 % of the light reach the extreme corners, and dust on the sensor casts shadows. The flats, taken on an even light, record both so that the corners are evened out and the stains go.",
+        "fr": "Ce télescope sur un capteur plein format ne laisse arriver qu’environ 12 % de la lumière dans les coins extrêmes, et la poussière sur le capteur projette des ombres. Les flats, pris sur une lumière uniforme, enregistrent les deux pour que les coins soient égalisés et les taches disparaissent."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/05.png",
+        "fr": "/tutorials/first-image/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 19.0,
+        "fr": 19.0
+      }
+    },
+    {
+      "id": "matching",
+      "title": {
+        "en": "What FLOAT says about the frames",
+        "fr": "Ce que FLOAT dit des images"
+      },
+      "text": {
+        "en": "Scroll the left column of Inspect down to <b>Calibration matching</b>. It checks the darks and the flats against the lights: the darks have the lights’ exposure and ISO, and their level (508 ADU) is close to the sensor’s black level (512 ADU).",
+        "fr": "Faites défiler la colonne de gauche d’Inspection jusqu’à <b>Correspondances</b>. Elle vérifie les darks et les flats face aux brutes : les darks ont la pose et l’ISO des brutes, et leur niveau (508 ADU) est proche du niveau de noir du capteur (512 ADU)."
+      },
+      "check": {
+        "en": "Two green ticks for the darks, then two notes: the flats, and the fact that without bias frames or dark flats the flats are corrected with the darks’ level.",
+        "fr": "Deux coches vertes pour les darks, puis deux notes : les flats, et le fait que sans offsets ni darks de flat les flats sont corrigés avec le niveau des darks."
+      },
+      "pitfall": {
+        "en": "The properties give the date of the frames as 1 January 2014: the camera’s clock was never set. FLOAT shows no warning for it, and it changes nothing to the processing.",
+        "fr": "Les propriétés donnent la date des images au 1er janvier 2014 : l’horloge du boîtier n’a jamais été réglée. FLOAT ne signale rien à ce sujet, et cela ne change rien au traitement."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/06.png",
+        "fr": "/tutorials/first-image/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 22.0,
+        "fr": 22.0
+      }
+    },
+    {
+      "id": "target",
+      "title": {
+        "en": "The target",
+        "fr": "La cible"
+      },
+      "text": {
+        "en": "Click <b>Graph</b> to go back to the workflow, click the project block at the top left, and type <b>NGC 2237</b> in <b>Target</b>, then press Enter. NGC 2237 is the Rosette Nebula.",
+        "fr": "Cliquez sur <b>Graphe</b> pour revenir au workflow, cliquez sur le bloc du projet en haut à gauche, et saisissez <b>NGC 2237</b> dans <b>Cible</b>, puis appuyez sur Entrée. NGC 2237 est la nébuleuse de la Rosette."
+      },
+      "check": {
+        "en": "The panel reads Found: RA 97.728°, Dec +5.049°.",
+        "fr": "Le panneau indique Trouvée : AD 97,728°, Déc +5,049°."
+      },
+      "why": {
+        "en": "Astrometry starts from the target’s position, so identifying the field takes seconds.",
+        "fr": "L’astrométrie part de la position de la cible : identifier le champ prend quelques secondes."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/07.png",
+        "fr": "/tutorials/first-image/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 27.0,
+        "fr": 27.0
+      }
+    },
+    {
+      "id": "run",
+      "title": {
+        "en": "Run",
+        "fr": "Exécuter"
+      },
+      "text": {
+        "en": "Click <b>Run</b>; the button gives the time the run should take. At its first run the project needs a name and a folder: type <b>Rosette</b>, choose the folder with <b>Browse…</b>, then click <b>Save</b>.",
+        "fr": "Cliquez sur <b>Exécuter</b> ; le bouton donne la durée prévue. À son premier lancement, le projet a besoin d’un nom et d’un dossier : saisissez <b>Rosette</b>, choisissez le dossier avec <b>Parcourir…</b>, puis cliquez sur <b>Enregistrer</b>."
+      },
+      "why": {
+        "en": "One click runs every block of the workflow in order, each one once. A later change only runs again what follows the block changed.",
+        "fr": "Un clic exécute tous les blocs du workflow dans l’ordre, chacun une fois. Une modification ultérieure ne relance que ce qui suit le bloc modifié."
+      },
+      "pitfall": {
+        "en": "The time on the button is an estimate; the real run took 35 min here. The project’s folder keeps its results (1.1 GB) and the calibrated frames go to a cache folder (10.6 GB): choose a disk with room.",
+        "fr": "La durée du bouton est une estimation ; l’exécution réelle a pris 35 min ici. Le dossier du projet garde ses résultats (1,1 Go) et les images calibrées vont dans un dossier de cache (10,6 Go) : choisissez un disque qui a de la place."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/08.png",
+        "fr": "/tutorials/first-image/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 34.0,
+        "fr": 34.0
+      }
+    },
+    {
+      "id": "computing",
+      "title": {
+        "en": "The run starts",
+        "fr": "L’exécution démarre"
+      },
+      "text": {
+        "en": "The <b>Run project</b> window lists the blocks to compute and the time each should take. Click <b>Close</b>: the run goes on, and each block of the graph shows its progress. <b>Stop</b> stops it.",
+        "fr": "La fenêtre <b>Exécuter projet</b> liste les blocs à calculer et la durée prévue de chacun. Cliquez sur <b>Fermer</b> : l’exécution continue, et chaque bloc du graphe montre son avancement. <b>Arrêter</b> l’arrête."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/09.png",
+        "fr": "/tutorials/first-image/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 41.0,
+        "fr": 41.0
+      }
+    },
+    {
+      "id": "done",
+      "title": {
+        "en": "The run is done",
+        "fr": "L’exécution est terminée"
+      },
+      "text": {
+        "en": "At the end the window comes back with a summary: 7 blocks computed in about 35 min on a PC with an RTX 4060 Ti graphics card. Calibration took 7 min, registration 1 min and stacking 26 min, the application’s card test having sent the stacking to the processor; the other blocks together took under a minute. 435 of the 436 frames were kept (1.8 h of light).",
+        "fr": "À la fin, la fenêtre revient avec un résumé : 7 blocs calculés en environ 35 min sur un PC avec une carte graphique RTX 4060 Ti. La calibration a pris 7 min, l’alignement 1 min et l’empilement 26 min, le test de la carte ayant envoyé l’empilement au processeur ; les autres blocs, moins d’une minute à eux tous. 435 des 436 images ont été gardées (1,8 h de lumière)."
+      },
+      "check": {
+        "en": "The status bar reads all up to date, and each block carries its green bar.",
+        "fr": "La barre d’état indique tout à jour, et chaque bloc porte sa barre verte."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/10.png",
+        "fr": "/tutorials/first-image/fr/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 52.0,
+        "fr": 52.0
+      }
+    },
+    {
+      "id": "post",
+      "title": {
+        "en": "Diagnosis in Post",
+        "fr": "Le diagnostic dans Post"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The workflow’s image is already there as one layer, <b>Color minimal</b>. Before any gesture, look at what is right and what is wrong. Right, and to leave alone: the colours are neutral, the ring is pink-red and the stars of the cluster at its heart are blue-white. Wrong: four points, each with the gesture that corrects it.",
+        "fr": "Cliquez sur <b>Post</b>. L’image du workflow y est déjà, en un calque, <b>Couleur minimal</b>. Avant tout geste, regardez ce qui va et ce qui ne va pas. Ce qui va, et qu’on laisse : les couleurs sont neutres, l’anneau est rose-rouge et les étoiles de l’amas, en son cœur, sont bleu-blanc. Ce qui ne va pas : quatre points, chacun avec le geste qui le corrige."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "A grey veil lies over the whole picture: the empty sky is a mid grey instead of a dark one.",
+            "fr": "Un voile gris recouvre toute l’image : le ciel vide est d’un gris moyen au lieu d’être sombre."
+          },
+          "read": {
+            "en": "Look at the empty sky between the stars. On this picture it measures about 49 on a scale of 255, where a dark grey sky is about 34. Judge by eye: the sky looks milky.",
+            "fr": "Regardez le ciel vide entre les étoiles. Sur cette image il mesure environ 49 sur 255, alors qu’un ciel gris sombre est autour de 34. Jugez à l’œil : le ciel paraît laiteux."
+          },
+          "fix": {
+            "en": "Lower Sky.",
+            "fr": "Baisser « Ciel »."
+          },
+          "step": "sky"
+        },
+        {
+          "problem": {
+            "en": "The outer filaments of the ring barely stand out of the sky.",
+            "fr": "Les filaments extérieurs de l’anneau se détachent à peine du ciel."
+          },
+          "read": {
+            "en": "Look at the edge of the ring, left and top: the filaments are almost the colour of the sky around them.",
+            "fr": "Regardez le bord de l’anneau, à gauche et en haut : les filaments sont presque de la couleur du ciel autour."
+          },
+          "fix": {
+            "en": "Raise Faint tones.",
+            "fr": "Monter « Tons faibles »."
+          },
+          "step": "faint"
+        },
+        {
+          "problem": {
+            "en": "Black lines run along the right and bottom edges: the registration of the frames leaves them.",
+            "fr": "Des lignes noires longent les bords droit et bas : l’alignement des images les laisse."
+          },
+          "read": {
+            "en": "Zoom to 100 % on the right edge (Ctrl and the mouse wheel over it, or the Zoom menu): a black band about 27 pixels wide; at the bottom edge about 13.",
+            "fr": "Zoomez à 100 % sur le bord droit (Ctrl et la molette au-dessus, ou le menu Zoom) : une bande noire d’environ 27 pixels de large ; sur le bord bas, environ 13."
+          },
+          "fix": {
+            "en": "Crop inside the edges.",
+            "fr": "Recadrer à l’intérieur des bords."
+          },
+          "step": "crop"
+        },
+        {
+          "problem": {
+            "en": "A dark stain at the far left: the shadow of a dust grain.",
+            "fr": "Une tache sombre à l’extrême gauche : l’ombre d’un grain de poussière."
+          },
+          "read": {
+            "en": "Zoom to 100 % on the left edge, at about a quarter of the height: a dark, blurred spot among the stars.",
+            "fr": "Zoomez à 100 % sur le bord gauche, à environ un quart de la hauteur : une tache sombre et floue parmi les étoiles."
+          },
+          "fix": {
+            "en": "Leave it out with the crop.",
+            "fr": "La laisser dehors avec le recadrage."
+          },
+          "step": "crop"
+        }
+      ],
+      "check": {
+        "en": "The layer Color minimal is already there, every slider reads 0, and the status bar reads all up to date.",
+        "fr": "Le calque Couleur minimal est déjà là, tous les curseurs indiquent 0, et la barre d’état indique tout à jour."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/11.png",
+        "fr": "/tutorials/first-image/fr/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 60.0,
+        "fr": 60.0
+      }
+    },
+    {
+      "id": "sky",
+      "title": {
+        "en": "Sky",
+        "fr": "Ciel"
+      },
+      "text": {
+        "en": "This corrects the grey veil. Drag <b>Sky</b> to the left until the veil is gone and the sky is a dark grey, here about −1.5. Wait until the picture is drawn again.",
+        "fr": "Cela corrige le voile gris. Faites glisser <b>Ciel</b> vers la gauche jusqu’à ce que le voile disparaisse et que le ciel soit d’un gris sombre, ici environ −1,5. Attendez que l’image soit redessinée."
+      },
+      "why": {
+        "en": "Most imagers keep the sky a dark grey and neutral, never black. A black sky swallows the faint edges of the nebula and makes the object look cut out; a light grey sky looks like fog.",
+        "fr": "La plupart des astrophotographes gardent un ciel gris sombre et neutre, jamais noir. Un ciel noir avale les bords faibles de la nébuleuse et donne l’impression d’un objet découpé ; un ciel gris clair ressemble à du brouillard."
+      },
+      "check": {
+        "en": "The sky is a dark grey and the faint arc at the top of the ring is still visible.",
+        "fr": "Le ciel est d’un gris sombre et le faible arc en haut de l’anneau reste visible."
+      },
+      "pitfall": {
+        "en": "Do not push Sky to the end: the arc fades and the sky turns to grain. Even at the far left the slider keeps the sky a little above black on this image.",
+        "fr": "Ne poussez pas « Ciel » jusqu’au bout : l’arc s’efface et le ciel tourne au grain. Même tout à gauche, le curseur garde ici le ciel un peu au-dessus du noir."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/first-image/details/sky-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The sky at 100 % before: a grey veil lies over the faint arc.",
+            "fr": "Le ciel à 100 % avant : un voile gris recouvre le faible arc."
+          }
+        },
+        {
+          "src": "/tutorials/first-image/details/sky-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right setting",
+            "fr": "Bon réglage"
+          },
+          "caption": {
+            "en": "Sky at about −1.5: the veil is gone and the faint arc stays visible.",
+            "fr": "« Ciel » vers −1,5 : le voile a disparu et le faible arc reste visible."
+          }
+        },
+        {
+          "src": "/tutorials/first-image/details/sky-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "Sky at the far left: the arc fades and the sky turns to grain.",
+            "fr": "« Ciel » tout à gauche : l’arc s’efface et le ciel tourne au grain."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/first-image/en/12.png",
+        "fr": "/tutorials/first-image/fr/12.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 84.0,
+        "fr": 84.0
+      }
+    },
+    {
+      "id": "faint",
+      "title": {
+        "en": "Faint tones",
+        "fr": "Tons faibles"
+      },
+      "text": {
+        "en": "This corrects the filaments that barely show. Drag <b>Faint tones</b> to the right until the outer filaments of the ring, left and top, come up out of the sky, here about +1. The Rosette then shows its real size.",
+        "fr": "Cela corrige les filaments qui se voient à peine. Faites glisser <b>Tons faibles</b> vers la droite jusqu’à ce que les filaments extérieurs de l’anneau, à gauche et en haut, sortent du ciel, ici environ +1. La Rosette montre alors sa vraie taille."
+      },
+      "why": {
+        "en": "The faint tones are the extensions of the nebula: they are what makes the Rosette a rose and not a disc.",
+        "fr": "Les tons faibles sont les prolongements de la nébuleuse : c’est ce qui fait de la Rosette une rose et non un disque."
+      },
+      "check": {
+        "en": "At 100 % the filaments are brighter. A fine grain appears in the sky; it is invisible on the whole picture and acceptable here.",
+        "fr": "À 100 %, les filaments sont plus lumineux. Un grain fin apparaît dans le ciel ; il est invisible sur l’image entière et acceptable ici."
+      },
+      "pitfall": {
+        "en": "Further right the grain becomes plain and the red fades to pink. With no Denoise block in this workflow, lifting the faint tones lifts the grain too: a workflow with a Denoise block can smooth it.",
+        "fr": "Plus à droite, le grain devient net et le rouge passe au rose. Sans bloc Débruitage dans ce workflow, monter les tons faibles monte aussi le grain : un workflow avec un bloc Débruitage peut le lisser."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/first-image/details/faint-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "A filament of the ring at 100 % before.",
+            "fr": "Un filament de l’anneau à 100 % avant."
+          }
+        },
+        {
+          "src": "/tutorials/first-image/details/faint-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right setting",
+            "fr": "Bon réglage"
+          },
+          "caption": {
+            "en": "Faint tones at about +1: the filament is brighter.",
+            "fr": "« Tons faibles » vers +1 : le filament est plus lumineux."
+          }
+        },
+        {
+          "src": "/tutorials/first-image/details/faint-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "Faint tones at about +2: the grain is plain and the red fades to pink.",
+            "fr": "« Tons faibles » vers +2 : le grain est net et le rouge passe au rose."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/first-image/en/13.png",
+        "fr": "/tutorials/first-image/fr/13.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 87.0,
+        "fr": 87.0
+      }
+    },
+    {
+      "id": "crop",
+      "title": {
+        "en": "Crop",
+        "fr": "Recadrage"
+      },
+      "text": {
+        "en": "This corrects the black edges and the dust stain. Click <b>Crop</b>, drag the corners of the frame inward until it keeps the whole ring and leaves out the black lines and the stain (here the frame is about 3500 × 2500 pixels), then click <b>Apply</b>. Its tooltip reads Keep this crop (Enter).",
+        "fr": "Cela corrige les bords noirs et la tache de poussière. Cliquez sur <b>Recadrage</b>, faites glisser les coins du cadre vers l’intérieur jusqu’à garder tout l’anneau et laisser dehors les lignes noires et la tache (ici le cadre fait environ 3500 × 2500 pixels), puis cliquez sur <b>Valider</b>. Son info-bulle indique Garder ce recadrage (Entrée)."
+      },
+      "why": {
+        "en": "A black edge or a dark stain at the border is the first thing the eye catches. The crop also brings the ring nearer the centre.",
+        "fr": "Un bord noir ou une tache sombre en bordure est la première chose que l’œil remarque. Le recadrage rapproche aussi l’anneau du centre."
+      },
+      "check": {
+        "en": "No black line on any edge at 100 %, and the dark stain is outside the frame.",
+        "fr": "Aucune ligne noire sur aucun bord à 100 %, et la tache sombre est hors du cadre."
+      },
+      "pitfall": {
+        "en": "The stars in the corners keep a comet shape: that is the coma of the telescope, not the processing. Cropping it all away would cut the field in half.",
+        "fr": "Les étoiles des coins gardent une forme de comète : c’est la coma du télescope, pas le traitement. La rogner entièrement couperait le champ en deux."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/first-image/details/crop-frame.jpg",
+          "w": 1600,
+          "h": 1071,
+          "label": {
+            "en": "The frame",
+            "fr": "Le cadre"
+          },
+          "caption": {
+            "en": "The frame drawn on the whole picture: it keeps the ring and leaves the edges out.",
+            "fr": "Le cadre tracé sur l’image entière : il garde l’anneau et laisse les bords dehors."
+          }
+        },
+        {
+          "src": "/tutorials/first-image/details/crop-edge-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before: right edge",
+            "fr": "Avant : bord droit"
+          },
+          "caption": {
+            "en": "The right edge at 100 % before the crop: a black line.",
+            "fr": "Le bord droit à 100 % avant le recadrage : une ligne noire."
+          }
+        },
+        {
+          "src": "/tutorials/first-image/details/crop-edge-after.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "After: right edge",
+            "fr": "Après : bord droit"
+          },
+          "caption": {
+            "en": "The right edge at 100 % after the crop: no black line.",
+            "fr": "Le bord droit à 100 % après le recadrage : plus de ligne noire."
+          }
+        },
+        {
+          "src": "/tutorials/first-image/details/crop-dust-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before: left edge",
+            "fr": "Avant : bord gauche"
+          },
+          "caption": {
+            "en": "The dark stain at the left edge, before the crop; it lies outside the frame.",
+            "fr": "La tache sombre au bord gauche, avant le recadrage ; elle est hors du cadre."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/first-image/en/14.png",
+        "fr": "/tutorials/first-image/fr/14.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 90.0,
+        "fr": 90.0
+      }
+    },
+    {
+      "id": "export",
+      "title": {
+        "en": "Export",
+        "fr": "Exporter"
+      },
+      "text": {
+        "en": "Click <b>Export…</b>. The default is <b>TIFF 16-bit</b> at <b>Full resolution</b>, with the processing history in a file next to the image. For a picture to publish, choose <b>JPEG</b> in <b>Format</b>. Click <b>Export</b>.",
+        "fr": "Cliquez sur <b>Exporter…</b>. Le réglage par défaut est <b>TIFF 16 bits</b> en <b>Pleine résolution</b>, avec l’historique du traitement dans un fichier à côté de l’image. Pour une image à publier, choisissez <b>JPEG</b> dans <b>Format</b>. Cliquez sur <b>Exporter</b>."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/15.png",
+        "fr": "/tutorials/first-image/fr/15.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 99.0,
+        "fr": 99.0
+      }
+    },
+    {
+      "id": "exported",
+      "title": {
+        "en": "The image is written",
+        "fr": "L’image est écrite"
+      },
+      "text": {
+        "en": "The window says how many files were written: the image and its processing history. Close it. Press Ctrl+S to keep the project with the three settings.",
+        "fr": "La fenêtre dit combien de fichiers ont été écrits : l’image et son historique de traitement. Fermez-la. Appuyez sur Ctrl+S pour garder le projet avec les trois réglages."
+      },
+      "shot": {
+        "en": "/tutorials/first-image/en/16.png",
+        "fr": "/tutorials/first-image/fr/16.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 106.0,
+        "fr": 106.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/first-image/result.jpg",
+    "w": 2000,
+    "h": 1429,
+    "caption": {
+      "en": "The Rosette Nebula: 436 exposures of 15 s (1.8 h), and the three gestures of this tutorial in Post, Sky, Faint tones and Crop.",
+      "fr": "La nébuleuse de la Rosette : 436 poses de 15 s (1,8 h), et les trois gestes de ce tutoriel dans Post, « Ciel », « Tons faibles » et « Recadrage »."
+    }
+  },
+  "blocks": [
+    "Calibration",
+    "Registration",
+    "Selection",
+    "Stacking",
+    "Astrometry",
+    "Gradient",
+    "Color",
+    "Post"
+  ],
+  "next": "full-processing"
+}

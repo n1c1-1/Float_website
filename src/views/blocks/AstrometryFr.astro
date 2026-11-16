@@ -1,0 +1,200 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Astrometry" title="Astrométrie"
+  description="Le bloc Astrométrie de FLOAT : l’astrométrie de l’empilement, une première solution puis un ajustement fin sur les étoiles de Gaia DR3, à quoi sert la solution, le catalogue d’étoiles hors ligne, réglages et limites, avec les sources publiées.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Astrométrie</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il reconnaît le coin de ciel de l’empilement d’après ses étoiles : chaque pixel reçoit sa position dans le ciel, et les blocs suivants peuvent se servir du catalogue d’étoiles.</dd></div><div><dt>Ce qu’on voit</dt><dd>Dans Inspecter, l’image avec la grille du ciel et les étoiles du catalogue posées sur ses étoiles, avec l’échelle de l’image, le champ, le résidu de position et la focale trouvée ; dans le Rapport, la cible, le champ et l’échelle.</dd></div><div><dt>Ce qui se règle</dt><dd>En général rien, quand les fichiers contiennent le pointage et la focale ; sinon, donnez le Nom cible, ou la Focale.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>La première solution</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>L’ajustement fin sur Gaia DR3</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>À quoi sert la solution</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Le catalogue d’étoiles hors ligne</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Réglages</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Astrométrie trouve où pointe l’empilement dans le ciel. Une première solution vient
+    d’Asterion, livré avec l’installeur ; sans lui, ou quand il ne trouve rien, la recherche propre de FLOAT prend le
+    relais, en aveugle quand la cible est inconnue. La solution est ensuite affinée sur les étoiles de Gaia DR3 par une
+    projection tangente et un polynôme de distorsion. La calibration des couleurs, les catalogues Gaia et la référence
+    H-alpha lisent cette solution. Une exécution ne télécharge rien ; le catalogue d’étoiles s’installe une fois.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Sélection</span></li><li><span>Empilement</span></li>
+    <li class="here"><span>Astrométrie</span></li><li><span>Gradient</span></li><li><span>Déconvolution</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</h2>
+    <aside class="note"><b>Le résidu</b> est la distance médiane, en pixels de l’empilement, entre chaque étoile
+    détectée et l’étoile de Gaia que la solution place là. Le bloc le donne avec le nombre d’étoiles sur lesquelles il a
+    été mesuré.</aside>
+    <p>Le bloc lit l’empilement et y trouve les étoiles (un maillage de fond de 64 pixels, un seuil de 15 fois le bruit,
+    6 pixels au moins). Il lit aussi ce que le projet sait du champ : la cible, le pointage du télescope écrit dans les
+    fichiers, la focale et la taille du pixel.</p>
+    <p>Il écrit le système de coordonnées célestes de l’empilement : une projection tangente avec un polynôme de
+    distorsion (la convention SIP). Il donne aussi le centre du champ, sa taille, l’échelle en secondes d’arc par pixel,
+    l’angle du nord, si l’image est en miroir, le résidu de l’ajustement et, quand la taille du pixel est connue, la
+    focale que la solution implique. Le Rapport donne aussi le résidu en secondes d’arc.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>La première solution</h2>
+    <p><strong>Asterion d’abord.</strong> La première solution vient d’Asterion,<a class="cite" href="#ref-1">[1]</a>
+    livré avec l’installeur. Il dispose de 10 secondes au plus. Quand la position de la cible est connue, il cherche
+    près d’elle ; sinon sur tout le ciel, si la Résolution aveugle est activée. Quand l’échelle vient de la focale et
+    qu’Asterion ne trouve rien à cette échelle, il est interrogé de nouveau à n’importe quelle échelle, au cas où la
+    focale aurait été mal saisie. L’ajustement fin de la section 3 part de cette solution, et la recherche ci-dessous
+    est sautée.</p>
+    <p><strong>La recherche propre de FLOAT.</strong> Quand Asterion n’est pas installé, ne peut pas s’exécuter ou ne
+    trouve rien, la recherche propre de FLOAT trouve le champ. Le journal dit quel cas s’est produit. La recherche
+    procède en quatre points.</p>
+    <ul>
+      <li><strong>L’échelle.</strong> Elle vaut 206,265 × taille du pixel (µm) / focale (mm), en secondes d’arc par pixel,
+      divisée par l’échelle drizzle.
+      Quand elle est inconnue, 22 valeurs de 0,4 à 40 secondes d’arc par pixel sont essayées, en commençant par les
+      focales auxquelles cet appareil a déjà été résolu.</li>
+      <li><strong>L’appariement.</strong> Mise en correspondance de triangles entre les 150 détections les plus
+      brillantes et les 150 étoiles de Gaia les plus brillantes projetées à l’échelle d’essai, les deux images en miroir
+      essayées. Quinze paires appariées valent appariement.</li>
+      <li><strong>Le centre.</strong> Le centre donné d’abord, puis des centres décalés de la Plage recherche, une
+      fraction du champ.</li>
+      <li><strong>La profondeur du catalogue.</strong> La magnitude Gaia la plus faible dépend de la surface du champ,
+      de G 10,5 pour un grand champ à G 16 pour un petit.</li>
+    </ul>
+    <p>Les tirages aléatoires de l’appariement sont fixés par une graine : le même empilement donne la même solution à
+    chaque exécution.</p>
+
+    <h3>La résolution aveugle</h3>
+    <p>Quand le centre est inconnu, ou que la recherche guidée échoue, le champ est identifié sur tout le ciel à partir
+    de ses étoiles les plus brillantes (jusqu’à 80). Le principe est celui d’Astrometry.net :<a class="cite" href="#ref-2">[2]</a>
+    chaque groupe de quatre étoiles est codé par les positions de ses deux étoiles intérieures dans le repère où ses deux
+    étoiles les plus éloignées sont en (0, 0) et (1, 1), un code qui ne change ni par translation, ni par rotation, ni
+    par changement d’échelle. Les codes de l’image sont cherchés dans un index du ciel construit sur les étoiles
+    brillantes des catalogues Hipparcos et Tycho-2.<a class="cite" href="#ref-3">[3]</a> Chaque candidat est vérifié en
+    comptant combien d’autres étoiles de l’image tombent sur des étoiles du catalogue, et n’est gardé que si ce nombre
+    dépasse nettement ce que donne le hasard. L’index contient les étoiles d’Hipparcos jusqu’à V 9,5 et de Tycho-2
+    jusqu’à VT 11 : la recherche aveugle est donc faite pour des champs de plus d’environ 1 degré.</p>
+
+    <h3>Les champs de peu d’étoiles</h3>
+    <p>Sous 50 étoiles dans l’empilement, le bloc utilise une autre décision. Chaque triplet des 30 étoiles les plus
+    brillantes est comparé à chaque triplet d’étoiles du catalogue. Une solution ne tient que si son facteur de Bayes
+    atteint 10<sup>9</sup>, selon la décision de Lang et al. :<a class="cite" href="#ref-2">[2]</a> chaque étoile soit n’a
+    pas de contrepartie (un quart d’entre elles peuvent n’en avoir aucune), soit se trouve dans une gaussienne de
+    1 pixel autour d’une étoile du catalogue. Aucun tirage aléatoire n’est utilisé. Sous 6 étoiles, aucun champ n’est
+    identifié. Aucun polynôme de distorsion n’est ajusté : il suivrait le bruit d’un si petit nombre d’étoiles.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>L’ajustement fin sur Gaia DR3</h2>
+    <aside class="note"><b>Époque.</b> Les positions de Gaia sont à l’époque 2016,0. L’ajustement les prend telles
+    quelles ; l’étape Catalogues (section 4 de cette page) les amène à la date des images.</aside>
+    <p>La première solution donne la place approximative des étoiles dans le ciel. L’ajustement fin procède ensuite par
+    passes. Une projection tangente avec un polynôme de distorsion de l’ordre choisi est ajustée sur jusqu’à
+    4000 détections. Les étoiles de Gaia sont projetées à travers elle et appariées aux détections à moins de 3 pixels,
+    puis l’ajustement est refait sur jusqu’à 8000 détections, et encore deux fois avec des appariements à moins de 1,5
+    puis de 1 pixel. Les étoiles à moins de 5 pixels du bord ne servent pas. Le résidu médian de la dernière passe est
+    celui qui est donné.</p>
+    <p>La solution est écrite une fois l’ajustement fait. La solution d’un champ de peu d’étoiles (section 2) doit en
+    plus donner un résidu médian sous 1 pixel, sans quoi aucune solution n’est donnée plutôt qu’une fausse.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>À quoi sert la solution</h2>
+    <p>Chaque étape suivante qui utilise le ciel s’appuie sur cette solution.</p>
+    <ul>
+      <li><strong>Les catalogues Gaia.</strong> L’étape Catalogues place sur l’image les étoiles de Gaia du champ, leurs
+      positions amenées à la date des poses avec leurs mouvements propres, et choisit les étoiles dont le bloc <a href="/fr/blocs/couleur/">Couleur</a>
+      utilise les spectres.</li>
+      <li><strong>La référence H-alpha.</strong> Un relevé du ciel en H-alpha est reprojeté sur l’empilement. Il montre où
+      se trouve la nébulosité faible, pour que le bloc <a href="/fr/blocs/gradient/">Gradient</a> n’y prenne aucun échantillon de ciel.</li>
+      <li><strong>La couleur.</strong> Le bloc Couleur mesure les étoiles que la solution place et les compare à leurs
+      spectres de Gaia.</li>
+    </ul>
+    <p><strong>Quand aucun champ n’est trouvé.</strong> Le réglage Si champ non identifié décide. Avec Continuer sans
+    solution, l’exécution continue, le bloc est dessiné en orange et son info-bulle donne la raison. Couleur prend alors
+    sa balance de repli, et Gradient choisit ses échantillons sans le relevé. Avec Arrêter, le bloc échoue.</p>
+    <p>Une cible éloignée du pointage enregistré dans les fichiers se traite en deux essais. Quand les deux diffèrent de
+    plus de la diagonale du champ plus 2 degrés, la cible saisie est essayée d’abord, sans le solveur aveugle. Si cela
+    échoue, le pointage des fichiers est essayé, et le journal demande de vérifier la cible du projet.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Le catalogue d’étoiles hors ligne</h2>
+    <p>Les étoiles que FLOAT lit viennent d’un catalogue Gaia DR3 hors ligne, installé une fois, par l’installeur ou
+    depuis Réglages › Catalogues et astrométrie. Il dérive d’extraits publiés de Gaia DR3.<a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-5">[5]</a>
+    L’index d’étoiles du solveur aveugle s’installe au même endroit.</p>
+    <p>Une exécution ne télécharge rien. Quand un catalogue manque, le bloc le dit et nomme le réglage qui l’installe. Un
+    nom de cible est cherché parmi les noms déjà résolus et dans les catalogues Messier, NGC, IC, Sharpless et Lynds que
+    FLOAT embarque. Un nom inconnu demande son AD et sa Dec.</p>
+    <p>L’extrait garde les 127 étoiles les plus brillantes de chaque cellule de 14 minutes d’arc. Dans la Voie lactée, il
+    peut s’arrêter avant la magnitude demandée : cela suffit pour une solution. Sans l’extrait, le bloc lit les tuiles
+    de ciel du cache, et échoue avec la raison quand elles ne sont pas toutes là.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les réglages du bloc. Les réglages avancés sont signalés.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Nom cible</th><td>du projet ou des fichiers</td><td>texte</td><td>Nom de l’objet principal, résolu en centre approximatif du champ. Inutile quand l’AD et la Dec sont données ou que les fichiers contiennent le pointage.</td></tr>
+          <tr><th scope="row">AD centre</th><td>du projet ou des fichiers</td><td class="n">0 – 360 °</td><td>Ascension droite approximative du centre. À environ 20 % de la largeur du champ près, cela suffit.</td></tr>
+          <tr><th scope="row">Dec centre</th><td>du projet ou des fichiers</td><td class="n">−90 – 90 °</td><td>Déclinaison approximative du centre.</td></tr>
+          <tr><th scope="row">Focale</th><td>des fichiers ou du projet</td><td class="n">mm, au-dessus de 0</td><td>Avec la taille du pixel, elle donne l’échelle de l’image. Vide, l’échelle est cherchée (quelques minutes sans Asterion).</td></tr>
+          <tr><th scope="row">Taille pixel (avancé)</th><td>de l’appareil ou des fichiers</td><td class="n">µm, au-dessus de 0</td><td>Taille d’un pixel du capteur.</td></tr>
+          <tr><th scope="row">Échelle image (avancé)</th><td>calculée, sinon cherchée</td><td class="n">arcsec/px, au-dessus de 0</td><td>Taille d’un pixel de l’empilement dans le ciel.</td></tr>
+          <tr><th scope="row">Résolution aveugle (avancé)</th><td>activée</td><td>activée, désactivée</td><td>Identifie le champ sur tout le ciel quand le centre est inconnu ou que la recherche guidée échoue.</td></tr>
+          <tr><th scope="row">Plage recherche (avancé)</th><td class="n">0,2 × champ</td><td class="n">0 – 1, pas de 0,05</td><td>À quelle distance du centre donné la recherche cherche le champ.</td></tr>
+          <tr><th scope="row">Ordre distorsion (avancé)</th><td class="n">3</td><td class="n">0 – 5</td><td>Ordre du polynôme SIP : 3 pour les réfracteurs avec réducteur et les grands champs, 2 pour les petits champs, 0 pour un plan tangent pur.</td></tr>
+          <tr><th scope="row">Si champ non identifié</th><td>Continuer sans solution</td><td>Continuer sans solution, Arrêter</td><td>Ce que fait le bloc quand aucun champ n’est identifié (section 4).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Une focale fausse ne cache pas le champ.</strong> Quand le champ n’est pas trouvé à l’échelle de la
+      focale saisie, il est cherché de nouveau sans elle. Un avertissement dit que le champ est à une autre échelle, et de
+      vérifier la focale et la taille du pixel.</li>
+      <li><strong>La résolution aveugle demande son index.</strong> Quand l’index d’étoiles n’est pas installé, la
+      recherche sur tout le ciel ne peut pas essayer, et le bloc demande la cible ou ses coordonnées.</li>
+      <li><strong>Les champs étroits se résolvent mal en aveugle.</strong> Le solveur aveugle est fait pour les grands
+      champs, qui contiennent assez d’étoiles brillantes.</li>
+      <li><strong>Une échelle inconnue et un centre éloigné peuvent prendre des minutes.</strong> Sans Asterion, une
+      échelle inconnue veut dire une recherche sur 22 échelles. Un appariement à une autre échelle que celle de
+      l’essai est suivi aussitôt, pour ne pas parcourir toute la grille.</li>
+      <li><strong>Les champs de peu d’étoiles.</strong> Sous 50 étoiles, une solution demande une preuve forte et n’a pas
+      de polynôme de distorsion. Un champ qui ne la donne pas n’a pas de solution.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Auteurs d’Asterion Solver, <i>Asterion</i>, licence Apache 2.0. <a href="https://github.com/asterion-solver/asterion">github.com/asterion-solver/asterion</a></li>
+      <li id="ref-2">Lang, D. et al. 2010, <i lang="en">Astrometry.net: Blind astrometric calibration of arbitrary astronomical images</i>, AJ 139, 1782. <a href="https://arxiv.org/abs/0910.2233">arXiv:0910.2233</a></li>
+      <li id="ref-3">ESA 1997, <i lang="en">The Hipparcos and Tycho Catalogues</i>. <a href="https://www.cosmos.esa.int/web/hipparcos">cosmos.esa.int/web/hipparcos</a>&nbsp;; Høg, E. et al. 2000, <i lang="en">The Tycho-2 catalogue of the 2.5 million brightest stars</i>, A&amp;A 355, L27. <a href="https://ui.adsabs.harvard.edu/abs/2000A%26A...355L..27H/abstract">ADS 2000A&amp;A...355L..27H</a></li>
+      <li id="ref-4">Cass, I., Knagg-Baugh, A., Melis, C. &amp; Richard, C. 2025, <i lang="en">Siril Astrometry Catalogue extracted from Gaia DR3</i>, v1.0.0. <a href="https://doi.org/10.5281/zenodo.14692304">doi:10.5281/zenodo.14692304</a></li>
+      <li id="ref-5">Gaia Collaboration, Vallenari, A. et al. 2023, <i lang="en">Gaia Data Release 3: Summary of the content and survey properties</i>, A&amp;A 674, A1. <a href="https://arxiv.org/abs/2208.00211">arXiv:2208.00211</a></li>
+    </ol>
+  </section>
+</Doc>

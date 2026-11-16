@@ -1,0 +1,129 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.000
+On the Home screen, click New project.
+
+2
+00:00:03.000 --> 00:00:06.000
+The project opens on a blank page: click From template.
+
+3
+00:00:06.000 --> 00:00:09.000
+In the Color tab, click Color minimal.
+
+4
+00:00:09.000 --> 00:00:13.000
+In the Session 1 panel, click Add lights and choose the 436 files of the night.
+
+5
+00:00:13.000 --> 00:00:16.000
+Click Open frames: the files of the session open in Inspect.
+
+6
+00:00:16.000 --> 00:00:19.000
+On the Darks row, click +, then Add folder… and choose the darks.
+
+7
+00:00:19.000 --> 00:00:22.000
+Do the same on the Flats row with the flats.
+
+8
+00:00:22.000 --> 00:00:27.000
+Calibration matching checks the darks and flats against the lights.
+
+9
+00:00:27.000 --> 00:00:30.000
+Click Graph to go back to the workflow.
+
+10
+00:00:30.000 --> 00:00:34.000
+Click the project block and type NGC 2237 in Target: the position is found.
+
+11
+00:00:34.000 --> 00:00:37.000
+Click Run. The button gives the time the run should take.
+
+12
+00:00:37.000 --> 00:00:41.000
+Name the project Rosette, pick its folder with Browse…, then click Save.
+
+13
+00:00:41.000 --> 00:00:45.000
+The run starts: it lists its blocks and the time each should take.
+
+14
+00:00:45.000 --> 00:00:48.000
+Click Close: the run goes on.
+
+15
+00:00:48.000 --> 00:00:52.000
+On the graph, each block shows its progress.
+
+16
+00:00:52.000 --> 00:00:57.000
+Not shown in real time: the whole run took 34 min 34 s on a graphics card (RTX 4060 Ti).
+
+17
+00:00:57.000 --> 00:01:00.000
+Each block computed has its bar in green.
+
+18
+00:01:00.000 --> 00:01:03.000
+Click Post.
+
+19
+00:01:03.000 --> 00:01:08.000
+Post shows the workflow’s image as one layer. Look before you touch anything.
+
+20
+00:01:08.000 --> 00:01:12.000
+The empty sky is a milky grey, not a dark one: Sky will correct it.
+
+21
+00:01:12.000 --> 00:01:16.000
+The outer filaments of the ring barely stand out of the sky: Faint tones will bring them up.
+
+22
+00:01:16.000 --> 00:01:20.000
+At 100 %, a black line runs along the right edge: Crop will take it off.
+
+23
+00:01:20.000 --> 00:01:24.000
+At the far left, a dark stain is the shadow of a dust grain: Crop will leave it out.
+
+24
+00:01:24.000 --> 00:01:27.000
+Drag Sky to the left until the grey veil is gone: here about −1.5.
+
+25
+00:01:27.000 --> 00:01:30.000
+Drag Faint tones to the right until the outer filaments come up: here about +1.
+
+26
+00:01:30.000 --> 00:01:33.000
+Click Crop.
+
+27
+00:01:33.000 --> 00:01:36.000
+Drag the corners of the frame inward: keep the whole ring, leave the edges out.
+
+28
+00:01:36.000 --> 00:01:39.000
+Click Apply to keep the crop.
+
+29
+00:01:39.000 --> 00:01:43.000
+Click Export…: TIFF 16-bit is the default format.
+
+30
+00:01:43.000 --> 00:01:46.000
+Click Export.
+
+31
+00:01:46.000 --> 00:01:51.000
+The image is written, with its processing history beside it.
+
+32
+00:01:51.000 --> 00:01:55.000
+Your first image is done. Next tutorial: adjust a block.

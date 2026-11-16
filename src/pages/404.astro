@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes } from '../i18n/ui';
+---
+<Base lang="en" page="home" bare title="Page not found" description="This address leads to no page of astro-float.org.">
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <div class="measure">
+      <p class="kicker">404</p>
+      <h1>Page not found</h1>
+      <p><a href={routes.home.en!}>Back to the home page</a>. This address leads to no page of this site.</p>
+      <p class="meta" lang="fr" style="margin-top: 2rem"><a href={routes.home.fr!}>Retour à l’accueil</a>. Page introuvable : cette adresse ne mène à aucune page du site.</p>
+    </div>
+  </div>
+</Base>

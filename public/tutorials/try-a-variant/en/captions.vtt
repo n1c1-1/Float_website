@@ -1,0 +1,153 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the copy of the second tutorial’s project.
+
+2
+00:00:04.000 --> 00:00:08.000
+The project opens up to date: nothing is to be computed.
+
+3
+00:00:08.000 --> 00:00:11.000
+Click Inspect: the final image of the workflow is shown.
+
+4
+00:00:11.000 --> 00:00:14.000
+Choose 100 % in the zoom list.
+
+5
+00:00:14.000 --> 00:00:17.000
+Drag the frame of the overview onto the star field to the right of the cluster.
+
+6
+00:00:17.000 --> 00:00:25.000
+At 100 %, the stars are a little soft: median width 4.84 px, 279 stars detected. The gas and the sky are right.
+
+7
+00:00:25.000 --> 00:00:28.000
+Click Graph.
+
+8
+00:00:28.000 --> 00:00:31.000
+Right-click the Gradient block.
+
+9
+00:00:31.000 --> 00:00:34.000
+Click Variant here: a second workflow starts after Gradient.
+
+10
+00:00:34.000 --> 00:00:40.000
+Calibration, registration and stacking are shared by the two workflows: they are not computed again.
+
+11
+00:00:40.000 --> 00:00:44.000
+Double-click Deconvolution in the palette: the block is added to the variant, after Gradient.
+
+12
+00:00:44.000 --> 00:00:49.000
+Choose Neural network (beta).
+
+13
+00:00:49.000 --> 00:00:53.000
+Click Run: only the variant’s blocks are computed.
+
+14
+00:00:53.000 --> 00:00:59.000
+The list shows everything up to date except the variant’s Deconvolution, Denoise and Stars/background.
+
+15
+00:00:59.000 --> 00:01:05.000
+Not shown in real time: the run took 3 min 08 s.
+
+16
+00:01:05.000 --> 00:01:10.000
+Click Inspect: the page opens on the variant’s Deconvolution block, before and after the block on each side of a divider.
+
+17
+00:01:10.000 --> 00:01:13.000
+Choose 100 % in the zoom list.
+
+18
+00:01:13.000 --> 00:01:16.000
+Drag the frame of the overview onto the same star field.
+
+19
+00:01:16.000 --> 00:01:21.000
+Drag the divider across the stars: before the block on its left, after on its right.
+
+20
+00:01:21.000 --> 00:01:29.000
+Stars: tighter, median width 4.84 to 4.19 px, and 37 % more faint stars detected. The gas and the faint arc are unchanged.
+
+21
+00:01:29.000 --> 00:01:32.000
+Click Post: the two workflows give two layers.
+
+22
+00:01:32.000 --> 00:01:37.000
+The variant’s layer is the top one, its eye switched off: the original shows.
+
+23
+00:01:37.000 --> 00:01:40.000
+Click the variant’s layer.
+
+24
+00:01:40.000 --> 00:01:43.000
+Drag Strength to −0.5, as on the original’s layer.
+
+25
+00:01:43.000 --> 00:01:46.000
+Drag Small stars to −1.0.
+
+26
+00:01:46.000 --> 00:01:49.000
+Drag Sky to −1.5.
+
+27
+00:01:49.000 --> 00:01:52.000
+Drag Faint tones to +1.0.
+
+28
+00:01:52.000 --> 00:01:55.000
+Click the eye of the top layer: the variant covers the original.
+
+29
+00:01:55.000 --> 00:02:00.000
+On the fitted view, the two pictures are almost the same.
+
+30
+00:02:00.000 --> 00:02:03.000
+Click the eye again: the original shows.
+
+31
+00:02:03.000 --> 00:02:06.000
+Zoom to about 100 % on the star field (Ctrl and the mouse wheel).
+
+32
+00:02:06.000 --> 00:02:11.000
+Click the eye: the variant’s stars are tighter.
+
+33
+00:02:11.000 --> 00:02:16.000
+Click it again: the original’s stars.
+
+34
+00:02:16.000 --> 00:02:19.000
+Click Graph.
+
+35
+00:02:19.000 --> 00:02:22.000
+Right-click a block of the variant.
+
+36
+00:02:22.000 --> 00:02:26.000
+Point at the Workflow entry of the menu.
+
+37
+00:02:26.000 --> 00:02:31.000
+Click Delete workflow: the variant goes, the original stays.
+
+38
+00:02:31.000 --> 00:02:35.000
+The project is saved with the original workflow only.

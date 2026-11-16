@@ -1,0 +1,223 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+import Compare from '../../components/Compare.astro';
+import Figure from '../../components/Figure.astro';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+const lang = 'en';
+const hasInspect = existsSync(join(process.cwd(), 'public', 'blocks', 'deconvolution', 'inspect-en.png'));
+---
+<Doc lang={lang} page="blocks" current="Deconvolution" title="Deconvolution"
+  description="The Deconvolution block of FLOAT: Richardson-Lucy with the handling of saturated stars, the star shape measured per zone and per colour, the neural method (beta), settings and limits, with the published sources.">
+
+  <p class="kicker">Block</p>
+  <h1>Deconvolution</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It sharpens the stack, using the shape of the stars measured on the stack itself.</dd></div><div><dt>What it shows</dt><dd>Tighter stars and finer detail; Inspect shows the image before and after, with the median star width before and after.</dd></div><div><dt>What can be set</dt><dd>Iterations sets how much it sharpens and Regularization holds back noise and rings; the defaults suit most images.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Before and after on a real image</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>What goes in, what comes out</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>The star shape</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Richardson-Lucy and saturated stars</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Holding back noise and rings</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>The neural method (beta)</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Settings</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Deconvolution block sharpens the stack and its two half-stacks with the shape of the
+    stars measured on the stack itself, zone by zone and colour by colour. The classic method is a Richardson-Lucy
+    iteration that keeps the clipped cores of saturated stars from ringing into the image. A second method, a neural
+    network, is in beta. The block is optional, works on linear data and sits before Denoise.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Stacking</span></li><li><span>Astrometry</span></li><li><span>Gradient</span></li>
+    <li class="here"><span>Deconvolution</span></li><li><span>Denoise</span></li><li><span>Color</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Before and after on a real image</h2>
+    <p>The comparison below uses one project of the Rosette Nebula: 436 exposures of 15 s with a Sony A7S at ISO 4000, on a
+    130/900 Newtonian. The two images come from the same project, without the Deconvolution block and with it in its
+    method Neural network, in beta. The block sits after Gradient and before Denoise. Everything else is identical, and
+    both are shown with the same stretch; the sky’s level is unchanged. The crops are at 100 %: one image pixel is one
+    screen pixel. The deconvolution took 2.9 min on an RTX 4060 Ti graphics card. Drag the divider, or focus it and use
+    the arrow keys.</p>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>Star width and star count in four zones of the stack, before and after Deconvolution. The star width is the median over the isolated, unsaturated stars of the zone, from the second moment of each star, as a FWHM in pixels. The stars detected are those standing 40 levels above the local background. A dash means the star width is not given for the zone.</caption>
+        <thead><tr><th>Zone</th><th>Box in the stack (x, y)</th><th>Star width (median, px)</th><th>Stars detected</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1 Cluster on the nebula</th><td class="n">1540–2240, 1120–1820</td><td class="n">–</td><td class="n">729 → 1056</td></tr>
+          <tr><th scope="row">2 Bright nebula, dark globules</th><td class="n">1550–2250, 520–1220</td><td class="n">–</td><td class="n">555 → 772</td></tr>
+          <tr><th scope="row">3 Faint arc</th><td class="n">1936–2636, 241–941</td><td class="n">4.95 → 4.53 (−8 %)</td><td class="n">395 → 530</td></tr>
+          <tr><th scope="row">4 Star field</th><td class="n">2750–3450, 1070–1770</td><td class="n">4.84 → 4.19 (−13 %)</td><td class="n">279 → 382 (+37 %)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <Compare lang={lang} n={1} before="/blocks/deconvolution/cluster-before.png" after="/blocks/deconvolution/cluster-after.png" width={700} height={700}
+      alt="Zone 1, the cluster on the nebula: stars over the glow of the gas, before and after Deconvolution.">
+      Zone 1, cluster on the nebula. The cluster’s stars separate from each other, with more small stars between them.
+      The gas behind is unchanged.
+    </Compare>
+    <Compare lang={lang} n={2} before="/blocks/deconvolution/bright-nebula-before.png" after="/blocks/deconvolution/bright-nebula-after.png" width={700} height={700}
+      alt="Zone 2, the bright nebula and dark globules: stars over bright gas with dark globules, before and after Deconvolution.">
+      Zone 2, bright nebula and dark globules. The small stars over the gas are sharper. The gas and the edges of the
+      globules look the same: the network works on point sources, not on the gas.
+    </Compare>
+    <Compare lang={lang} n={3} before="/blocks/deconvolution/faint-arc-before.png" after="/blocks/deconvolution/faint-arc-after.png" width={700} height={700}
+      alt="Zone 3, the faint arc: stars over faint gas, before and after Deconvolution.">
+      Zone 3, faint arc. The stars are finer over the faint gas, and the faint gas is kept, not flattened.
+    </Compare>
+    <Compare lang={lang} n={4} before="/blocks/deconvolution/star-field-before.png" after="/blocks/deconvolution/star-field-after.png" width={700} height={700}
+      alt="Zone 4, the star field: stars on a dark sky, before and after Deconvolution.">
+      Zone 4, star field. The stars are tighter and rounder, and faint stars appear that were a blur before (+37 %
+      detected). The sky’s level and grain are unchanged.
+    </Compare>
+    {hasInspect && (
+      <Figure lang={lang} n={5} src="/blocks/deconvolution/inspect-en.png" alt="The Inspect page of FLOAT on the Deconvolution block, with its splitter between the image before and after." plate wide>
+        The same comparison in the application: the Inspect page on the Deconvolution block, with its splitter.
+      </Figure>
+    )}
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>What goes in, what comes out</h2>
+    <aside class="note"><b>Why the half-stacks too.</b> <a href="/blocks/denoise/">Denoise</a> reads the difference of the two half-stacks as the noise.
+    If only the stack were sharpened, that difference would no longer describe the image that follows.</aside>
+    <p>The block receives the stack, its two half-stacks, the coverage map of the stack and the map of its saturated
+    pixels. It writes the three images sharpened, a before and after preview, and two measures: the median width of the
+    stars before and after, and the number of zones.</p>
+    <p>The same operation is applied to the stack and to each half-stack, with the same star shapes, so that a Denoise
+    placed after it still reads two images processed alike, whose difference measures the noise. Pixels without data stay as they were.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>The star shape</h2>
+    <aside class="note"><b>Why on the stack.</b> The star shape of a stack changes across the field, wider in the
+    corners, far more than from one frame to the next. It is measured once, on the stack.</aside>
+    <p>The field is cut into zones, with about as many along the short side as keep them square and the number set along
+    the long side (6 by default). In each zone and each colour, FLOAT measures the shape on stars that are:</p>
+    <ul>
+      <li>not saturated, and not near a saturated pixel or a pixel without data;</li>
+      <li>bright: a peak at least 30 times the noise;</li>
+      <li>isolated: no neighbour brighter than 3 % of the star within 1.5 times the stamp radius (stamps are 25 × 25
+      pixels).</li>
+    </ul>
+    <p>Each star is centred to a fraction of a pixel in its own colour, so the small shifts between the colours are
+    not blurred into the shape. The shape of a zone is the median of its stars, normalised to its flux. The faint wings
+    beyond a few pixels from the centre are replaced by the median of the shape around the centre of the star, taken ring by ring, since they are
+    measured with little signal and their noise would weigh like a real halo.</p>
+    <p>A zone with few stars leans on a smooth model of the field, a quadratic surface fitted to all the zones: a
+    zone’s shape is weighted by its star count against 20 stars of the model, and a zone without stars takes the model.
+    The measured widths, per colour, are written to the log with their range over the zones. Their median, before and
+    after, is the block’s star width measure; it is the width at half height of the shape resampled eight times finer.</p>
+    <p>If fewer than 10 isolated stars can be found, the star shape cannot be measured: the image is left as it is and
+    the block says so.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Richardson-Lucy and saturated stars</h2>
+    <p>The method is Richardson-Lucy,<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a> an
+    iteration that multiplies the estimate by the correction the star shape implies, until the estimate, blurred by
+    that shape, matches the measured image. Each zone is restored with its own shape, and the zones are blended between
+    their centres.<a class="cite" href="#ref-3">[3]</a> The sky is raised to at least 8 noise units above zero during the
+    iterations, since the method needs positive values, and taken back afterwards.</p>
+    <aside class="note"><b>The clipped cores.</b> A saturated pixel is lower than the light that fell on it. Treated as a
+    measure, it makes the iteration invent a dark ring around the star.</aside>
+    <p>A clipped star would be wrong in a plain Richardson-Lucy. FLOAT follows Whyte, Sivic and Zisserman.<a class="cite" href="#ref-4">[4]</a>
+    At each iteration the estimate is split into its bright pixels and the rest. The measured pixels that the bright
+    ones reach are left out of the update of the rest, which keeps their errors from ringing into the image, and the
+    bright part is updated with a smooth saturation in the forward model. The clipping level of each colour is the high
+    end of the pixels marked saturated in it. After the restoration, the saturated cores themselves are put back as they
+    were photographed.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Holding back noise and rings</h2>
+    <p>Five mechanisms limit the noise and the rings that deconvolution draws around stars.</p>
+    <ul>
+      <li><strong>Total variation.</strong> A regularisation term holds the noise back.<a class="cite" href="#ref-5">[5]</a>
+      Its strength is the Regularization setting.</li>
+      <li><strong>Damped iteration.</strong> A pixel already within 3 noise units of the data is no longer pushed (the
+      damping of White<a class="cite" href="#ref-6">[6]</a>).</li>
+      <li><strong>Stop.</strong> The iteration stops early when the mean relative change of the estimate falls under
+      0.3 %.</li>
+      <li><strong>Local deringing.</strong> At each iteration, around the stars, 90 % of a darkening is refused.</li>
+      <li><strong>Protection.</strong> The result counts in proportion to the signal: not at all under 3 noise units
+      over the sky, in full from 15, so the sky between objects is left alone.</li>
+    </ul>
+    <p>The noise is measured on the difference of the half-stacks, on a sample of at most 2 million pixels drawn with a
+    fixed seed: the same pixels at every run, so the result is the same at every run. The local deringing has no
+    published equation behind it; it is FLOAT’s own rule.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>The neural method (beta)</h2>
+    <p>The second method is a NAFNet network<a class="cite" href="#ref-7">[7]</a> trained against images of the Euclid
+    space telescope. The network ships with the program. This method is in beta.</p>
+    <p>It works one colour at a time, on the stack and on each half-stack. Each plane is expressed in noise units, passed
+    through the pretrained <a href="/blocks/denoise/">Denoise</a> network, and then through the deconvolution network, in tiles of 512 pixels with a
+    margin of 48 that fades out over the overlap with the next tile, so that the edges leave no seam. The saturated
+    cores are kept, as in the classic method. The network measures no star shape: it does not read the Zones,
+    Iterations or Regularization settings.</p>
+    <p>The image goes through Denoise first, and the method also removes the noise. Its star fluxes are less
+    reliable than the classic method’s.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The settings of the block.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Method</th><td>Richardson-Lucy</td><td>Richardson-Lucy, Neural network (beta)</td><td>Richardson-Lucy iterates with the star shape measured across the field. The neural network is in beta and also removes the noise.</td></tr>
+          <tr><th scope="row">Iterations</th><td class="n">30</td><td class="n">1 – 100</td><td>More iterations sharpen more, and raise the noise. Richardson-Lucy only.</td></tr>
+          <tr><th scope="row">Regularization</th><td class="n">0.002</td><td class="n">0 – 0.05</td><td>Holds back noise and ringing. Richardson-Lucy only.</td></tr>
+          <tr><th scope="row">Zones (advanced)</th><td class="n">6</td><td class="n">1 – 16</td><td>Zones along the long side of the image, each with its own measured star shape. Richardson-Lucy only.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>The neural method is in beta.</strong> It is not finished. It also removes the noise, and its star
+      fluxes are less reliable than the classic method’s.</li>
+      <li><strong>Few stars, no deconvolution.</strong> Under 10 isolated, unsaturated stars the image is left as it is.
+      A zone without stars borrows the shape of the model of the field.</li>
+      <li><strong>Saturated cores are not restored.</strong> The classic method keeps them from ringing; both methods
+      leave them as they were photographed.</li>
+      <li><strong>Rings were the difficulty.</strong> The damping, the stop, the local deringing and the protection were
+      added against the rings around stars and the noise, with settings frozen on tuning images and judged on 33 others
+      (<a href={`${release.repo}/issues/92`}>issue 92</a>). A global deringing step, which gives back part of what went
+      below the measured image, exists in the code and is set to zero.</li>
+      <li><strong>Time.</strong> On a processor, one colour takes minutes; the neural method also takes minutes per
+      row of tiles.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Richardson, W. H. 1972, <i>Bayesian-Based Iterative Method of Image Restoration</i>, J. Opt. Soc. Am. 62, 55 (Richardson-Lucy). <a href="https://doi.org/10.1364/JOSA.62.000055">doi:10.1364/JOSA.62.000055</a></li>
+      <li id="ref-2">Lucy, L. B. 1974, <i>An iterative technique for the rectification of observed distributions</i>, AJ 79, 745 (Richardson-Lucy). <a href="https://doi.org/10.1086/111605">doi:10.1086/111605</a></li>
+      <li id="ref-3">Nagy, J. G. &amp; O’Leary, D. P. 1998, <i>Restoring Images Degraded by Spatially Variant Blur</i>, SIAM J. Sci. Comput. 19, 1063 (the zones blended between their centres). <a href="https://doi.org/10.1137/S106482759528507X">doi:10.1137/S106482759528507X</a></li>
+      <li id="ref-4">Whyte, O., Sivic, J. &amp; Zisserman, A. 2014, <i>Deblurring Shaken and Partially Saturated Images</i>, International Journal of Computer Vision 110, 185. <a href="https://doi.org/10.1007/s11263-014-0727-3">doi:10.1007/s11263-014-0727-3</a></li>
+      <li id="ref-5">Dey, N. et al. 2006, <i>Richardson-Lucy algorithm with total variation regularization for 3D confocal microscope deconvolution</i>, Microsc. Res. Tech. 69, 260. <a href="https://doi.org/10.1002/jemt.20294">doi:10.1002/jemt.20294</a></li>
+      <li id="ref-6">White, R. L. 1994, <i>Image restoration using the damped Richardson-Lucy method</i>, Proc. SPIE 2198, 1342, Eqs. 7, 9 and 10. <a href="https://doi.org/10.1117/12.176819">doi:10.1117/12.176819</a></li>
+      <li id="ref-7">Chen, L., Chu, X., Zhang, X. &amp; Sun, J. 2022, <i>Simple Baselines for Image Restoration</i> (NAFNet), ECCV 2022. <a href="https://arxiv.org/abs/2204.04676">arXiv:2204.04676</a></li>
+    </ol>
+  </section>
+</Doc>

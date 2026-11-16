@@ -1,0 +1,237 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import Figure from '../../components/Figure.astro';
+import Chart from '../../components/Chart.astro';
+import { colourFitFigure, responseFigure } from '../../data/charts/figures';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Color" title="Couleur"
+  description="Le bloc Couleur de FLOAT : la calibration des couleurs sur les spectres XP de Gaia des étoiles du champ, le blanc G2V, les étoiles écartées, un facteur par couleur, la balance de repli, réglages et limites, avec les sources publiées.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Couleur</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il règle l’équilibre des couleurs de l’image sur les étoiles du champ, dont les vraies couleurs sont connues par le catalogue Gaia.</dd></div><div><dt>Ce qu’on voit</dt><dd>Un ciel neutre et des étoiles à leurs couleurs naturelles ; Inspecter liste chaque étoile mesurée, et si elle a servi.</dd></div><div><dt>Ce qui se règle</dt><dd>En général rien : les valeurs par défaut conviennent à la plupart des champs ; Référence blanc choisit la couleur d’étoile qui paraît blanche, et Étoiles minimum peut être abaissé pour un champ étroit qui compte peu d’étoiles.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Les étoiles et leurs spectres</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>La mesure des étoiles</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Le blanc et les facteurs</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Où la matrice s’applique</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>La balance de repli</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Une approximation de la réponse du capteur</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Réglages</a></li>
+      <li><a href="#s9"><span class="secnum">9</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Couleur calibre les couleurs de l’empilement sur les étoiles du champ. Les
+    étoiles isolées du champ sont mesurées sur l’empilement et comparées aux couleurs que donnent leurs spectres XP de
+    Gaia. Pour le rouge et le bleu, une droite robuste à travers les étoiles donne le facteur qui ramène un blanc de
+    référence, par défaut une étoile G2V, au neutre ; le vert reste à 1. Les canaux de l’appareil ne sont pas mélangés.
+    Quand les étoiles ne peuvent pas calibrer les couleurs, une balance de repli prend le relais et le bloc dit
+    pourquoi.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Déconvolution</span></li><li><span>Débruitage</span></li>
+    <li class="here"><span>Couleur</span></li><li><span>Étoiles/fond</span></li><li><span>Post</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</h2>
+    <aside class="note"><b>Les spectres XP</b> sont les spectres à basse résolution de Gaia DR3.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a>
+    FLOAT les ramène tous à l’intervalle de 400 à 800 nm.</aside>
+    <p>Le bloc lit l’empilement dont le bloc <a href="/fr/blocs/gradient/">Gradient</a> a retiré le ciel, les étoiles que le bloc Catalogues a choisies avec
+    leurs spectres XP de Gaia, et la carte des pixels proches de la saturation de l’empilement. Le bloc Catalogues a
+    besoin de la solution du bloc <a href="/fr/blocs/astrometrie/">Astrométrie</a> pour placer ces étoiles.</p>
+    <p>Il écrit un facteur par canal de l’appareil, rangés en matrice 3 × 3 diagonale : une balance des blancs des
+    couleurs de l’appareil, non une conversion vers le sRGB ; les primaires de l’appareil sont gardées. Il écrit aussi
+    un tableau de chaque étoile du catalogue avec ce qui a été mesuré, ce qui était attendu, et si l’étoile a servi ou
+    pourquoi elle n’a pas servi. Inspecter montre le tableau.</p>
+    <p>Le bloc ne travaille pas sur une image monochrome, qui n’a pas de couleurs à calibrer.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Les étoiles et leurs spectres</h2>
+    <p>Les étoiles de couleur sont des étoiles de Gaia DR3<a class="cite" href="#ref-3">[3]</a> du champ ayant un spectre
+    XP, entre la Limite brillante (G 7,5) et la Limite faible (G 14). Chacune doit être isolée : toute autre étoile à
+    moins de 40 secondes d’arc est plus faible d’au moins 3 magnitudes. Le bloc Catalogues ne prend aucune étoile à moins
+    de 60 pixels du bord, et le bloc Couleur écarte toute étoile à moins de 50 pixels du bord de l’empilement
+    (tableau 1).</p>
+    <p>Au plus 4000 étoiles sont gardées. Quand il y en a davantage, elles sont réparties régulièrement sur les
+    magnitudes, et non les plus brillantes seules : sur un grand champ pris avec un objectif photo, les milliers d’étoiles les plus
+    brillantes sont toutes saturées.</p>
+    <p>Les spectres sont les spectres XP de Gaia, sous la forme échantillonnée publiée par Demleitner et Andrae,<a class="cite" href="#ref-4">[4]</a>
+    ou sous la forme compacte du catalogue hors ligne, installé une fois (voir le bloc <a href="/fr/blocs/astrometrie/">Astrométrie</a>). Quand des services
+    aux grilles de longueurs d’onde différentes répondent, tous les spectres sont ramenés à 400–800 nm. De son spectre,
+    chaque étoile tire sa couleur attendue, comme un point de l’espace colorimétrique CIE XYZ.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>La mesure des étoiles</h2>
+    <p>Chaque étoile est mesurée sur l’empilement par photométrie d’ouverture dans chaque couleur, dans l’Ouverture
+    photométrique, sur son propre fond local pris dans un anneau de 2,5 à 3,6 fois le rayon de l’ouverture. Par défaut,
+    le rayon de l’ouverture vaut 0,7 fois la FWHM des étoiles mesurée par l’<a href="/fr/blocs/alignement/">Alignement</a>,
+    fois l’échelle drizzle, et au moins 4 pixels.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les étoiles écartées, et pourquoi. Inspecter donne la raison de chacune.</caption>
+        <thead><tr><th>Raison</th><th>Ce que cela veut dire</th></tr></thead>
+        <tbody>
+          <tr><td>Bord</td><td>À moins de 50 pixels du bord de l’empilement.</td></tr>
+          <tr><td>Non mesurée</td><td>Des pixels vides dans son ouverture.</td></tr>
+          <tr><td>Non positive</td><td>Pas de flux positif dans chaque couleur : étoile faible, ou sur un fond sombre.</td></tr>
+          <tr><td>Saturée</td><td>Un échantillon proche de la saturation dans au moins une image, dans l’ouverture ou un pixel au-delà.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Les étoiles saturées sont repérées avec la carte des échantillons proches de la saturation de l’empilement. Pour un
+    empilement fait avant qu’il garde cette carte, une étoile est saturée quand son pic dépasse 45 % des pixels les plus
+    brillants du canal.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Le blanc et les facteurs</h2>
+    <aside class="note"><b>Pourquoi G2V.</b> La Référence blanc est la température de couleur rendue neutre : un corps
+    noir à 5778 K, proche du spectre du Soleil. Une étoile G2V paraît blanche, les plus chaudes bleues et les plus froides orange. Le bloc <a href="/fr/blocs/post/">Post</a>
+    peut encore réchauffer ou refroidir l’image sans toucher à cette calibration.</aside>
+    <p>Le blanc de référence est la lumière d’un corps noir à 5778 K. La couleur XYZ attendue de chaque étoile est adaptée
+    de ce blanc au D65 (transformation de Bradford) et convertie en sRGB linéaire, si bien que le blanc de référence
+    ressort neutre.</p>
+    <p>Pour le rouge et pour le bleu, FLOAT prend le rapport de la couleur au vert, mesuré sur l’empilement, contre le même
+    rapport attendu d’après les spectres de Gaia. Une droite est ajustée à travers les étoiles avec l’estimateur de
+    Theil–Sen,<a class="cite" href="#ref-7">[7]</a><a class="cite" href="#ref-8">[8]</a> la médiane des pentes de toutes les paires d’étoiles, robuste à la dispersion de chaque étoile. La droite
+    est lue au rapport du blanc de référence, 1. Le facteur est l’inverse du rapport mesuré là. Le vert vaut 1.</p>
+    <p>La figure 1 montre les deux ajustements sur un vrai empilement&nbsp;: chaque étoile y donne un point par rapport, et
+    les facteurs se lisent là où les droites croisent le blanc de référence.</p>
+
+    <Figure lang={lang} n={1}>
+      <Chart slot="body" {...colourFitFigure(lang)} />
+      Rapport au vert mesuré sur l’empilement en fonction du rapport attendu d’après le spectre XP de Gaia de l’étoile,
+      pour le rouge (points pleins) et le bleu (cercles), avec les droites de Theil–Sen. Données&nbsp;: les Pléiades,
+      1344 poses de 13 s, 537 des 605 étoiles du catalogue dans le champ. Au blanc de référence (trait gris), la droite
+      du rouge vaut 1,903 et celle du bleu 0,792&nbsp;: avant la mise à l’échelle commune, les facteurs sont 0,526 pour le
+      rouge et 1,263 pour le bleu, le vert 1 ; après elle, 0,427, 0,812 et 1,026. Réglages : ceux par défaut,
+      l’Ouverture photométrique automatique (4 px).
+    </Figure>
+    <p>Les trois facteurs sont ensuite mis à l’échelle par une constante commune (divisés par la moyenne de leurs
+    inverses) ; les couleurs n’en dépendent pas. C’est la matrice. Avec moins de 20 étoiles utilisables, aucun facteur
+    n’est calculé. Par défaut, 50 étoiles sont exigées (Étoiles minimum) : la dispersion des rapports mesurés est de 5 à
+    7 %, et 50 étoiles donnent à chaque facteur une erreur d’environ 0,7 à 1 % (la dispersion divisée par √50).</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Où la matrice s’applique</h2>
+    <p>La matrice s’applique à l’image linéaire, après le bloc <a href="/fr/blocs/gradient/">Gradient</a>. Tout bloc qui lit l’image après Couleur la reçoit
+    multipliée par la matrice : l’empilement, et ses deux demi-empilements.</p>
+    <p>La balance des blancs « lumière du jour » des fichiers bruts, quand l’empilement en a été multiplié, est reprise
+    exactement par cette calibration, qui mesure le blanc sur les étoiles.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>La balance de repli</h2>
+    <p>Les étoiles ne peuvent pas calibrer les couleurs quand le champ n’est pas identifié, quand aucune étoile de Gaia du
+    champ n’est disponible, ou quand moins d’Étoiles minimum ont été mesurées. Le réglage Si échec calibration choisit.
+    Avec Balance de repli, l’exécution continue, le bloc est dessiné en orange et son info-bulle donne la raison. Avec
+    Arrêter, le bloc échoue.</p>
+    <p>La balance de repli est une calibration sans photométrie, en deux temps. D’abord, le niveau du ciel de chaque canal,
+    la médiane de ses pixels après écrêtage à 3 écarts-types de ce qui dépasse le ciel, est retiré, si bien que le fond
+    est neutre. Ensuite, le rouge et le bleu sont mis à l’échelle pour que le rapport médian au vert des étoiles du champ,
+    jusqu’à 2000, vaille 1, l’hypothèse du monde gris<a class="cite" href="#ref-5">[5]</a> prise sur les étoiles. Avec
+    moins de 10 étoiles mesurables, les couleurs de l’appareil sont gardées.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Une approximation de la réponse du capteur</h2>
+    <aside class="note"><b>Un diagnostic seulement.</b> Les courbes ne changent aucune couleur&nbsp;: les couleurs de
+    l’image viennent des facteurs de la section 4, pas de ces courbes.</aside>
+    <p>Les étoiles qui calibrent les couleurs renseignent aussi sur l’appareil. Le flux d’une étoile dans un canal est
+    l’intégrale de son spectre multiplié par la réponse du canal. Avec les spectres XP de Gaia des étoiles de couleur
+    et les flux mesurés sur l’empilement, FLOAT cherche les trois réponses qui les expliquent le mieux. Chaque courbe
+    est une somme, sans terme négatif, de gaussiennes d’écart-type 12 nm centrées tous les 15 nm de 380 à 1000 nm&nbsp;; les
+    irrégularités de la courbe sont pénalisées, comme dans la reconstruction des sensibilités d’un appareil à partir
+    de spectres connus,<a class="cite" href="#ref-6">[6]</a> et les étoiles que l’ajustement n’explique pas sont
+    rejetées en quatre passes.</p>
+    <p>Les courbes sont calculées en une seconde environ quand elles sont affichées, à partir de ce que les blocs
+    Catalogues et Couleur ont enregistré&nbsp;; rien de plus n’est stocké. Inspecter les montre sous Couleur, avec la couleur
+    que prend chaque longueur d’onde, et le <a href="/fr/blocs/rapport/">Rapport</a> les imprime. La figure 2 montre les trois courbes reconstruites pour
+    un appareil.</p>
+
+    <Figure lang={lang} n={2}>
+      <Chart slot="body" {...responseFigure(lang)} />
+      Réponse approchée des canaux rouge, vert et bleu en fonction de la longueur d’onde, rapportée à la plus forte,
+      reconstruite à partir des étoiles de couleur de la figure 1. Données&nbsp;: les Pléiades, 537 étoiles, spectres de 400
+      à 800 nm&nbsp;; l’écart médian aux flux des étoiles est de 7,8 % en rouge, 8,5 % en vert et 8,7 % en bleu. Les traits
+      gris marquent Hβ, [OIII] et Hα. Les spectres d’étoiles sont larges et se ressemblent, si bien que beaucoup de
+      courbes expliquent aussi bien les étoiles&nbsp;: les formes sont approchées, et la réponse à une raie étroite comme
+      Hα peut être loin du compte (section 9). Ici, la courbe du bleu est au plus haut à 400 nm, au bord des
+      spectres, et celle du rouge a deux pics&nbsp;: ce sont les détails les moins contraints.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Les réglages du bloc, et les trois du bloc Catalogues qui choisissent ses étoiles. Les réglages avancés sont signalés.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Si échec calibration</th><td>Balance de repli</td><td>Balance de repli, Arrêter</td><td>Ce que fait le bloc quand les étoiles ne peuvent pas calibrer les couleurs (section 6).</td></tr>
+          <tr><th scope="row">Étoiles minimum</th><td class="n">50</td><td class="n">20 – 2000</td><td>Le plus petit nombre d’étoiles mesurées avec un spectre de Gaia que la calibration accepte. 50 donne à chaque facteur environ 1 % d’incertitude.</td></tr>
+          <tr><th scope="row">Ouverture photométrique (avancé)</th><td>automatique</td><td class="n">1,5 – 30 px, pas de 0,5</td><td>Rayon de l’ouverture qui mesure les étoiles. Automatique : 0,7 fois la FWHM des étoiles mesurée par l’Alignement, fois l’échelle drizzle, au moins 4 px. Plus grand est plus sûr par forte turbulence mais plus bruité.</td></tr>
+          <tr><th scope="row">Référence blanc</th><td class="n">5778 K</td><td class="n">3000 – 12&nbsp;000 K, pas de 100</td><td>Température de couleur rendue comme blanc neutre. Un corps noir à 5778 K est proche du spectre du Soleil, une étoile G2V.</td></tr>
+          <tr><th scope="row">Limite brillante (avancé)</th><td class="n">G 7,5</td><td class="n">3 – 15, pas de 0,5</td><td>Étoiles de Gaia les plus brillantes dont le spectre XP est utilisé.</td></tr>
+          <tr><th scope="row">Limite faible (avancé)</th><td class="n">G 14</td><td class="n">8 – 17,5, pas de 0,5</td><td>Étoiles de Gaia les plus faibles dont le spectre XP est utilisé.</td></tr>
+          <tr><th scope="row">Nombre étoiles (avancé)</th><td class="n">4000</td><td class="n">100 – 20&nbsp;000</td><td>Nombre maximal de spectres XP utilisés.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s9"><span class="secnum">9</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Pas de matrice de couleurs.</strong> Une version antérieure reconstruisait les courbes de sensibilité du
+      capteur à partir des étoiles et y ajustait une matrice de couleurs 3 × 3. Les étoiles ne contraignent pas une telle
+      matrice là où leurs spectres se ressemblent, et elle mélangeait les canaux arbitrairement : le H-alpha de la Rosette
+      et du Cœur sortait magenta. Elle a été retirée, et le bloc applique un facteur par couleur.</li>
+      <li><strong>La réponse spectrale de l’appareil n’est qu’un diagnostic.</strong> Inspecter en montre une approximation,
+      recalculée quand on l’affiche, à partir de ce que les blocs Catalogues et Couleur ont enregistré. Elle ne change aucune
+      couleur. Sur des étoiles synthétiques aux courbes connues, les formes revenaient à 0,02 près du maximum en médiane
+      sur le visible, mais la réponse à H-alpha sortait à 0,76 pour 0,59 en vrai. Aucune marge d’erreur n’est tracée :
+      ni un nouveau tirage des étoiles ni une variation du lissage n’ont mesuré cette erreur.<a class="cite" href="#ref-6">[6]</a></li>
+      <li><strong>Une balance des blancs ne mélange pas les canaux.</strong> Elle laisse la teinte telle que les filtres de
+      l’appareil la donnent : une émission vue un peu par les pixels bleus reste un peu bleue.</li>
+      <li><strong>Trop peu d’étoiles avec un spectre.</strong> Un champ étroit en contient peu. Quand les spectres d’étoiles
+      installés s’arrêtent à une magnitude plus brillante que la Limite faible, les étoiles de couleur entre les deux n’en
+      ont pas, et le journal le dit. Les spectres d’étoiles complets s’installent depuis Réglages › Catalogues et
+      astrométrie.</li>
+      <li><strong>Les étoiles saturées sont écartées.</strong> Sur un grand champ pris avec un objectif, beaucoup des plus
+      brillantes le sont.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">De Angeli, F. et al. 2023, <i lang="en">Gaia Data Release 3: Processing and validation of BP/RP low-resolution spectral data</i>, A&amp;A 674, A2. <a href="https://arxiv.org/abs/2206.06143">arXiv:2206.06143</a></li>
+      <li id="ref-2">Montegriffo, P. et al. 2023, <i lang="en">Gaia Data Release 3: External calibration of BP/RP low-resolution spectroscopic data</i>, A&amp;A 674, A3. <a href="https://arxiv.org/abs/2206.06205">arXiv:2206.06205</a></li>
+      <li id="ref-3">Gaia Collaboration, Vallenari, A. et al. 2023, <i lang="en">Gaia Data Release 3: Summary of the content and survey properties</i>, A&amp;A 674, A1. <a href="https://arxiv.org/abs/2208.00211">arXiv:2208.00211</a></li>
+      <li id="ref-4">Demleitner, M. &amp; Andrae, R. 2022, <i lang="en">Monte Carlo sampled DR3 XP spectra</i>, GAVO Data Center. <a href="https://doi.org/10.21938/W:hWbPah3wBabuqewQULTA">doi:10.21938/W:hWbPah3wBabuqewQULTA</a></li>
+      <li id="ref-5">Buchsbaum, G. 1980, <i lang="en">A spatial processor model for object colour perception</i>, J. Franklin Inst. 310, 1. <a href="https://doi.org/10.1016/0016-0032(80)90058-7">doi:10.1016/0016-0032(80)90058-7</a></li>
+      <li id="ref-6">Finlayson, G., Hordley, S. &amp; Hubel, P. 1998, <i lang="en">Recovering device sensitivities with quadratic programming</i>, IS&amp;T/SID Color Imaging Conference 6, 90. <a href="https://doi.org/10.2352/cic.1998.6.1.art00020">doi:10.2352/cic.1998.6.1.art00020</a></li>
+      <li id="ref-7">Theil, H. 1950, <i lang="en">A rank-invariant method of linear and polynomial regression analysis</i>, I, Proc. Kon. Ned. Akad. Wetensch. 53, 386.</li>
+      <li id="ref-8">Sen, P. K. 1968, <i lang="en">Estimates of the Regression Coefficient Based on Kendall’s Tau</i>, J. Am. Stat. Assoc. 63, 1379. <a href="https://doi.org/10.1080/01621459.1968.10480934">doi:10.1080/01621459.1968.10480934</a></li>
+    </ol>
+  </section>
+</Doc>

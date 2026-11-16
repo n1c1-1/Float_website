@@ -1,0 +1,153 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez la copie du projet du deuxième tutoriel.
+
+2
+00:00:04.000 --> 00:00:08.000
+Le projet s’ouvre à jour : rien n’est à calculer.
+
+3
+00:00:08.000 --> 00:00:11.000
+Cliquez sur « Inspection » : l’image finale du workflow s’affiche.
+
+4
+00:00:11.000 --> 00:00:14.000
+Choisissez 100 % dans la liste du zoom.
+
+5
+00:00:14.000 --> 00:00:17.000
+Faites glisser le cadre de l’aperçu sur le champ d’étoiles à droite de l’amas.
+
+6
+00:00:17.000 --> 00:00:25.000
+À 100 %, les étoiles sont un peu molles : largeur médiane 4,84 px, 279 étoiles détectées. Le gaz et le ciel sont justes.
+
+7
+00:00:25.000 --> 00:00:28.000
+Cliquez sur « Graphe ».
+
+8
+00:00:28.000 --> 00:00:31.000
+Faites un clic droit sur le bloc « Gradient ».
+
+9
+00:00:31.000 --> 00:00:34.000
+Cliquez sur « Variante ici » : un second workflow démarre après « Gradient ».
+
+10
+00:00:34.000 --> 00:00:40.000
+L’étalonnage, l’alignement et l’empilement sont partagés par les deux workflows : ils ne sont pas recalculés.
+
+11
+00:00:40.000 --> 00:00:44.000
+Double-cliquez sur « Déconvolution » dans la palette : le bloc s’ajoute à la variante, après « Gradient ».
+
+12
+00:00:44.000 --> 00:00:49.000
+Choisissez « Réseau de neurones (bêta) ».
+
+13
+00:00:49.000 --> 00:00:53.000
+Cliquez sur « Exécuter » : seuls les blocs de la variante sont calculés.
+
+14
+00:00:53.000 --> 00:00:59.000
+La liste montre tout à jour, sauf « Déconvolution », « Débruitage » et « Étoiles/fond » de la variante.
+
+15
+00:00:59.000 --> 00:01:05.000
+Non montré en temps réel : l’exécution a duré 3 min 23 s.
+
+16
+00:01:05.000 --> 00:01:10.000
+Cliquez sur « Inspection » : la page s’ouvre sur le bloc « Déconvolution » de la variante, avant et après le bloc de chaque côté d’un rideau.
+
+17
+00:01:10.000 --> 00:01:13.000
+Choisissez 100 % dans la liste du zoom.
+
+18
+00:01:13.000 --> 00:01:16.000
+Faites glisser le cadre de l’aperçu sur le même champ d’étoiles.
+
+19
+00:01:16.000 --> 00:01:21.000
+Faites glisser le rideau sur les étoiles : avant le bloc à sa gauche, après à sa droite.
+
+20
+00:01:21.000 --> 00:01:29.000
+Étoiles : plus serrées, largeur médiane de 4,84 à 4,19 px, et 37 % d’étoiles faibles détectées en plus. Le gaz et l’arc faible sont inchangés.
+
+21
+00:01:29.000 --> 00:01:32.000
+Cliquez sur « Post » : les deux workflows donnent deux calques.
+
+22
+00:01:32.000 --> 00:01:37.000
+Le calque de la variante est celui du haut, son œil éteint : l’original s’affiche.
+
+23
+00:01:37.000 --> 00:01:40.000
+Cliquez sur le calque de la variante.
+
+24
+00:01:40.000 --> 00:01:43.000
+Faites glisser « Intensité » à −0,5, comme sur le calque de l’original.
+
+25
+00:01:43.000 --> 00:01:46.000
+Faites glisser « Petites étoiles » à −1,0.
+
+26
+00:01:46.000 --> 00:01:49.000
+Faites glisser « Ciel » à −1,5.
+
+27
+00:01:49.000 --> 00:01:52.000
+Faites glisser « Tons faibles » à +1,0.
+
+28
+00:01:52.000 --> 00:01:55.000
+Cliquez sur l’œil du calque du haut : la variante recouvre l’original.
+
+29
+00:01:55.000 --> 00:02:00.000
+Sur la vue ajustée, les deux images sont presque les mêmes.
+
+30
+00:02:00.000 --> 00:02:03.000
+Cliquez de nouveau sur l’œil : l’original s’affiche.
+
+31
+00:02:03.000 --> 00:02:06.000
+Zoomez à environ 100 % sur le champ d’étoiles (Ctrl et la molette).
+
+32
+00:02:06.000 --> 00:02:11.000
+Cliquez sur l’œil : les étoiles de la variante sont plus serrées.
+
+33
+00:02:11.000 --> 00:02:16.000
+Cliquez de nouveau : les étoiles de l’original.
+
+34
+00:02:16.000 --> 00:02:19.000
+Cliquez sur « Graphe ».
+
+35
+00:02:19.000 --> 00:02:22.000
+Faites un clic droit sur un bloc de la variante.
+
+36
+00:02:22.000 --> 00:02:26.000
+Pointez l’entrée « Workflow » du menu.
+
+37
+00:02:26.000 --> 00:02:31.000
+Cliquez sur « Supprimer workflow » : la variante disparaît, l’original reste.
+
+38
+00:02:31.000 --> 00:02:35.000
+Le projet est enregistré avec le seul workflow d’origine.

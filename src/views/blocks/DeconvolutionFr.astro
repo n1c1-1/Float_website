@@ -1,0 +1,233 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+import Compare from '../../components/Compare.astro';
+import Figure from '../../components/Figure.astro';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+const lang = 'fr';
+const hasInspect = existsSync(join(process.cwd(), 'public', 'blocks', 'deconvolution', 'inspect-fr.png'));
+---
+<Doc lang={lang} page="blocks" current="Deconvolution" title="Déconvolution"
+  description="Le bloc Déconvolution de FLOAT : Richardson-Lucy avec le traitement des étoiles saturées, la forme des étoiles mesurée par zone et par couleur, la méthode neuronale (bêta), réglages et limites, avec les sources publiées.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Déconvolution</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il rend l’empilement plus net, avec la forme des étoiles mesurée sur l’empilement lui-même.</dd></div><div><dt>Ce qu’on voit</dt><dd>Des étoiles plus fines et des détails plus fins ; Inspecter montre l’image avant et après, avec la largeur médiane des étoiles avant et après.</dd></div><div><dt>Ce qui se règle</dt><dd>Itérations règle la force de l’accentuation et Régularisation retient le bruit et les anneaux ; les valeurs par défaut conviennent à la plupart des images.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Avant et après sur une image réelle</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>La forme des étoiles</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Richardson-Lucy et étoiles saturées</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Retenir le bruit et les anneaux</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>La méthode neuronale (bêta)</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Réglages</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Déconvolution accentue l’empilement et ses deux demi-empilements avec la forme des
+    étoiles mesurée sur l’empilement lui-même, zone par zone et couleur par couleur. La méthode classique est une
+    itération de Richardson-Lucy qui empêche les cœurs écrêtés des étoiles saturées de produire des anneaux dans
+    l’image. Une seconde méthode, un réseau de neurones, est en bêta. Le bloc est facultatif, travaille sur des données
+    linéaires et se place avant Débruitage.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Empilement</span></li><li><span>Astrométrie</span></li><li><span>Gradient</span></li>
+    <li class="here"><span>Déconvolution</span></li><li><span>Débruitage</span></li><li><span>Couleur</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Avant et après sur une image réelle</h2>
+    <p>La comparaison ci-dessous utilise un projet de la nébuleuse de la Rosette : 436 poses de 15 s avec un Sony A7S à
+    4000 ISO, sur un Newton 130/900. Les deux images viennent du même projet, sans le bloc Déconvolution et avec lui
+    dans sa méthode Réseau de neurones, en bêta. Le bloc se place après Gradient et avant Débruitage. Tout le reste est
+    identique, et les deux sont montrées avec le même étirement ; le niveau du ciel est inchangé. Les détails sont à
+    100 % : un pixel de l’image est un pixel de l’écran. La déconvolution a pris 2,9 min sur une carte graphique
+    RTX 4060 Ti. Faites glisser le séparateur, ou donnez-lui le focus et utilisez les flèches.</p>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Largeur et nombre des étoiles dans quatre zones de l’empilement, avant et après Déconvolution. La largeur des étoiles est la médiane sur les étoiles isolées et non saturées de la zone, d’après le moment d’ordre deux de chaque étoile, en largeur à mi-hauteur, en pixels. Les étoiles détectées sont celles qui dépassent de 40 niveaux le fond local. Un tiret signale que la largeur des étoiles n’est pas donnée pour la zone.</caption>
+        <thead><tr><th>Zone</th><th>Cadre dans l’empilement (x, y)</th><th>Largeur des étoiles (médiane, px)</th><th>Étoiles détectées</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1 Amas sur la nébuleuse</th><td class="n">1540–2240, 1120–1820</td><td class="n">–</td><td class="n">729 → 1056</td></tr>
+          <tr><th scope="row">2 Nébuleuse brillante, globules sombres</th><td class="n">1550–2250, 520–1220</td><td class="n">–</td><td class="n">555 → 772</td></tr>
+          <tr><th scope="row">3 Arc faible</th><td class="n">1936–2636, 241–941</td><td class="n">4,95 → 4,53 (−8 %)</td><td class="n">395 → 530</td></tr>
+          <tr><th scope="row">4 Champ d’étoiles</th><td class="n">2750–3450, 1070–1770</td><td class="n">4,84 → 4,19 (−13 %)</td><td class="n">279 → 382 (+37 %)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <Compare lang={lang} n={1} before="/blocks/deconvolution/cluster-before.png" after="/blocks/deconvolution/cluster-after.png" width={700} height={700}
+      alt="Zone 1, l’amas sur la nébuleuse : des étoiles sur la lueur du gaz, avant et après Déconvolution.">
+      Zone 1, amas sur la nébuleuse. Les étoiles de l’amas se séparent les unes des autres, avec plus de petites étoiles
+      entre elles. Le gaz derrière est inchangé.
+    </Compare>
+    <Compare lang={lang} n={2} before="/blocks/deconvolution/bright-nebula-before.png" after="/blocks/deconvolution/bright-nebula-after.png" width={700} height={700}
+      alt="Zone 2, la nébuleuse brillante et les globules sombres : des étoiles sur du gaz brillant avec des globules sombres, avant et après Déconvolution.">
+      Zone 2, nébuleuse brillante et globules sombres. Les petites étoiles sur le gaz sont plus nettes. Le gaz et les
+      bords des globules paraissent les mêmes : le réseau travaille sur les sources ponctuelles, pas sur le gaz.
+    </Compare>
+    <Compare lang={lang} n={3} before="/blocks/deconvolution/faint-arc-before.png" after="/blocks/deconvolution/faint-arc-after.png" width={700} height={700}
+      alt="Zone 3, l’arc faible : des étoiles sur du gaz faible, avant et après Déconvolution.">
+      Zone 3, arc faible. Les étoiles sont plus fines sur le gaz faible, et le gaz faible est conservé, pas aplati.
+    </Compare>
+    <Compare lang={lang} n={4} before="/blocks/deconvolution/star-field-before.png" after="/blocks/deconvolution/star-field-after.png" width={700} height={700}
+      alt="Zone 4, le champ d’étoiles : des étoiles sur un ciel sombre, avant et après Déconvolution.">
+      Zone 4, champ d’étoiles. Les étoiles sont plus serrées et plus rondes, et des étoiles faibles apparaissent là où il
+      n’y avait qu’un flou (+37 % détectées). Le niveau et le grain du ciel sont inchangés.
+    </Compare>
+    {hasInspect && (
+      <Figure lang={lang} n={5} src="/blocks/deconvolution/inspect-fr.png" alt="La page Inspecter de FLOAT sur le bloc Déconvolution, avec son séparateur entre l’image avant et après." plate wide>
+        La même comparaison dans l’application : la page Inspecter sur le bloc Déconvolution, avec son séparateur.
+      </Figure>
+    )}
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Ce qui entre, ce qui sort</h2>
+    <aside class="note"><b>Pourquoi aussi les demi-empilements.</b> <a href="/fr/blocs/debruitage/">Débruitage</a> lit la différence des deux
+    demi-empilements comme le bruit. Si seul l’empilement était accentué, cette différence ne décrirait plus l’image
+    qui suit.</aside>
+    <p>Le bloc reçoit l’empilement, ses deux demi-empilements, la carte de couverture de l’empilement et la carte de ses
+    pixels saturés. Il écrit les trois images accentuées, un aperçu avant et après, et deux mesures : la largeur médiane
+    des étoiles avant et après, et le nombre de zones.</p>
+    <p>La même opération s’applique à l’empilement et à chaque demi-empilement, avec les mêmes formes d’étoiles, si bien
+    qu’un Débruitage placé après lui lit toujours deux images traitées de la même façon, dont la différence mesure le
+    bruit. Les pixels sans données
+    restent tels quels.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>La forme des étoiles</h2>
+    <aside class="note"><b>Pourquoi sur l’empilement.</b> La forme des étoiles d’un empilement change dans le champ,
+    plus large dans les coins, bien plus que d’une image à l’autre. Elle est mesurée une seule fois, sur
+    l’empilement.</aside>
+    <p>Le champ est découpé en zones : le nombre est fixé le long du grand côté (6 par défaut), et le petit côté en reçoit
+    autant qu’il en faut pour les garder à peu près carrées. Dans chaque zone et chaque couleur, FLOAT mesure la forme sur
+    des étoiles qui sont :</p>
+    <ul>
+      <li>non saturées, et loin de tout pixel saturé ou sans données ;</li>
+      <li>brillantes : un pic d’au moins 30 fois le bruit ;</li>
+      <li>isolées : aucune voisine plus brillante que 3 % de l’étoile à moins de 1,5 fois le rayon de la vignette
+      (des vignettes de 25 × 25 pixels).</li>
+    </ul>
+    <p>Chaque étoile est centrée à une fraction de pixel près dans sa propre couleur, si bien que les petits décalages
+    entre les couleurs ne sont pas fondus dans la forme. La forme d’une zone est la médiane de ses étoiles, normalisée à
+    leur flux. Les ailes faibles, au-delà de quelques pixels du centre, sont remplacées par la médiane de la forme
+    autour du centre de l’étoile, prise anneau par anneau, car elles sont mesurées avec peu de signal et leur bruit
+    pèserait comme un vrai halo.</p>
+    <p>Une zone qui compte peu d’étoiles s’appuie sur un modèle lisse du champ, une surface quadratique ajustée sur toutes
+    les zones : la forme d’une zone est pondérée par son nombre d’étoiles contre 20 étoiles pour le modèle, et une zone
+    sans étoiles prend le modèle. Les largeurs mesurées, par couleur, sont écrites dans le journal avec leur étendue sur
+    les zones. Leur médiane, avant et après, est la mesure de largeur d’étoile du bloc ; c’est la largeur à mi-hauteur de
+    la forme rééchantillonnée huit fois plus finement.</p>
+    <p>Si moins de 10 étoiles isolées sont trouvées, la forme ne peut pas être mesurée : l’image est laissée telle quelle
+    et le bloc le dit.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Richardson-Lucy et étoiles saturées</h2>
+    <p>La méthode est Richardson-Lucy,<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a> une
+    itération qui multiplie l’estimation par la correction qu’implique la forme des étoiles, jusqu’à ce que l’estimation,
+    floutée par cette forme, rejoigne l’image mesurée. Chaque zone est restaurée avec sa propre forme, et les zones sont
+    fondues entre leurs centres.<a class="cite" href="#ref-3">[3]</a> Le ciel est relevé d’au moins 8 unités de bruit
+    au-dessus de zéro pendant les itérations, car la méthode demande des valeurs positives, puis rabaissé ensuite.</p>
+    <aside class="note"><b>Les cœurs écrêtés.</b> Un pixel saturé est plus bas que la lumière qui l’a frappé. Traité
+    comme une mesure, il pousse l’itération à inventer un anneau sombre autour de l’étoile.</aside>
+    <p>Une étoile écrêtée fausserait un Richardson-Lucy simple. FLOAT suit Whyte, Sivic et Zisserman.<a class="cite" href="#ref-4">[4]</a>
+    À chaque itération, l’estimation est séparée en ses pixels brillants et le reste. Les pixels mesurés que les
+    brillants atteignent sont écartés de la mise à jour du reste, ce qui empêche leurs erreurs de produire des anneaux
+    dans l’image, et la partie brillante est mise à jour avec une saturation douce dans le modèle direct. Le niveau
+    d’écrêtage de chaque couleur est le haut des pixels marqués saturés dans cette couleur. Après la restauration, les
+    cœurs saturés eux-mêmes sont remis tels qu’ils ont été photographiés.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Retenir le bruit et les anneaux</h2>
+    <p>Cinq mécanismes limitent le bruit et les anneaux que la déconvolution dessine autour des étoiles.</p>
+    <ul>
+      <li><strong>Variation totale.</strong> Un terme de régularisation retient le bruit.<a class="cite" href="#ref-5">[5]</a>
+      Sa force est le réglage Régularisation.</li>
+      <li><strong>Itération amortie.</strong> Un pixel déjà à moins de 3 unités de bruit des données n’est plus poussé
+      (l’amortissement de White<a class="cite" href="#ref-6">[6]</a>).</li>
+      <li><strong>Arrêt.</strong> L’itération s’arrête plus tôt quand la variation relative moyenne de l’estimation
+      tombe sous 0,3 %.</li>
+      <li><strong>Anneaux locaux.</strong> À chaque itération, autour des étoiles, 90 % d’un assombrissement est
+      refusé.</li>
+      <li><strong>Protection.</strong> Le résultat compte en proportion du signal : pas du tout sous 3 unités de bruit
+      au-dessus du ciel, en entier à partir de 15, si bien que le ciel entre les objets est laissé tranquille.</li>
+    </ul>
+    <p>Le bruit est mesuré sur la différence des demi-empilements, sur un échantillon d’au plus 2 millions de pixels tirés
+    avec une graine fixe : les mêmes pixels à chaque exécution, donc le même résultat à chaque exécution. Le traitement
+    local des anneaux ne repose sur aucune équation publiée ; c’est une règle propre à FLOAT.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>La méthode neuronale (bêta)</h2>
+    <p>La seconde méthode est un réseau NAFNet<a class="cite" href="#ref-7">[7]</a> entraîné contre des images du
+    télescope spatial Euclid. Le réseau est livré avec le programme. Cette méthode est en bêta.</p>
+    <p>Elle travaille une couleur à la fois, sur l’empilement et sur chaque demi-empilement. Chaque plan est exprimé en
+    unités de bruit, passé dans le réseau de <a href="/fr/blocs/debruitage/">Débruitage</a> pré-entraîné, puis dans le réseau de déconvolution, par tuiles de
+    512 pixels avec une marge de 48 qui s’efface sur le recouvrement avec la tuile voisine, si bien que les bords ne
+    laissent pas de raccord. Les cœurs saturés sont gardés, comme dans la méthode classique. Le réseau ne mesure aucune
+    forme d’étoile : il ne lit pas les réglages Zones, Itérations ni Régularisation.</p>
+    <p>L’image passe d’abord par Débruitage, et la méthode retire aussi le bruit. Ses flux d’étoiles sont moins fiables
+    que ceux de la méthode classique.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Les réglages du bloc.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Méthode</th><td>Richardson-Lucy</td><td>Richardson-Lucy, Réseau de neurones (bêta)</td><td>Richardson-Lucy itère avec la forme d’étoile mesurée dans le champ. Le réseau de neurones est en bêta et retire aussi le bruit.</td></tr>
+          <tr><th scope="row">Itérations</th><td class="n">30</td><td class="n">1 – 100</td><td>Plus d’itérations accentuent davantage, et font monter le bruit. Richardson-Lucy seulement.</td></tr>
+          <tr><th scope="row">Régularisation</th><td class="n">0,002</td><td class="n">0 – 0,05</td><td>Retient le bruit et les anneaux. Richardson-Lucy seulement.</td></tr>
+          <tr><th scope="row">Zones (avancé)</th><td class="n">6</td><td class="n">1 – 16</td><td>Zones le long du grand côté de l’image, chacune avec sa forme d’étoile mesurée. Richardson-Lucy seulement.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>La méthode neuronale est en bêta.</strong> Elle n’est pas terminée. Elle retire aussi le bruit, et ses
+      flux d’étoiles sont moins fiables que ceux de la méthode classique.</li>
+      <li><strong>Peu d’étoiles, pas de déconvolution.</strong> Sous 10 étoiles isolées et non saturées, l’image est
+      laissée telle quelle. Une zone sans étoiles emprunte la forme du modèle du champ.</li>
+      <li><strong>Les cœurs saturés ne sont pas restaurés.</strong> La méthode classique les empêche de produire des
+      anneaux ; les deux méthodes les laissent tels qu’ils ont été photographiés.</li>
+      <li><strong>Les anneaux étaient la difficulté.</strong> L’amortissement, l’arrêt, le traitement local des anneaux
+      et la protection ont été ajoutés contre les anneaux autour des étoiles et contre le bruit, avec des réglages
+      figés sur des images de réglage et jugés sur 33 autres
+      (<a href={`${release.repo}/issues/92`}>ticket 92</a>). Une étape globale de retrait des anneaux, qui rend une
+      partie de ce qui est passé sous l’image mesurée, existe dans le code et est réglée à zéro.</li>
+      <li><strong>Durée.</strong> Sur un processeur, une couleur prend des minutes ; la méthode neuronale prend aussi des
+      minutes par rangée de tuiles.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Richardson, W. H. 1972, <i lang="en">Bayesian-Based Iterative Method of Image Restoration</i>, J. Opt. Soc. Am. 62, 55 (Richardson-Lucy). <a href="https://doi.org/10.1364/JOSA.62.000055">doi:10.1364/JOSA.62.000055</a></li>
+      <li id="ref-2">Lucy, L. B. 1974, <i lang="en">An iterative technique for the rectification of observed distributions</i>, AJ 79, 745 (Richardson-Lucy). <a href="https://doi.org/10.1086/111605">doi:10.1086/111605</a></li>
+      <li id="ref-3">Nagy, J. G. &amp; O’Leary, D. P. 1998, <i lang="en">Restoring Images Degraded by Spatially Variant Blur</i>, SIAM J. Sci. Comput. 19, 1063 (les zones fondues entre leurs centres). <a href="https://doi.org/10.1137/S106482759528507X">doi:10.1137/S106482759528507X</a></li>
+      <li id="ref-4">Whyte, O., Sivic, J. &amp; Zisserman, A. 2014, <i lang="en">Deblurring Shaken and Partially Saturated Images</i>, International Journal of Computer Vision 110, 185. <a href="https://doi.org/10.1007/s11263-014-0727-3">doi:10.1007/s11263-014-0727-3</a></li>
+      <li id="ref-5">Dey, N. et al. 2006, <i lang="en">Richardson-Lucy algorithm with total variation regularization for 3D confocal microscope deconvolution</i>, Microsc. Res. Tech. 69, 260. <a href="https://doi.org/10.1002/jemt.20294">doi:10.1002/jemt.20294</a></li>
+      <li id="ref-6">White, R. L. 1994, <i lang="en">Image restoration using the damped Richardson-Lucy method</i>, Proc. SPIE 2198, 1342, éq. 7, 9 et 10. <a href="https://doi.org/10.1117/12.176819">doi:10.1117/12.176819</a></li>
+      <li id="ref-7">Chen, L., Chu, X., Zhang, X. &amp; Sun, J. 2022, <i lang="en">Simple Baselines for Image Restoration</i> (NAFNet), ECCV 2022. <a href="https://arxiv.org/abs/2204.04676">arXiv:2204.04676</a></li>
+    </ol>
+  </section>
+</Doc>

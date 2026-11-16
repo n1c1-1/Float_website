@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet du premier tutoriel.
+
+2
+00:00:04.000 --> 00:00:09.000
+Le projet s’ouvre à jour : la barre d’état indique tout à jour, rien n’est à calculer.
+
+3
+00:00:09.000 --> 00:00:12.000
+Cliquez sur « Post ».
+
+4
+00:00:12.000 --> 00:00:17.000
+Post montre l’image du premier tutoriel. Avant tout geste, regardez ce qui ne va pas encore.
+
+5
+00:00:17.000 --> 00:00:22.000
+À 100 %, le ciel est granuleux : le bloc Débruitage le lissera.
+
+6
+00:00:22.000 --> 00:00:28.000
+Les étoiles sont nombreuses et encombrent l’anneau : le bloc Étoiles/fond les sépare, puis les curseurs d’étoiles les calment.
+
+7
+00:00:28.000 --> 00:00:34.000
+Les replis de l’anneau et les globules sombres manquent de relief : « Contraste local » sur l’image sans étoiles le leur donnera.
+
+8
+00:00:34.000 --> 00:00:37.000
+Cliquez sur « Graphe ».
+
+9
+00:00:37.000 --> 00:00:40.000
+Dans la palette, double-cliquez sur « Débruitage » : le bloc rejoint le workflow.
+
+10
+00:00:40.000 --> 00:00:45.000
+Débruitage se place dans la chaîne avant Couleur : il nettoie l’empilement avant tout étirement.
+
+11
+00:00:45.000 --> 00:00:48.000
+Puis double-cliquez sur « Étoiles/fond », grisé tant que Débruitage n’existait pas.
+
+12
+00:00:48.000 --> 00:00:54.000
+Un bloc Combiner calques est apparu tout seul dans la zone Composition, relié à Post.
+
+13
+00:00:54.000 --> 00:00:58.000
+Cliquez sur « Exécuter ». Le bouton donne la durée prévue : environ 1 minute.
+
+14
+00:00:58.000 --> 00:01:04.000
+La liste montre chaque bloc : ceux d’avant la modification sont à jour et ne sont pas recalculés.
+
+15
+00:01:04.000 --> 00:01:09.000
+Non montré en temps réel : l’exécution dure environ 1 minute sur une carte graphique (RTX 4060 Ti) que rien d’autre n’utilise.
+
+16
+00:01:09.000 --> 00:01:15.000
+Seuls les blocs qui suivent la modification ont été calculés : Débruitage et Étoiles/fond, les premiers ont été gardés.
+
+17
+00:01:15.000 --> 00:01:18.000
+Cliquez sur « Post ».
+
+18
+00:01:18.000 --> 00:01:24.000
+Un seul calque, « Couleur minimal · Combiner calques », remplace le calque simple, avec deux lignes : Étoiles et Image sans étoiles.
+
+19
+00:01:24.000 --> 00:01:27.000
+Le nouveau calque repart de zéro : faites glisser « Ciel » vers la gauche, à nouveau, vers −1,5.
+
+20
+00:01:27.000 --> 00:01:30.000
+Faites glisser « Tons faibles » vers la droite, à nouveau, vers +1.
+
+21
+00:01:30.000 --> 00:01:36.000
+Le même ciel à 100 % : le grain a disparu. Débruitage a agi sur l’empilement, avant l’étirement.
+
+22
+00:01:36.000 --> 00:01:41.000
+Le filament à gauche de l’anneau est lisse lui aussi, et sa faible lueur est gardée.
+
+23
+00:01:41.000 --> 00:01:44.000
+Faites glisser « Intensité » un peu vers la gauche : les étoiles sur l’anneau prennent moins de lumière, ici −0,5.
+
+24
+00:01:44.000 --> 00:01:47.000
+Faites glisser « Petites étoiles » vers la gauche : l’essaim de petites étoiles s’éclaircit, ici −1.
+
+25
+00:01:47.000 --> 00:01:50.000
+Cliquez sur la ligne « Image sans étoiles ».
+
+26
+00:01:50.000 --> 00:01:53.000
+Cliquez sur « Filtre », puis « Contraste », puis « Contraste local ».
+
+27
+00:01:53.000 --> 00:01:56.000
+Faites glisser « Intensité » vers la droite jusqu’à ce que les globules et les replis ressortent, ici 0,5 ; laissez « Échelle » telle quelle.
+
+28
+00:01:56.000 --> 00:02:02.000
+Les globules sombres et les replis de l’anneau ressortent du gaz, et les étoiles ne sont pas touchées.
+
+29
+00:02:02.000 --> 00:02:06.000
+Cliquez sur « Exporter… ».
+
+30
+00:02:06.000 --> 00:02:09.000
+Choisissez « JPEG » dans « Format ».
+
+31
+00:02:09.000 --> 00:02:12.000
+Cliquez sur « Exporter ».
+
+32
+00:02:12.000 --> 00:02:17.000
+L’image est écrite, avec l’historique du traitement à côté.
+
+33
+00:02:17.000 --> 00:02:21.000
+L’image est exportée. Appuyez sur Ctrl+S pour garder le projet.

@@ -1,0 +1,141 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.000
+On the Home screen, click Open project… and pick the project.
+
+2
+00:00:03.000 --> 00:00:08.000
+The project opens on its graph, already computed: the status bar says all up to date and Run has nothing to run.
+
+3
+00:00:08.000 --> 00:00:11.000
+Click Show all, then fold the side panel.
+
+4
+00:00:11.000 --> 00:00:14.000
+Click the fold button of the side panel.
+
+5
+00:00:14.000 --> 00:00:21.000
+The whole graph: four rows, four workflows (S, H, O III, Stars), then the S-H-O combination, the Combine layers blocks and Post.
+
+6
+00:00:21.000 --> 00:00:24.000
+Open the Table view: one row per session.
+
+7
+00:00:24.000 --> 00:00:31.000
+Three sessions, one per filter: O III / H-alpha, O III / S II, and Stars for the night without a filter.
+
+8
+00:00:31.000 --> 00:00:34.000
+Select a session card.
+
+9
+00:00:34.000 --> 00:00:37.000
+Open Block settings.
+
+10
+00:00:37.000 --> 00:00:44.000
+The session holds its lights and its own flat; darks and bias are one master shared by the sessions.
+
+11
+00:00:44.000 --> 00:00:47.000
+Click Folded: one card per workflow.
+
+12
+00:00:47.000 --> 00:00:54.000
+S has 13 lights, H 10, O III 23 from two sessions, Stars 49; H, O III and Stars sit on the grid of S.
+
+13
+00:00:54.000 --> 00:01:01.000
+Only S has an Astrometry block: it solves the field once, and the other rows take its grid.
+
+14
+00:01:01.000 --> 00:01:04.000
+Right-click a Stacking block of H.
+
+15
+00:01:04.000 --> 00:01:11.000
+Align on: the reference is S, and the method is Stars. The stars of the H stack are laid on those of S.
+
+16
+00:01:11.000 --> 00:01:14.000
+Select the S-H-O block: its wires light up.
+
+17
+00:01:14.000 --> 00:01:21.000
+S-H-O is not a stack: it reads the starless images of S, H and O III.
+
+18
+00:01:21.000 --> 00:01:24.000
+Open Block settings.
+
+19
+00:01:24.000 --> 00:01:32.000
+Inputs: S and H feed the red pixels, O III the green and blue ones. Each filter gets a hue.
+
+20
+00:01:32.000 --> 00:01:35.000
+Select the Combine layers block after S-H-O.
+
+21
+00:01:35.000 --> 00:01:38.000
+Open Block settings.
+
+22
+00:01:38.000 --> 00:01:46.000
+The stars put back come from O III, not from the Stars night.
+
+23
+00:01:46.000 --> 00:01:49.000
+Select the lower Combine layers block.
+
+24
+00:01:49.000 --> 00:01:52.000
+Open Block settings.
+
+25
+00:01:52.000 --> 00:02:00.000
+The Stars workflow stays in the graph, computed, with its own Combine layers.
+
+26
+00:02:00.000 --> 00:02:03.000
+Click Post.
+
+27
+00:02:03.000 --> 00:02:11.000
+Post shows the finished image, version Palette and finish. Nothing is changed here.
+
+28
+00:02:11.000 --> 00:02:14.000
+Open the File menu.
+
+29
+00:02:14.000 --> 00:02:17.000
+Click New project.
+
+30
+00:02:17.000 --> 00:02:20.000
+Click From template.
+
+31
+00:02:20.000 --> 00:02:27.000
+In the Color tab, Dual-band x2 is the template for a colour camera with two dual-band filters and a session for the stars.
+
+32
+00:02:27.000 --> 00:02:30.000
+Click Dual-band x2.
+
+33
+00:02:30.000 --> 00:02:38.000
+The template brings the graph, the sessions named per filter and Align on on the grid of S. The frames are still to add.
+
+34
+00:02:38.000 --> 00:02:41.000
+Open the Table view of the new project.
+
+35
+00:02:41.000 --> 00:02:49.000
+The sessions are named per filter, and H, O III and Stars are already on the grid of S. The cells for the frames are empty.

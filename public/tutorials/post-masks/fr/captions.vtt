@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet du tutoriel Réparer au lieu de recadrer.
+
+2
+00:00:04.000 --> 00:00:08.000
+Le projet s’ouvre à jour : rien n’est à calculer.
+
+3
+00:00:08.000 --> 00:00:11.000
+Cliquez sur « Post ».
+
+4
+00:00:11.000 --> 00:00:19.000
+Avant tout geste : la ligne « Étoiles de synthèse » n’a pas de masque, donc les étoiles de synthèse remplacent toutes les réelles, et un voile reste sur le ciel.
+
+5
+00:00:19.000 --> 00:00:24.000
+Cliquez sur la vignette de masque de la ligne « Étoiles de synthèse » : le masque est vide, la ligne se voit partout.
+
+6
+00:00:24.000 --> 00:00:29.000
+Cliquez sur « Ajouter au masque » : un masque est fait de parties de cinq sortes.
+
+7
+00:00:29.000 --> 00:00:34.000
+Choisissez « Pinceau » : « Soustraire » et « Cacher » sont réglés, donc peindre masque la ligne.
+
+8
+00:00:34.000 --> 00:00:38.000
+Faites glisser « Taille » tout à droite : aussi grande que possible, ici 1 200 px.
+
+9
+00:00:38.000 --> 00:00:42.000
+Faites glisser « Dureté » à 0 : le bord du coup de pinceau s’estompe.
+
+10
+00:00:42.000 --> 00:00:48.000
+Peignez un seul coup de pinceau au centre du champ : les étoiles réelles y reviennent.
+
+11
+00:00:48.000 --> 00:00:53.000
+Appuyez sur M pour voir le masque en gris : le blanc montre les étoiles de synthèse, le noir les cache.
+
+12
+00:00:53.000 --> 00:00:57.000
+Masque entier, « Progressif » : faites-le glisser à droite pour adoucir le bord du masque, pour voir.
+
+13
+00:00:57.000 --> 00:01:01.000
+« Densité » : baissez-la et la partie cachée laisse repasser la ligne, pour voir.
+
+14
+00:01:01.000 --> 00:01:05.000
+Cochez « Inverser » : les étoiles de synthèse ne se voient plus qu’au centre, pour voir.
+
+15
+00:01:05.000 --> 00:01:08.000
+Décochez-la pour revenir.
+
+16
+00:01:08.000 --> 00:01:12.000
+Cliquez sur « Montrer », puis faites glisser sur le ciel : ce coup de pinceau y rend les étoiles de synthèse.
+
+17
+00:01:12.000 --> 00:01:16.000
+Appuyez sur Ctrl+Z : le dernier coup de pinceau est annulé.
+
+18
+00:01:16.000 --> 00:01:21.000
+Cliquez sur « Tout effacer » : chaque coup de pinceau disparaît, et la ligne se voit de nouveau partout. Ctrl+Z le reprend.
+
+19
+00:01:21.000 --> 00:01:25.000
+Appuyez sur Ctrl+Z : le masque au pinceau est de retour.
+
+20
+00:01:25.000 --> 00:01:28.000
+Cliquez sur « Image sans étoiles ».
+
+21
+00:01:28.000 --> 00:01:32.000
+Cliquez sur « Filtre », ouvrez « Contraste » et choisissez « Dévoilage ».
+
+22
+00:01:32.000 --> 00:01:37.000
+Faites glisser « Quantité » jusqu’à environ 0,25 : le voile du ciel disparaît.
+
+23
+00:01:37.000 --> 00:01:41.000
+Faites glisser « Échelle » jusqu’à environ 256 px.
+
+24
+00:01:41.000 --> 00:01:45.000
+Le filtre étant sélectionné, cliquez sur le bouton de masque sous la liste.
+
+25
+00:01:45.000 --> 00:01:49.000
+Cliquez sur « Ajouter au masque » et choisissez « Plage de luminosité ».
+
+26
+00:01:49.000 --> 00:01:52.000
+Faites glisser « De » à 0 %.
+
+27
+00:01:52.000 --> 00:01:57.000
+Faites glisser « À » à 25 % : la partie choisit le ciel et les tons faibles, pas l’anneau.
+
+28
+00:01:57.000 --> 00:02:02.000
+Faites glisser « Progressif » jusqu’à environ 8 px.
+
+29
+00:02:02.000 --> 00:02:07.000
+Appuyez sur M : le blanc est l’endroit où « Dévoilage » agit, sur les tons sombres.
+
+30
+00:02:07.000 --> 00:02:11.000
+Appuyez sur Ctrl+S : les masques sont enregistrés avec le projet.
+
+31
+00:02:11.000 --> 00:02:14.000
+Ouvrez « Fichier », puis cliquez sur « Fermer projet ».
+
+32
+00:02:14.000 --> 00:02:17.000
+Cliquez sur le projet pour le rouvrir.
+
+33
+00:02:17.000 --> 00:02:23.000
+Les masques sont toujours là : un clic sur une vignette ouvre ses parties, toujours modifiables.

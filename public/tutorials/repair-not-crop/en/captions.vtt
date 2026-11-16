@@ -1,0 +1,169 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the project of the second tutorial.
+
+2
+00:00:04.000 --> 00:00:08.000
+The project opens up to date: nothing is to be computed.
+
+3
+00:00:08.000 --> 00:00:11.000
+Click Post.
+
+4
+00:00:11.000 --> 00:00:17.000
+Post shows the image of the second tutorial: clean and quiet, but tightly cropped. Before any gesture, look at what the crop left out.
+
+5
+00:00:17.000 --> 00:00:21.000
+Click Crop: the whole field appears around the frame.
+
+6
+00:00:21.000 --> 00:00:27.000
+At the left edge, outside the frame, a dark stain: the shadow of a dust grain. The Spot healing tool will repair it.
+
+7
+00:00:27.000 --> 00:00:33.000
+In the corners and along the edges, the stars are comet-shaped: the coma of the telescope. The Synthetic stars block will redraw them.
+
+8
+00:00:33.000 --> 00:00:39.000
+What is right stays as it is: the dark, neutral sky, the smooth gas and the star settings of the second tutorial.
+
+9
+00:00:39.000 --> 00:00:42.000
+Click Graph.
+
+10
+00:00:42.000 --> 00:00:45.000
+In the palette, double-click Synthetic stars: the block joins the workflow.
+
+11
+00:00:45.000 --> 00:00:52.000
+The block sits after Stars/background, with the method Image shape: the stars are redrawn with the shape measured at the centre of the field, where it is round.
+
+12
+00:00:52.000 --> 00:00:56.000
+Click Run: only this block is computed.
+
+13
+00:00:56.000 --> 00:01:01.000
+The list shows every block up to date, except Synthetic stars.
+
+14
+00:01:01.000 --> 00:01:06.000
+Not shown in real time: the run took 11 s.
+
+15
+00:01:06.000 --> 00:01:09.000
+Click Post.
+
+16
+00:01:09.000 --> 00:01:17.000
+The Stars group now holds two rows: Synthetic stars, with a white mask, and Real stars. White means that the synthetic stars replace the real ones everywhere.
+
+17
+00:01:17.000 --> 00:01:20.000
+Click Crop.
+
+18
+00:01:20.000 --> 00:01:23.000
+Drag the top left corner of the frame to the corner of the field.
+
+19
+00:01:23.000 --> 00:01:26.000
+Drag the bottom right corner to the edge as well, keeping the black borders of the alignment out.
+
+20
+00:01:26.000 --> 00:01:29.000
+Click Apply to keep the crop.
+
+21
+00:01:29.000 --> 00:01:34.000
+The whole field is back, with the stain and the comet-shaped stars.
+
+22
+00:01:34.000 --> 00:01:37.000
+Click the Starless image row.
+
+23
+00:01:37.000 --> 00:01:40.000
+Click Spot healing: its filter is added to the starless image.
+
+24
+00:01:40.000 --> 00:01:43.000
+Drag Size to the right until the circle covers the whole stain with a margin, here about 140 px.
+
+25
+00:01:43.000 --> 00:01:46.000
+Click on the stain: it is replaced by sky taken beside it.
+
+26
+00:01:46.000 --> 00:01:49.000
+Reduce Size a little for the small stain beside it, here about 90 px.
+
+27
+00:01:49.000 --> 00:01:52.000
+Click on the small stain.
+
+28
+00:01:52.000 --> 00:01:58.000
+The sky is even where the stain was, with no lighter or darker patch where the sky was taken.
+
+29
+00:01:58.000 --> 00:02:01.000
+Click the Synthetic stars row.
+
+30
+00:02:01.000 --> 00:02:04.000
+Click its mask: the brush appears, set to Subtract.
+
+31
+00:02:04.000 --> 00:02:07.000
+Drag Size to the right until the brush is as large as it goes.
+
+32
+00:02:07.000 --> 00:02:10.000
+Drag Hardness to the left, to 0: the edge of the stroke fades out.
+
+33
+00:02:10.000 --> 00:02:13.000
+Paint one stroke across the centre of the field: the real stars come back there.
+
+34
+00:02:13.000 --> 00:02:19.000
+The red tint shows where the mask hides the synthetic stars: the centre, with a soft edge.
+
+35
+00:02:19.000 --> 00:02:25.000
+Nothing shows where the mask fades, and the density of the stars does not jump.
+
+36
+00:02:25.000 --> 00:02:31.000
+In the corner, the comet-shaped stars are now round; the brightest ones are real.
+
+37
+00:02:31.000 --> 00:02:37.000
+In the centre, the real stars are kept, with their spikes.
+
+38
+00:02:37.000 --> 00:02:41.000
+Click Export…
+
+39
+00:02:41.000 --> 00:02:44.000
+Choose JPEG in Format.
+
+40
+00:02:44.000 --> 00:02:47.000
+Click Export.
+
+41
+00:02:47.000 --> 00:02:52.000
+The image is written, with its processing history beside it.
+
+42
+00:02:52.000 --> 00:02:56.000
+The image is exported. Press Ctrl+S to keep the project.

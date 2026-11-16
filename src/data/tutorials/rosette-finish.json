@@ -1,0 +1,589 @@
+{
+  "slug": "rosette-finish",
+  "slugFr": "rosette-finition",
+  "section": "path",
+  "level": 4,
+  "order": 1,
+  "title": {
+    "en": "The finish: three gestures, and what to leave out",
+    "fr": "La finition : trois gestes, et ce qu’on laisse de côté"
+  },
+  "summary": {
+    "en": "The project of the third tutorial is finished in Post with three gestures, all on the starless image: Dehaze under a luminance mask for a deeper sky, Saturation for a more vivid ring and Multiscale sharpening for the fine structure at full size. The filters tried and left out are listed, each with its reason.",
+    "fr": "Le projet du troisième tutoriel est fini dans Post avec trois gestes, tous sur l’image sans étoiles : « Dévoilage » sous un masque de luminosité pour un ciel plus profond, « Saturation » pour un anneau plus vif et « Accentuation multi-échelle » pour la structure fine à taille réelle. Les filtres essayés et laissés de côté sont listés, chacun avec sa raison."
+  },
+  "duration": {
+    "en": "About 10 min, with no computing",
+    "fr": "Environ 10 min, sans calcul"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial Repair instead of cropping done: its finished project (about 1.9 GB) is the starting point",
+      "Disk space: about 2 GB for a copy of that project"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Réparer au lieu de recadrer fait : son projet terminé (environ 1,9 Go) est le point de départ",
+      "Place sur le disque : environ 2 Go pour une copie de ce projet"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB",
+      "fr": "6,9 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "video": {
+    "fr": {
+      "src": "/tutorials/rosette-finish/fr/video.mp4",
+      "captions": "/tutorials/rosette-finish/fr/captions.vtt",
+      "chapters": "/tutorials/rosette-finish/fr/chapters.vtt",
+      "poster": "/tutorials/rosette-finish/fr/poster.jpg",
+      "seconds": 147.0
+    },
+    "en": {
+      "src": "/tutorials/rosette-finish/en/video.mp4",
+      "captions": "/tutorials/rosette-finish/en/captions.vtt",
+      "chapters": "/tutorials/rosette-finish/en/chapters.vtt",
+      "poster": "/tutorials/rosette-finish/en/poster.jpg",
+      "seconds": 147.0
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project",
+        "fr": "Ouvrir le projet"
+      },
+      "text": {
+        "en": "On the Home screen click <b>Open project…</b> and choose the finished project of the third tutorial, or a copy of its folder. The project opens up to date: nothing is to be computed.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez le projet terminé du troisième tutoriel, ou une copie de son dossier. Le projet s’ouvre à jour : rien n’est à calculer."
+      },
+      "check": {
+        "en": "The status bar reads all up to date, and the Run button is greyed.",
+        "fr": "La barre d’état indique tout à jour, et le bouton « Exécuter » est grisé."
+      },
+      "shot": {
+        "fr": "/tutorials/rosette-finish/fr/01.png",
+        "en": "/tutorials/rosette-finish/en/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 0.0,
+        "en": 0.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "Diagnosis in Post",
+        "fr": "Le diagnostic dans Post"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The picture is the whole field of the third tutorial, with round stars to the edges. Before any gesture, look at what is left to finish: zoom to 100 % (Ctrl and the mouse wheel over the picture) on the sky, on the bright part of the ring and on the dark globules, and come back to the whole picture with the fit button. Right, and to leave alone: the neutral sky, the denoised gas, the round stars and the repaired stain. No colour balance and no noise reduction are needed.",
+        "fr": "Cliquez sur <b>Post</b>. L’image est le champ entier du troisième tutoriel, avec des étoiles rondes jusqu’aux bords. Avant tout geste, regardez ce qui reste à finir : zoomez à 100 % (Ctrl et la molette au-dessus de l’image) sur le ciel, sur la partie claire de l’anneau et sur les globules sombres, puis revenez à l’image entière avec le bouton d’ajustement. Ce qui va, et qu’on laisse : le ciel neutre, le gaz débruité, les étoiles rondes et la tache réparée. Ni balance des couleurs ni réduction du bruit ne sont nécessaires."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "A veil is left on the sky.",
+            "fr": "Un voile reste sur le ciel."
+          },
+          "read": {
+            "en": "At 100 % on the sky at the upper right of the ring, the sky is a dark grey that measures 33 to 34 on a 0 to 255 scale on the exported picture, and the faint edges of the ring do not stand out from it. The aim is about 26.",
+            "fr": "À 100 % sur le ciel en haut à droite de l’anneau, le ciel est un gris sombre qui mesure 33 à 34 sur une échelle de 0 à 255 sur l’image exportée, et les bords faibles de l’anneau ne s’en détachent pas. Le but est environ 26."
+          },
+          "fix": {
+            "en": "Dehaze on the starless image, under a luminance mask.",
+            "fr": "« Dévoilage » sur l’image sans étoiles, sous un masque de luminosité."
+          },
+          "step": "dehaze"
+        },
+        {
+          "problem": {
+            "en": "The ring could be a little more vivid.",
+            "fr": "L’anneau pourrait être un peu plus vif."
+          },
+          "read": {
+            "en": "At 100 % on the bright part of the ring on the left, the red and the pink are a little pale. The colour of the Rosette is a pink red with magenta: the aim is a little more vividness, not a redder ring.",
+            "fr": "À 100 % sur la partie claire de l’anneau à gauche, le rouge et le rose sont un peu pâles. La couleur de la Rosette est un rouge rosé avec du magenta : le but est un peu plus de vivacité, pas un anneau plus rouge."
+          },
+          "fix": {
+            "en": "Saturation on the starless image, without a mask.",
+            "fr": "« Saturation » sur l’image sans étoiles, sans masque."
+          },
+          "step": "saturation"
+        },
+        {
+          "problem": {
+            "en": "The fine structure of the gas is soft at full size.",
+            "fr": "La structure fine du gaz est molle à taille réelle."
+          },
+          "read": {
+            "en": "At 100 % on the dark globules above the centre of the ring, the folds and the edges are a little soft.",
+            "fr": "À 100 % sur les globules sombres au-dessus du centre de l’anneau, les replis et les bords sont un peu mous."
+          },
+          "fix": {
+            "en": "Multiscale sharpening on the starless image.",
+            "fr": "« Accentuation multi-échelle » sur l’image sans étoiles."
+          },
+          "step": "sharpen"
+        }
+      ],
+      "check": {
+        "en": "The sky is neutral: on the exported picture of the third tutorial its three colours measure 33 to 34. It is read before it is corrected, and no colour balance is needed.",
+        "fr": "Le ciel est neutre : sur l’image exportée du troisième tutoriel, ses trois couleurs mesurent 33 à 34. Il se lit avant d’être corrigé, et aucune balance des couleurs n’est nécessaire."
+      },
+      "shot": {
+        "fr": "/tutorials/rosette-finish/fr/02.png",
+        "en": "/tutorials/rosette-finish/en/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 8.0,
+        "en": 8.0
+      }
+    },
+    {
+      "id": "dehaze",
+      "title": {
+        "en": "Part A: a deeper sky with Dehaze",
+        "fr": "Partie A : un ciel plus profond avec Dévoilage"
+      },
+      "text": {
+        "en": "Click the <b>Starless image</b> row: every filter of this tutorial goes there. Click <b>Filter</b>, <b>Contrast</b> and <b>Dehaze</b>. Drag <b>Amount</b> to the right until the veil lifts and the sky is deeper, here 0.25, and <b>Scale</b> to about 256 px.",
+        "fr": "Cliquez sur la ligne <b>Image sans étoiles</b> : tous les filtres de ce tutoriel s’y placent. Cliquez sur <b>Filtre</b>, <b>Contraste</b> et <b>Dévoilage</b>. Faites glisser <b>Quantité</b> vers la droite jusqu’à ce que le voile se lève et que le ciel soit plus profond, ici 0,25, et <b>Échelle</b> jusqu’à environ 256 px."
+      },
+      "why": {
+        "en": "The veil is the residual light of the sky that the flats and the gradient removal left. Dehaze takes away this large-scale veil: the sky goes from 33 to 26 on the exported picture, and the faint edges of the ring stand out from a darker background.",
+        "fr": "Le voile est la lueur résiduelle du ciel que les flats et le retrait du gradient ont laissée. « Dévoilage » enlève ce voile à grande échelle : le ciel passe de 33 à 26 sur l’image exportée, et les bords faibles de l’anneau se détachent d’un fond plus sombre."
+      },
+      "check": {
+        "en": "The sky is deeper, and the ring has dimmed a little: the mask of the next step brings its glow back.",
+        "fr": "Le ciel est plus profond, et l’anneau s’est un peu assombri : le masque de l’étape suivante lui rend sa lueur."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/rosette-finish/details/dehaze-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The sky and the faint edges of the ring at 100 % before.",
+            "fr": "Le ciel et les bords faibles de l’anneau à 100 % avant."
+          }
+        },
+        {
+          "src": "/tutorials/rosette-finish/details/dehaze-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right",
+            "fr": "Juste"
+          },
+          "caption": {
+            "en": "Amount at 0.25: the sky is deeper and the faint edges stand out.",
+            "fr": "« Quantité » à 0,25 : le ciel est plus profond et les bords faibles ressortent."
+          }
+        },
+        {
+          "src": "/tutorials/rosette-finish/details/dehaze-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "Amount at 0.7: the sky falls to 10, almost black, and the faint outskirts vanish.",
+            "fr": "« Quantité » à 0,7 : le ciel tombe à 10, presque noir, et les faibles abords disparaissent."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/rosette-finish/fr/03.png",
+        "en": "/tutorials/rosette-finish/en/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 44.0,
+        "en": 44.0
+      }
+    },
+    {
+      "id": "mask",
+      "title": {
+        "en": "A luminance mask on Dehaze",
+        "fr": "Un masque de luminosité sur Dévoilage"
+      },
+      "text": {
+        "en": "With Dehaze selected, click <b>Add mask</b>, below the layers. Click <b>Add to mask</b> and <b>Luminance range</b>. Drag <b>From</b> to 0 % and <b>To</b> to about 25 %, so that the range selects the sky and the faint tones and not the ring, then drag <b>Feather</b> to 8 px.",
+        "fr": "Dévoilage étant sélectionné, cliquez sur <b>Ajouter un masque</b>, sous les calques. Cliquez sur <b>Ajouter au masque</b> et <b>Plage de luminosité</b>. Faites glisser <b>De</b> jusqu’à 0 % et <b>À</b> vers 25 %, pour que la plage sélectionne le ciel et les tons faibles et non l’anneau, puis faites glisser <b>Progressif</b> jusqu’à 8 px."
+      },
+      "why": {
+        "en": "A mask says where a filter acts: white means act here. Without the mask, Dehaze would also lower the nebula: its brightest 5 % would go from 145 to 132, and the ring would lose its glow. With the mask, Dehaze only acts on the dark tones, and the nebula stays at 146. The feather lets the edge of the mask fade.",
+        "fr": "Un masque dit où agit un filtre : blanc veut dire agir ici. Sans le masque, « Dévoilage » abaisserait aussi la nébuleuse : ses 5 % les plus clairs passeraient de 145 à 132, et l’anneau perdrait sa lueur. Avec le masque, « Dévoilage » n’agit que sur les tons sombres, et la nébuleuse reste à 146. Le paramètre progressif laisse le bord du masque s’estomper."
+      },
+      "check": {
+        "en": "The red tint covers the ring, which the mask hides from Dehaze. Click the top row of the layer to see the picture: the sky reads 26, 25 and 25 on the exported picture, neutral.",
+        "fr": "La teinte rouge couvre l’anneau, que le masque cache à « Dévoilage ». Cliquez sur la ligne du haut du calque pour voir l’image : le ciel vaut 26, 25 et 25 sur l’image exportée, neutre."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/rosette-finish/details/mask-without.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Without the mask",
+            "fr": "Sans le masque"
+          },
+          "caption": {
+            "en": "Without the mask, Dehaze would also lower the nebula: the ring would lose its glow.",
+            "fr": "Sans le masque, « Dévoilage » abaisserait aussi la nébuleuse : l’anneau perdrait sa lueur."
+          }
+        },
+        {
+          "src": "/tutorials/rosette-finish/details/mask-with.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "With the mask",
+            "fr": "Avec le masque"
+          },
+          "caption": {
+            "en": "With the mask, Dehaze acts on the dark tones only and the nebula is kept.",
+            "fr": "Avec le masque, « Dévoilage » n’agit que sur les tons sombres et la nébuleuse est gardée."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/rosette-finish/fr/04.png",
+        "en": "/tutorials/rosette-finish/en/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 62.0,
+        "en": 62.0
+      }
+    },
+    {
+      "id": "saturation",
+      "title": {
+        "en": "Part B: a more vivid ring with Saturation",
+        "fr": "Partie B : un anneau plus vif avec Saturation"
+      },
+      "text": {
+        "en": "Click the <b>Starless image</b> row, then <b>Filter</b>, <b>Color</b> and <b>Saturation</b>. Drag <b>Strength</b> to the right until the ring is more vivid but keeps its pink and magenta, here +20 %, with <b>Hues</b> on All. Add no mask.",
+        "fr": "Cliquez sur la ligne <b>Image sans étoiles</b>, puis sur <b>Filtre</b>, <b>Couleur</b> et <b>Saturation</b>. Faites glisser <b>Intensité</b> vers la droite jusqu’à ce que l’anneau soit plus vif tout en gardant son rose et son magenta, ici +20 %, avec <b>Teintes</b> sur Toutes. N’ajoutez pas de masque."
+      },
+      "why": {
+        "en": "The colour of the Rosette is a pink red with magenta, and a red pushed by hand is the most common fault on this target. Saturation makes the red and the pink of the ring more vivid, while the sky, a neutral grey, does not take any colour. No mask is needed: the same saturation with and without a mask gives the same sky, and a mask that changes nothing is not added.",
+        "fr": "La couleur de la Rosette est un rouge rosé avec du magenta, et un rouge poussé à la main est le défaut le plus courant sur cette cible. « Saturation » rend le rouge et le rose de l’anneau plus vifs, alors que le ciel, un gris neutre, ne prend aucune couleur. Aucun masque n’est nécessaire : la même saturation avec et sans masque donne le même ciel, et un masque qui ne change rien n’est pas ajouté."
+      },
+      "check": {
+        "en": "The ring is more vivid, and the sky is still a neutral grey: 26, 25 and 25 on the exported picture.",
+        "fr": "L’anneau est plus vif, et le ciel est toujours un gris neutre : 26, 25 et 25 sur l’image exportée."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/rosette-finish/details/sat-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The ring at 100 % before.",
+            "fr": "L’anneau à 100 % avant."
+          }
+        },
+        {
+          "src": "/tutorials/rosette-finish/details/sat-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right",
+            "fr": "Juste"
+          },
+          "caption": {
+            "en": "Strength at +20: the red and the pink are more vivid, the nuances are kept.",
+            "fr": "« Intensité » à +20 : le rouge et le rose sont plus vifs, les nuances sont gardées."
+          }
+        },
+        {
+          "src": "/tutorials/rosette-finish/details/sat-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "Strength at +70: the ring turns neon red and loses its pink nuances.",
+            "fr": "« Intensité » à +70 : l’anneau devient rouge fluo et perd ses nuances de rose."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/rosette-finish/fr/05.png",
+        "en": "/tutorials/rosette-finish/en/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 86.0,
+        "en": 86.0
+      }
+    },
+    {
+      "id": "sharpen",
+      "title": {
+        "en": "Part C: the fine structure with Multiscale sharpening",
+        "fr": "Partie C : la structure fine avec Accentuation multi-échelle"
+      },
+      "text": {
+        "en": "This gesture serves the full-size picture, for a print or a view at 100 %. Click <b>Filter</b>, <b>Detail</b> and <b>Multiscale sharpening</b>. Drag the <b>4 px</b> scale to 0.3, the <b>8 px</b> scale to 0.4 and the <b>16 px</b> scale to 0.3. Leave <b>1 px</b> and <b>2 px</b> at 0.",
+        "fr": "Ce geste sert l’image à taille réelle, pour un tirage ou un affichage à 100 %. Cliquez sur <b>Filtre</b>, <b>Détail</b> et <b>Accentuation multi-échelle</b>. Faites glisser l’échelle <b>4 px</b> jusqu’à 0,3, l’échelle <b>8 px</b> jusqu’à 0,4 et l’échelle <b>16 px</b> jusqu’à 0,3. Laissez <b>1 px</b> et <b>2 px</b> à 0."
+      },
+      "why": {
+        "en": "The aim is a crisper fine structure of the gas, the folds and the edges of the dark globules, at full size. The 1 px and 2 px scales stay at 0: they would bring the grain back. On the whole picture the change is slight; at 100 % it shows.",
+        "fr": "Le but est une structure fine du gaz plus nette, les replis et les bords des globules sombres, à taille réelle. Les échelles 1 px et 2 px restent à 0 : elles feraient revenir le grain. Sur l’image entière le changement est léger ; à 100 % il se voit."
+      },
+      "check": {
+        "en": "At 100 % the globules and the folds are crisper, and the gas is not granular. The sky measures 26, 26 and 26 on the exported picture.",
+        "fr": "À 100 % les globules et les replis sont plus nets, et le gaz n’est pas granuleux. Le ciel mesure 26, 26 et 26 sur l’image exportée."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/rosette-finish/details/sharp-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The globules at 100 % before.",
+            "fr": "Les globules à 100 % avant."
+          }
+        },
+        {
+          "src": "/tutorials/rosette-finish/details/sharp-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right",
+            "fr": "Juste"
+          },
+          "caption": {
+            "en": "The three scales at 0.3, 0.4 and 0.3: the edges are crisper.",
+            "fr": "Les trois échelles à 0,3, 0,4 et 0,3 : les bords sont plus nets."
+          }
+        },
+        {
+          "src": "/tutorials/rosette-finish/details/sharp-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "About three times these values: the gas turns granular, as if the grain came back.",
+            "fr": "Environ trois fois ces valeurs : le gaz devient granuleux, comme si le grain revenait."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/rosette-finish/fr/06.png",
+        "en": "/tutorials/rosette-finish/en/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 98.0,
+        "en": 98.0
+      }
+    },
+    {
+      "id": "left-out",
+      "title": {
+        "en": "What is left out, and why",
+        "fr": "Ce qu’on laisse de côté, et pourquoi"
+      },
+      "text": {
+        "en": "Click <b>Filter</b> and <b>Noise</b>: the filters of this list stay unused. The table below this step gives the filters tried on this picture and left out, each with its reason. A filter that changes nothing is not harmless: it is one more thing to understand and to keep.",
+        "fr": "Cliquez sur <b>Filtre</b> et <b>Bruit</b> : les filtres de cette liste restent inutilisés. Le tableau sous cette étape donne les filtres essayés sur cette image et laissés de côté, chacun avec sa raison. Un filtre qui ne change rien n’est pas inoffensif : c’est une chose de plus à comprendre et à garder."
+      },
+      "why": {
+        "en": "One noise reduction is enough: the Denoise block already did the work, and stacking more would blur. Every filter goes on the starless image, because sharpening or saturating over the stars would make them hard and coloured. The order follows the levels first, then the colour, then the detail: sharpening last works on the final tones.",
+        "fr": "Une seule réduction du bruit suffit : le bloc « Débruitage » a déjà fait le travail, et en empiler d’autres flouterait. Tous les filtres vont sur l’image sans étoiles, car accentuer ou saturer par-dessus les étoiles les rendrait dures et colorées. L’ordre suit les niveaux d’abord, puis la couleur, puis le détail : accentuer en dernier travaille sur les tons finaux."
+      },
+      "shot": {
+        "fr": "/tutorials/rosette-finish/fr/07.png",
+        "en": "/tutorials/rosette-finish/en/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 118.0,
+        "en": 118.0
+      },
+      "table": {
+        "caption": {
+          "en": "The filters tried on this picture and left out.",
+          "fr": "Les filtres essayés sur cette image et laissés de côté."
+        },
+        "head": [
+          {
+            "en": "Filter",
+            "fr": "Filtre"
+          },
+          {
+            "en": "Why it is left out",
+            "fr": "Pourquoi il est laissé de côté"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "en": "Multiscale noise reduction",
+              "fr": "Réduction du bruit multi-échelle"
+            },
+            {
+              "en": "The noise of the sky is already under one level: the filter would only blur.",
+              "fr": "Le bruit du ciel est déjà sous un niveau : le filtre ne ferait que flouter."
+            }
+          ],
+          [
+            {
+              "en": "Noise reduction",
+              "fr": "Réduction du bruit"
+            },
+            {
+              "en": "No change: the colour noise is already removed.",
+              "fr": "Aucun changement : le bruit de couleur est déjà retiré."
+            }
+          ],
+          [
+            {
+              "en": "Green removal",
+              "fr": "Retrait du vert"
+            },
+            {
+              "en": "There is no green in this sky, neutral within one level: nothing changes.",
+              "fr": "Il n’y a pas de vert dans ce ciel, neutre à un niveau près : rien ne change."
+            }
+          ],
+          [
+            {
+              "en": "Highlight compression",
+              "fr": "Compression des hautes lumières"
+            },
+            {
+              "en": "No visible change at 0.3: the stars of the cluster are on the stars layer, and the ring has no burnt area on the starless image.",
+              "fr": "Aucun changement visible à 0,3 : les étoiles de l’amas sont sur le calque d’étoiles, et l’anneau n’a pas de zone brûlée sur l’image sans étoiles."
+            }
+          ],
+          [
+            {
+              "en": "Colour mixer",
+              "fr": "Mélangeur de couleurs"
+            },
+            {
+              "en": "Three settings tried: none makes a difference on the whole picture, and turning violet and magenta towards red, as on NGC 7000, would move the ring towards red, which this target must avoid.",
+              "fr": "Trois réglages essayés : aucun ne fait de différence sur l’image entière, et tourner le violet et le magenta vers le rouge, comme sur NGC 7000, déplacerait l’anneau vers le rouge, ce que cette cible doit éviter."
+            }
+          ],
+          [
+            {
+              "en": "Local contrast",
+              "fr": "Contraste local"
+            },
+            {
+              "en": "Already set at the second tutorial: it is not repeated.",
+              "fr": "Déjà réglé au deuxième tutoriel : il n’est pas répété."
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "export",
+      "title": {
+        "en": "Export",
+        "fr": "Exporter"
+      },
+      "text": {
+        "en": "Click <b>Export…</b>, choose <b>JPEG</b> in <b>Format</b> and click <b>Export</b>. The file is named after the project, in its export folder.",
+        "fr": "Cliquez sur <b>Exporter…</b>, choisissez <b>JPEG</b> dans <b>Format</b> et cliquez sur <b>Exporter</b>. Le fichier porte le nom du projet, dans son dossier d’export."
+      },
+      "shot": {
+        "fr": "/tutorials/rosette-finish/fr/08.png",
+        "en": "/tutorials/rosette-finish/en/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 128.0,
+        "en": 128.0
+      }
+    },
+    {
+      "id": "exported",
+      "title": {
+        "en": "The image is written",
+        "fr": "L’image est écrite"
+      },
+      "text": {
+        "en": "The window says how many files were written: the image and its processing history. Close it. Press Ctrl+S to keep the project with its three filters and its mask.",
+        "fr": "La fenêtre indique combien de fichiers ont été écrits : l’image et son historique de traitement. Fermez-la. Appuyez sur Ctrl+S pour garder le projet avec ses trois filtres et son masque."
+      },
+      "shot": {
+        "fr": "/tutorials/rosette-finish/fr/09.png",
+        "en": "/tutorials/rosette-finish/en/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 138.0,
+        "en": 138.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/rosette-finish/result.jpg",
+    "w": 2000,
+    "h": 1324,
+    "caption": {
+      "en": "The finished Rosette Nebula, 4,200 × 2,780 px. On the exported picture the sky measures 26, 26 and 26, neutral, with 3.0 levels of spread from corner to corner. The sky is deeper, the ring a little more vivid, and the fine structure of the gas crisper at full size.",
+      "fr": "La nébuleuse de la Rosette finie, 4 200 × 2 780 px. Sur l’image exportée le ciel mesure 26, 26 et 26, neutre, avec 3,0 niveaux d’écart d’un coin à l’autre. Le ciel est plus profond, l’anneau un peu plus vif, et la structure fine du gaz plus nette à taille réelle."
+    }
+  },
+  "blocks": [
+    "Post"
+  ],
+  "next": null
+}

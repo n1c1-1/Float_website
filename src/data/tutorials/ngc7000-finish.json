@@ -1,0 +1,536 @@
+{
+  "slug": "ngc7000-finish",
+  "slugFr": "ngc7000-finition",
+  "section": "path",
+  "level": 4,
+  "order": 4,
+  "title": {
+    "en": "Palette and finish",
+    "fr": "Palette et finition"
+  },
+  "summary": {
+    "en": "You duplicate the version Default S-H-O as Palette and finish, read what is still timid in it, then push the palette and finish the image with five filters on the starless image: Colour mixer, Levels, Local contrast, Multiscale sharpening and Highlight compression, in that order. You export it as a JPEG.",
+    "fr": "Vous dupliquez la version Default S-H-O sous le nom Palette and finish, lisez ce qui y est encore timide, puis poussez la palette et finissez l’image avec cinq filtres sur l’image sans étoiles : Mélangeur de couleurs, Niveaux, Contraste local, Accentuation multi-échelle et Compression des hautes lumières, dans cet ordre. Vous l’exportez en JPEG."
+  },
+  "duration": {
+    "en": "About 15 min: a 2 min 23 s video and the text, without any computing",
+    "fr": "Environ 15 min : une vidéo de 2 min 23 s et le texte, sans aucun calcul"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The previous tutorial of the series, <a href=\"/learn/ngc7000-sho/\">The default S-H-O, read then corrected</a>: this one starts from the project it saves, with its version Default S-H-O"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel précédent de la série, <a href=\"/fr/apprendre/ngc7000-sho/\">Le S-H-O par défaut, lu puis corrigé</a> : celui-ci part du projet qu’il enregistre, avec sa version Default S-H-O"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "NGC 7000 (North America Nebula) · Sony A7S, 300 s at ISO 2000 · two dual-band filters (O III / H-alpha, O III / S II) and a night without filter · 72 lights (6 h), master bias, dark and flats",
+      "fr": "NGC 7000 (nébuleuse de l’Amérique du Nord) · Sony A7S, 300 s à ISO 2000 · deux filtres bi-bande (O III / H-alpha, O III / S II) et une nuit sans filtre · 72 brutes (6 h), masters d’offset, de dark et de flats"
+    },
+    "author": "Thomas",
+    "note": {
+      "en": "Frames shown with their author’s agreement; they are not offered for download",
+      "fr": "Images montrées avec l’accord de leur auteur ; elles ne sont pas proposées au téléchargement"
+    }
+  },
+  "video": {
+    "en": {
+      "src": "/tutorials/ngc7000-finish/en/video.mp4",
+      "captions": "/tutorials/ngc7000-finish/en/captions.vtt",
+      "chapters": "/tutorials/ngc7000-finish/en/chapters.vtt",
+      "poster": "/tutorials/ngc7000-finish/en/poster.jpg",
+      "seconds": 143.0
+    },
+    "fr": {
+      "src": "/tutorials/ngc7000-finish/fr/video.mp4",
+      "captions": "/tutorials/ngc7000-finish/fr/captions.vtt",
+      "chapters": "/tutorials/ngc7000-finish/fr/chapters.vtt",
+      "poster": "/tutorials/ngc7000-finish/fr/poster.jpg",
+      "seconds": 143.0
+    }
+  },
+  "steps": [
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "Open the version and read it",
+        "fr": "Ouvrir la version et la lire"
+      },
+      "text": {
+        "en": "Click <b>Post</b>: it opens on the version <b>Default S-H-O</b> of the previous tutorial. Before any gesture, read what is still wrong: zoom to 100 % on the wall, then fit the picture again and look at the transition between the blue zone and the orange edge. Already right, leave it alone: the noise (the noise filters were tried on this image, with no visible change: 2.79 to 2.64) and the neutrality of the sky.",
+        "fr": "Cliquez sur <b>Post</b> : il s’ouvre sur la version <b>Default S-H-O</b> du tutoriel précédent. Avant tout geste, lisez ce qui ne va pas encore : mettez l’image à 100 % sur le mur, puis ajustez-la de nouveau et regardez la transition entre la zone bleue et le bord orange. Déjà juste, à ne pas toucher : le bruit (les filtres de bruit ont été essayés sur cette image, sans changement visible : 2,79 à 2,64) et la neutralité du ciel."
+      },
+      "why": {
+        "en": "Reading first tells which filter is needed and in which order; each defect below names its gesture.",
+        "fr": "Lire d’abord dit quel filtre est nécessaire et dans quel ordre ; chaque défaut ci-dessous nomme son geste."
+      },
+      "pitfall": {
+        "en": "Judge the sky by eye: here it is about 36 on the 0 to 255 scale of the exported file.",
+        "fr": "Jugez le ciel à l’œil : il est ici à environ 36 sur l’échelle de 0 à 255 du fichier exporté."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "The palette is still timid",
+            "fr": "La palette est encore timide"
+          },
+          "read": {
+            "en": "Fitted view: at the transition between the blue zone and the orange edge, the orange and the cyan stay close to each other.",
+            "fr": "Vue ajustée : à la transition entre la zone bleue et le bord orange, l’orange et le cyan restent proches l’un de l’autre."
+          },
+          "fix": {
+            "en": "<b>Colour mixer</b>",
+            "fr": "<b>Mélangeur de couleurs</b>"
+          },
+          "step": "mixer"
+        },
+        {
+          "problem": {
+            "en": "Blacks not deep, sky a little light",
+            "fr": "Noirs pas profonds, ciel un peu clair"
+          },
+          "read": {
+            "en": "The dark lane at the top right is a dark grey, about 36 on the 0 to 255 scale of the exported file.",
+            "fr": "La bande sombre en haut à droite est un gris sombre, environ 36 sur l’échelle de 0 à 255 du fichier exporté."
+          },
+          "fix": {
+            "en": "<b>Levels</b>",
+            "fr": "<b>Niveaux</b>"
+          },
+          "step": "levels"
+        },
+        {
+          "problem": {
+            "en": "Soft structure at full size",
+            "fr": "Structure molle en taille réelle"
+          },
+          "read": {
+            "en": "At 100 % on the wall, the folds and the lanes are soft.",
+            "fr": "À 100 % sur le mur, les plis et les bandes sombres sont mous."
+          },
+          "fix": {
+            "en": "<b>Local contrast</b> and <b>Multiscale sharpening</b>",
+            "fr": "<b>Contraste local</b> et <b>Accentuation multi-échelle</b>"
+          },
+          "step": "local-contrast"
+        },
+        {
+          "problem": {
+            "en": "The wall’s red will burn",
+            "fr": "Le rouge du mur va brûler"
+          },
+          "read": {
+            "en": "After the two filters above, the pixels with red at 250 or more are 0.95 % of the picture: the wall is pushed into the white.",
+            "fr": "Après les deux filtres ci-dessus, les pixels dont le rouge atteint 250 ou plus font 0,95 % de l’image : le mur est poussé dans le blanc."
+          },
+          "fix": {
+            "en": "<b>Highlight compression</b>, last",
+            "fr": "<b>Compression des hautes lumières</b>, en dernier"
+          },
+          "step": "highlights"
+        }
+      ],
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-finish/details/detail-before.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "The wall, 100 %",
+            "fr": "Le mur, 100 %"
+          },
+          "caption": {
+            "en": "The structure of the wall is soft.",
+            "fr": "La structure du mur est molle."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-finish/en/01.png",
+        "fr": "/tutorials/ngc7000-finish/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "duplicate",
+      "title": {
+        "en": "Duplicate the version",
+        "fr": "Dupliquer la version"
+      },
+      "text": {
+        "en": "Click <b>New version</b>: it duplicates the current version. Click the name of the copy, select it, type <b>Palette and finish</b> and press Enter. Then select the <b>Starless image</b> sub-layer of the S-H-O layer: the filters added from now on apply to it only, before the stars are put back.",
+        "fr": "Cliquez sur <b>Nouvelle version</b> : elle duplique la version actuelle. Cliquez sur le nom de la copie, sélectionnez-le, tapez <b>Palette and finish</b> et appuyez sur Entrée. Sélectionnez ensuite le sous-calque <b>Image sans étoiles</b> du calque S-H-O : les filtres ajoutés à partir de maintenant agissent sur lui seul, avant que les étoiles soient remises."
+      },
+      "why": {
+        "en": "Working on a copy keeps Default S-H-O as it was, ready to compare or to come back to. Filtering the starless image spares the stars: sharpening or saturating them would give rings and colour fringes.",
+        "fr": "Travailler sur une copie garde Default S-H-O telle quelle, prête à comparer ou à retrouver. Filtrer l’image sans étoiles épargne les étoiles : les accentuer ou les saturer donnerait des anneaux et des franges de couleur."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-finish/en/02.png",
+        "fr": "/tutorials/ngc7000-finish/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 30.0,
+        "fr": 30.0
+      }
+    },
+    {
+      "id": "mixer",
+      "title": {
+        "en": "Separate the gold from the cyan",
+        "fr": "Séparer l’or du cyan"
+      },
+      "text": {
+        "en": "Click <b>Filter</b>, then <b>Color</b>, then <b>Colour mixer</b>. It gives hue, saturation and luminance for eight colour ranges. Push the palette until the gold of H-alpha and S II and the cyan of O III are clearly apart, without any flat, fluorescent area: Orange · hue about +10°, Orange · saturation +25 %, Red · saturation +15 %, Yellow · saturation +20 %, Aqua · saturation +55 %, Blue · saturation +35 %, Blue · hue −10°.",
+        "fr": "Cliquez sur <b>Filtre</b>, puis <b>Couleur</b>, puis <b>Mélangeur de couleurs</b>. Il donne teinte, saturation et luminance pour huit plages de couleur. Poussez la palette jusqu’à ce que l’or de H-alpha et S II et le cyan d’O III soient nettement séparés, sans aplat fluorescent : Orange · teinte environ +10°, Orange · saturation +25 %, Rouge · saturation +15 %, Jaune · saturation +20 %, Cyan · saturation +55 %, Bleu · saturation +35 %, Bleu · teinte −10°."
+      },
+      "why": {
+        "en": "It corrects the timid palette: it separates the gold of H-alpha and S II from the cyan of O III, which is the look expected from this palette. The values stay gentle: with stronger ones, 1.1 % of the picture burnt in red.",
+        "fr": "Il corrige la palette timide : il sépare l’or de H-alpha et S II du cyan d’O III, ce qui est l’aspect attendu de cette palette. Les valeurs restent douces : avec des valeurs plus fortes, 1,1 % de l’image brûlait en rouge."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-finish/details/mixer-before.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Before, 100 %",
+            "fr": "Avant, 100 %"
+          },
+          "caption": {
+            "en": "Orange and cyan still close.",
+            "fr": "L’orange et le cyan encore proches."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-finish/details/mixer-right.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "The right setting, 100 %",
+            "fr": "Le bon réglage, 100 %"
+          },
+          "caption": {
+            "en": "Gold and cyan apart, the gas keeps its nuances.",
+            "fr": "L’or et le cyan séparés, le gaz garde ses nuances."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-finish/details/mixer-far.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Pushed too far (orange +90, aqua +100), 100 %",
+            "fr": "Poussé trop loin (orange +90, cyan +100), 100 %"
+          },
+          "caption": {
+            "en": "Flat, fluorescent areas.",
+            "fr": "Des aplats fluorescents."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-finish/en/03.png",
+        "fr": "/tutorials/ngc7000-finish/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 41.0,
+        "fr": 41.0
+      }
+    },
+    {
+      "id": "levels",
+      "title": {
+        "en": "Deepen the blacks",
+        "fr": "Approfondir les noirs"
+      },
+      "text": {
+        "en": "Click <b>Filter</b>, then <b>Stretch</b>, then <b>Levels</b>. Raise <b>Black point</b> a little, until the sky is deeper and the dark lanes are really dark: about 0.02. Lower <b>Gamma</b> slightly: about 0.95. The sky goes from about 36 to about 29 on the 0 to 255 scale of the exported file.",
+        "fr": "Cliquez sur <b>Filtre</b>, puis <b>Étirement</b>, puis <b>Niveaux</b>. Montez un peu <b>Point noir</b>, jusqu’à ce que le ciel soit plus profond et les bandes sombres vraiment sombres : environ 0,02. Baissez légèrement <b>Gamma</b> : environ 0,95. Le ciel passe d’environ 36 à environ 29 sur l’échelle de 0 à 255 du fichier exporté."
+      },
+      "why": {
+        "en": "It corrects the light sky and the shallow blacks, without touching the colours.",
+        "fr": "Il corrige le ciel un peu clair et les noirs peu profonds, sans toucher aux couleurs."
+      },
+      "pitfall": {
+        "en": "Do not go beyond about 0.02: at a black point of 0.08 the sky falls to 15 and the faint gas is swallowed.",
+        "fr": "N’allez pas au-delà d’environ 0,02 : à un point noir de 0,08, le ciel tombe à 15 et le gaz faible est avalé."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-finish/details/levels-before.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Before, 100 %",
+            "fr": "Avant, 100 %"
+          },
+          "caption": {
+            "en": "The sky is a lifted dark grey.",
+            "fr": "Le ciel est un gris sombre relevé."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-finish/details/levels-right.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Black point 0.02, gamma 0.95, 100 %",
+            "fr": "Point noir 0,02, gamma 0,95, 100 %"
+          },
+          "caption": {
+            "en": "Deeper sky, the faint gas is still there.",
+            "fr": "Ciel plus profond, le gaz faible est toujours là."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-finish/details/levels-far.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Pushed too far (black point 0.08), 100 %",
+            "fr": "Poussé trop loin (point noir 0,08), 100 %"
+          },
+          "caption": {
+            "en": "The faint gas is swallowed.",
+            "fr": "Le gaz faible est avalé."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-finish/en/04.png",
+        "fr": "/tutorials/ngc7000-finish/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 75.0,
+        "fr": 75.0
+      }
+    },
+    {
+      "id": "local-contrast",
+      "title": {
+        "en": "Bring out the folds of the wall",
+        "fr": "Faire ressortir les plis du mur"
+      },
+      "text": {
+        "en": "Click <b>Filter</b>, then <b>Contrast</b>, then <b>Local contrast</b>. Raise <b>Strength</b> until the folds of the wall and the lanes stand out: about 0.4. Set <b>Scale</b> to a large radius: about 80 px.",
+        "fr": "Cliquez sur <b>Filtre</b>, puis <b>Contraste</b>, puis <b>Contraste local</b>. Montez <b>Intensité</b> jusqu’à faire ressortir les plis du mur et les bandes sombres : environ 0,4. Réglez <b>Échelle</b> sur un grand rayon : environ 80 px."
+      },
+      "why": {
+        "en": "It corrects the soft structure at the scale of the folds, which a global contrast cannot reach. A large radius acts on the shapes of the gas, not on the noise.",
+        "fr": "Il corrige la structure molle à l’échelle des plis, que le contraste global n’atteint pas. Un grand rayon agit sur les formes du gaz, pas sur le bruit."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-finish/details/detail-before.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Before local contrast and sharpening, 100 %",
+            "fr": "Avant contraste local et accentuation, 100 %"
+          },
+          "caption": {
+            "en": "Soft folds.",
+            "fr": "Des plis mous."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-finish/en/05.png",
+        "fr": "/tutorials/ngc7000-finish/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 84.0,
+        "fr": 84.0
+      }
+    },
+    {
+      "id": "sharpening",
+      "title": {
+        "en": "Sharpen the finest texture",
+        "fr": "Accentuer la texture fine"
+      },
+      "text": {
+        "en": "Click <b>Filter</b>, then <b>Detail</b>, then <b>Multiscale sharpening</b>. It raises each scale of detail on its own. Leave 1 px at 0 and give the other scales: 2 px about 0.15, 4 px 0.35, 8 px 0.5, 16 px 0.4. It applies to the lightness, so the colours are not touched.",
+        "fr": "Cliquez sur <b>Filtre</b>, puis <b>Détail</b>, puis <b>Accentuation multi-échelle</b>. Elle relève chaque échelle de détail séparément. Laissez 1 px à 0 et donnez aux autres échelles : 2 px environ 0,15, 4 px 0,35, 8 px 0,5, 16 px 0,4. Elle s’applique à la luminosité : les couleurs ne sont pas touchées."
+      },
+      "why": {
+        "en": "It gives the finest texture of the gas. Together with local contrast it is what pushes the wall into the white, which the last step corrects.",
+        "fr": "Elle donne la texture la plus fine du gaz. Avec le contraste local, c’est elle qui pousse le mur dans le blanc, ce que la dernière étape corrige."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-finish/details/detail-before.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Before, 100 %",
+            "fr": "Avant, 100 %"
+          },
+          "caption": {
+            "en": "Soft structure.",
+            "fr": "Structure molle."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-finish/details/detail-after.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "After local contrast and sharpening, 100 %",
+            "fr": "Après contraste local et accentuation, 100 %"
+          },
+          "caption": {
+            "en": "The folds and the lanes stand out.",
+            "fr": "Les plis et les bandes sombres ressortent."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-finish/en/06.png",
+        "fr": "/tutorials/ngc7000-finish/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 93.0,
+        "fr": 93.0
+      }
+    },
+    {
+      "id": "highlights",
+      "title": {
+        "en": "Keep the wall from burning",
+        "fr": "Empêcher le mur de brûler"
+      },
+      "text": {
+        "en": "Click <b>Filter</b>, then <b>Contrast</b>, then <b>Highlight compression</b>. Raise <b>Strength</b> until the red of the wall keeps its texture: about 0.5, the other settings left as they come. The pixels with red at 250 or more go from 0.95 % to 0.53 % of the picture.",
+        "fr": "Cliquez sur <b>Filtre</b>, puis <b>Contraste</b>, puis <b>Compression des hautes lumières</b>. Montez <b>Intensité</b> jusqu’à ce que le rouge du mur garde sa texture : environ 0,5, les autres réglages laissés tels quels. Les pixels dont le rouge atteint 250 ou plus passent de 0,95 % à 0,53 % de l’image."
+      },
+      "why": {
+        "en": "It corrects the burnt red of the wall. It comes after local contrast and sharpening, because they are what pushed the wall into the white: placed before them, it would leave 0.95 % of the picture burnt.",
+        "fr": "Elle corrige le rouge brûlé du mur. Elle vient après le contraste local et l’accentuation, parce que ce sont eux qui ont poussé le mur dans le blanc : placée avant eux, elle laisserait 0,95 % de l’image brûlée."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-finish/details/highlights-before.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Before the compression, 100 %",
+            "fr": "Avant la compression, 100 %"
+          },
+          "caption": {
+            "en": "The wall’s red is burnt: 0.95 % of the pixels have red at 250 or more.",
+            "fr": "Le rouge du mur est brûlé : 0,95 % des pixels ont un rouge à 250 ou plus."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-finish/details/highlights-after.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Highlight compression 0.5, after the sharpening, 100 %",
+            "fr": "Compression des hautes lumières 0,5, après l’accentuation, 100 %"
+          },
+          "caption": {
+            "en": "The red keeps its texture: 0.53 %, the level of the previous version.",
+            "fr": "Le rouge garde sa texture : 0,53 %, le niveau de la version précédente."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-finish/en/07.png",
+        "fr": "/tutorials/ngc7000-finish/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 114.0,
+        "fr": 114.0
+      }
+    },
+    {
+      "id": "export",
+      "title": {
+        "en": "Export the picture",
+        "fr": "Exporter l’image"
+      },
+      "text": {
+        "en": "Click <b>Export…</b>, choose the <b>JPEG</b> format, check the file path (on the tutorial drive) and click <b>Export</b>. The sky of the exported file reads about 26 to 29 on the 0 to 255 scale.",
+        "fr": "Cliquez sur <b>Exporter…</b>, choisissez le format <b>JPEG</b>, vérifiez le chemin du fichier (sur le disque des tutoriels) et cliquez sur <b>Exporter</b>. Le ciel du fichier exporté se lit à environ 26 à 29 sur l’échelle de 0 à 255."
+      },
+      "why": {
+        "en": "The export is the finished picture of this version.",
+        "fr": "L’export est l’image finie de cette version."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-finish/en/08.png",
+        "fr": "/tutorials/ngc7000-finish/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 127.0,
+        "fr": 127.0
+      }
+    },
+    {
+      "id": "save",
+      "title": {
+        "en": "Save, and what was left out",
+        "fr": "Enregistrer, et ce qui a été laissé de côté"
+      },
+      "text": {
+        "en": "Press Ctrl+S: the project keeps both versions, Default S-H-O and Palette and finish. Three things were left out on purpose. <b>Noise filters</b>: Multiscale noise reduction and colour Noise reduction were tried and changed nothing visible (noise 2.79 to 2.64), so they are not kept. <b>A gentler mixer</b> than an earlier try of this image: orange, red and yellow at +25, +15 and +20 instead of +45, +25 and +40, because with the earlier values 1.1 % of the picture burnt in red. <b>Whiter stars</b>: Star color at a whiter setting instead of a pinker one, since these stars are seen through O III.",
+        "fr": "Appuyez sur Ctrl+S : le projet garde les deux versions, Default S-H-O et Palette and finish. Trois choses ont été laissées de côté volontairement. <b>Les filtres de bruit</b> : la réduction de bruit multi-échelle et la réduction de bruit couleur ont été essayées et n’ont rien changé de visible (bruit de 2,79 à 2,64) ; elles ne sont pas gardées. <b>Un mélangeur plus doux</b> qu’un essai antérieur sur cette image : orange, rouge et jaune à +25, +15 et +20 au lieu de +45, +25 et +40, car avec les valeurs précédentes 1,1 % de l’image brûlait en rouge. <b>Des étoiles plus blanches</b> : Couleur des étoiles réglée vers le blanc plutôt que vers le rose, puisque ces étoiles sont vues à travers O III."
+      },
+      "why": {
+        "en": "Edits that are not saved are lost when the project is closed. What was left out is as much a decision as what was kept.",
+        "fr": "Les modifications non enregistrées sont perdues à la fermeture du projet. Ce qui a été laissé de côté est autant une décision que ce qui a été gardé."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-finish/en/09.png",
+        "fr": "/tutorials/ngc7000-finish/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 138.0,
+        "fr": 138.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/ngc7000-finish/result.jpg",
+    "w": 2000,
+    "h": 1340,
+    "caption": {
+      "en": "NGC 7000 in S-H-O, 72 exposures of 300 s (6 h) with a colour camera and two dual-band filters, data by Thomas. On the left the nebula ends and the dense star clouds of the Milky Way show through.",
+      "fr": "NGC 7000 en S-H-O, 72 poses de 300 s (6 h) avec un capteur couleur et deux filtres bi-bande, données de Thomas. À gauche la nébuleuse s’arrête et les nuages d’étoiles denses de la Voie lactée apparaissent."
+    }
+  },
+  "blocks": [
+    "Post",
+    "Combination",
+    "Stars"
+  ],
+  "next": null
+}

@@ -1,0 +1,141 @@
+---
+import Base from '../layouts/Base.astro';
+import { release, routes, version, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+
+const A = 'https://arxiv.org/abs/';
+const methods = fr
+  ? [
+      ['Alignement', 'décalage par vote sur les positions des étoiles, puis polynôme cubique ; appariement de triangles pour les grandes rotations et les champs pauvres, Valdes et al. 1995, Groth 1986', ['https://doi.org/10.1086/133667', 'https://doi.org/10.1086/114099']],
+      ['Empilement', 'drizzle, Fruchter & Hook 2002', A + 'astro-ph/9808087'],
+      ['Astrométrie', 'première solution par Asterion ; recherche propre à FLOAT et décision bayésienne de Lang et al. 2010 en secours ; ajustement fin sur Gaia DR3', A + '0910.2233'],
+      ['Couleur', 'spectres Gaia XP, Montegriffo et al. 2023, Demleitner & Andrae 2022', A + '2206.06205'],
+      ['Débruitage', 'Noise2Noise, Lehtinen et al. 2018', A + '1803.04189'],
+      ['Déconvolution', 'Richardson 1972, Lucy 1974, Whyte et al. 2014 ; NAFNet, Chen et al. 2022', A + '2204.04676'],
+      ['Étoiles/fond', 'NAFNet, Chen et al. 2022', A + '2204.04676'],
+      ['Post', 'étirement arcsinh, Lupton et al. 2004 ; filtre guidé, He et al. 2013 ; ondelettes, Starck & Murtagh 2006 ; CLAHE, Zuiderveld 1994 ; tampon correcteur, Barnes et al. 2009', A + 'astro-ph/0312483'],
+    ]
+  : [
+      ['Registration', 'shift by vote on star positions, then a cubic polynomial; triangle matching for large rotations and sparse fields, Valdes et al. 1995, Groth 1986', ['https://doi.org/10.1086/133667', 'https://doi.org/10.1086/114099']],
+      ['Stacking', 'drizzle, Fruchter & Hook 2002', A + 'astro-ph/9808087'],
+      ['Astrometry', 'first solution by Asterion; FLOAT’s own search and Bayesian decision of Lang et al. 2010 as the fallback; fine fit on Gaia DR3', A + '0910.2233'],
+      ['Color', 'Gaia XP spectra, Montegriffo et al. 2023, Demleitner & Andrae 2022', A + '2206.06205'],
+      ['Denoise', 'Noise2Noise, Lehtinen et al. 2018', A + '1803.04189'],
+      ['Deconvolution', 'Richardson 1972, Lucy 1974, Whyte et al. 2014; NAFNet, Chen et al. 2022', A + '2204.04676'],
+      ['Stars/background', 'NAFNet, Chen et al. 2022', A + '2204.04676'],
+      ['Post', 'arcsinh stretch, Lupton et al. 2004; guided filter, He et al. 2013; wavelets, Starck & Murtagh 2006; CLAHE, Zuiderveld 1994; spot healing, Barnes et al. 2009', A + 'astro-ph/0312483'],
+    ];
+const ack = fr
+  ? [
+      ['Siril', 'rejet à l’empilement, pondération des images, ajustement des étoiles, extraction du fond, étirement hyperbolique généralisé'],
+      ['GIMP', 'calques et filtres'],
+      ['RawTherapee, darktable', 'dématriçage'],
+      ['DrizzlePac', 'drizzle et sa règle de couverture'],
+      ['Astrometry.net, Asterion', 'astrométrie à l’aveugle'],
+      ['Astroalign', 'appariement de triangles'],
+      ['Source Extractor', 'estimation du fond'],
+      ['GraXpert', 'retrait du gradient'],
+      ['DeepSkyStacker', 'images brutes'],
+      ['NAFNet', 'architecture du réseau'],
+    ]
+  : [
+      ['Siril', 'stacking rejection, frame weighting, star fitting, background extraction, the generalised hyperbolic stretch'],
+      ['GIMP', 'layers and filters'],
+      ['RawTherapee, darktable', 'demosaicing'],
+      ['DrizzlePac', 'drizzle and its coverage rule'],
+      ['Astrometry.net, Asterion', 'blind plate solving'],
+      ['Astroalign', 'triangle matching'],
+      ['Source Extractor', 'background estimation'],
+      ['GraXpert', 'gradient removal'],
+      ['DeepSkyStacker', 'raw frames'],
+      ['NAFNet', 'network architecture'],
+    ];
+const issues = `${release.repo}/issues`;
+---
+<Base lang={lang} page="project" title={fr ? 'Projet' : 'Project'}
+  description={fr ? 'Comment participer à FLOAT, les remerciements, les méthodes, la licence et la citation.' : 'How to take part in FLOAT, the acknowledgements, the methods, the licence and the citation.'}>
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <p class="kicker">{fr ? 'Le projet' : 'The project'}</p>
+    <h1>{fr ? 'Projet' : 'Project'}</h1>
+    <p class="meta">Version {version}</p>
+
+    <section class="sec">
+      <h2><span class="secnum">1</span>{fr ? 'Participer' : 'Taking part'}</h2>
+      <div class="measure">
+        <p>{fr
+          ? <>Un défaut se signale dans les <a href={issues}>tickets du dépôt</a>, en disant quel bloc l’a montré. Un jeu d’images sur lequel FLOAT échoue s’y signale de la même façon, avec le matériel (appareil ou caméra, optique), le nombre et la durée des poses.</>
+          : <>A defect is reported in the <a href={issues}>issues of the repository</a>, saying which block showed it. A data set on which FLOAT fails is reported in the same way, with the equipment (camera, optics) and the number and length of the frames.</>}</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">2</span>{fr ? 'Remerciements' : 'Acknowledgements'}</h2>
+      <p class="measure">{fr
+        ? 'FLOAT a été construit en lisant le code et la documentation de projets libres.'
+        : 'FLOAT was built by reading the code and documentation of open-source projects.'}</p>
+      <div class="tbl-wrap measure" style="max-width: 60rem">
+        <table class="tbl">
+          <caption><b>{fr ? 'Tableau 1.' : 'Table 1.'}</b>{fr ? 'Les projets libres lus, et ce qu’ils ont éclairé.' : 'The open-source projects read, and what each informed.'}</caption>
+          <thead><tr><th>{fr ? 'Projet' : 'Project'}</th><th>{fr ? 'Ce qu’il a éclairé' : 'What it informed'}</th></tr></thead>
+          <tbody>
+            {ack.map(([a, b]) => <tr><th scope="row">{a}</th><td>{b}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+      <p class="measure">{fr
+        ? 'FLOAT repose sur PyTorch, NumPy, OpenCV, Astropy, LibRaw et Qt.'
+        : 'FLOAT is built on PyTorch, NumPy, OpenCV, Astropy, LibRaw and Qt.'}</p>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">3</span>{fr ? 'Méthodes et données' : 'Methods and data'}</h2>
+      <div class="tbl-wrap measure" style="max-width: 70rem">
+        <table class="tbl">
+          <caption><b>{fr ? 'Tableau 2.' : 'Table 2.'}</b>{fr ? 'Les blocs et leurs méthodes publiées.' : 'The blocks and their published methods.'}</caption>
+          <thead><tr><th>{fr ? 'Bloc' : 'Block'}</th><th>{fr ? 'Méthode' : 'Method'}</th></tr></thead>
+          <tbody>
+            {methods.map(([step, method, url]) => (
+              <tr><th scope="row">{step}</th><td>{method}{[url].flat().filter(Boolean).map((u) => <> · <a href={u as string}>{(u as string).startsWith('https://arxiv.org') ? 'arXiv' : 'doi'}</a></>)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="measure">
+        <p>{fr
+          ? <>Données : Gaia DR3 (<a href="https://arxiv.org/abs/2208.00211">Gaia Collaboration, Vallenari et al. 2023</a>), SIMBAD (<a href="https://arxiv.org/abs/astro-ph/0002110">Wenger et al. 2000</a>), VizieR (<a href="https://arxiv.org/abs/astro-ph/0002122">Ochsenbein et al. 2000</a>), OpenNGC (<a href="https://github.com/mattiaverga/OpenNGC">M. Verga</a>). Chaque source, sa licence et la mention qu’elle demande figurent dans Aide › À propos, dans l’application. Gaia DR3 et le relevé H-alpha du ciel nord sont libres pour un usage non commercial.</>
+          : <>Data: Gaia DR3 (<a href="https://arxiv.org/abs/2208.00211">Gaia Collaboration, Vallenari et al. 2023</a>), SIMBAD (<a href="https://arxiv.org/abs/astro-ph/0002110">Wenger et al. 2000</a>), VizieR (<a href="https://arxiv.org/abs/astro-ph/0002122">Ochsenbein et al. 2000</a>), OpenNGC (<a href="https://github.com/mattiaverga/OpenNGC">M. Verga</a>). Each source, with its licence and the acknowledgement it asks for, is listed in Help › About in the application. Gaia DR3 and the northern-sky H-alpha survey are free for non-commercial use.</>}</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">4</span>Licence</h2>
+      <div class="measure">
+        <p>{fr
+          ? <>Licence GPL v3 : le code peut être utilisé, lu, modifié et redistribué. Le texte est dans le fichier LICENSE du <a href={release.repo}>dépôt</a>. Les poids ouverts et l’absence de dépendance fermée sont expliqués sur la page <a href={routes.why.fr!}>Pourquoi FLOAT</a>.</>
+          : <>GPL v3 licence: the code can be used, read, modified and redistributed. The text is in the LICENSE file of the <a href={release.repo}>repository</a>. Open weights and the absence of closed dependencies are explained on the <a href={routes.why.en!}>Why FLOAT</a> page.</>}</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">5</span>{fr ? 'Citer FLOAT' : 'Citing FLOAT'}</h2>
+      <div class="measure">
+        <p>{fr ? 'Pour citer FLOAT :' : 'To cite FLOAT:'}</p>
+        <pre>{fr ? `FLOAT (FLOw for AsTrophotography), version ${version}, bêta du ${release.date.fr}. GPL v3. ${release.repo}` : `FLOAT (FLOw for AsTrophotography), version ${version}, beta of ${release.date.en}. GPL v3. ${release.repo}`}</pre>
+        <p>{fr
+          ? <>Toutes les publications sont sur la page des <a href={`${release.repo}/releases`}>publications</a> du dépôt ; la dernière est <a href={`${release.repo}/releases/tag/${release.tag}`}>{release.tag}</a>.</>
+          : <>All releases are on the <a href={`${release.repo}/releases`}>releases</a> page of the repository; the latest is <a href={`${release.repo}/releases/tag/${release.tag}`}>{release.tag}</a>.</>}</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">6</span>{fr ? 'Ce site' : 'This site'}</h2>
+      <div class="measure">
+        <p>{fr
+          ? <>Ce site est fait de pages statiques. Il n’utilise aucun cookie et aucun traceur. Le code source du logiciel est sur <a href={release.repo}>GitHub</a>.</>
+          : <>This site is made of static pages. It uses no cookies and no trackers. The source code of the software is on <a href={release.repo}>GitHub</a>.</>}</p>
+      </div>
+    </section>
+  </div>
+</Base>

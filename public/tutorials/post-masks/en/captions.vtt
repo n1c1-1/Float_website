@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the project of the tutorial Repair instead of cropping.
+
+2
+00:00:04.000 --> 00:00:08.000
+The project opens up to date: nothing is to be computed.
+
+3
+00:00:08.000 --> 00:00:11.000
+Click Post.
+
+4
+00:00:11.000 --> 00:00:19.000
+Before any gesture: the Synthetic stars row has no mask, so the synthetic stars replace all the real ones, and a veil is left on the sky.
+
+5
+00:00:19.000 --> 00:00:24.000
+Click the mask thumbnail of the Synthetic stars row: the mask is empty, the row shows everywhere.
+
+6
+00:00:24.000 --> 00:00:29.000
+Click Add to mask: a mask is made of parts of five kinds.
+
+7
+00:00:29.000 --> 00:00:34.000
+Choose Brush: Subtract and Hide are set, so painting hides the row.
+
+8
+00:00:34.000 --> 00:00:38.000
+Drag Size to the far right: as large as it goes, here 1,200 px.
+
+9
+00:00:38.000 --> 00:00:42.000
+Drag Hardness to 0: the edge of the stroke fades out.
+
+10
+00:00:42.000 --> 00:00:48.000
+Paint one stroke across the centre of the field: the real stars come back there.
+
+11
+00:00:48.000 --> 00:00:53.000
+Press M to see the mask in grey: white shows the synthetic stars, black hides them.
+
+12
+00:00:53.000 --> 00:00:57.000
+Whole mask, Feather: drag it right to soften the edge of the mask, to see.
+
+13
+00:00:57.000 --> 00:01:01.000
+Density: lower it and the hidden part lets the row through again, to see.
+
+14
+00:01:01.000 --> 00:01:05.000
+Tick Invert: the synthetic stars now show at the centre only, to see.
+
+15
+00:01:05.000 --> 00:01:08.000
+Untick it to go back.
+
+16
+00:01:08.000 --> 00:01:12.000
+Click Show, then drag across the sky: this stroke gives the synthetic stars back there.
+
+17
+00:01:12.000 --> 00:01:16.000
+Press Ctrl+Z: the last stroke is undone.
+
+18
+00:01:16.000 --> 00:01:21.000
+Click Clear all: every stroke goes, and the row shows everywhere again. Ctrl+Z takes it back.
+
+19
+00:01:21.000 --> 00:01:25.000
+Press Ctrl+Z: the brush mask is back.
+
+20
+00:01:25.000 --> 00:01:28.000
+Click Starless image.
+
+21
+00:01:28.000 --> 00:01:32.000
+Click Filter, open Contrast and choose Dehaze.
+
+22
+00:01:32.000 --> 00:01:37.000
+Drag Amount to about 0.25: the veil of the sky goes.
+
+23
+00:01:37.000 --> 00:01:41.000
+Drag Scale to about 256 px.
+
+24
+00:01:41.000 --> 00:01:45.000
+With the filter selected, click the mask button under the list.
+
+25
+00:01:45.000 --> 00:01:49.000
+Click Add to mask and choose Luminance range.
+
+26
+00:01:49.000 --> 00:01:52.000
+Drag From to 0 %.
+
+27
+00:01:52.000 --> 00:01:57.000
+Drag To to 25 %: the part selects the sky and the faint tones, not the ring.
+
+28
+00:01:57.000 --> 00:02:02.000
+Drag Feather to about 8 px.
+
+29
+00:02:02.000 --> 00:02:07.000
+Press M: white is where Dehaze acts, on the dark tones.
+
+30
+00:02:07.000 --> 00:02:11.000
+Press Ctrl+S: the masks are saved with the project.
+
+31
+00:02:11.000 --> 00:02:14.000
+Open File, then click Close project.
+
+32
+00:02:14.000 --> 00:02:17.000
+Click the project to open it again.
+
+33
+00:02:17.000 --> 00:02:23.000
+The masks are still there: a click on a thumbnail opens its parts, still editable.

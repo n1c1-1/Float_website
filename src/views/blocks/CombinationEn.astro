@@ -1,0 +1,244 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Combination" title="Combination"
+  description="The Combination blocks of FLOAT (S-H-O, H-O, RGB, LRGB): one stack per filter of a monochrome camera combined into one colour image, with the steps of a recipe and the published sources.">
+
+  <p class="kicker">Block</p>
+  <h1>Combination</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It makes one colour image from the stacks of several filters of a monochrome camera, or from the channels of a dual-band image.</dd></div><div><dt>What it shows</dt><dd>One colour image, which goes on through the chain as any stack does, with the scale of each channel given in the log.</dd></div><div><dt>What can be set</dt><dd>For S-H-O and H-O, the hue of each filter; the defaults suit most images, and Channel weights sets the share of each filter.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>What goes in, what comes out</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>One grid for all the channels</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>The steps of a recipe</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>A hue per filter, lightness and colour</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>RGB and LRGB</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>The shipped recipes</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Settings</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">A Combination block makes one colour image from the images of several workflows: one
+    workflow per filter of a monochrome camera, or the channels of one colour image shot through a dual-band filter.
+    What it does is written in a recipe, a short file made of a few steps from a fixed list: the sky of every channel
+    brought to zero, a linear match of the channels to a reference, an optional continuum subtraction. A recipe then
+    makes red, green and blue from the channels, either with a hue per filter or with a matrix. Four recipes give the
+    blocks S-H-O, H-O, RGB and LRGB.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Stacking</span></li><li><span>Denoise</span></li>
+    <li class="here"><span>Combination</span></li><li><span>Color</span></li><li><span>Stars/background</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>What goes in, what comes out</h2>
+    <aside class="note"><b>One block per recipe.</b> The block is named after its recipe: S-H-O, H-O, RGB or LRGB. The
+    generic name, Combination, stands for any other recipe.</aside>
+    <p>A combination is the first block of its own workflow. Each of its inputs, called a port (S II, Hα and O III for
+    S-H-O; R, G and B for RGB), is wired to one workflow, one per filter. The block reads that workflow’s Output: its
+    linear image, with the sky taken off. When the colour is made on separate images, a port may instead read the starless
+    image or the stars alone of the workflow’s <a href="/blocks/stars/">Stars/background</a> block. Any workflow may feed any port. A port with no
+    workflow is empty and the block waits for it.</p>
+    <p>Each port reads one channel of its image: the luminance of an image, its red, green or blue, or the mean of green
+    and blue. A monochrome image is read as its grey. The mean of green and blue is the O III of a dual-band filter on a
+    colour sensor, whose green and blue pixels both see the 501 nm line.</p>
+    <p>The block writes a stack, which its own Output block renders as it renders any stack. It handles no star: a
+    Stars/background block placed after it does, and so does the Combine layers block in <a href="/blocks/post/">Post</a>. The valid area of the
+    result is where every input has data. Its plate solution is that of the first input that has one.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>One grid for all the channels</h2>
+    <p>The block aligns nothing. Its inputs must be on one pixel grid, that of the first port. The channels of one
+    colour image are. Images of other workflows are, once an Align on block, placed after their <a href="/blocks/stacking/">Stacking</a>, has brought
+    them onto the first one’s grid.</p>
+    <p>Align on has two methods. <strong>Stars</strong>, the default, matches triangles of stars
+    (Valdes et al.,<a class="cite" href="#ref-1">[1]</a> Groth,<a class="cite" href="#ref-2">[2]</a> with the
+    implementation of Astroalign<a class="cite" href="#ref-3">[3]</a>), then fits the cubic polynomial of <a href="/blocks/registration/">Registration</a> on
+    every star matched. <strong>Plate</strong> reprojects the reference grid through the plate solutions of both images,
+    when they carry one. If the inputs are not on one grid, the block refuses them and names the ports concerned:
+    “Hα is not on the grid of S II: place Align on after its Stacking”.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>The steps of a recipe</h2>
+    <aside class="note"><b>Why the sky first.</b> An input’s own sky level is the median of the whole frame, nebulosity
+    included. It differs from one filter to the other by what the nebula adds. In one set, a few tenths of a percent of
+    offset in the S II became a red or cyan cast over the whole sky, 8 times the sky’s own noise.</aside>
+    <p>A recipe lists steps in order, from three operations. The first is always the background neutralisation.</p>
+    <h3>Background neutralisation</h3>
+    <p>An empty sky must map to (0, 0, 0) whatever the hues. Each channel’s sky level is therefore measured on the same
+    pixels in every channel and subtracted in the linear data. Rector et al.<a class="cite" href="#ref-4">[4]</a> set the
+    background of each filter’s image to zero before the layers are coloured and added. The sky pixels are the faintest
+    fifth of the blocks of 16 × 16 pixels, judged in all channels at once, each in units of its own spread. The level
+    is the median of these pixels after a 3σ clipping.</p>
+    <h3>Linear match</h3>
+    <p>Each channel is fitted by least squares to a reference channel, reference = a × channel + b, on the pixels where
+    the reference lies between 1e-7 and 0.875 of the sensor’s full scale. This is the linear match of Siril and of its RGB
+    compositing tool,<a class="cite" href="#ref-5">[5]</a> with the bounds of that tool. The offset b moves the sky, which
+    is taken back to zero after the fit. The reference is the H-alpha for narrow-band recipes, the strongest signal, so
+    that a faint O III weighs as much as a strong H-alpha. It is the red for RGB and the luminance for LRGB, the top layer
+    of the compositing tool.<a class="cite" href="#ref-5">[5]</a> A fit with a negative slope is refused: the channels do
+    not show the same field.</p>
+    <h3>Continuum subtraction</h3>
+    <p>A narrow-band filter records its line and the continuum under it. A broadband filter around the line records the
+    continuum and a small share of the line. The stellar method<a class="cite" href="#ref-6">[6]</a><a class="cite" href="#ref-7">[7]</a><a class="cite" href="#ref-8">[8]</a>
+    takes the stars of the field, which have no line emission: the ratio of their fluxes in the two images is the scale
+    of the continuum. The line image minus the broadband image times that scale gives the line. FLOAT measures the
+    stars by aperture photometry, a circle whose radius is 1.5 times the stars’ full width at half maximum, the local sky taken in an annulus from
+    1.25 to 2 radii, and keeps the median of their ratios. A star with a neighbour in its annulus, a saturated star and a
+    star under 10 times its flux error are left out. At least 5 stars are needed. The line is then divided by the scale,
+    so that a star is equal in both images. A recipe may also give the scale as a number.</p>
+    <p>After the steps, the weights of the channels (1 by default) scale each channel.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>A hue per filter, lightness and colour</h2>
+    <aside class="note"><b>The hue palette.</b> Tinting each channel with its hue and adding the layers is, on linear
+    data, a matrix whose columns are the colours of the hues. Each column is weighted so that equal channels give a grey.
+    Hues with no grey between them are refused.</aside>
+    <p>The narrow-band recipes give each filter a hue, in degrees on the colour wheel (0 red, 120 green, 240 blue).
+    Each filter’s greyscale image is tinted with its hue and the layers are added, as Rector et al. describe.<a class="cite" href="#ref-4">[4]</a>
+    The colour balance is solved so that a single filter’s signal has exactly its own hue and a neutral input stays
+    neutral. Three hues solve it exactly. Two hues, for H-O, are solved by least squares, which is exact when the hues
+    face each other. A recipe may give a matrix instead: three rows (red, green, blue), one number per channel.</p>
+    <p>The default hues of S-H-O are taken from five public S-H-O composites of the Hubble teams
+    (ESA/Hubble heic1501a, opo9544a, heic1007a, heic1520a, heic0707a), read in the perceptual space Oklch on their
+    nebula pixels: S II 15.5°, H-alpha 31.4° and O III 202.2° on the colour wheel of the linear data, which land on the
+    warm areas’ lower quartile, the warm areas’ median and the blue areas’ median in <a href="/blocks/post/">Post</a>’s default display. The defaults
+    of H-O are the usual mapping of a dual-band filter: H-alpha red (0°), O III cyan (180°).</p>
+    <p>A narrow-band image is composed as lightness and colour, the way an LRGB is.<a class="cite" href="#ref-9">[9]</a></p>
+    <ul>
+      <li><strong>The lightness</strong> is the mean of the channels, each weighted by 1 over the square of its sky noise
+      (the least noisy image weighs most), or an equal mean. Equal channels give that same value: a neutral source keeps its
+      level.</li>
+      <li><strong>The colour</strong> is each pixel’s colour ratios to its own luminance, smoothed. The eye resolves colour
+      more coarsely than lightness,<a class="cite" href="#ref-10">[10]</a> so the lightness keeps every detail. In Auto,
+      the smoothing radius is where the noisiest channel’s noise, averaged by the Gaussian, comes down to the lightness’s
+      own; below half a pixel it is 0. The radius is shown in the results.</li>
+      <li><strong>The noise floor.</strong> Where the colour’s luminance is under 3 times its noise, measured on the sky
+      pixels, the pixel is grey. From 1 to 2 floors the colour comes in smoothly. The noise of a weak filter, raised by
+      the balance, no longer paints the sky.</li>
+      <li><strong>The strength.</strong> The colour’s departure from grey is multiplied by 1.9, the luminance kept, so
+      that the nebula’s median chroma in Post’s default display matches the 0.054 measured on the same five composites.
+      Where the brightest channel would be shown above 0.9 of the display, the factor is lowered pixel by pixel down to 1:
+      gamut compression at constant lightness,<a class="cite" href="#ref-11">[11]</a> so that a bright core is not flattened.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>RGB and LRGB</h2>
+    <p>The broadband recipes give the colour as it was recorded. Their colour balance is that of a <a href="/blocks/color/">Color</a> block placed
+    after the combination, as in the templates Mono RGB and Mono LRGB: a photometric white balance of the stars, one
+    factor per colour.<a class="cite" href="#ref-12">[12]</a> The linear match only puts the channels on one scale.</p>
+    <ul>
+      <li><strong>RGB</strong> is the red, green and blue channels, matched to the red, and nothing else.</li>
+      <li><strong>LRGB</strong> is the colour of RGB and the lightness of L at every pixel. R, G and B are linearly matched to
+      L. Each pixel’s three channels are scaled so that its colour ratios keep their own luminance times L, which keeps the
+      pixel’s chromaticity on a linear image. Where the colour’s luminance is under its noise floor, the pixel is grey at
+      L’s level: the depth of L is kept on the faint areas and on the sky, where the colour has no signal. The colour is
+      not smoothed and its strength is not raised.</li>
+    </ul>
+    <p>Both hand on to the Color block the saturation map of the stacks of R, G and B, so that the Color block leaves
+    out the saturated stars by that map and not by an estimate from the brightest pixels. L is not in it: it scales the
+    three channels alike, so a star saturated in L keeps the colour ratios of its R, G and B.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>The shipped recipes</h2>
+    <p>A recipe is a file of the application’s folder. It names its inputs, its parameters with their defaults, its steps
+    and its output; a file with an error is left out of the list with a message naming the file, the line and the setting.
+    When a combination is placed in a project, its recipe is copied into the project, so that the project computes the
+    same whatever happens to the file. A project whose copy is older than the file is told so, and changes only when
+    the file is applied.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The recipes shipped with FLOAT.</caption>
+        <thead><tr><th>Recipe</th><th>Inputs</th><th>Steps</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">S-H-O</th><td>S II, Hα, O III</td><td>Sky; linear match to Hα</td><td>One hue per filter; lightness from the channels, weighted by noise; colour smoothed; strength 1.9</td></tr>
+          <tr><th scope="row">H-O</th><td>Hα, O III (two filters, or a dual-band image’s channels)</td><td>Sky; linear match to Hα</td><td>Hues 0° and 180°; same composition as S-H-O</td></tr>
+          <tr><th scope="row">RGB</th><td>R, G, B</td><td>Sky; linear match to R</td><td>The channels as they are; saturation maps handed on</td></tr>
+          <tr><th scope="row">LRGB</th><td>L, R, G, B</td><td>Sky; linear match to L</td><td>Colour of R, G, B, lightness of L; colour not smoothed; saturation maps handed on</td></tr>
+          <tr><th scope="row">HOO (colour camera dual-band)</th><td>Hα read from the red, O III from the mean of green and blue</td><td>Sky; linear match to Hα</td><td>Hα in red, O III in green and blue, as they are; no lightness composition</td></tr>
+          <tr><th scope="row">HaRGB</th><td>R, G, B, Hα</td><td>Sky; G and B matched to R; continuum of Hα taken off by R, scale measured on the stars</td><td>The line added to the red, a fifth of it to the blue; saturation maps of R, G, B handed on</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>For HaRGB, the line image is on the red’s scale, a star having the same value in both, so it adds to the
+    red. The amount added is the weight of the Hα channel, 1 by default. The HOO recipe reads the H-alpha from the red pixels of a dual-band image and the O III from
+    the green and blue ones, as Siril’s extraction does.<a class="cite" href="#ref-13">[13]</a></p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The settings of the narrow-band blocks. RGB and LRGB have none beyond the channel weights.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">S II hue</th><td class="n">15.5°</td><td class="n">0 – 360</td><td>The colour of the S II filter on the colour wheel (S-H-O only).</td></tr>
+          <tr><th scope="row">Hα hue</th><td class="n">31.4° (S-H-O), 0° (H-O)</td><td class="n">0 – 360</td><td>The colour of the H-alpha filter.</td></tr>
+          <tr><th scope="row">O III hue</th><td class="n">202.2° (S-H-O), 180° (H-O)</td><td class="n">0 – 360</td><td>The colour of the O III filter.</td></tr>
+          <tr><th scope="row">Lightness</th><td>noise</td><td>noise, equal</td><td>How the filters make the lightness: weighted by their noise, or equally.</td></tr>
+          <tr><th scope="row">Colour smoothing</th><td>Auto</td><td>Auto, Radius</td><td>Auto takes the smoothing radius from the filters’ noise; Radius takes the one set below.</td></tr>
+          <tr><th scope="row">Smoothing radius</th><td class="n">0 px</td><td class="n">0 – 50</td><td>The colour’s smoothing radius when Colour smoothing is Radius; 0: none.</td></tr>
+          <tr><th scope="row">Channel weights</th><td class="n">1</td><td>per channel</td><td>Each channel’s weight, after the balance. A channel too faint for the balance is lowered by hand.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>A recipe other than the four shipped types has its own parameters, each with its default and its range, written
+    in its file; the block shows them under Recipe settings and refuses a value outside the range.</p>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>No alignment inside the block.</strong> Inputs that are not on one grid are refused, naming them.
+      Align on does the work, before the combination.</li>
+      <li><strong>The continuum scale needs stars.</strong> With fewer than 5 isolated, unsaturated stars measured in
+      both images, the step stops and asks for the scale to be written in the recipe.</li>
+      <li><strong>A background taken from the input’s own sky level was tried and left.</strong> It differs from one
+      filter to the other by what the nebula adds, and the balance multiplied the difference into a cast of the whole sky
+      (section 3).</li>
+      <li><strong>The photometric calibration of stars on a combination.</strong> An estimate of the saturated stars
+      from the brightest pixels refused most of a field’s stars on an LRGB (160 of 195); the saturation map of the
+      stacks of R, G and B, handed on by the combination, replaces it (129 stars measured).</li>
+      <li><strong>No chrominance smoothing in LRGB.</strong> Each filter’s workflow has its own <a href="/blocks/denoise/">Denoise</a>; the combination
+      does not smooth the colour and does not raise its strength, which varies by a factor of five from one
+      subject to another among broadband composites of professional observatories (nine ESO and ESA/Hubble images).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Valdes, F. et al. 1995, <i>FOCAS Automatic Catalog Matching Algorithms</i>, PASP 107, 1119. <a href="https://doi.org/10.1086/133667">doi:10.1086/133667</a></li>
+      <li id="ref-2">Groth, E. J. 1986, <i>A pattern-matching algorithm for two-dimensional coordinate lists</i>, AJ 91, 1244. <a href="https://doi.org/10.1086/114099">doi:10.1086/114099</a></li>
+      <li id="ref-3">Beroiz, M., Cabral, J. B. &amp; Sanchez, B. 2020, <i>Astroalign: A Python module for astronomical image registration</i>, Astronomy and Computing 32, 100384. <a href="https://arxiv.org/abs/1909.02946">arXiv:1909.02946</a></li>
+      <li id="ref-4">Rector, T. A., Levay, Z. G., Frattare, L. M., English, J. &amp; Pu’uohau-Pummill, K. 2007, <i>Image-Processing Techniques for the Creation of Presentation-Quality Astronomical Images</i>, AJ 133, 598. <a href="https://doi.org/10.1086/510117">doi:10.1086/510117</a></li>
+      <li id="ref-5">Siril documentation, <i>RGB compositing</i> and <i>Commands</i> (linear_match). <a href="https://siril.readthedocs.io">siril.readthedocs.io</a>; Siril FAQ, <a href="https://siril.org/faq">siril.org/faq</a></li>
+      <li id="ref-6">Waller, W. H. 1990, <i>Emission-line and continuum fluxes from narrow- and broad-band imagery</i>, PASP 102, 1217. <a href="https://doi.org/10.1086/132752">doi:10.1086/132752</a></li>
+      <li id="ref-7">Koopmann, R. A., Kenney, J. D. P. &amp; Young, J. 2001, <i>An Atlas of H-alpha and R Images and Radial Profiles of 63 Bright Virgo Cluster Spiral Galaxies</i>, ApJS 135, 125. <a href="https://arxiv.org/abs/astro-ph/0106335">arXiv:astro-ph/0106335</a></li>
+      <li id="ref-8">Spector, O., Finkelman, I. &amp; Brosch, N. 2012, <i>Continuum removal in H-alpha extragalactic measurements</i>, MNRAS 419, 2156. <a href="https://arxiv.org/abs/1110.5636">arXiv:1110.5636</a></li>
+      <li id="ref-9">Gendler, R. 2013, <i>Lessons from the Masters</i>, Springer. <a href="https://doi.org/10.1007/978-1-4614-7834-8">doi:10.1007/978-1-4614-7834-8</a></li>
+      <li id="ref-10">Mullen, K. T. 1985, <i>The contrast sensitivity of human colour vision to red-green and blue-yellow chromatic gratings</i>, J. Physiol. 359, 381. <a href="https://doi.org/10.1113/jphysiol.1985.sp015591">doi:10.1113/jphysiol.1985.sp015591</a></li>
+      <li id="ref-11">Morovic, J. &amp; Luo, M. R. 2001, <i>The fundamentals of gamut mapping: a survey</i>, J. Imaging Sci. Technol. 45(3), 283. <a href="https://doi.org/10.2352/j.imagingsci.technol.2001.45.3.art00013">doi:10.2352/j.imagingsci.technol.2001.45.3.art00013</a></li>
+      <li id="ref-12">Siril tutorial, <i>RGB composition</i>. <a href="https://siril.org/tutorials/rgb_composition">siril.org/tutorials/rgb_composition</a></li>
+      <li id="ref-13">Siril documentation, <i>Extraction</i>. <a href="https://siril.readthedocs.io/en/stable/processing/extraction.html">siril.readthedocs.io</a></li>
+    </ol>
+  </section>
+</Doc>

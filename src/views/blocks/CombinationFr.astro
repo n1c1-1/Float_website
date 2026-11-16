@@ -1,0 +1,257 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Combination" title="Combinaison"
+  description="Les blocs Combinaison de FLOAT (S-H-O, H-O, RVB, LRVB) : un empilement par filtre d’une caméra monochrome réunis en une image couleur, avec les étapes d’une recette et les sources publiées.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Combinaison</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il fait une image couleur à partir des empilements de plusieurs filtres d’une caméra monochrome, ou des canaux d’une image bi-bande.</dd></div><div><dt>Ce qu’on voit</dt><dd>Une image couleur, qui poursuit la chaîne comme n’importe quel empilement, avec l’échelle de chaque canal donnée dans le journal.</dd></div><div><dt>Ce qui se règle</dt><dd>Pour S-H-O et H-O, la teinte de chaque filtre ; les valeurs par défaut conviennent à la plupart des images, et Poids canaux règle la part de chaque filtre.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Une même grille pour tous les canaux</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Les étapes d’une recette</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Une teinte par filtre, luminosité et couleur</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>RVB et LRVB</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Les recettes fournies</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Réglages</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Un bloc Combinaison fait une image couleur à partir des images de plusieurs workflows&nbsp;: un
+    workflow par filtre d’une caméra monochrome, ou les canaux d’une image couleur prise à travers un filtre bi-bande.
+    Ce qu’il fait est écrit dans une recette, un court fichier fait de quelques étapes tirées d’une liste fixe&nbsp;: le ciel
+    de chaque canal ramené à zéro, un ajustement linéaire des canaux sur une référence, une soustraction du continuum
+    facultative. La recette fait ensuite le rouge, le vert et le bleu à partir des canaux, soit avec une teinte par
+    filtre, soit avec une matrice. Quatre recettes donnent les blocs S-H-O, H-O, RVB et LRVB.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Empilement</span></li><li><span>Débruitage</span></li>
+    <li class="here"><span>Combinaison</span></li><li><span>Couleur</span></li><li><span>Étoiles/fond</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</h2>
+    <aside class="note"><b>Un bloc par recette.</b> Le bloc porte le nom de sa recette&nbsp;: S-H-O, H-O, RVB ou LRVB. Le
+    nom générique, Combinaison, désigne toute autre recette.</aside>
+    <p>Une combinaison est le premier bloc de son propre workflow. Chacune de ses entrées, appelée port (S II, Hα et
+    O III pour S-H-O&nbsp;; R, G et B pour RVB), est reliée à un workflow, un par filtre. Le bloc lit la Sortie de ce
+    workflow&nbsp;: son image linéaire, le ciel retiré. Quand la couleur est faite sur des images séparées, un port peut lire
+    à la place l’image sans étoiles ou les étoiles seules du bloc <a href="/fr/blocs/etoiles/">Étoiles/fond</a> du workflow. Un workflow quelconque peut
+    alimenter un port quelconque. Un port sans workflow est vide et le bloc l’attend.</p>
+    <p>Chaque port lit un canal de son image&nbsp;: la luminance d’une image, son rouge, son vert ou son bleu, ou la moyenne du
+    vert et du bleu. Une image monochrome est lue comme son gris. La moyenne du vert et du bleu est l’O III d’un filtre
+    bi-bande sur un capteur couleur, dont les pixels verts et bleus voient tous deux la raie à 501 nm.</p>
+    <p>Le bloc écrit un empilement, que son propre bloc Sortie rend comme n’importe quel empilement. Il ne traite aucune
+    étoile&nbsp;: un bloc Étoiles/fond placé après lui s’en charge, comme le bloc Combiner calques de <a href="/fr/blocs/post/">Post</a>. La zone valide du
+    résultat est celle où chaque entrée a des données. Sa solution astrométrique est celle de la première entrée qui en
+    a une.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Une même grille pour tous les canaux</h2>
+    <p>Le bloc n’aligne rien. Ses entrées doivent être sur une même grille de pixels, celle du premier port. Les canaux
+    d’une même image couleur le sont. Les images d’autres workflows le sont une fois qu’un bloc Aligner sur, placé après
+    leur <a href="/fr/blocs/empilement/">Empilement</a>, les a ramenées sur la grille de la première.</p>
+    <p>Aligner sur a deux méthodes. <strong>Étoiles</strong>, la méthode par défaut, met en correspondance des triangles
+    d’étoiles (Valdes et al.,<a class="cite" href="#ref-1">[1]</a> Groth,<a class="cite" href="#ref-2">[2]</a> avec
+    l’implémentation d’Astroalign<a class="cite" href="#ref-3">[3]</a>), puis ajuste le polynôme cubique de <a href="/fr/blocs/alignement/">l’Alignement</a>
+    sur toutes les étoiles appariées. <strong>Plate</strong> reprojette la grille de référence au travers des
+    solutions astrométriques des deux images, quand elles en portent une. Si les entrées ne sont pas sur une même
+    grille, le bloc les refuse et nomme les ports concernés&nbsp;: «&nbsp;Hα n’est pas sur la grille de S II&nbsp;: placer Aligner sur
+    après son Empilement&nbsp;».</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Les étapes d’une recette</h2>
+    <aside class="note"><b>Pourquoi le ciel d’abord.</b> Le niveau de ciel propre à une entrée est la médiane de toute
+    l’image, nébulosité comprise. Il diffère d’un filtre à l’autre de ce qu’ajoute la nébuleuse. Sur une série, quelques
+    dixièmes de pour cent de décalage dans le S II sont devenus une dominante rouge ou cyan sur tout le ciel, 8 fois le
+    bruit propre du ciel.</aside>
+    <p>Une recette liste des étapes dans l’ordre, tirées de trois opérations. La première est toujours la neutralisation
+    du fond.</p>
+    <h3>Neutralisation du fond</h3>
+    <p>Un ciel vide doit donner (0, 0, 0) quelles que soient les teintes. Le niveau de ciel de chaque canal est donc mesuré
+    sur les mêmes pixels dans tous les canaux et soustrait dans les données linéaires. Rector et al.<a class="cite" href="#ref-4">[4]</a>
+    ramènent à zéro le fond de l’image de chaque filtre avant que les couches soient colorées et additionnées. Les
+    pixels de ciel sont le cinquième le plus faible des blocs de 16 × 16 pixels, jugé dans tous les canaux à la fois,
+    chacun en unités de sa propre dispersion. Le niveau est la médiane de ces pixels après un écrêtage à 3σ.</p>
+    <h3>Ajustement linéaire</h3>
+    <p>Chaque canal est ajusté par moindres carrés sur un canal de référence, référence = a × canal + b, sur les pixels où
+    la référence est comprise entre 1e-7 et 0,875 de la pleine échelle du capteur. C’est l’ajustement linéaire de Siril et
+    de son outil de composition RVB,<a class="cite" href="#ref-5">[5]</a> avec les bornes de cet outil. Le décalage b
+    déplace le ciel, qui est ramené à zéro après l’ajustement. La référence est l’H-alpha pour les recettes en bande
+    étroite, le signal le plus fort, si bien qu’un O III faible pèse autant qu’un H-alpha fort. C’est le rouge pour RVB
+    et la luminance pour LRVB, la couche du dessus de l’outil de composition.<a class="cite" href="#ref-5">[5]</a> Un
+    ajustement de pente négative est refusé&nbsp;: les canaux ne montrent pas le même champ.</p>
+    <h3>Soustraction du continuum</h3>
+    <p>Un filtre à bande étroite enregistre sa raie et le continuum qui est dessous. Un filtre à large bande autour de la
+    raie enregistre le continuum et une petite part de la raie. La méthode stellaire<a class="cite" href="#ref-6">[6]</a><a class="cite" href="#ref-7">[7]</a><a class="cite" href="#ref-8">[8]</a>
+    prend les étoiles du champ, qui n’ont pas d’émission dans la raie&nbsp;: le rapport de leurs flux dans les deux images est
+    l’échelle du continuum. L’image de la raie moins l’image à large bande multipliée par cette échelle donne la
+    raie. FLOAT mesure les étoiles par photométrie d’ouverture, un cercle de rayon 1,5 fois la largeur à mi-hauteur des étoiles, le ciel local pris
+    dans un anneau de 1,25 à 2 rayons, et garde la médiane de leurs rapports. Une étoile ayant une voisine dans son
+    anneau, une étoile saturée et une étoile sous 10 fois l’erreur de son flux sont écartées. Il faut au moins 5 étoiles.
+    La raie est ensuite divisée par l’échelle, de sorte qu’une étoile est égale dans les deux images. Une recette peut
+    aussi donner l’échelle sous forme d’un nombre.</p>
+    <p>Après les étapes, les poids des canaux (1 par défaut) multiplient chaque canal.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Une teinte par filtre, luminosité et couleur</h2>
+    <aside class="note"><b>La palette de teintes.</b> Teinter chaque canal de sa teinte et additionner les couches revient,
+    sur des données linéaires, à une matrice dont les colonnes sont les couleurs des teintes. Chaque colonne est pondérée
+    pour que des canaux égaux donnent un gris. Des teintes entre lesquelles il n’y a pas de gris sont refusées.</aside>
+    <p>Les recettes en bande étroite donnent à chaque filtre une teinte, en degrés sur le cercle des couleurs (0 rouge,
+    120 vert, 240 bleu). L’image en gris de chaque filtre est teintée de sa teinte et les couches sont additionnées,
+    comme le décrivent Rector et al.<a class="cite" href="#ref-4">[4]</a> L’équilibre des couleurs est résolu pour que le
+    signal d’un seul filtre ait exactement sa propre teinte et qu’une entrée neutre reste neutre. Trois teintes le
+    résolvent exactement. Deux teintes, pour H-O, sont résolues par moindres carrés, ce qui est exact quand les teintes
+    sont opposées. Une recette peut donner une matrice à la place&nbsp;: trois lignes (rouge, vert, bleu), un nombre par
+    canal.</p>
+    <p>Les teintes par défaut de S-H-O sont tirées de cinq compositions S-H-O publiques des équipes Hubble
+    (ESA/Hubble heic1501a, opo9544a, heic1007a, heic1520a, heic0707a), lues dans l’espace perceptuel
+    Oklch sur les pixels de leur nébuleuse&nbsp;: S II 15,5°, H-alpha 31,4° et O III 202,2° sur le cercle des couleurs des
+    données linéaires, qui tombent sur le quartile inférieur des zones chaudes, la médiane des zones chaudes et la
+    médiane des zones bleues dans l’affichage par défaut de <a href="/fr/blocs/post/">Post</a>. Les valeurs par défaut de H-O sont la correspondance
+    habituelle d’un filtre bi-bande&nbsp;: H-alpha rouge (0°), O III cyan (180°).</p>
+    <p>Une image en bande étroite est composée en luminosité et couleur, comme l’est une LRVB.<a class="cite" href="#ref-9">[9]</a></p>
+    <ul>
+      <li><strong>La luminosité</strong> est la moyenne des canaux, chacun pondéré par 1 sur le carré de son bruit de
+      ciel (l’image la moins bruitée pèse le plus), ou une moyenne égale. Des canaux égaux donnent cette même valeur&nbsp;: une
+      source neutre garde son niveau.</li>
+      <li><strong>La couleur</strong> est faite des rapports de couleur de chaque pixel à sa propre luminance, lissés. L’œil
+      résout la couleur plus grossièrement que la luminosité,<a class="cite" href="#ref-10">[10]</a> si bien que la
+      luminosité garde tout son détail. En Auto, le rayon de lissage est celui où le bruit du canal le plus bruité, moyenné
+      par la gaussienne, descend au bruit de la luminosité&nbsp;; en dessous d’un demi-pixel, il vaut 0. Le rayon est affiché
+      dans les résultats.</li>
+      <li><strong>Le plancher de bruit.</strong> Là où la luminance de la couleur est sous 3 fois son bruit, mesuré sur les
+      pixels de ciel, le pixel est gris. De 1 à 2 planchers, la couleur entre progressivement. Le bruit d’un filtre faible,
+      relevé par l’équilibre, ne peint plus le ciel.</li>
+      <li><strong>L’intensité.</strong> L’écart de la couleur au gris est multiplié par 1,9, la luminance conservée, pour
+      que la chroma médiane de la nébuleuse dans l’affichage par défaut de Post rejoigne les 0,054 mesurés sur les mêmes
+      cinq compositions. Là où le canal le plus brillant serait affiché au-dessus de 0,9 de l’affichage, le facteur est
+      abaissé pixel par pixel jusqu’à 1&nbsp;: une compression de gamut à luminosité constante,<a class="cite" href="#ref-11">[11]</a>
+      pour qu’un cœur brillant ne soit pas aplati.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>RVB et LRVB</h2>
+    <p>Les recettes à large bande donnent la couleur telle qu’elle a été enregistrée. Leur équilibre des couleurs est celui
+    d’un bloc <a href="/fr/blocs/couleur/">Couleur</a> placé après la combinaison, comme dans les modèles RVB mono et LRVB mono&nbsp;: une balance des blancs
+    photométrique des étoiles, un facteur par couleur.<a class="cite" href="#ref-12">[12]</a> L’ajustement linéaire ne
+    fait que mettre les canaux à la même échelle.</p>
+    <ul>
+      <li><strong>RVB</strong> est faite des canaux rouge, vert et bleu, ajustés sur le rouge, et de rien d’autre.</li>
+      <li><strong>LRVB</strong> est la couleur de RVB et la luminosité de L en chaque pixel. R, G et B sont ajustés
+      linéairement sur L. Les trois canaux de chaque pixel sont multipliés de façon que ses rapports de couleur gardent leur
+      propre luminance fois L, ce qui conserve la chromaticité du pixel sur une image linéaire. Là où la luminance de la
+      couleur est sous son plancher de bruit, le pixel est gris au niveau de L&nbsp;: la profondeur de L est gardée sur les zones
+      faibles et sur le ciel, où la couleur n’a pas de signal. La couleur n’est pas lissée et son intensité n’est pas
+      relevée.</li>
+    </ul>
+    <p>Les deux transmettent au bloc Couleur la carte de saturation des empilements de R, G et B, pour que le bloc Couleur
+    écarte les étoiles saturées par cette carte et non par une estimation tirée des pixels les plus brillants. L n’y est
+    pas&nbsp;: elle multiplie les trois canaux de la même façon, si bien qu’une étoile saturée dans L garde les rapports de
+    couleur de ses R, G et B.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Les recettes fournies</h2>
+    <p>Une recette est un fichier du dossier de l’application. Elle nomme ses entrées, ses paramètres avec leurs valeurs
+    par défaut, ses étapes et sa sortie&nbsp;; un fichier qui contient une erreur est écarté de la liste, avec un message qui
+    nomme le fichier, la ligne et le réglage. Quand une combinaison est placée dans un projet, sa recette est copiée dans
+    le projet, si bien que le projet calcule la même chose quoi qu’il arrive au fichier. Un projet dont la copie est plus
+    ancienne que le fichier en est averti, et ne change que lorsque le fichier est appliqué.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les recettes fournies avec FLOAT.</caption>
+        <thead><tr><th>Recette</th><th>Entrées</th><th>Étapes</th><th>Sortie</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">S-H-O</th><td>S II, Hα, O III</td><td>Ciel&nbsp;; ajustement linéaire sur Hα</td><td>Une teinte par filtre&nbsp;; luminosité des canaux, pondérée par le bruit&nbsp;; couleur lissée&nbsp;; intensité 1,9</td></tr>
+          <tr><th scope="row">H-O</th><td>Hα, O III (deux filtres, ou les canaux d’une image bi-bande)</td><td>Ciel&nbsp;; ajustement linéaire sur Hα</td><td>Teintes 0° et 180°&nbsp;; même composition que S-H-O</td></tr>
+          <tr><th scope="row">RVB</th><td>R, G, B</td><td>Ciel&nbsp;; ajustement linéaire sur R</td><td>Les canaux tels quels&nbsp;; cartes de saturation transmises</td></tr>
+          <tr><th scope="row">LRVB</th><td>L, R, G, B</td><td>Ciel&nbsp;; ajustement linéaire sur L</td><td>Couleur de R, G, B, luminosité de L&nbsp;; couleur non lissée&nbsp;; cartes de saturation transmises</td></tr>
+          <tr><th scope="row">HOO (caméra couleur bi-bande)</th><td>Hα lu dans le rouge, O III dans la moyenne du vert et du bleu</td><td>Ciel&nbsp;; ajustement linéaire sur Hα</td><td>Hα en rouge, O III en vert et bleu, tels quels&nbsp;; pas de composition en luminosité</td></tr>
+          <tr><th scope="row">HaRVB</th><td>R, G, B, Hα</td><td>Ciel&nbsp;; G et B ajustés sur R&nbsp;; continuum de Hα retiré par R, échelle mesurée sur les étoiles</td><td>La raie ajoutée au rouge, un cinquième au bleu&nbsp;; cartes de saturation de R, G, B transmises</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Pour HaRVB, l’image de la raie est à l’échelle du rouge, une étoile ayant la même valeur dans les deux, si bien
+    qu’elle s’ajoute au rouge. La quantité ajoutée est le poids du canal Hα, 1 par défaut. La recette HOO lit l’H-alpha dans les pixels rouges d’une image
+    bi-bande et l’O III dans les verts et les bleus, comme le décrit la documentation d’extraction de Siril.<a class="cite" href="#ref-13">[13]</a></p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Les réglages des blocs en bande étroite. RVB et LRVB n’ont que les poids des canaux.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Teinte S II</th><td class="n">15,5°</td><td class="n">0 – 360</td><td>La couleur du filtre S II sur le cercle des couleurs (S-H-O seulement).</td></tr>
+          <tr><th scope="row">Teinte Hα</th><td class="n">31,4° (S-H-O), 0° (H-O)</td><td class="n">0 – 360</td><td>La couleur du filtre H-alpha.</td></tr>
+          <tr><th scope="row">Teinte O III</th><td class="n">202,2° (S-H-O), 180° (H-O)</td><td class="n">0 – 360</td><td>La couleur du filtre O III.</td></tr>
+          <tr><th scope="row">Luminosité</th><td>Par bruit</td><td>Par bruit, Égale</td><td>Comment les filtres font la luminosité&nbsp;: pondérés par leur bruit, ou à parts égales.</td></tr>
+          <tr><th scope="row">Lissage couleur</th><td>Auto</td><td>Auto, Rayon</td><td>Auto prend le rayon de lissage du bruit des filtres&nbsp;; Rayon prend celui qui est réglé en dessous.</td></tr>
+          <tr><th scope="row">Rayon lissage</th><td class="n">0 px</td><td class="n">0 – 50</td><td>Le rayon de lissage de la couleur quand Lissage couleur vaut Rayon&nbsp;; 0&nbsp;: aucun.</td></tr>
+          <tr><th scope="row">Poids canaux</th><td class="n">1</td><td>par canal</td><td>Le poids de chaque canal, après l’équilibre. Un canal trop faible pour l’équilibre est abaissé à la main.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Une recette autre que les quatre types fournis a ses propres paramètres, chacun avec sa valeur par défaut et sa
+    plage, écrits dans son fichier&nbsp;; le bloc les montre sous Réglages recette et refuse une valeur hors de la plage.</p>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Aucun alignement dans le bloc.</strong> Les entrées qui ne sont pas sur une même grille sont refusées,
+      avec leurs noms. Aligner sur fait le travail, avant la combinaison.</li>
+      <li><strong>L’échelle du continuum demande des étoiles.</strong> Avec moins de 5 étoiles isolées et non saturées
+      mesurées dans les deux images, l’étape s’arrête et demande d’écrire l’échelle dans la recette.</li>
+      <li><strong>Un fond pris sur le niveau de ciel propre à l’entrée a été essayé, puis abandonné.</strong> Il diffère
+      d’un filtre à l’autre de ce qu’ajoute la nébuleuse, et l’équilibre multipliait cet écart en une dominante de tout le
+      ciel (section 3).</li>
+      <li><strong>La calibration photométrique des étoiles sur une combinaison.</strong> Une estimation des étoiles saturées
+      d’après les pixels les plus brillants refusait la plupart des étoiles du champ sur une LRVB (160 sur 195)&nbsp;; la carte
+      de saturation des empilements de R, G et B, transmise par la combinaison, la remplace (129 étoiles mesurées).</li>
+      <li><strong>Pas de lissage de la chrominance en LRVB.</strong> Le workflow de chaque filtre a son propre <a href="/fr/blocs/debruitage/">Débruitage</a>&nbsp;;
+      la combinaison ne lisse pas la couleur et ne relève pas son intensité, qui varie d’un facteur cinq d’un sujet à
+      l’autre parmi des compositions à large bande d’observatoires professionnels (neuf images ESO et ESA/Hubble).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Valdes, F. et al. 1995, <i lang="en">FOCAS Automatic Catalog Matching Algorithms</i>, PASP 107, 1119. <a href="https://doi.org/10.1086/133667">doi:10.1086/133667</a></li>
+      <li id="ref-2">Groth, E. J. 1986, <i lang="en">A pattern-matching algorithm for two-dimensional coordinate lists</i>, AJ 91, 1244. <a href="https://doi.org/10.1086/114099">doi:10.1086/114099</a></li>
+      <li id="ref-3">Beroiz, M., Cabral, J. B. &amp; Sanchez, B. 2020, <i lang="en">Astroalign: A Python module for astronomical image registration</i>, Astronomy and Computing 32, 100384. <a href="https://arxiv.org/abs/1909.02946">arXiv:1909.02946</a></li>
+      <li id="ref-4">Rector, T. A., Levay, Z. G., Frattare, L. M., English, J. &amp; Pu’uohau-Pummill, K. 2007, <i lang="en">Image-Processing Techniques for the Creation of Presentation-Quality Astronomical Images</i>, AJ 133, 598. <a href="https://doi.org/10.1086/510117">doi:10.1086/510117</a></li>
+      <li id="ref-5">Documentation de Siril, <i>RGB compositing</i> et <i>Commands</i> (linear_match). <a href="https://siril.readthedocs.io">siril.readthedocs.io</a>&nbsp;; FAQ de Siril, <a href="https://siril.org/faq">siril.org/faq</a></li>
+      <li id="ref-6">Waller, W. H. 1990, <i lang="en">Emission-line and continuum fluxes from narrow- and broad-band imagery</i>, PASP 102, 1217. <a href="https://doi.org/10.1086/132752">doi:10.1086/132752</a></li>
+      <li id="ref-7">Koopmann, R. A., Kenney, J. D. P. &amp; Young, J. 2001, <i lang="en">An Atlas of H-alpha and R Images and Radial Profiles of 63 Bright Virgo Cluster Spiral Galaxies</i>, ApJS 135, 125. <a href="https://arxiv.org/abs/astro-ph/0106335">arXiv:astro-ph/0106335</a></li>
+      <li id="ref-8">Spector, O., Finkelman, I. &amp; Brosch, N. 2012, <i lang="en">Continuum removal in H-alpha extragalactic measurements</i>, MNRAS 419, 2156. <a href="https://arxiv.org/abs/1110.5636">arXiv:1110.5636</a></li>
+      <li id="ref-9">Gendler, R. 2013, <i lang="en">Lessons from the Masters</i>, Springer. <a href="https://doi.org/10.1007/978-1-4614-7834-8">doi:10.1007/978-1-4614-7834-8</a></li>
+      <li id="ref-10">Mullen, K. T. 1985, <i lang="en">The contrast sensitivity of human colour vision to red-green and blue-yellow chromatic gratings</i>, J. Physiol. 359, 381. <a href="https://doi.org/10.1113/jphysiol.1985.sp015591">doi:10.1113/jphysiol.1985.sp015591</a></li>
+      <li id="ref-11">Morovic, J. &amp; Luo, M. R. 2001, <i lang="en">The fundamentals of gamut mapping: a survey</i>, J. Imaging Sci. Technol. 45(3), 283. <a href="https://doi.org/10.2352/j.imagingsci.technol.2001.45.3.art00013">doi:10.2352/j.imagingsci.technol.2001.45.3.art00013</a></li>
+      <li id="ref-12">Tutoriel de Siril, <i>RGB composition</i>. <a href="https://siril.org/tutorials/rgb_composition">siril.org/tutorials/rgb_composition</a></li>
+      <li id="ref-13">Documentation de Siril, <i>Extraction</i>. <a href="https://siril.readthedocs.io/en/stable/processing/extraction.html">siril.readthedocs.io</a></li>
+    </ol>
+  </section>
+</Doc>

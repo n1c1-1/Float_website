@@ -1,0 +1,184 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import Figure from '../../components/Figure.astro';
+import Chart from '../../components/Chart.astro';
+import { selectionFigure } from '../../data/charts/figures';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Selection" title="Selection"
+  description="The Selection block of FLOAT: what is measured on each frame, the weight formula, the four selection modes, frames excluded by hand, and the settings, with the published source.">
+
+  <p class="kicker">Block</p>
+  <h1>Selection</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It gives every frame a weight from its clarity, its noise and the sharpness of its stars, so that the good frames count more in the stack; only very poor frames are left out.</dd></div><div><dt>What it shows</dt><dd>The Selection chart, with the weight of every frame over the night, and the list of the frames left out, each with its reason; the stack records them.</dd></div><div><dt>What can be set</dt><dd>Frame selection: Automatic (the default) keeps almost every frame and lets the weights work; Thresholds sets a Minimum transparency and a Maximum star size.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>What goes in, what comes out</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>What is measured</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>The weight of a frame</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>The four modes</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Frames left out in every mode</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Settings</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Selection block decides which frames go into the stack and how much each weighs. Each
+    frame is given a weight from its transparency, its noise and the size of its stars. By default almost every frame
+    is kept and the weights handle the poor ones; only a frame under 5 % of the best weight is left out. Three other
+    modes filter the frames further. Every frame left out is listed with the reason.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Calibration</span></li><li><span>Registration</span></li><li class="here"><span>Selection</span></li>
+    <li><span>Stacking</span></li><li><span>Astrometry</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>What goes in, what comes out</h2>
+    <p>The block has no computation of its own. It reads the measures that <a href="/blocks/registration/">Registration</a> took on every frame
+    (transparency, star size, roundness, noise), the frames that were not aligned, those without usable pixels, and the
+    frames the user excluded by hand. Its rules are applied when the stack is made, with the settings of section 6,
+    which are kept with the stack’s.</p>
+    <p>It gives, for every frame, a weight, or the reason the frame is left out. The <a href="/blocks/stacking/">Stacking</a> block reads them and
+    records them with the stack. A workflow without a Selection block stacks the frames as they are, with the
+    same weight.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>What is measured</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The measures the block reads, all taken by Registration.</caption>
+        <thead><tr><th>Measure</th><th>What it says</th><th>Where it acts</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Transparency</th><td>The star flux of the frame relative to the reference frame, in a fixed aperture. Clouds, haze and dew lower it.</td><td>The weight; the transparency filters.</td></tr>
+          <tr><th scope="row">Star size</th><td>The FWHM of the stars. Wind, focus drift and seeing raise it. The filters read the Moffat fit; for a registration made without it, the coarse size measured on 2 × 2 super-pixels.</td><td>The weight (coarse size); the star-size filters.</td></tr>
+          <tr><th scope="row">Roundness</th><td>Minor axis over major axis of the stars, 1 for round stars. Wind and tracking errors lower it.</td><td>The roundness filter of the k × σ mode.</td></tr>
+          <tr><th scope="row">Noise</th><td>The noise of the frame, measured from the difference of adjacent super-pixels. If the registration did not measure it, the spread of the frame’s pixels, which the nebulae and stars of the field inflate.</td><td>The weight.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The way each is measured is described on the <a href="/blocks/registration/">Registration</a> page.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>The weight of a frame</h2>
+    <aside class="note"><b>Why no sharp cut.</b> Once the weights are right, the rejection of whole frames becomes a
+    damaging operation, as Zackay and Ofek show.<a class="cite" href="#ref-1">[1]</a> This is why the default leaves
+    out so few.</aside>
+    <p>The weight of an aligned frame is</p>
+    <p><b>weight = (transparency / noise)² × (FWHM<sub>5</sub> / FWHM)²</b>,</p>
+    <p>where FWHM is the star size of the frame and FWHM<sub>5</sub> the 5th percentile of the star sizes of the night.
+    The weights are divided by the largest, so that the best frame weighs 1. A frame that is not aligned, or whose noise
+    is not measured, has no weight.</p>
+    <p>The first factor is the signal-to-noise ratio, squared: a hazy or noisy frame weighs less. The second is the
+    sharpness: a frame with larger stars weighs less. The <a href="/blocks/stacking/">Stacking</a> block uses the weight in the mean of the drops.</p>
+    <p>Figure 1 shows these weights over one night, in the default mode: the first frames, with a low transparency and
+    larger stars, weigh little but stay in, and only three fall under the minimum.</p>
+
+    <Figure lang={lang} n={1}>
+      <Chart slot="body" {...selectionFigure(lang)} />
+      Weight of each frame, relative to the best one, against the time since the first frame, with the Automatic
+      mode’s minimum of 5 % (grey line). Data: the Pleiades, 1348 frames of 13 s. The median weight rises from 0.17
+      in the first 30 minutes to 0.91 between 240 and 270 minutes, then falls to 0.61. Blue: the 1344 frames stacked;
+      orange rings: the three left out, at 1.2 to 2.9 % of the best weight. The frame that was not aligned has no
+      weight and is not drawn.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>The four modes</h2>
+    <aside class="note"><b>The robust sigma</b> of a k × σ filter is 1.4826 times the median absolute deviation, and
+    its centre the median, so that the outliers the filter must find cannot inflate it.<a class="cite" href="#ref-2">[2]</a>
+    One pass is made.</aside>
+    <p>The setting <b>Frame selection</b> chooses the mode. The statistics of a filter, the median and the sigma, are
+    measured on all the aligned frames, those excluded by hand included, so that excluding a frame by hand never
+    changes the fate of another.</p>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The four modes of Frame selection.</caption>
+        <thead><tr><th>Mode</th><th>Frames left out</th><th>Weights</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Automatic (default)</th><td>Those under 5 % of the best weight, besides the frames of section 5.</td><td>The formula of section 3.</td></tr>
+          <tr><th scope="row">k × σ</th><td>Those whose star size is above the night’s median by more than 2.5 robust sigmas, whose roundness is below it by more, or whose transparency is below it by more. Then those under 5 % of the best weight among the frames still in.</td><td>The formula of section 3.</td></tr>
+          <tr><th scope="row">Thresholds</th><td>Those whose transparency is under Minimum transparency times the 90th percentile of the aligned frames, then those whose star size is above Maximum star size times the median. No minimum weight.</td><td>The formula of section 3.</td></tr>
+          <tr><th scope="row">All</th><td>Only the frames of section 5. No filter, no minimum weight.</td><td>Equal for every frame.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>In the k × σ mode, only the bad tail of each criterion counts: large stars, low roundness, low transparency. The
+    filter on the sky level exists in the selection code, but the stack does not give it a measure and it does not
+    apply. A frame without a value for a criterion is never left out for it.</p>
+    <p>In Thresholds mode, the order of the tests decides the reason shown: not aligned, no usable pixel, excluded by
+    hand, low transparency, large stars. In the other modes: not aligned, no usable pixel, excluded by hand, the
+    filters, no measure of the weight, then the minimum weight.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Frames left out in every mode</h2>
+    <ul>
+      <li><strong>Frames not aligned.</strong> <a href="/blocks/registration/">Registration</a> could not match them with enough stars.</li>
+      <li><strong>Frames with no usable pixel.</strong> <a href="/blocks/calibration/">Calibration</a> could not measure them: a white frame, for
+      example.</li>
+      <li><strong>Frames excluded by hand.</strong> The user excludes a frame, one by one or by thresholds from the
+      Selection chart, and it stays out whatever its quality. If a file named as excluded is not among the lights,
+      the log says so.</li>
+    </ul>
+    <p>The frames left out, with the weight and the reason of each, are recorded with the stack. A stack needs at least
+    two frames; with fewer, it stops and says which cause removed them: too few lights, too few aligned, too many
+    excluded by hand, or thresholds too strict.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 3.</b>The settings of the selection.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Frame selection</th><td>Automatic</td><td>Automatic, k × σ, Thresholds, All</td><td>Which frames are left out (section 4). Frames excluded by hand are left out in every case.</td></tr>
+          <tr><th scope="row">Transparency filter</th><td>on</td><td>on, off</td><td>With k × σ: whether frames are also left out for a low transparency. Off keeps them, with the lower weight their transparency gives them.</td></tr>
+          <tr><th scope="row">Minimum transparency</th><td class="n">0.6</td><td class="n">0 – 1</td><td>With Thresholds: frames whose star flux falls below this fraction of the best frames are left out. 0 keeps everything, low-transparency frames still getting a low weight.</td></tr>
+          <tr><th scope="row">Maximum star size</th><td class="n">2 × median</td><td class="n">1 – 5 × median</td><td>With Thresholds: frames whose stars are larger than this multiple of the median size are left out (wind, focus drift, tracking error).</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The value of Minimum transparency is proposed from the night: 0.3 when more than half of the frames are under 60 %
+    of the 90th percentile of the transparency (only the worst are then left out), otherwise 0.6 (no frame
+    then falls under it when the transparency is stable). The 2.5 sigmas of the k × σ mode and the 5 %
+    minimum weight are fixed.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>No sorting is the default.</strong> Only 5 % of the best weight is a cut. A frame with poor
+      transparency or large stars stays in the stack with a low weight.</li>
+      <li><strong>The filters are an option.</strong> The k × σ mode takes 2.5 as its constant on star size, roundness and
+      transparency; the sky level is not filtered, since a brighter sky only adds noise, which the weights already
+      count.</li>
+      <li><strong>A filter needs a spread.</strong> If every frame has the same value, a k × σ filter excludes none and
+      says so.</li>
+      <li><strong>Thresholds do not use the minimum weight.</strong> In that mode a frame with a very low weight but
+      above the thresholds stays in.</li>
+      <li><strong>The coarse star size in the weight.</strong> The sharpness of the weight uses the coarse size of
+      <a href="/blocks/registration/">Registration</a>, not the Moffat one.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Zackay, B. &amp; Ofek, E. O. 2017, <i>How to coadd images? I. Optimal source detection and photometry using ensembles of images</i>, ApJ 836, 187. <a href="https://arxiv.org/abs/1512.06872">arXiv:1512.06872</a></li>
+      <li id="ref-2">Hampel, F. R. 1974, <i>The Influence Curve and its Role in Robust Estimation</i>, JASA 69, 383. <a href="https://doi.org/10.1080/01621459.1974.10482962">doi:10.1080/01621459.1974.10482962</a></li>
+    </ol>
+  </section>
+</Doc>

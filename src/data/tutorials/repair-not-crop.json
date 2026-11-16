@@ -1,0 +1,540 @@
+{
+  "slug": "repair-not-crop",
+  "slugFr": "reparer-sans-recadrer",
+  "section": "path",
+  "level": 3,
+  "order": 1,
+  "title": {
+    "en": "Repair instead of cropping",
+    "fr": "Réparer au lieu de recadrer"
+  },
+  "summary": {
+    "en": "The project of the second tutorial is opened again and its crop loosened to the whole field, a third more area. A dust stain is healed with Spot healing, and the comet-shaped stars of the edges are redrawn by the Synthetic stars block, the real stars being painted back at the centre.",
+    "fr": "Le projet du deuxième tutoriel est rouvert et son recadrage élargi au champ entier, un tiers de surface en plus. Une tache de poussière est réparée avec le tampon correcteur, et les étoiles en forme de comète des bords sont redessinées par le bloc Étoiles de synthèse, les étoiles réelles étant repeintes au centre."
+  },
+  "duration": {
+    "en": "About 10 min, of which 10 s of computing",
+    "fr": "Environ 10 min, dont 10 s de calcul"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial The full processing: stars apart done: its finished project (about 1.8 GB) is the starting point",
+      "Disk space: about 2 GB for a copy of that project"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Le traitement complet : les étoiles à part fait : son projet terminé (environ 1,8 Go) est le point de départ",
+      "Place sur le disque : environ 2 Go pour une copie de ce projet"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB",
+      "fr": "6,9 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "video": {
+    "fr": {
+      "src": "/tutorials/repair-not-crop/fr/video.mp4",
+      "captions": "/tutorials/repair-not-crop/fr/captions.vtt",
+      "chapters": "/tutorials/repair-not-crop/fr/chapters.vtt",
+      "poster": "/tutorials/repair-not-crop/fr/poster.jpg",
+      "seconds": 176.0
+    },
+    "en": {
+      "src": "/tutorials/repair-not-crop/en/video.mp4",
+      "captions": "/tutorials/repair-not-crop/en/captions.vtt",
+      "chapters": "/tutorials/repair-not-crop/en/chapters.vtt",
+      "poster": "/tutorials/repair-not-crop/en/poster.jpg",
+      "seconds": 176.0
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project",
+        "fr": "Ouvrir le projet"
+      },
+      "text": {
+        "en": "On the Home screen click <b>Open project…</b> and choose the finished project of the second tutorial, or a copy of its folder. The project opens up to date: nothing is to be computed.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez le projet terminé du deuxième tutoriel, ou une copie de son dossier. Le projet s’ouvre à jour : rien n’est à calculer."
+      },
+      "check": {
+        "en": "The status bar reads all up to date, and the Run button is greyed.",
+        "fr": "La barre d’état indique tout à jour, et le bouton « Exécuter » est grisé."
+      },
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/01.png",
+        "en": "/tutorials/repair-not-crop/en/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 0.0,
+        "en": 0.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "Diagnosis in Post",
+        "fr": "Le diagnostic dans Post"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The picture is the result of the second tutorial: clean and quiet, but tightly cropped, because the first tutorial cut two defects away instead of repairing them. Before any gesture, click <b>Crop</b>: the whole field appears around the frame and the two defects come back. Leave with <b>Cancel</b>. Right, and to leave alone: the sky level and neutrality, the denoised gas and the star settings of the second tutorial.",
+        "fr": "Cliquez sur <b>Post</b>. L’image est le résultat du deuxième tutoriel : propre et calme, mais très recadrée, parce que le premier tutoriel a coupé deux défauts au lieu de les réparer. Avant tout geste, cliquez sur <b>Recadrage</b> : le champ entier apparaît autour du cadre et les deux défauts reviennent. Quittez avec <b>Annuler</b>. Ce qui va, et qu’on laisse : le niveau et la neutralité du ciel, le gaz débruité et les réglages d’étoiles du deuxième tutoriel."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "The field is tight.",
+            "fr": "Le champ est serré."
+          },
+          "read": {
+            "en": "The picture is about 3,500 px wide. With Crop open, the frame shows what the first tutorial gave up around it: a band of sky and stars on every side.",
+            "fr": "L’image fait environ 3 500 px de large. Avec « Recadrage » ouvert, le cadre montre ce que le premier tutoriel a abandonné autour : une bande de ciel et d’étoiles de chaque côté."
+          },
+          "fix": {
+            "en": "Loosen the crop to the whole field.",
+            "fr": "Élargir le recadrage au champ entier."
+          },
+          "step": "crop"
+        },
+        {
+          "problem": {
+            "en": "A dark stain at the left edge.",
+            "fr": "Une tache sombre au bord gauche."
+          },
+          "read": {
+            "en": "With Crop open, zoom to 100 % (Ctrl and the mouse wheel over the picture) at the left edge, outside the frame: a dark patch, with a smaller one beside it.",
+            "fr": "Avec « Recadrage » ouvert, zoomez à 100 % (Ctrl et la molette au-dessus de l’image) au bord gauche, hors du cadre : une plage sombre, avec une plus petite à côté."
+          },
+          "fix": {
+            "en": "Spot healing on the starless image.",
+            "fr": "« Tampon correcteur » sur l’image sans étoiles."
+          },
+          "step": "spot"
+        },
+        {
+          "problem": {
+            "en": "Comet-shaped stars along the edges and in the corners.",
+            "fr": "Des étoiles en forme de comète le long des bords et dans les coins."
+          },
+          "read": {
+            "en": "Zoom to 100 % in a corner: the stars are stretched like comets, while those at the centre of the field are round. It is the coma of the telescope.",
+            "fr": "Zoomez à 100 % dans un coin : les étoiles sont étirées comme des comètes, alors que celles du centre du champ sont rondes. C’est la coma du télescope."
+          },
+          "fix": {
+            "en": "Add the Synthetic stars block, then paint the real stars back at the centre.",
+            "fr": "Ajouter le bloc « Étoiles de synthèse », puis repeindre les étoiles réelles au centre."
+          },
+          "step": "synth"
+        }
+      ],
+      "check": {
+        "en": "The sky is dark and neutral: on the exported picture it reads 34, 34 and 33 in red, green and blue on a 0 to 255 scale, neutral within one level. The sky is read before it is corrected, and here no gesture is needed.",
+        "fr": "Le ciel est sombre et neutre : sur l’image exportée il vaut 34, 34 et 33 en rouge, vert et bleu sur une échelle de 0 à 255, neutre à un niveau près. Le ciel se lit avant d’être corrigé, et ici aucun geste n’est nécessaire."
+      },
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/02.png",
+        "en": "/tutorials/repair-not-crop/en/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 8.0,
+        "en": 8.0
+      }
+    },
+    {
+      "id": "synth",
+      "title": {
+        "en": "Add the Synthetic stars block",
+        "fr": "Ajouter le bloc Étoiles de synthèse"
+      },
+      "text": {
+        "en": "Click <b>Graph</b>. In the palette, double-click <b>Synthetic stars</b>: the block takes its place after Stars/background, with the method <b>Image shape</b>, the default.",
+        "fr": "Cliquez sur <b>Graphe</b>. Dans la palette, double-cliquez sur <b>Étoiles de synthèse</b> : le bloc se place après Étoiles/fond, avec la méthode <b>Forme de l’image</b>, celle par défaut."
+      },
+      "why": {
+        "en": "The stars of the edges and corners are comet-shaped: that is the coma of this telescope, which has no corrector. Image shape measures the shape of the stars at the centre of the field, where it is round, and redraws every detected star with it. The brightest stars are left real.",
+        "fr": "Les étoiles des bords et des coins ont une forme de comète : c’est la coma de ce télescope, qui n’a pas de correcteur. « Forme de l’image » mesure la forme des étoiles au centre du champ, où elle est ronde, et redessine avec elle chaque étoile détectée. Les plus brillantes restent réelles."
+      },
+      "check": {
+        "en": "The status bar reads to run: ≤ 1 min.",
+        "fr": "La barre d’état indique à exécuter : ≤ 1 min."
+      },
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/03.png",
+        "en": "/tutorials/repair-not-crop/en/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 39.0,
+        "en": 39.0
+      }
+    },
+    {
+      "id": "run",
+      "title": {
+        "en": "Run the block",
+        "fr": "Exécuter le bloc"
+      },
+      "text": {
+        "en": "Click <b>Run</b>. The <b>Run project</b> window lists every block: all are up to date except Synthetic stars, which alone is computed. It takes about 10 s.",
+        "fr": "Cliquez sur <b>Exécuter</b>. La fenêtre <b>Exécuter projet</b> liste chaque bloc : tous sont à jour sauf Étoiles de synthèse, qui est seul calculé. Cela prend environ 10 s."
+      },
+      "why": {
+        "en": "Each block is computed once, and a change only runs again the blocks that follow it: nothing else is recomputed.",
+        "fr": "Chaque bloc est calculé une fois, et une modification ne relance que les blocs qui la suivent : rien d’autre n’est recalculé."
+      },
+      "check": {
+        "en": "The window ends with 1 block computed, and the status bar reads all up to date.",
+        "fr": "La fenêtre se termine par 1 bloc calculé, et la barre d’état indique tout à jour."
+      },
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/04.png",
+        "en": "/tutorials/repair-not-crop/en/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 52.0,
+        "en": 52.0
+      }
+    },
+    {
+      "id": "layer",
+      "title": {
+        "en": "The new rows in Post",
+        "fr": "Les nouvelles lignes dans Post"
+      },
+      "text": {
+        "en": "Close the window and click <b>Post</b>. The Stars group of the layer now holds two rows, <b>Synthetic stars</b> and <b>Real stars</b>. The mask of the Synthetic stars row is white: it starts open, so the synthetic stars replace all the real ones.",
+        "fr": "Fermez la fenêtre et cliquez sur <b>Post</b>. Le groupe Étoiles du calque contient maintenant deux lignes, <b>Étoiles de synthèse</b> et <b>Étoiles réelles</b>. Le masque de la ligne Étoiles de synthèse est blanc : il démarre ouvert, donc les étoiles de synthèse remplacent toutes les réelles."
+      },
+      "why": {
+        "en": "Post builds these rows by itself once the block is computed. The mask is what chooses, point by point, between the synthetic stars and the real ones.",
+        "fr": "Post construit ces lignes tout seul une fois le bloc calculé. Le masque choisit, point par point, entre les étoiles de synthèse et les réelles."
+      },
+      "check": {
+        "en": "The thumbnail of the mask of the Synthetic stars row is white.",
+        "fr": "La vignette du masque de la ligne Étoiles de synthèse est blanche."
+      },
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/05.png",
+        "en": "/tutorials/repair-not-crop/en/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 66.0,
+        "en": 66.0
+      }
+    },
+    {
+      "id": "crop",
+      "title": {
+        "en": "Loosen the crop",
+        "fr": "Élargir le recadrage"
+      },
+      "text": {
+        "en": "Click <b>Crop</b>. Drag the top left corner of the frame to the corner of the field, then the bottom right corner to the edge, keeping only the black borders of the alignment out: a few pixels on the right, at the top and at the bottom. Click <b>Apply</b>.",
+        "fr": "Cliquez sur <b>Recadrage</b>. Faites glisser le coin haut gauche du cadre jusqu’au coin du champ, puis le coin bas droit jusqu’au bord, en laissant dehors seulement les bordures noires de l’alignement : quelques pixels à droite, en haut et en bas. Cliquez sur <b>Valider</b>."
+      },
+      "why": {
+        "en": "The first tutorial cropped because a beginner should not have to repair. At this level the defects are repaired instead, so the field they were hiding is taken back: the ring breathes in a wider field, and the stars around it give the scale.",
+        "fr": "Le premier tutoriel a recadré parce qu’un débutant ne devrait pas avoir à réparer. À ce niveau, les défauts sont réparés, et le champ qu’ils cachaient est repris : l’anneau respire dans un champ plus large, et les étoiles autour lui donnent l’échelle."
+      },
+      "check": {
+        "en": "The panel reads about 4,200 × 2,780 px, a third more area (33 %) than the tight crop. The stain and the comet-shaped stars are back.",
+        "fr": "Le panneau indique environ 4 200 × 2 780 px, un tiers de surface en plus (33 %) par rapport au recadrage serré. La tache et les étoiles en forme de comète sont de retour."
+      },
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/06.png",
+        "en": "/tutorials/repair-not-crop/en/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 77.0,
+        "en": 77.0
+      }
+    },
+    {
+      "id": "spot",
+      "title": {
+        "en": "Heal the stain",
+        "fr": "Réparer la tache"
+      },
+      "text": {
+        "en": "Click the <b>Starless image</b> row, then <b>Spot healing</b>. Zoom in on the stain at the left edge, drag <b>Size</b> until the circle covers the whole stain with a margin (here about 140 px) and click on it. Reduce Size to about 90 px for the small stain beside it and click on it too. The source is found automatically, in clean sky nearby.",
+        "fr": "Cliquez sur la ligne <b>Image sans étoiles</b>, puis sur <b>Tampon correcteur</b> (dans le menu <b>…</b> de la barre d’outils). Zoomez sur la tache du bord gauche, faites glisser <b>Taille</b> jusqu’à ce que le cercle couvre toute la tache avec une marge (ici environ 140 px) et cliquez dessus. Réduisez Taille à environ 90 px pour la petite tache à côté et cliquez aussi dessus. La source est trouvée automatiquement, dans du ciel propre à proximité."
+      },
+      "why": {
+        "en": "The stain is the shadow of a dust grain on the sensor: the flats used come from another night, so they do not correct it. On a stack of two nights, the second turned by 178°, the stain is 24 % shallower: a shadow on the sensor is diluted that way, and a dark cloud in the sky would not be. The tool goes on the starless image because there are no stars to copy along with the sky, so the patch is invisible; on the combined image the patch would copy stars and double them.",
+        "fr": "La tache est l’ombre d’un grain de poussière sur le capteur : les flats utilisés viennent d’une autre nuit, donc ils ne la corrigent pas. Sur l’empilement de deux nuits, la seconde tournée de 178°, la tache est 24 % moins profonde : l’ombre d’un grain sur le capteur se dilue ainsi, un nuage sombre dans le ciel non. L’outil se met sur l’image sans étoiles parce qu’il n’y a pas d’étoiles à copier avec le ciel, donc la retouche est invisible ; sur l’image combinée, elle copierait des étoiles et les doublerait."
+      },
+      "check": {
+        "en": "The panel reads 2 spots healed, and the sky is even where the stain was, with no lighter or darker patch where the sky was taken.",
+        "fr": "Le panneau indique 2 taches corrigées, et le ciel est uniforme là où était la tache, sans plage plus claire ou plus sombre à l’endroit où le ciel a été pris."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/repair-not-crop/details/spot-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The stain at the left edge at 100 %.",
+            "fr": "La tache du bord gauche à 100 %."
+          }
+        },
+        {
+          "src": "/tutorials/repair-not-crop/details/spot-after.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "After",
+            "fr": "Après"
+          },
+          "caption": {
+            "en": "The same zone after the two clicks: the sky is even.",
+            "fr": "La même zone après les deux clics : le ciel est uniforme."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/07.png",
+        "en": "/tutorials/repair-not-crop/en/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 94.0,
+        "en": 94.0
+      }
+    },
+    {
+      "id": "mask",
+      "title": {
+        "en": "Paint the real stars back at the centre",
+        "fr": "Repeindre les étoiles réelles au centre"
+      },
+      "text": {
+        "en": "Click the <b>Synthetic stars</b> row, then its mask: the brush appears, set to <b>Subtract</b> (the list also offers Add and Intersect). Drag <b>Size</b> to the right until the brush is as large as it goes, here 1,200 px, and <b>Hardness</b> to 0, then paint one stroke across the centre of the field.",
+        "fr": "Cliquez sur la ligne <b>Étoiles de synthèse</b>, puis sur son masque : le pinceau apparaît, réglé sur <b>Soustraire</b> (la liste propose aussi Ajouter et Intersecter). Faites glisser <b>Taille</b> vers la droite jusqu’à ce que le pinceau soit aussi grand que possible, ici 1 200 px, et <b>Dureté</b> jusqu’à 0, puis peignez un seul coup de pinceau au centre du champ."
+      },
+      "why": {
+        "en": "The real stars come back at the centre, where the optics are good; outside it, the round synthetic stars replace the comet-shaped ones. The coma grows from the centre outwards: it is already visible at 1,000 px from the corners, along the whole left edge. Painting the four corners would leave half of the comet-shaped stars in place, whereas painting the one zone where the optics are good is a single gesture and covers all the rest.",
+        "fr": "Les étoiles réelles reviennent au centre, où l’optique est bonne ; en dehors, les étoiles rondes de synthèse remplacent celles en forme de comète. La coma grandit du centre vers l’extérieur : elle est déjà visible à 1 000 px des coins, le long de tout le bord gauche. Peindre les quatre coins laisserait en place la moitié des étoiles en forme de comète, alors que peindre la seule zone où l’optique est bonne est un seul geste et couvre tout le reste."
+      },
+      "check": {
+        "en": "The thumbnail of the mask shows a dark patch at the centre, and the red tint covers the centre with a soft edge.",
+        "fr": "La vignette du masque montre une plage sombre au centre, et la teinte rouge couvre le centre avec un bord progressif."
+      },
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/08.png",
+        "en": "/tutorials/repair-not-crop/en/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 118.0,
+        "en": 118.0
+      }
+    },
+    {
+      "id": "check",
+      "title": {
+        "en": "Check at 100 %",
+        "fr": "Vérifier à 100 %"
+      },
+      "text": {
+        "en": "Click the top row of the layer and zoom to 100 % (Ctrl and the mouse wheel) in a corner, then at the centre. In the corner the comet-shaped stars are round; at the centre the real stars are unchanged, with their spikes. On the fitted view, nothing shows where the mask fades, and the star density does not jump.",
+        "fr": "Cliquez sur la ligne du haut du calque et zoomez à 100 % (Ctrl et la molette) dans un coin, puis au centre. Dans le coin, les étoiles en forme de comète sont rondes ; au centre, les étoiles réelles sont inchangées, avec leurs aigrettes. Sur la vue ajustée, rien ne montre où le masque s’estompe, et la densité d’étoiles ne saute pas."
+      },
+      "why": {
+        "en": "The brush fades out with Hardness at 0, so the real and the synthetic stars meet without a seam.",
+        "fr": "Le pinceau s’estompe avec « Dureté » à 0, donc les étoiles réelles et celles de synthèse se rejoignent sans raccord."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/repair-not-crop/details/corner-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Corner before",
+            "fr": "Coin avant"
+          },
+          "caption": {
+            "en": "A corner at 100 % before: the stars are comet-shaped.",
+            "fr": "Un coin à 100 % avant : les étoiles ont une forme de comète."
+          }
+        },
+        {
+          "src": "/tutorials/repair-not-crop/details/corner-after.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Corner after",
+            "fr": "Coin après"
+          },
+          "caption": {
+            "en": "The same corner after: the stars are round.",
+            "fr": "Le même coin après : les étoiles sont rondes."
+          }
+        },
+        {
+          "src": "/tutorials/repair-not-crop/details/edge-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Edge before",
+            "fr": "Bord avant"
+          },
+          "caption": {
+            "en": "An edge zone before.",
+            "fr": "Une zone du bord avant."
+          }
+        },
+        {
+          "src": "/tutorials/repair-not-crop/details/edge-after.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Edge after",
+            "fr": "Bord après"
+          },
+          "caption": {
+            "en": "The same edge zone after: the comet-shaped stars are round.",
+            "fr": "La même zone du bord après : les étoiles en forme de comète sont rondes."
+          }
+        },
+        {
+          "src": "/tutorials/repair-not-crop/details/centre-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Centre before",
+            "fr": "Centre avant"
+          },
+          "caption": {
+            "en": "The centre of the cluster before.",
+            "fr": "Le centre de l’amas avant."
+          }
+        },
+        {
+          "src": "/tutorials/repair-not-crop/details/centre-after.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Centre after",
+            "fr": "Centre après"
+          },
+          "caption": {
+            "en": "The centre after: the real stars are unchanged.",
+            "fr": "Le centre après : les étoiles réelles sont inchangées."
+          }
+        },
+        {
+          "src": "/tutorials/repair-not-crop/details/centre-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "Synthetic stars everywhere: the bright stars of the cluster lose their spikes and look drawn.",
+            "fr": "Étoiles de synthèse partout : les étoiles brillantes de l’amas perdent leurs aigrettes et paraissent dessinées."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/09.png",
+        "en": "/tutorials/repair-not-crop/en/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 145.0,
+        "en": 145.0
+      }
+    },
+    {
+      "id": "export",
+      "title": {
+        "en": "Export",
+        "fr": "Exporter"
+      },
+      "text": {
+        "en": "Click <b>Export…</b>, choose <b>JPEG</b> in <b>Format</b> and click <b>Export</b>. The file is named after the project, in its export folder.",
+        "fr": "Cliquez sur <b>Exporter…</b>, choisissez <b>JPEG</b> dans <b>Format</b> et cliquez sur <b>Exporter</b>. Le fichier porte le nom du projet, dans son dossier d’export."
+      },
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/10.png",
+        "en": "/tutorials/repair-not-crop/en/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 157.0,
+        "en": 157.0
+      }
+    },
+    {
+      "id": "exported",
+      "title": {
+        "en": "The image is written",
+        "fr": "L’image est écrite"
+      },
+      "text": {
+        "en": "The window says how many files were written: the image and its processing history. Close it. Press Ctrl+S to keep the project with its new block, its widened crop, its two healed spots and its mask.",
+        "fr": "La fenêtre indique combien de fichiers ont été écrits : l’image et son historique de traitement. Fermez-la. Appuyez sur Ctrl+S pour garder le projet avec son nouveau bloc, son recadrage élargi, ses deux taches corrigées et son masque."
+      },
+      "shot": {
+        "fr": "/tutorials/repair-not-crop/fr/11.png",
+        "en": "/tutorials/repair-not-crop/en/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 167.0,
+        "en": 167.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/repair-not-crop/result.jpg",
+    "w": 2000,
+    "h": 1324,
+    "caption": {
+      "en": "The whole field of the Rosette Nebula, 4,200 × 2,780 px: 33 % more area than the second tutorial, and round stars to the edges. The sky reads 34, 34 and 33 in red, green and blue, and it differs by 3.7 levels from corner to corner, against 6 before.",
+      "fr": "Le champ entier de la nébuleuse de la Rosette, 4 200 × 2 780 px : 33 % de surface en plus par rapport au deuxième tutoriel, et des étoiles rondes jusqu’aux bords. Le ciel vaut 34, 34 et 33 en rouge, vert et bleu, et l’écart d’un coin à l’autre est de 3,7 niveaux, contre 6 avant."
+    }
+  },
+  "blocks": [
+    "Stars",
+    "Post"
+  ],
+  "next": "rosette-finish"
+}

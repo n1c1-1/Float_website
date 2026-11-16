@@ -1,0 +1,169 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet du deuxième tutoriel.
+
+2
+00:00:04.000 --> 00:00:08.000
+Le projet s’ouvre à jour : rien n’est à calculer.
+
+3
+00:00:08.000 --> 00:00:11.000
+Cliquez sur « Post ».
+
+4
+00:00:11.000 --> 00:00:17.000
+Post montre l’image du deuxième tutoriel : propre et calme, mais très recadrée. Avant tout geste, regardez ce que le recadrage a laissé de côté.
+
+5
+00:00:17.000 --> 00:00:21.000
+Cliquez sur « Recadrage » : le champ entier apparaît autour du cadre.
+
+6
+00:00:21.000 --> 00:00:27.000
+Au bord gauche, hors du cadre, une tache sombre : l’ombre d’un grain de poussière. L’outil « Tampon correcteur » la réparera.
+
+7
+00:00:27.000 --> 00:00:33.000
+Dans les coins et le long des bords, les étoiles ont une forme de comète : la coma du télescope. Le bloc « Étoiles de synthèse » les redessinera.
+
+8
+00:00:33.000 --> 00:00:39.000
+Ce qui va reste tel quel : le ciel sombre et neutre, le gaz lisse et les réglages d’étoiles du deuxième tutoriel.
+
+9
+00:00:39.000 --> 00:00:42.000
+Cliquez sur « Graphe ».
+
+10
+00:00:42.000 --> 00:00:45.000
+Dans la palette, double-cliquez sur « Étoiles de synthèse » : le bloc rejoint le workflow.
+
+11
+00:00:45.000 --> 00:00:52.000
+Le bloc se place après « Étoiles/fond », avec la méthode « Forme de l’image » : les étoiles sont redessinées avec la forme mesurée au centre du champ, où elle est ronde.
+
+12
+00:00:52.000 --> 00:00:56.000
+Cliquez sur « Exécuter » : seul ce bloc est calculé.
+
+13
+00:00:56.000 --> 00:01:01.000
+La liste montre chaque bloc à jour, sauf « Étoiles de synthèse ».
+
+14
+00:01:01.000 --> 00:01:06.000
+Non montré en temps réel : l’exécution a duré 9 s.
+
+15
+00:01:06.000 --> 00:01:09.000
+Cliquez sur « Post ».
+
+16
+00:01:09.000 --> 00:01:17.000
+Le groupe « Étoiles » contient maintenant deux lignes : « Étoiles de synthèse », avec un masque blanc, et « Étoiles réelles ». Blanc veut dire que les étoiles de synthèse remplacent partout les réelles.
+
+17
+00:01:17.000 --> 00:01:20.000
+Cliquez sur « Recadrage ».
+
+18
+00:01:20.000 --> 00:01:23.000
+Faites glisser le coin haut gauche du cadre jusqu’au coin du champ.
+
+19
+00:01:23.000 --> 00:01:26.000
+Faites de même avec le coin bas droit, en laissant dehors les bordures noires de l’alignement.
+
+20
+00:01:26.000 --> 00:01:29.000
+Cliquez sur « Valider » pour garder le recadrage.
+
+21
+00:01:29.000 --> 00:01:34.000
+Le champ entier est de retour, avec la tache et les étoiles en forme de comète.
+
+22
+00:01:34.000 --> 00:01:37.000
+Cliquez sur la ligne « Image sans étoiles ».
+
+23
+00:01:37.000 --> 00:01:40.000
+Cliquez sur « Tampon correcteur » : son filtre s’ajoute à l’image sans étoiles.
+
+24
+00:01:40.000 --> 00:01:43.000
+Faites glisser « Taille » vers la droite jusqu’à ce que le cercle couvre toute la tache avec une marge, ici environ 140 px.
+
+25
+00:01:43.000 --> 00:01:46.000
+Cliquez sur la tache : elle est remplacée par du ciel pris à côté.
+
+26
+00:01:46.000 --> 00:01:49.000
+Réduisez un peu « Taille » pour la petite tache à côté, ici environ 90 px.
+
+27
+00:01:49.000 --> 00:01:52.000
+Cliquez sur la petite tache.
+
+28
+00:01:52.000 --> 00:01:58.000
+Le ciel est uniforme là où était la tache, sans plage plus claire ou plus sombre à l’endroit où le ciel a été pris.
+
+29
+00:01:58.000 --> 00:02:01.000
+Cliquez sur la ligne « Étoiles de synthèse ».
+
+30
+00:02:01.000 --> 00:02:04.000
+Cliquez sur son masque : le pinceau apparaît, réglé sur « Soustraire ».
+
+31
+00:02:04.000 --> 00:02:07.000
+Faites glisser « Taille » vers la droite jusqu’à ce que le pinceau soit aussi grand que possible.
+
+32
+00:02:07.000 --> 00:02:10.000
+Faites glisser « Dureté » vers la gauche, jusqu’à 0 : le bord du coup de pinceau s’estompe.
+
+33
+00:02:10.000 --> 00:02:13.000
+Peignez un seul coup de pinceau au centre du champ : les étoiles réelles y reviennent.
+
+34
+00:02:13.000 --> 00:02:19.000
+La teinte rouge montre où le masque cache les étoiles de synthèse : le centre, avec un bord progressif.
+
+35
+00:02:19.000 --> 00:02:25.000
+Rien ne montre où le masque s’estompe, et la densité des étoiles ne saute pas.
+
+36
+00:02:25.000 --> 00:02:31.000
+Dans le coin, les étoiles en forme de comète sont maintenant rondes ; les plus brillantes restent réelles.
+
+37
+00:02:31.000 --> 00:02:37.000
+Au centre, les étoiles réelles sont gardées, avec leurs aigrettes.
+
+38
+00:02:37.000 --> 00:02:41.000
+Cliquez sur « Exporter… ».
+
+39
+00:02:41.000 --> 00:02:44.000
+Choisissez « JPEG » dans « Format ».
+
+40
+00:02:44.000 --> 00:02:47.000
+Cliquez sur « Exporter ».
+
+41
+00:02:47.000 --> 00:02:52.000
+L’image est écrite, avec l’historique du traitement à côté.
+
+42
+00:02:52.000 --> 00:02:56.000
+L’image est exportée. Appuyez sur Ctrl+S pour garder le projet.

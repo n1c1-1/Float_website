@@ -1,0 +1,197 @@
+---
+import '@fontsource-variable/source-serif-4';
+import '@fontsource-variable/source-serif-4/wght-italic.css';
+import '@fontsource-variable/source-sans-3';
+import '@fontsource-variable/source-code-pro';
+import '../styles/global.css';
+// the two faces that start the page, fetched early (the others load only when a character needs them)
+import serifLatin from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url';
+import sansLatin from '@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url';
+import { nav, routes, ui, release, version, type Lang } from '../i18n/ui';
+
+// `paths`: the page's own address in each language, for pages that are not in `routes` (a tutorial)
+// `bare`: a page outside the site's tree (the 404): its own title, no canonical, no language pair, not indexed
+interface Props { lang: Lang; page: string; title: string; description: string; paths?: Record<Lang, string>; bare?: boolean }
+const { lang, page, title, description: fullDescription, paths, bare = false } = Astro.props;
+// a description is read in search results up to about 160 characters: cut at the end of a sentence (or a word) before that
+function shorten(text: string, max = 160) {
+  if (text.length <= max) return text;
+  const head = text.slice(0, max);
+  const sentence = Math.max(head.lastIndexOf('. '), head.lastIndexOf(' : '), head.lastIndexOf('; '));
+  if (sentence > 80) return head.slice(0, sentence + (head[sentence] === '.' ? 1 : 0));
+  return head.slice(0, head.lastIndexOf(' ')).replace(/[,;:\s]+$/, '') + '…';
+}
+const description = shorten(fullDescription);
+const t = ui[lang];
+const other: Lang = lang === 'en' ? 'fr' : 'en';
+const here = paths?.[lang] ?? routes[page][lang]!;
+const there = paths?.[other] ?? routes[page][other] ?? routes.home[other]!;
+const site = 'https://astro-float.org';
+const pageTitle = page === 'home' && !bare ? `FLOAT · ${t.tagline}` : `${title} · FLOAT`;
+const ogImage = site + '/og-card.jpg';
+const ogAlt = lang === 'fr' ? 'Les Pléiades, image traitée dans FLOAT' : 'The Pleiades, an image processed in FLOAT';
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#fbfbf9" />
+    <link rel="icon" type="image/svg+xml" href="/float.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" as="font" type="font/woff2" href={serifLatin} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={sansLatin} crossorigin />
+    {bare
+      ? <meta name="robots" content="noindex" />
+      : <>
+          <link rel="canonical" href={site + here} />
+          <link rel="alternate" hreflang={lang} href={site + here} />
+          <link rel="alternate" hreflang={other} href={site + there} />
+          <link rel="alternate" hreflang="x-default" href={site + (lang === 'en' ? here : there)} />
+        </>}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="FLOAT" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    {!bare && <meta property="og:url" content={site + here} />}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogAlt} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_GB' : 'fr_FR'} />
+    <meta property="og:locale:alternate" content={other === 'en' ? 'en_GB' : 'fr_FR'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogAlt} />
+  </head>
+  <body>
+    <a class="skip" href="#content">{t.skip}</a>
+    <header class="site-head">
+      <div class="in">
+        <a class="brand" href={routes.home[lang]} aria-label="FLOAT"><img src="/float.svg" alt="" width="28" height="28" /><span>FLOAT</span></a>
+        <nav class="site-nav" aria-label={lang === 'fr' ? 'Principal' : 'Main'}>
+          {nav.map((n) => {
+            const href = routes[n.key][lang]!;
+            return <a href={href} aria-current={n.key === page ? 'page' : undefined}>{n[lang]}</a>;
+          })}
+        </nav>
+        <div class="lang" role="group" aria-label={lang === 'fr' ? 'Langue' : 'Language'}>
+          <a href={lang === 'en' ? here : there} hreflang="en" lang="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+          <a href={lang === 'fr' ? here : there} hreflang="fr" lang="fr" aria-current={lang === 'fr' ? 'true' : undefined}>FR</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="content" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="site-foot">
+      <div class="in">
+        <span>FLOAT {version}, {t.betaOf} {release.date[lang]} · {t.licence}</span>
+        <span><a href={routes.download[lang]}>{t.download}</a> · <a href={release.repo}>{t.source}</a> · <a href={`${release.repo}/issues`}>{t.report}</a> · astro-float.org</span>
+      </div>
+    </footer>
+
+    <dialog class="viewer" aria-label={t.zoomHint}>
+      <div class="stage"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" tabindex="0" role="button" /></div>
+      <button type="button" class="close" autofocus>{t.close}</button>
+    </dialog>
+
+    <script>
+      // on a narrow screen the menu scrolls sideways: the page being read is brought into view
+      const cur = document.querySelector<HTMLElement>('.site-nav a[aria-current]');
+      const menu = document.querySelector<HTMLElement>('.site-nav');
+      if (cur && menu && menu.scrollWidth > menu.clientWidth) menu.scrollLeft = cur.offsetLeft - (menu.clientWidth - cur.offsetWidth) / 2;
+    </script>
+    <script>
+      // Full-size viewer on a dark neutral ground: click an image to open it fitted, click again for 1:1, drag to move.
+      const dlg = document.querySelector<HTMLDialogElement>('dialog.viewer')!;
+      const stage = dlg.querySelector<HTMLElement>('.stage')!;
+      const big = dlg.querySelector('img')!;
+      const blank = big.src;
+      // a table or a code block that scrolls sideways can be reached and scrolled with the keyboard
+      const scrollers = document.querySelectorAll<HTMLElement>('.tbl-wrap, pre');
+      const watch = () => scrollers.forEach((el) => { if (el.scrollWidth > el.clientWidth + 1) el.tabIndex = 0; else el.removeAttribute('tabindex'); });
+      watch();
+      new ResizeObserver(watch).observe(document.body);
+      let opener: HTMLElement | null = null;
+      const open = (img: HTMLImageElement) => {
+        opener = img;
+        big.src = img.dataset.zoom || img.src;
+        big.alt = img.alt;
+        big.setAttribute('aria-label', img.alt);
+        dlg.classList.remove('full');
+        dlg.showModal();                                    // the page behind is inert, Tab stays in the dialog, Escape closes it
+      };
+      document.querySelectorAll<HTMLImageElement>('img[data-zoom]').forEach((img) => {
+        // an image that opens something is a button for the keyboard too
+        img.tabIndex = 0;
+        img.setAttribute('role', 'button');
+        img.addEventListener('click', () => open(img));
+        img.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(img); }
+        });
+      });
+      dlg.querySelector('button.close')!.addEventListener('click', () => dlg.close());
+      // focus goes back to the image that opened the viewer
+      dlg.addEventListener('close', () => { big.src = blank; opener?.focus(); opener = null; });
+      // Tab turns inside the dialog: the image, then the Close button, then the image again
+      dlg.addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab') return;
+        const first = big, last = dlg.querySelector<HTMLElement>('button.close')!;
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      });
+      // keyboard: Enter or Space fits / enlarges, the arrows move the enlarged image
+      big.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const full = dlg.classList.toggle('full');
+          if (full) { stage.scrollLeft = (big.naturalWidth - stage.clientWidth) / 2; stage.scrollTop = (big.naturalHeight - stage.clientHeight) / 2; }
+        } else if (dlg.classList.contains('full')) {
+          const k = 80;
+          if (e.key === 'ArrowLeft') stage.scrollLeft -= k;
+          else if (e.key === 'ArrowRight') stage.scrollLeft += k;
+          else if (e.key === 'ArrowUp') stage.scrollTop -= k;
+          else if (e.key === 'ArrowDown') stage.scrollTop += k;
+          else return;
+          e.preventDefault();
+        }
+      });
+      let drag: { x: number; y: number; l: number; t: number; moved: boolean } | null = null;
+      big.addEventListener('pointerdown', (e) => {
+        drag = { x: e.clientX, y: e.clientY, l: stage.scrollLeft, t: stage.scrollTop, moved: false };
+        big.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+      big.addEventListener('pointermove', (e) => {
+        if (!drag) return;
+        const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+        stage.scrollLeft = drag.l - dx;
+        stage.scrollTop = drag.t - dy;
+      });
+      big.addEventListener('pointerup', (e) => {
+        const moved = drag?.moved;
+        drag = null;
+        if (moved) return;
+        // a plain click: fitted <-> 1:1, centred on the point clicked
+        const r = big.getBoundingClientRect();
+        const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+        const full = dlg.classList.toggle('full');
+        if (full) {
+          stage.scrollLeft = fx * big.naturalWidth - stage.clientWidth / 2;
+          stage.scrollTop = fy * big.naturalHeight - stage.clientHeight / 2;
+        }
+      });
+    </script>
+  </body>
+</html>

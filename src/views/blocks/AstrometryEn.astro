@@ -1,0 +1,193 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Astrometry" title="Astrometry"
+  description="The Astrometry block of FLOAT: plate solving of the stack, a first solution then a fine fit on Gaia DR3 stars, what the solution serves, the offline star catalogue, settings and limits, with the published sources.">
+
+  <p class="kicker">Block</p>
+  <h1>Astrometry</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It recognises the patch of sky in the stack from its stars, so that every pixel gets its position on the sky, and the later blocks can use the star catalogue.</dd></div><div><dt>What it shows</dt><dd>In Inspect, the image with the sky grid and the catalogue stars set on its stars, with the image scale, the field of view, the position residual and the focal length found; in the Report, the target, the field and the scale.</dd></div><div><dt>What can be set</dt><dd>Usually nothing, when the files hold the pointing and the focal length; otherwise give the Target name, or the Focal length.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>What goes in, what comes out</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>The first solution</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>The fine fit on Gaia DR3</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>What the solution is used for</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>The offline star catalogue</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Settings</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Astrometry block finds where the stack points on the sky. A first solution comes from
+    Asterion, shipped with the installer; without it, or when it finds nothing, FLOAT’s own search takes over, blind
+    when the target is unknown. The solution is then refined on the Gaia DR3 stars with a tangent-plane projection and a
+    distortion polynomial. Colour calibration, the Gaia catalogues and the H-alpha reference read this solution. A run
+    downloads nothing: the star catalogue is installed once.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Selection</span></li><li><span>Stacking</span></li>
+    <li class="here"><span>Astrometry</span></li><li><span>Gradient</span></li><li><span>Deconvolution</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>What goes in, what comes out</h2>
+    <aside class="note"><b>The residual</b> is the median distance, in pixels of the stack, between each detected star
+    and the Gaia star the solution puts there. The block reports it with the number of stars it was measured on.</aside>
+    <p>The block reads the stack and finds its stars (a background mesh of 64 pixels, a threshold of 15 times the noise,
+    6 pixels at least). It also reads what the project knows of the field: the target, the telescope pointing written
+    in the files, the focal length and the pixel size.</p>
+    <p>It writes the world coordinate system of the stack: a tangent-plane projection with a distortion polynomial
+    (the SIP convention). It also reports the centre of the field, its size, the scale in arcseconds per pixel, the
+    angle of north, whether the image is mirrored, the residual of the fit and, when the pixel size is known, the focal
+    length the solution implies. The Report also gives the residual in arcseconds.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>The first solution</h2>
+    <p><strong>Asterion first.</strong> The first solution comes from Asterion,<a class="cite" href="#ref-1">[1]</a>
+    shipped with the installer. It is given at most 10 seconds. When the target’s position is known, it is searched near
+    it; otherwise on the whole sky, if Blind solving is on. When the scale comes from the focal length and Asterion finds
+    nothing at that scale, it is asked again at any scale, in case the focal length was entered wrongly. The fine fit of
+    section 3 starts from this solution, and the search below is skipped.</p>
+    <p><strong>FLOAT’s own search.</strong> When Asterion is not installed, cannot run or finds nothing, FLOAT’s own
+    search finds the field. The log says which case it was. The search runs in four steps.</p>
+    <ul>
+      <li><strong>The scale.</strong> It is 206.265 × pixel size (µm) / focal length (mm), in arcseconds per pixel, divided by
+      the drizzle scale. When it
+      is unknown, 22 values from 0.4 to 40 arcseconds per pixel are tried, the focal lengths this camera was solved at
+      before first.</li>
+      <li><strong>The match.</strong> Triangle matching of the 150 brightest detections with the 150 brightest Gaia
+      stars projected at the trial scale, both mirror images tried. Fifteen matched pairs are taken as a match.</li>
+      <li><strong>The centre.</strong> The given centre first, then centres shifted by the Search range, a fraction of
+      the field.</li>
+      <li><strong>The catalogue depth.</strong> The faintest Gaia magnitude is set by the field’s area, from G 10.5 for
+      a wide field to G 16 for a small one.</li>
+    </ul>
+    <p>The random draws of the match are seeded: the same stack gives the same solution at every run.</p>
+
+    <h3>Blind solving</h3>
+    <p>When the centre is unknown, or the guided search fails, the field is identified on the whole sky from its
+    brightest stars (up to 80). The principle is the one of Astrometry.net:<a class="cite" href="#ref-2">[2]</a> each
+    group of four stars is coded by the positions of its two inner stars in the frame where its two most distant stars
+    stand at (0, 0) and (1, 1), a code that does not change with translation, rotation or scale. The codes of the image
+    are looked up in an index of the sky built from the bright stars of the Hipparcos and Tycho-2
+    catalogues.<a class="cite" href="#ref-3">[3]</a> Each candidate is verified by counting how many other stars of the
+    image fall on catalogue stars, and is kept only when that count stands well above what chance gives. The index
+    holds the stars of Hipparcos to V 9.5 and of Tycho-2 to VT 11, so the blind search is made for fields wider than
+    about 1 degree.</p>
+
+    <h3>Fields of few stars</h3>
+    <p>Under 50 stars in the stack, the block uses another decision. Every triple of the 30 brightest stars is compared
+    with every triple of the catalogue stars. A solution stands only when its Bayes factor reaches 10<sup>9</sup>, by the
+    decision of Lang et al.:<a class="cite" href="#ref-2">[2]</a> each star either has no counterpart (a quarter of them
+    are allowed none) or lies within a Gaussian of 1 pixel around a catalogue star. No random draw is used. With fewer
+    than 6 stars, no field is identified. No distortion polynomial is fitted, as it would follow the noise of so few
+    stars.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>The fine fit on Gaia DR3</h2>
+    <aside class="note"><b>Epoch.</b> The Gaia positions are at epoch 2016.0. The fit uses them as they are; the
+    Catalogs step (section 4 of this page) carries them to the date of the images.</aside>
+    <p>The first solution gives the stars’ approximate place on the sky. The fine fit then runs in passes. A
+    tangent-plane projection with a distortion polynomial of the chosen order is fitted on up to 4000 detections. The
+    Gaia stars are projected through it and matched to the detections within 3 pixels, then the fit is made again on up
+    to 8000 detections, and twice more with matches within 1.5 and 1 pixel. Stars within 5 pixels of the edge are not
+    used. The median residual of the last pass is the one reported.</p>
+    <p>The solution is written once the fit is done. The solution of a sparse field (section 2) must also give a median
+    residual under 1 pixel, or no solution is given rather than a wrong one.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>What the solution is used for</h2>
+    <p>Every later step that uses the sky relies on this solution.</p>
+    <ul>
+      <li><strong>The Gaia catalogues.</strong> The Catalogs step places the Gaia stars of the field on the image,
+      their positions carried to the date of the frames with their proper motions, and selects the stars whose spectra
+      the <a href="/blocks/color/">Color</a> block uses.</li>
+      <li><strong>The H-alpha reference.</strong> A survey of the sky in H-alpha is reprojected onto the stack. It shows
+      where the faint nebulosity is, so that the <a href="/blocks/gradient/">Gradient</a> block takes no sky sample there.</li>
+      <li><strong>Colour.</strong> The Color block measures the stars the solution places and compares them with
+      their Gaia spectra.</li>
+    </ul>
+    <p><strong>When no field is found.</strong> The setting If the field is not identified decides. With Continue
+    without solution, the run goes on, the block is drawn in orange and its tooltip gives the reason. Color then takes
+    its fallback balance, and Gradient chooses its samples without the survey. With Stop, the block fails.</p>
+    <p>A target far from the pointing recorded in the files is handled in two tries. When the two differ by more than the
+    field’s diagonal plus 2 degrees, the typed target is tried first, without the blind solver. If that fails, the
+    pointing of the files is tried, and the log asks to check the project’s target.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>The offline star catalogue</h2>
+    <p>The stars FLOAT reads come from an offline Gaia DR3 catalogue installed once, by the installer or from Settings ›
+    Catalogs &amp; astrometry. It derives from published extracts of Gaia DR3.<a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-5">[5]</a> The star index of the blind solver is installed in the same place.</p>
+    <p>A run downloads nothing. When a catalogue is missing, the block says so and names the setting that installs it.
+    A target name is looked up in the names already resolved and in the Messier, NGC, IC, Sharpless and Lynds
+    catalogues that FLOAT ships. An unknown name needs its RA and Dec.</p>
+    <p>The extract keeps the 127 brightest stars of every cell of 14 arcminutes. In the Milky Way it can stop short of
+    the magnitude asked for; it is enough for a solution. Without the extract, the block reads the sky tiles of the cache, and
+    fails with the reason when they are not all there.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The settings of the block. The Advanced ones are marked.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Target name</th><td>from the project or the files</td><td>text</td><td>Name of the main object, resolved to the approximate centre of the field. Not needed when RA and Dec are given or when the files hold the pointing.</td></tr>
+          <tr><th scope="row">Centre RA</th><td>from the project or the files</td><td class="n">0 – 360 °</td><td>Approximate right ascension of the centre. Within about 20 % of the field width is enough.</td></tr>
+          <tr><th scope="row">Centre Dec</th><td>from the project or the files</td><td class="n">−90 – 90 °</td><td>Approximate declination of the centre.</td></tr>
+          <tr><th scope="row">Focal length</th><td>from the files or the project</td><td class="n">mm, above 0</td><td>With the pixel size, it gives the image scale. Empty, the scale is searched (a few minutes without Asterion).</td></tr>
+          <tr><th scope="row">Pixel size (Advanced)</th><td>from the camera or the files</td><td class="n">µm, above 0</td><td>Size of a sensor pixel.</td></tr>
+          <tr><th scope="row">Image scale (Advanced)</th><td>computed, else searched</td><td class="n">arcsec/px, above 0</td><td>Size of a pixel of the stack on the sky.</td></tr>
+          <tr><th scope="row">Blind solving (Advanced)</th><td>on</td><td>on, off</td><td>Identifies the field on the whole sky when the centre is unknown or the guided search fails.</td></tr>
+          <tr><th scope="row">Search range (Advanced)</th><td class="n">0.2 × field</td><td class="n">0 – 1, step 0.05</td><td>How far from the given centre the search looks for the field.</td></tr>
+          <tr><th scope="row">Distortion order (Advanced)</th><td class="n">3</td><td class="n">0 – 5</td><td>Order of the SIP polynomial: 3 for refractors with reducers and wide fields, 2 for small fields, 0 for a pure tangent plane.</td></tr>
+          <tr><th scope="row">If the field is not identified</th><td>Continue without solution</td><td>Continue without solution, Stop</td><td>What the block does when no field is identified (section 4).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>A wrong focal length does not hide the field.</strong> When the field is not found at the scale of the
+      entered focal length, it is searched again without it. A warning says the field is at another scale, and to check
+      the focal length and the pixel size.</li>
+      <li><strong>Blind solving needs its index.</strong> When the star index is not installed, the all-sky search
+      cannot try, and the block asks for the target or its coordinates.</li>
+      <li><strong>Narrow fields are hard to solve blind.</strong> The blind solver is built for wide fields, with enough
+      bright stars in them.</li>
+      <li><strong>Unknown scale and far centre can take minutes.</strong> Without Asterion, an unknown scale means a
+      search over 22 scales. A match at another scale than the trial one is followed
+      at once, to avoid walking the whole grid.</li>
+      <li><strong>Sparse fields.</strong> Under 50 stars, a solution needs strong proof and has no distortion polynomial.
+      A field that does not give it has no solution.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Asterion Solver authors, <i>Asterion</i>, Apache License 2.0. <a href="https://github.com/asterion-solver/asterion">github.com/asterion-solver/asterion</a></li>
+      <li id="ref-2">Lang, D. et al. 2010, <i>Astrometry.net: Blind astrometric calibration of arbitrary astronomical images</i>, AJ 139, 1782. <a href="https://arxiv.org/abs/0910.2233">arXiv:0910.2233</a></li>
+      <li id="ref-3">ESA 1997, <i>The Hipparcos and Tycho Catalogues</i>. <a href="https://www.cosmos.esa.int/web/hipparcos">cosmos.esa.int/web/hipparcos</a>; Høg, E. et al. 2000, <i>The Tycho-2 catalogue of the 2.5 million brightest stars</i>, A&amp;A 355, L27. <a href="https://ui.adsabs.harvard.edu/abs/2000A%26A...355L..27H/abstract">ADS 2000A&amp;A...355L..27H</a></li>
+      <li id="ref-4">Cass, I., Knagg-Baugh, A., Melis, C. &amp; Richard, C. 2025, <i>Siril Astrometry Catalogue extracted from Gaia DR3</i>, v1.0.0. <a href="https://doi.org/10.5281/zenodo.14692304">doi:10.5281/zenodo.14692304</a></li>
+      <li id="ref-5">Gaia Collaboration, Vallenari, A. et al. 2023, <i>Gaia Data Release 3: Summary of the content and survey properties</i>, A&amp;A 674, A1. <a href="https://arxiv.org/abs/2208.00211">arXiv:2208.00211</a></li>
+    </ol>
+  </section>
+</Doc>

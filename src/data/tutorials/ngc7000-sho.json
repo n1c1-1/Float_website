@@ -1,0 +1,529 @@
+{
+  "slug": "ngc7000-sho",
+  "slugFr": "ngc7000-sho",
+  "section": "path",
+  "level": 4,
+  "order": 3,
+  "title": {
+    "en": "The default S-H-O, read then corrected",
+    "fr": "Le S-H-O par défaut, lu puis corrigé"
+  },
+  "summary": {
+    "en": "You open the S-H-O image as Post gives it, read what is wrong on it before touching anything, then correct it in six gestures: Crop, Sky, Contrast and Faint tones, Saturation, Star color, then Star size and Small stars. You name the version Default S-H-O and export it as a JPEG.",
+    "fr": "Vous ouvrez l’image S-H-O telle que Post la donne, vous lisez ce qui ne va pas avant de toucher à quoi que ce soit, puis vous la corrigez en six gestes : Recadrage, Ciel, Contraste et Tons faibles, Saturation, Couleur des étoiles, puis Taille des étoiles et Petites étoiles. Vous nommez la version Default S-H-O et l’exportez en JPEG."
+  },
+  "duration": {
+    "en": "About 12 min: a 2 min 14 s video and the text, without any computing",
+    "fr": "Environ 12 min : une vidéo de 2 min 14 s et le texte, sans aucun calcul"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The previous tutorial of the series, <a href=\"/learn/ngc7000-graph/\">Reading the graph of an S-H-O image made with a colour camera</a>: this one starts from the same project, with Post untouched"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel précédent de la série, <a href=\"/fr/apprendre/ngc7000-graphe/\">Lire le graphe d’une image S-H-O faite avec un capteur couleur</a> : celui-ci part du même projet, avec Post intact"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "NGC 7000 (North America Nebula) · Sony A7S, 300 s at ISO 2000 · two dual-band filters (O III / H-alpha, O III / S II) and a night without filter · 72 lights (6 h), master bias, dark and flats",
+      "fr": "NGC 7000 (nébuleuse de l’Amérique du Nord) · Sony A7S, 300 s à ISO 2000 · deux filtres bi-bande (O III / H-alpha, O III / S II) et une nuit sans filtre · 72 brutes (6 h), masters d’offset, de dark et de flats"
+    },
+    "author": "Thomas",
+    "note": {
+      "en": "Frames shown with their author’s agreement; they are not offered for download",
+      "fr": "Images montrées avec l’accord de leur auteur ; elles ne sont pas proposées au téléchargement"
+    }
+  },
+  "video": {
+    "en": {
+      "src": "/tutorials/ngc7000-sho/en/video.mp4",
+      "captions": "/tutorials/ngc7000-sho/en/captions.vtt",
+      "chapters": "/tutorials/ngc7000-sho/en/chapters.vtt",
+      "poster": "/tutorials/ngc7000-sho/en/poster.jpg",
+      "seconds": 134.0
+    },
+    "fr": {
+      "src": "/tutorials/ngc7000-sho/fr/video.mp4",
+      "captions": "/tutorials/ngc7000-sho/fr/captions.vtt",
+      "chapters": "/tutorials/ngc7000-sho/fr/chapters.vtt",
+      "poster": "/tutorials/ngc7000-sho/fr/poster.jpg",
+      "seconds": 134.0
+    }
+  },
+  "steps": [
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "Open Post and read the picture",
+        "fr": "Ouvrir Post et lire l’image"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. It opens on one visible layer, <b>S-H-O · Combine layers</b>, with every slider at zero; the layer of the Stars workflow is added hidden, and nothing is offered to compute. Before any gesture, read what is wrong: zoom the picture to 100 % from the zoom list and look at the corners. Already right, leave it alone: the sky has no colour cast, the noise is handled by the Denoise block, and the palette itself is the one you want.",
+        "fr": "Cliquez sur <b>Post</b>. Il s’ouvre sur un seul calque visible, <b>S-H-O · Combiner calques</b>, tous les curseurs à zéro ; le calque du workflow Étoiles est ajouté, masqué, et rien n’est proposé au calcul. Avant tout geste, lisez ce qui ne va pas : mettez l’image à 100 % depuis la liste du zoom et regardez les coins. Déjà juste, à ne pas toucher : le ciel n’a pas de dominante de couleur, le bruit est traité par le bloc Débruitage, et la palette est bien celle qu’on veut."
+      },
+      "why": {
+        "en": "Correcting without reading first leads to guessing. Each defect below is read where it shows, and each one names the gesture that corrects it.",
+        "fr": "Corriger sans lire d’abord, c’est deviner. Chaque défaut ci-dessous se lit là où il se voit, et chacun nomme le geste qui le corrige."
+      },
+      "pitfall": {
+        "en": "Judge the sky by eye; the figures given here are measured on the exported file (0 to 255).",
+        "fr": "Jugez le ciel à l’œil ; les chiffres donnés ici sont mesurés sur le fichier exporté (de 0 à 255)."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "Grey sky, veiled picture",
+            "fr": "Ciel gris, image voilée"
+          },
+          "read": {
+            "en": "The dark lane at the top right is a lifted grey, not a near-black: about 47 on the 0 to 255 scale of the exported file.",
+            "fr": "La bande sombre en haut à droite est un gris relevé, pas un quasi-noir : environ 47 sur l’échelle de 0 à 255 du fichier exporté."
+          },
+          "fix": {
+            "en": "Lower <b>Sky</b>",
+            "fr": "Baissez <b>Ciel</b>"
+          },
+          "step": "sky"
+        },
+        {
+          "problem": {
+            "en": "Flat nebula",
+            "fr": "Nébuleuse plate"
+          },
+          "read": {
+            "en": "Fitted view: the orange wall and the dark lanes lack depth, and the faint outer gas is hardly there.",
+            "fr": "Vue ajustée : le mur orange et les bandes sombres manquent de relief, et le gaz faible extérieur est à peine là."
+          },
+          "fix": {
+            "en": "Raise <b>Contrast</b> and <b>Faint tones</b>",
+            "fr": "Montez <b>Contraste</b> et <b>Tons faibles</b>"
+          },
+          "step": "contrast"
+        },
+        {
+          "problem": {
+            "en": "Shy colours",
+            "fr": "Couleurs timides"
+          },
+          "read": {
+            "en": "The brightest 5 % of the picture is almost grey (about 151/150/150).",
+            "fr": "Les 5 % les plus clairs de l’image sont presque gris (environ 151/150/150)."
+          },
+          "fix": {
+            "en": "Raise <b>Saturation</b>",
+            "fr": "Montez <b>Saturation</b>"
+          },
+          "step": "saturation"
+        },
+        {
+          "problem": {
+            "en": "Comet-shaped stars in the corners, black borders",
+            "fr": "Étoiles en comète dans les coins, bords noirs"
+          },
+          "read": {
+            "en": "At 100 %, the top corners: the stars have tails, and the four edges carry 3 to 10 px of black left by the alignment.",
+            "fr": "À 100 %, les coins du haut : les étoiles ont une queue, et les quatre bords portent 3 à 10 px de noir laissés par l’alignement."
+          },
+          "fix": {
+            "en": "<b>Crop</b>",
+            "fr": "<b>Recadrez</b>"
+          },
+          "step": "crop"
+        },
+        {
+          "problem": {
+            "en": "Pink, crowded stars",
+            "fr": "Étoiles roses et serrées"
+          },
+          "read": {
+            "en": "At 100 % on a star field: the stars are pink, and the small ones crowd the gas.",
+            "fr": "À 100 % sur un champ d’étoiles : les étoiles sont roses, et les petites encombrent le gaz."
+          },
+          "fix": {
+            "en": "<b>Star color</b>, then <b>Star size</b> and <b>Small stars</b>",
+            "fr": "<b>Couleur des étoiles</b>, puis <b>Taille des étoiles</b> et <b>Petites étoiles</b>"
+          },
+          "step": "star-color"
+        }
+      ],
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-sho/details/corner-left.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Top-left corner, 100 %",
+            "fr": "Coin haut gauche, 100 %"
+          },
+          "caption": {
+            "en": "Stars with tails, pink, and crowded.",
+            "fr": "Des étoiles à queue, roses et serrées."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-sho/details/corner-right.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Top-right corner, 100 %",
+            "fr": "Coin haut droit, 100 %"
+          },
+          "caption": {
+            "en": "The same tails on the other corner: the optics, identical on one night.",
+            "fr": "Les mêmes queues sur l’autre coin : l’optique, identique sur une nuit."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/01.png",
+        "fr": "/tutorials/ngc7000-sho/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "crop",
+      "title": {
+        "en": "Crop the corners and the borders",
+        "fr": "Recadrer les coins et les bords"
+      },
+      "text": {
+        "en": "Click <b>Crop</b>. Drag the top-left corner of the box in, then the bottom-right one, until the comet stars of the corners and the black borders are outside it and the North America and its wall are centred: about 300 px off each side and 200 px off the top and bottom, a box of 3655 × 2450 px. Click <b>Apply</b>.",
+        "fr": "Cliquez sur <b>Recadrage</b>. Tirez vers l’intérieur le coin supérieur gauche du cadre, puis le coin inférieur droit, jusqu’à ce que les étoiles en comète des coins et les bords noirs soient dehors et que l’Amérique du Nord et son mur soient centrés : environ 300 px retirés de chaque côté et 200 px en haut et en bas, un cadre de 3655 × 2450 px. Cliquez sur <b>Appliquer</b>."
+      },
+      "why": {
+        "en": "It removes the comet-shaped stars of the corners, which no other gesture would cure, and the black borders; it also frames the subject. Nothing is lost: the rendering of the whole image does not change.",
+        "fr": "Il enlève les étoiles en comète des coins, qu’aucun autre geste ne guérirait, et les bords noirs ; il cadre aussi le sujet. Rien n’est perdu : le rendu de l’image entière ne change pas."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/02.png",
+        "fr": "/tutorials/ngc7000-sho/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 38.0,
+        "fr": 38.0
+      }
+    },
+    {
+      "id": "sky",
+      "title": {
+        "en": "Bring the sky down",
+        "fr": "Faire descendre le ciel"
+      },
+      "text": {
+        "en": "Drag <b>Sky</b> to the left until the veil is gone and the sky is a dark grey: here about −0.5. The dark lane at the top right goes from about 47 to about 36 on the 0 to 255 scale of the exported file.",
+        "fr": "Tirez <b>Ciel</b> vers la gauche jusqu’à ce que le voile disparaisse et que le ciel soit un gris sombre : ici environ −0,8. La bande sombre en haut à droite passe d’environ 47 à environ 36 sur l’échelle de 0 à 255 du fichier exporté."
+      },
+      "why": {
+        "en": "It corrects the veil of the first defect: the picture gets its black back, and everything that follows is judged against a dark sky.",
+        "fr": "Il corrige le voile du premier défaut : l’image retrouve son noir, et tout ce qui suit se juge sur un ciel sombre."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-sho/details/sky-before.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Before, 100 %",
+            "fr": "Avant, 100 %"
+          },
+          "caption": {
+            "en": "The sky is a lifted grey.",
+            "fr": "Le ciel est un gris relevé."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-sho/details/sky-after.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Sky −0.5, 100 %",
+            "fr": "Ciel −0,8, 100 %"
+          },
+          "caption": {
+            "en": "The sky is a dark grey; the noise is as it was.",
+            "fr": "Le ciel est un gris sombre ; le bruit est inchangé."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/03.png",
+        "fr": "/tutorials/ngc7000-sho/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 59.0,
+        "fr": 59.0
+      }
+    },
+    {
+      "id": "contrast",
+      "title": {
+        "en": "Give the nebula relief",
+        "fr": "Donner du relief à la nébuleuse"
+      },
+      "text": {
+        "en": "Drag <b>Contrast</b> to the right until the wall and the dark lanes stand out: here about +0.9. Then drag <b>Faint tones</b> to the right until the outer filaments come up: about +0.5. Sky, Contrast and Faint tones are done one after the other on the same panel.",
+        "fr": "Tirez <b>Contraste</b> vers la droite jusqu’à faire ressortir le mur et les bandes sombres : ici environ +0,8. Puis tirez <b>Tons faibles</b> vers la droite jusqu’à faire monter les filaments extérieurs : environ +0,4. Ciel, Contraste et Tons faibles se font l’un après l’autre sur le même panneau."
+      },
+      "why": {
+        "en": "It corrects the flat nebula: Contrast separates the bright wall from the dark lanes, and Faint tones lifts the gas that was close to the sky.",
+        "fr": "Il corrige la nébuleuse plate : Contraste sépare le mur clair des bandes sombres, et Tons faibles remonte le gaz qui était proche du ciel."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/04.png",
+        "fr": "/tutorials/ngc7000-sho/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 68.0,
+        "fr": 68.0
+      }
+    },
+    {
+      "id": "saturation",
+      "title": {
+        "en": "Bring the palette to life",
+        "fr": "Donner vie à la palette"
+      },
+      "text": {
+        "en": "Drag <b>Saturation</b> to the right until the palette has its colours, gold and orange for H-alpha and S II, blue for O III: here about +1.0. The brightest 5 % of the picture goes from almost grey to about 160/164/164.",
+        "fr": "Tirez <b>Saturation</b> vers la droite jusqu’à ce que la palette retrouve ses couleurs, or et orange pour H-alpha et S II, bleu pour O III : ici environ +0,8. Les 5 % les plus clairs de l’image passent du presque gris à environ 160/164/164."
+      },
+      "why": {
+        "en": "It corrects the shy colours: the palette was there from the start, but too weak to read.",
+        "fr": "Il corrige les couleurs timides : la palette était là dès le départ, mais trop faible pour se lire."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/05.png",
+        "fr": "/tutorials/ngc7000-sho/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 80.0,
+        "fr": 80.0
+      }
+    },
+    {
+      "id": "star-color",
+      "title": {
+        "en": "Whiten the stars",
+        "fr": "Blanchir les étoiles"
+      },
+      "text": {
+        "en": "Drag <b>Star color</b> toward white until the stars lose their false pink: here about −1.5. Check at 100 % on a star field.",
+        "fr": "Tirez <b>Couleur des étoiles</b> vers le blanc jusqu’à ce que les étoiles perdent leur rose artificiel : ici environ −2,0. Vérifiez à 100 % sur un champ d’étoiles."
+      },
+      "why": {
+        "en": "These stars come from the O III workflow, so their colour is not theirs: they are seen through one line. White stars are the usual choice on an S-H-O.",
+        "fr": "Ces étoiles viennent du workflow O III : leur couleur n’est donc pas la leur, elles sont vues à travers une seule raie. Des étoiles blanches sont le choix habituel sur un S-H-O."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-sho/details/color-default.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Default, 100 %",
+            "fr": "Par défaut, 100 %"
+          },
+          "caption": {
+            "en": "Pink stars.",
+            "fr": "Des étoiles roses."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-sho/details/color-white.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Star color −1.5, 100 %",
+            "fr": "Couleur des étoiles −2,0, 100 %"
+          },
+          "caption": {
+            "en": "White stars.",
+            "fr": "Des étoiles blanches."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-sho/details/color-pinker.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Pushed the other way (+0.5), 100 %",
+            "fr": "Poussé dans l’autre sens (+0,5), 100 %"
+          },
+          "caption": {
+            "en": "Pinker than the default.",
+            "fr": "Plus roses que par défaut."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/06.png",
+        "fr": "/tutorials/ngc7000-sho/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 89.0,
+        "fr": 89.0
+      }
+    },
+    {
+      "id": "star-size",
+      "title": {
+        "en": "Make the stars smaller and fewer",
+        "fr": "Rendre les étoiles plus petites et moins nombreuses"
+      },
+      "text": {
+        "en": "Drag <b>Star size</b> toward smaller until the stars stop crowding the gas: here about −0.4. Then drag <b>Small stars</b> toward less: about −0.3. Fewer and smaller small stars remain over the nebula.",
+        "fr": "Tirez <b>Taille des étoiles</b> vers plus petites jusqu’à ce que les étoiles n’encombrent plus le gaz : ici environ −0,5. Puis tirez <b>Petites étoiles</b> vers moins : environ −0,4. Il reste moins de petites étoiles, et plus petites, sur la nébuleuse."
+      },
+      "why": {
+        "en": "It corrects the crowded stars: a field this rich in stars hides the gas behind them if the small ones are left as they come.",
+        "fr": "Il corrige les étoiles serrées : un champ aussi riche en étoiles cache le gaz derrière elles si les petites restent telles qu’elles viennent."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/ngc7000-sho/details/size-before.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Before, 100 %",
+            "fr": "Avant, 100 %"
+          },
+          "caption": {
+            "en": "Many small stars over the gas.",
+            "fr": "Beaucoup de petites étoiles sur le gaz."
+          }
+        },
+        {
+          "src": "/tutorials/ngc7000-sho/details/size-after.jpg",
+          "w": 600,
+          "h": 572,
+          "label": {
+            "en": "Star size −0.4, Small stars −0.3, 100 %",
+            "fr": "Taille des étoiles −0,5, Petites étoiles −0,4, 100 %"
+          },
+          "caption": {
+            "en": "Fewer, smaller stars; the gas shows.",
+            "fr": "Moins d’étoiles, plus petites ; le gaz se voit."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/07.png",
+        "fr": "/tutorials/ngc7000-sho/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 98.0,
+        "fr": 98.0
+      }
+    },
+    {
+      "id": "version",
+      "title": {
+        "en": "Name the version",
+        "fr": "Nommer la version"
+      },
+      "text": {
+        "en": "Click the version name above the picture, select it, type <b>Default S-H-O</b> and press Enter.",
+        "fr": "Cliquez sur le nom de la version au-dessus de l’image, sélectionnez-le, tapez <b>Default S-H-O</b> et appuyez sur Entrée."
+      },
+      "why": {
+        "en": "The next tutorial duplicates this version to push the palette further without losing this one: it has to be findable by its name.",
+        "fr": "Le tutoriel suivant duplique cette version pour pousser la palette sans perdre celle-ci : elle doit se retrouver par son nom."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/08.png",
+        "fr": "/tutorials/ngc7000-sho/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 110.0,
+        "fr": 110.0
+      }
+    },
+    {
+      "id": "export",
+      "title": {
+        "en": "Export the picture",
+        "fr": "Exporter l’image"
+      },
+      "text": {
+        "en": "Click <b>Export…</b>, choose the <b>JPEG</b> format, check the file path (on the tutorial drive) and click <b>Export</b>. The sky of the exported file reads about 36 on the 0 to 255 scale.",
+        "fr": "Cliquez sur <b>Exporter…</b>, choisissez le format <b>JPEG</b>, vérifiez le chemin du fichier (sur le disque des tutoriels) et cliquez sur <b>Exporter</b>. Le ciel du fichier exporté se lit à environ 36 sur l’échelle de 0 à 255."
+      },
+      "why": {
+        "en": "The export is the finished picture of this version, the one to compare with the next tutorial’s.",
+        "fr": "L’export est l’image finie de cette version, celle à comparer avec celle du tutoriel suivant."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/09.png",
+        "fr": "/tutorials/ngc7000-sho/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 118.0,
+        "fr": 118.0
+      }
+    },
+    {
+      "id": "save",
+      "title": {
+        "en": "Save the project",
+        "fr": "Enregistrer le projet"
+      },
+      "text": {
+        "en": "Press Ctrl+S: the status bar reads Project saved. The version Default S-H-O is kept in the project.",
+        "fr": "Appuyez sur Ctrl+S : la barre d’état dit que le projet est enregistré. La version Default S-H-O est gardée dans le projet."
+      },
+      "why": {
+        "en": "Edits that are not saved are lost when the project is closed.",
+        "fr": "Les modifications non enregistrées sont perdues à la fermeture du projet."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-sho/en/10.png",
+        "fr": "/tutorials/ngc7000-sho/fr/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 129.0,
+        "fr": 129.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/ngc7000-sho/result.jpg",
+    "w": 2000,
+    "h": 1340,
+    "caption": {
+      "en": "NGC 7000 in S-H-O, version Default S-H-O: 72 exposures of 300 s (6 h) with a colour camera and two dual-band filters, data by Thomas. On the left the nebula ends and the dense star clouds of the Milky Way show through: that is the sky, not a join.",
+      "fr": "NGC 7000 en S-H-O, version Default S-H-O : 72 poses de 300 s (6 h) avec un capteur couleur et deux filtres bi-bande, données de Thomas. À gauche la nébuleuse s’arrête et les nuages d’étoiles denses de la Voie lactée apparaissent : c’est le ciel, pas un raccord."
+    }
+  },
+  "blocks": [
+    "Post",
+    "Combination",
+    "Stars"
+  ],
+  "next": "ngc7000-finish"
+}

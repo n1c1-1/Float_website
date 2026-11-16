@@ -1,0 +1,188 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Stars" title="Étoiles/fond"
+  description="Le bloc Étoiles/fond de FLOAT : un réseau retire les étoiles de l’image linéaire et donne l’image sans étoiles et les étoiles seules, dont la somme est l’original ; leur usage dans Post ; le bloc Étoiles de synthèse ; réglages et limites.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Étoiles/fond</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il sépare les étoiles du reste de l’image, pour que chacun soit étiré à part.</dd></div><div><dt>Ce qu’on voit</dt><dd>Deux images, l’image sans étoiles et les étoiles seules, qui arrivent dans Post comme un seul calque avec ses curseurs d’étoiles.</dd></div><div><dt>Ce qui se règle</dt><dd>Le bloc lui-même n’a aucun réglage ; dans Post, Étoiles rend les étoiles plus brillantes ou plus discrètes et Taille des étoiles les réduit ou les agrandit, et les valeurs par défaut les atténuent déjà un peu.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Le réseau</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Les deux images dans Post</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Étoiles de synthèse</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Réglages</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Étoiles/fond sépare les étoiles du reste de l’image. Un réseau travaille sur l’image
+    linéaire et rend deux images : l’image sans étoiles et les étoiles seules. Leur somme est l’image d’origine, pixel
+    pour pixel. Post étire ensuite chacune à part et remet les étoiles dessus. Le bloc Étoiles de synthèse, placé après
+    lui, redessine les étoiles détectées avec une seule forme : celle mesurée dans l’image, ou celle de l’instrument.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Débruitage</span></li><li><span>Couleur</span></li>
+    <li class="here"><span>Étoiles/fond</span></li><li><span>Post</span></li><li><span>Rapport</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</h2>
+    <aside class="note"><b>La somme est exacte.</b> Les étoiles seules sont calculées comme l’image moins l’image sans
+    étoiles, dans les unités de l’image entrée. La séparation ne perd ni n’ajoute rien.</aside>
+    <p>Le bloc prend l’image linéaire produite par la chaîne jusqu’à <a href="/fr/blocs/couleur/">Couleur</a> : l’empilement dont le gradient de ciel est
+    retiré, débruité, au blanc équilibré, son ciel ôté. Il écrit l’image sans étoiles, les étoiles seules et la carte des
+    pixels couverts, avec les statistiques dont <a href="/fr/blocs/post/">Post</a> a besoin pour étirer les deux. Un aperçu avant et après montre les
+    deux sur un même étirement.</p>
+    <p>Une image monochrome reste grise : l’image sans étoiles est la moyenne des trois canaux, répétée. Les pixels sans
+    données restent tels quels.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Le réseau</h2>
+    <p>Le réseau est NAFNet,<a class="cite" href="#ref-1">[1]</a> un réseau de restauration d’image. Les réseaux utilisés
+    pour le débruitage, la déconvolution et la séparation des étoiles sont livrés avec le programme, et le code qui les
+    a entraînés est dans le dépôt. Le bloc n’a aucun réglage : le réseau est appliqué tel quel.</p>
+    <p>Il travaille sur l’image linéaire, chaque canal moins son fond et divisé par une unité de bruit. L’unité de bruit
+    est le bruit des demi-empilements avant débruitage, passé par la matrice de couleur et moyenné sur les trois
+    couleurs ; une image sans demi-empilements prend la dispersion de son propre ciel. Le réseau voit un étirement asinh
+    fixe de cette image, défait exactement à la sortie.</p>
+    <p>L’image traverse le réseau par tuiles de 1024 pixels avec un recouvrement de 256, fondues par une fenêtre douce
+    (une image plus petite qu’une tuile utilise des tuiles de 256 avec un recouvrement de 64). L’attention par canal du
+    réseau fait sa moyenne sur une fenêtre de 256 pixels au lieu de toute la tuile, comme le fait le Test-time Local
+    Converter,<a class="cite" href="#ref-2">[2]</a> si bien qu’une tuile plus grande voit ce que le réseau a appris. Sur
+    une carte qui a peu de mémoire libre, les tuiles passent moins nombreuses à la fois, puis sont coupées plus
+    petites.</p>
+    <p>Le réseau laisse une grille régulière, aux multiples de 1/16 de cycle par pixel. Là où elle ressort dans le spectre de
+    l’image sans étoiles, elle est retirée par filtrage, et le nombre de pics retirés est noté. Le réseau tourne en
+    quelques secondes sur une carte graphique et quelques minutes sur un processeur.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Les deux images dans Post</h2>
+    <aside class="note"><b>Deux calques, ou un seul recombiné.</b> Les deux images arrivent dans <a href="/fr/blocs/post/">Post</a> comme deux calques,
+    ou un bloc qui les recombine les prend telles quelles ; ses réglages sont ceux de son calque dans Post.</aside>
+    <p>Chaque image est étirée à part, puis les étoiles sont remises dessus.</p>
+    <ul>
+      <li><strong>L’image sans étoiles</strong> reçoit l’étirement automatique de la Sortie avec les statistiques de
+      l’image entière, pas les siennes : sans le grain des étoiles, elles l’étireraient bien plus fort, et recombinée
+      elle ne ressemblerait pas à l’empilement.</li>
+      <li><strong>Les étoiles</strong> reçoivent le noir à 0, puisque leur fond est celui de l’image sans étoiles, et le
+      blanc et le ton moyen de l’image entière. Le réglage Étoiles déplace le ton moyen.</li>
+    </ul>
+    <p>Les étoiles étant à part, les étirer moins est la réduction d’étoiles : aucune réduction n’est nécessaire sur
+    l’image recombinée. Trois autres réglages agissent sur les étoiles seules. <strong>Taille des étoiles</strong> les
+    agrandit par une dilatation ronde en niveaux de gris ou les réduit par une érosion ronde, un pixel à la fois en
+    alternant une croix et un carré, à travers un masque des étoiles quand elle réduit, pour que le grain entre les
+    étoiles d’un champ dense ne soit pas érodé en filaments. <strong>Petites étoiles</strong> estompe les étoiles plus
+    étroites qu’un certain nombre de fois l’étoile typique de l’image (leur largeur médiane à mi-hauteur) ; le support
+    des étoiles est ouvert par reconstruction,<a class="cite" href="#ref-3">[3]</a> si bien que les étoiles plus larges
+    restent exactement comme elles étaient. <strong>Couleur des étoiles</strong> règle leur saturation autour de la
+    luminance.</p>
+    <p>La recombinaison est Écran, 1 − (1 − a)(1 − b) ; Densité linéaire − (ajout), a + b, écrêté ; ou Éclaircir, le
+    plus grand des deux.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Étoiles de synthèse</h2>
+    <p>Le bloc Étoiles de synthèse vient après Étoiles/fond. Il lit les étoiles seules, détecte les étoiles à 8 unités de
+    bruit au-dessus du ciel, et les redessine, chacune avec son flux, sa couleur et sa position, et une seule forme pour
+    toutes. Il écrit une image d’étoiles seules dans la disposition du bloc Étoiles/fond, si bien que <a href="/fr/blocs/post/">Post</a> l’utilise de
+    la même façon. Ajouter des étoiles ne peut que mettre de la lumière sur l’image sans étoiles, jamais en retirer. Deux
+    méthodes donnent la forme.</p>
+    <h3>Forme de l’image</h3>
+    <p>La forme est la médiane des étoiles isolées et non saturées près du centre du champ (à moins de 35 % de la distance
+    au coin), chacune centrée et normalisée, sur au moins 5 étoiles. Les étoiles les plus brillantes (les 0,2 % du
+    haut) et les saturées, de pic supérieur à 60 % de la plus brillante, restent réelles, avec leur lumière et un bord
+    très doux : leurs aigrettes ne sont pas à la portée de la forme. Dans Post, les étoiles dessinées remplacent les
+    réelles, et le masque du calque dit où les réelles restent, le centre par exemple.</p>
+    <h3>PSF instrument</h3>
+    <aside class="note"><b>Pour une mise au point ratée ou un mauvais suivi.</b> Chaque étoile est remplacée : la forme
+    réelle ne compte plus.</aside>
+    <p>Chaque étoile prend la forme théorique de l’instrument. Elle est calculée à partir de l’ouverture : le module au
+    carré de la transformée de Fourier de la pupille,<a class="cite" href="#ref-4">[4]</a> avec l’obstruction centrale et l’araignée, pour chaque couleur,
+    moyennée sur cinq longueurs d’onde de sa bande (590 à 680 nm pour le rouge, 500 à 570 pour le vert, 420 à 500 pour
+    le bleu), puis floutée par la turbulence, un profil de Moffat<a class="cite" href="#ref-5">[5]</a> de la Largeur étoile. Les aigrettes sortent du calcul,
+    et leur force suit le flux de chaque étoile. Les étoiles saturées prennent leur lumière du catalogue Gaia : le point
+    zéro de l’image est ajusté sur les étoiles non saturées associées à Gaia, et les rapports de couleur sont ceux des
+    30 étoiles non saturées de couleur BP−RP la plus proche.</p>
+    <p>La forme ne dépend de la focale et de la taille du pixel que par leur rapport, l’échelle du champ. Elle vient du
+    bloc <a href="/fr/blocs/astrometrie/">Astrométrie</a>, ou de la focale et de la taille du pixel connues pour la cible ; la taille du pixel est prise à
+    3,76 µm quand elle est inconnue. Sans échelle, le bloc s’arrête et demande le bloc Astrométrie.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les réglages des étoiles dans Post, qui agissent sur les deux images du bloc.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Étoiles</th><td class="n">0,6</td><td class="n">0,2 – 5</td><td>Force de l’étirement des étoiles : 1 est l’étirement de toute l’image ; moins les rend plus faibles et plus petites, plus les rend plus brillantes.</td></tr>
+          <tr><th scope="row">Taille des étoiles</th><td class="n">−1 px</td><td class="n">−3 – 3 px</td><td>En dessous de 0 les étoiles sont réduites de ce rayon (une érosion en niveaux de gris), au-dessus de 0 agrandies (une dilatation).</td></tr>
+          <tr><th scope="row">Petites étoiles</th><td class="n">0</td><td class="n">0 – 2</td><td>Les petites étoiles retirées : celles plus étroites que ce nombre de fois l’étoile typique de l’image. 0 les garde toutes.</td></tr>
+          <tr><th scope="row">Couleur des étoiles</th><td class="n">1,2</td><td class="n">0 – 3</td><td>Saturation des couleurs des étoiles autour de leur luminance, après leur étirement.</td></tr>
+          <tr><th scope="row">Mode de fusion</th><td>Écran</td><td>Écran, Densité linéaire − (ajout), Éclaircir</td><td>Comment les étoiles reviennent sur l’image sans étoiles.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Les réglages du bloc Étoiles de synthèse. Tous sauf Méthode n’agissent qu’avec PSF instrument.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Méthode</th><td>Forme de l’image</td><td>Forme de l’image, PSF instrument</td><td>Forme de l’image : les étoiles prennent la forme mesurée au centre du champ. PSF instrument : chaque étoile prend la forme théorique de l’instrument.</td></tr>
+          <tr><th scope="row">Type</th><td>Newton</td><td>Newton, Lunette, Schmidt-Cassegrain, Objectif photo</td><td>Le type d’optique : ce qui se trouve sur le trajet de la lumière.</td></tr>
+          <tr><th scope="row">Diamètre</th><td class="n">150 mm</td><td class="n">plus de 10 – 2000 mm</td><td>Le diamètre de l’ouverture.</td></tr>
+          <tr><th scope="row">Obstruction</th><td class="n">33 %</td><td class="n">0 – 70 %</td><td>Le diamètre de l’obstruction centrale, en part de celui de l’ouverture. Utilisée par Newton et Schmidt-Cassegrain seulement.</td></tr>
+          <tr><th scope="row">Branches araignée</th><td class="n">4</td><td class="n">0 – 6</td><td>Les branches de l’araignée : 4 donnent une croix d’aigrettes. Utilisées par Newton seulement.</td></tr>
+          <tr><th scope="row">Largeur araignée</th><td class="n">1,5 mm</td><td class="n">0,1 – 20 mm</td><td>La largeur des branches : plus elles sont larges, plus les aigrettes sont brillantes.</td></tr>
+          <tr><th scope="row">Angle araignée</th><td class="n">0°</td><td class="n">−180 – 180°</td><td>La direction des aigrettes sur l’image.</td></tr>
+          <tr><th scope="row">Largeur étoile</th><td class="n">2,5 px</td><td class="n">1 – 8 px</td><td>La largeur à mi-hauteur des étoiles dessinées : la turbulence ajoutée à la diffraction.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Des halos coupés par les tuiles.</strong> Avec des tuiles de la taille de l’entraînement, un grand halo
+      était coupé le long d’une limite de tuile : la tuile qui tenait le cœur le retirait, sa voisine, qui ne voyait que du
+      halo, le laissait. Les tuiles sont maintenant plus grandes que les plus grands halos rencontrés, 280 pixels autour de
+      M45 (<a href={`${release.repo}/issues/45`}>ticket 45</a>).</li>
+      <li><strong>La grille propre au réseau.</strong> Il laisse un motif régulier dans l’image sans étoiles, retiré par
+      filtrage là où il ressort.</li>
+      <li><strong>Une seule forme pour toutes les étoiles.</strong> Étoiles de synthèse donne à chaque étoile la même
+      forme : une forme qui change dans le champ n’est pas reproduite ; avec Forme de l’image, c’est celle du centre.</li>
+      <li><strong>Les étoiles les plus brillantes et saturées restent réelles</strong> avec Forme de l’image. Leurs
+      aigrettes et leurs halos ne sont pas redessinés.</li>
+      <li><strong>Étoiles saturées et catalogue.</strong> Avec PSF instrument, la lumière des étoiles saturées vient du
+      catalogue Gaia ; sans lui, elles gardent le flux mesuré dans une ouverture.</li>
+      <li><strong>Aucune étoile trouvée, aucun changement.</strong> Sans étoile à mesurer, les étoiles sont laissées
+      telles quelles et le bloc le dit.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Chen, L., Chu, X., Zhang, X. &amp; Sun, J. 2022, <i lang="en">Simple Baselines for Image Restoration</i> (NAFNet), ECCV 2022. <a href="https://arxiv.org/abs/2204.04676">arXiv:2204.04676</a></li>
+      <li id="ref-2">Chu, X., Chen, L., Chen, C. &amp; Lu, X. 2022, <i lang="en">Improving Image Restoration by Revisiting Global Information Aggregation</i> (Test-time Local Converter), ECCV 2022. <a href="https://arxiv.org/abs/2112.04491">arXiv:2112.04491</a></li>
+      <li id="ref-3">Vincent, L. 1993, <i lang="en">Morphological grayscale reconstruction in image analysis: applications and efficient algorithms</i>, IEEE Transactions on Image Processing 2, 176. <a href="https://doi.org/10.1109/83.217222">doi:10.1109/83.217222</a></li>
+      <li id="ref-4">Goodman, J. W. 2005, <i lang="en">Introduction to Fourier Optics</i>, 3e éd., Roberts &amp; Company (l’image d’une source ponctuelle comme module au carré de la transformée de Fourier de la pupille).</li>
+      <li id="ref-5">Moffat, A. F. J. 1969, <i lang="en">A Theoretical Investigation of Focal Stellar Images in the Photographic Emulsion and Application to Photographic Photometry</i>, A&amp;A 3, 455. <a href="https://ui.adsabs.harvard.edu/abs/1969A%26A.....3..455M">ADS:1969A&amp;A.....3..455M</a></li>
+    </ol>
+  </section>
+</Doc>

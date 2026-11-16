@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import { blocks, blockUrl, type Lang } from '../i18n/ui';
+import { imageUrl, type ImageSheet } from '../data/images';
+interface Props { lang: Lang; sheet: ImageSheet }
+const { lang, sheet: s } = Astro.props;
+const fr = lang === 'fr';
+const stacking = blockUrl(blocks.find((b) => b.key === 'Stacking')!, lang);
+const graphLine = s.graphLine[lang].replace(fr ? 'empilement' : 'stacking', (w) => `@@${w}@@`).split('@@');
+---
+<Base lang={lang} page="images" title={s.name[lang]} description={s.description[lang]} paths={{ en: imageUrl(s, 'en'), fr: imageUrl(s, 'fr') }}>
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <p class="kicker">{fr ? 'Fiche d’image' : 'Image sheet'}</p>
+    <h1>{s.name[lang]}</h1>
+    <p class="meta">{s.designation} · {s.frames}</p>
+
+    <div class="split sheet">
+      <Figure lang={lang} n={1} src={s.src} plate zoom eager width={s.width} height={s.height} alt={s.alt[lang]}>
+        {s.caption[lang]}
+      </Figure>
+
+      <div>
+        <div class="tbl-wrap" style="margin-top: 0.4rem">
+          <table class="tbl sheet">
+            <caption><b>{fr ? 'Tableau 1.' : 'Table 1.'}</b>{fr ? 'L’objet.' : 'The object.'}</caption>
+            <tbody>
+              <tr><th scope="row">{fr ? 'Nom' : 'Name'}</th><td>{s.name[lang]}, {s.designation}</td></tr>
+              <tr><th scope="row">Type</th><td>{s.type[lang]}</td></tr>
+              <tr><th scope="row">Constellation</th><td>{s.constellation[lang]}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl sheet">
+            <caption><b>{fr ? 'Tableau 2.' : 'Table 2.'}</b>{fr ? 'La prise de vue.' : 'The acquisition.'}</caption>
+            <tbody>
+              {s.setup && <tr><th scope="row">{fr ? 'Instrument' : 'Telescope'}</th><td>{s.setup.telescope[lang]}</td></tr>}
+              {s.setup && <tr><th scope="row">{fr ? 'Appareil' : 'Camera'}</th><td>{s.setup.camera[lang]}</td></tr>}
+              {s.setup && <tr><th scope="row">{fr ? 'Monture' : 'Mount'}</th><td>{s.setup.mount[lang]}</td></tr>}
+              <tr><th scope="row">{fr ? 'Poses' : 'Frames'}</th><td class="n">{s.frames}</td></tr>
+              <tr><th scope="row">{fr ? 'Pose totale' : 'Total exposure'}</th><td class="n">{s.total[lang]}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl sheet">
+            <caption><b>{fr ? 'Tableau 3.' : 'Table 3.'}</b>{fr ? 'Le traitement et le fichier.' : 'The processing and the file.'}</caption>
+            <tbody>
+              <tr><th scope="row">{fr ? 'Graphe' : 'Graph'}</th><td>{s.graphRow[lang]}</td></tr>
+              <tr><th scope="row">{fr ? 'Image publiée' : 'Published image'}</th><td class="n">{s.width} × {s.height} px</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <section class="sec">
+      <h2><span class="secnum">1</span>{fr ? 'Le graphe de ce traitement' : 'The graph of this processing'}</h2>
+      <p class="measure">{graphLine[0]}{graphLine.length > 1 && <><a href={stacking}>{graphLine[1]}</a>{graphLine[2]}</>}</p>
+      <Figure lang={lang} n={2} src={s.graph.src} plate zoom width={s.graph.width} height={s.graph.height} alt={s.graph.alt[lang]}>
+        {s.graph.caption[lang]}
+      </Figure>
+    </section>
+  </div>
+</Base>

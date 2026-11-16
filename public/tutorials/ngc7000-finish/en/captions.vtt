@@ -1,0 +1,153 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.000
+On the Home screen, click Open project… and pick the project from the previous tutorial.
+
+2
+00:00:03.000 --> 00:00:06.000
+Click Post.
+
+3
+00:00:06.000 --> 00:00:13.000
+Post opens on the version Default S-H-O, the image of the previous tutorial.
+
+4
+00:00:13.000 --> 00:00:16.000
+Read the picture: open the zoom list and choose 100 %.
+
+5
+00:00:16.000 --> 00:00:24.000
+At 100 % on the wall: the structure is soft, and the sky and the shadows are not yet deep.
+
+6
+00:00:24.000 --> 00:00:30.000
+Fitted view: the orange of the wall and the cyan of the blue zone are still close to each other.
+
+7
+00:00:30.000 --> 00:00:33.000
+Click New version: it duplicates the current one.
+
+8
+00:00:33.000 --> 00:00:36.000
+Click the version name to rename the copy.
+
+9
+00:00:36.000 --> 00:00:41.000
+The copy is named Palette and finish; Default S-H-O stays as it was.
+
+10
+00:00:41.000 --> 00:00:44.000
+Select the Starless image sub-layer: the filters added now apply to it only.
+
+11
+00:00:44.000 --> 00:00:47.000
+Click Filter, then Color, then Colour mixer.
+
+12
+00:00:47.000 --> 00:00:50.000
+Orange · hue: drag to about +10°.
+
+13
+00:00:50.000 --> 00:00:53.000
+Orange · saturation: about +25 %.
+
+14
+00:00:53.000 --> 00:00:56.000
+Red · saturation: about +15 %.
+
+15
+00:00:56.000 --> 00:00:59.000
+Yellow · saturation: about +20 %.
+
+16
+00:00:59.000 --> 00:01:02.000
+Aqua · saturation: about +55 %.
+
+17
+00:01:02.000 --> 00:01:05.000
+Blue · saturation: about +35 %.
+
+18
+00:01:05.000 --> 00:01:08.000
+Blue · hue: about −10°.
+
+19
+00:01:08.000 --> 00:01:15.000
+The gold of H-alpha and S II and the cyan of O III are now clearly apart.
+
+20
+00:01:15.000 --> 00:01:18.000
+Click Filter, then Stretch, then Levels.
+
+21
+00:01:18.000 --> 00:01:21.000
+Raise the black point a little, until the sky is deeper and the dark lanes are dark: about 0,02.
+
+22
+00:01:21.000 --> 00:01:24.000
+Lower Gamma slightly: about 0,95.
+
+23
+00:01:24.000 --> 00:01:27.000
+Click Filter, then Contrast, then Local contrast.
+
+24
+00:01:27.000 --> 00:01:30.000
+Raise Strength until the folds of the wall and the lanes stand out: about 0,4.
+
+25
+00:01:30.000 --> 00:01:33.000
+Set Scale to a large radius: about 80 px.
+
+26
+00:01:33.000 --> 00:01:36.000
+Click Filter, then Detail, then Multiscale sharpening.
+
+27
+00:01:36.000 --> 00:01:39.000
+2 px: about 0,15.
+
+28
+00:01:39.000 --> 00:01:42.000
+4 px: about 0,35.
+
+29
+00:01:42.000 --> 00:01:45.000
+8 px: about 0,5.
+
+30
+00:01:45.000 --> 00:01:48.000
+16 px: about 0,4.
+
+31
+00:01:48.000 --> 00:01:54.000
+The finest texture is back, and the wall starts to burn.
+
+32
+00:01:54.000 --> 00:01:57.000
+Click Filter, then Contrast, then Highlight compression.
+
+33
+00:01:57.000 --> 00:02:00.000
+Raise Strength until the red of the wall keeps its texture: about 0,5.
+
+34
+00:02:00.000 --> 00:02:07.000
+The finished image: five filters on the starless image, in this order.
+
+35
+00:02:07.000 --> 00:02:10.000
+Click Export.
+
+36
+00:02:10.000 --> 00:02:13.000
+Choose the JPEG format.
+
+37
+00:02:13.000 --> 00:02:18.000
+Check the file, on the tutorial drive, then click Export.
+
+38
+00:02:18.000 --> 00:02:23.000
+Save the project with Ctrl+S.

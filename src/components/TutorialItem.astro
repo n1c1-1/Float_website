@@ -1,0 +1,25 @@
+---
+import { tutorialUrl, posterOf, type Tutorial } from '../data/tutorials';
+import type { Lang } from '../i18n/ui';
+interface Props { t: Tutorial; lang: Lang }
+const { t, lang } = Astro.props;
+const poster = posterOf(t, lang);
+---
+<li class="titem">
+  {poster && <a href={tutorialUrl(t, lang)} tabindex="-1" aria-hidden="true"><img src={poster} alt="" loading="lazy" width="320" height="180" /></a>}
+  <div>
+    <h4><a href={tutorialUrl(t, lang)}>{t.title[lang]}</a></h4>
+    <p>{t.summary[lang]}</p>
+    <p class="meta">{t.duration[lang]}</p>
+  </div>
+</li>
+<style>
+  .titem { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 1.2rem; align-items: start; padding: 0.9rem 0; border-top: 1px solid var(--rule); margin: 0; }
+  .titem:last-child { border-bottom: 1px solid var(--rule); }
+  .titem > div:only-child { grid-column: 1 / -1; }
+  .titem img { display: block; width: 100%; height: auto; background: var(--plate); object-fit: cover; aspect-ratio: 16 / 9; }
+  .titem h4 { font-family: var(--serif); font-size: 1.125rem; margin: 0 0 0.3rem; }
+  .titem p { margin: 0 0 0.3rem; }
+  .titem .meta { margin: 0; }
+  @media (max-width: 30rem) { .titem { grid-template-columns: 1fr; } }
+</style>

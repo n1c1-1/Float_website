@@ -1,0 +1,207 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Gradient" title="Gradient"
+  description="Le bloc Gradient de FLOAT : trois modèles du gradient du ciel (polynôme, RBF, automatique), les échantillons de ciel, le relevé H-alpha qui écarte les échantillons de la nébulosité, et les réglages.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Gradient</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il retire la lueur inégale que la pollution lumineuse et la Lune répandent sur l’image, pour que le fond de ciel soit égal d’un bord à l’autre.</dd></div><div><dt>Ce qu’on voit</dt><dd>Dans Inspecter, l’empilement sans le gradient, avec l’ampleur du gradient (en % du niveau du ciel) et le nombre d’échantillons de ciel utilisés ; la même valeur dans le Rapport.</dd></div><div><dt>Ce qui se règle</dt><dd>La Méthode : Polynôme (par défaut) convient à la plupart des champs, Automatique suit des gradients plus compliqués ; et le Degré surface (2), à monter à 3 ou 4 pour les grands champs.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Polynôme</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>RBF</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Automatique</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Le relevé H-alpha comme guide</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Réglages</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Gradient modélise le ciel lisse que la pollution lumineuse et la Lune ajoutent à
+    l’empilement, et le vignetage du fond de ciel, et le retire de ce que lisent tous les blocs suivants. Il propose trois modèles&nbsp;: une
+    surface polynomiale ajustée sur des blocs de ciel, une spline en plaque mince passant par des échantillons de ciel,
+    et une surface automatique ajustée sur tous les pixels qui ne ressemblent pas à un objet. Seule la variation du ciel
+    sur le champ est retirée, pas son niveau. Un relevé H-alpha du champ, quand il y en a un, écarte les échantillons de
+    la nébulosité.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Sélection</span></li><li><span>Empilement</span></li><li><span>Astrométrie</span></li>
+    <li class="here"><span>Gradient</span></li><li><span>Déconvolution</span></li><li><span>Débruitage</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</h2>
+    <aside class="note"><b>Pourquoi sur l’empilement.</b> Le bloc travaille sur l’empilement linéaire, dans les couleurs
+    de l’appareil, avant la calibration des couleurs. Les blocs suivants (débruitage, couleur, retrait des étoiles,
+    sortie) voient alors un ciel plat.</aside>
+    <p>Le bloc lit l’empilement et la carte du nombre d’images qui couvrent chaque pixel. Les pixels couverts par moins de
+    60 % du nombre typique d’images, et qui touchent le bord de l’empilement, sont écartés&nbsp;; les zones exclues
+    dans l’éditeur le sont aussi.</p>
+    <p>Il écrit la variation du ciel pour chacune des trois couleurs, de médiane 0 sur le champ couvert, et le niveau du
+    ciel qu’il laisse en place. Les blocs suivants soustraient cette variation de l’empilement et des demi-empilements A
+    et B (section 5 de la page <a href="/fr/blocs/empilement/#s5">Empilement</a>), qui partagent donc le même ciel. Le
+    niveau du ciel est gardé à dessein&nbsp;: les modèles de bruit des blocs suivants s’appuient sur lui.</p>
+    <p>FLOAT indique aussi l’ampleur du gradient&nbsp;: l’étendue de la surface retirée sur le champ (du 1<sup>er</sup> au
+    99<sup>e</sup> centile), en pourcentage du niveau du ciel. L’aperçu du bloc montre l’empilement sans le
+    gradient.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Polynôme</h2>
+    <p>Un polynôme de la position du pixel, ajusté pour chaque couleur sur des échantillons de ciel.<a class="cite" href="#ref-1">[1]</a> Sans échantillon
+    placé, le champ est découpé en blocs&nbsp;; le côté de la grille est le réglage «&nbsp;Échantillons par côté&nbsp;», et chaque
+    case de la grille contient environ 4 × 4 blocs. La médiane d’un bloc est un échantillon.</p>
+    <p>Les échantillons de ciel sont trouvés sur la luminance, sur tout le champ, par une boucle. La surface est
+    ajustée sur les échantillons&nbsp;; ceux qui sont à plus de 2,5 sigmas au-dessus d’elle sont écartés&nbsp;; la surface est
+    ajustée de nouveau, jusqu’à ce que l’ensemble ne change plus. Le sigma est la dispersion entre échantillons voisins&nbsp;:
+    il mesure le bruit et la structure fine du ciel, pas les objets, qui varient lentement d’un bloc au suivant. Les
+    échantillons sous la surface sont tous gardés&nbsp;: le ciel est là.</p>
+    <aside class="note"><b>Un grand objet.</b> Un objet qui remplit la plus grande partie du champ, une grande galaxie
+    par exemple, est écarté en entier et la surface passe sous lui.</aside>
+    <p>Chaque couleur est ensuite ajustée sur ces échantillons, en écartant tour à tour ceux qui sont à plus de 2,5 sigmas
+    de sa propre surface. Un bloc ne compte comme échantillon que si l’empilement le couvre à 99 % ou plus. Avec moins de
+    10 blocs de ce genre, ou moins de trois fois plus d’échantillons que la surface n’a de termes, le bloc s’arrête et le
+    dit&nbsp;: baisser le degré ou le nombre d’échantillons.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>RBF</h2>
+    <p>Une spline en plaque mince (une fonction de base radiale) passant par les échantillons de
+    ciel.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a> La surface passe
+    près de chaque échantillon&nbsp;: elle peut donc suivre un gradient de n’importe quelle forme, et elle dépend de
+    l’endroit où sont les échantillons. Le réglage «&nbsp;Lissage surface&nbsp;» dit à quelle distance&nbsp;: à 0, la surface passe par
+    chaque échantillon&nbsp;; plus haut, elle passe près d’eux et elle est plus lisse.</p>
+    <p>Sans échantillon placé, les échantillons forment une grille régulière de «&nbsp;Échantillons par côté&nbsp;» points sur le
+    petit côté de l’image, avec une boîte carrée autour de chacun. Les échantillons gardés sont ceux qui ne dépassent
+    pas de plus de 2,5 sigmas une surface de degré 2 passant par eux, trouvés comme à la section 2. Les coordonnées et
+    les valeurs de chaque couleur sont remises à l’échelle avant l’ajustement, pour que le lissage ait le même sens sur
+    toutes les images.</p>
+    <p>Les échantillons du polynôme et de la RBF peuvent aussi être placés à la main dans l’éditeur, et des zones
+    exclues, sous forme d’ellipses ou de traits peints. Les échantillons placés sont toujours gardés tels quels.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Automatique</h2>
+    <p>Un modèle sans échantillons, d’après la méthode automatique d’extraction du fond de
+    Siril.<a class="cite" href="#ref-1">[1]</a> Il travaille sur chaque couleur à part, sur une copie de l’empilement réduite 4 fois
+    par moyennes de blocs («&nbsp;Réduction travail&nbsp;»), l’image étant ramenée entre 0 et 1 de son pixel le plus sombre à son
+    pixel le plus brillant (centiles 0,01 et 99,99 du champ couvert, avec 20 % de marge au-dessus). Le fond est d’abord
+    ajusté sur tous les pixels&nbsp;; puis, pendant 20 tours au plus, jusqu’à ce que moins d’un pixel sur 10&nbsp;000
+    change&nbsp;:</p>
+    <ul>
+      <li>le résidu est l’image moins le fond&nbsp;; un pixel est gardé quand son résidu est compris entre la médiane moins
+      4 sigmas et la médiane plus 2 sigmas, le sigma valant 1,4826 fois l’écart absolu médian du résidu sur tout le
+      champ couvert. Les structures brillantes partent d’abord&nbsp;;</li>
+      <li>avec «&nbsp;Protection structures&nbsp;», un masque lisse étendu autour des pixels dont le résidu dépasse le «&nbsp;Seuil
+      protection&nbsp;» (0,05, sur l’image de 0 à 1) est écarté aussi. «&nbsp;Extension protection&nbsp;» règle l’étendue du masque.
+      Avec «&nbsp;Protection bruit&nbsp;» différent de 0, le seuil vaut ce multiple du bruit du ciel à la place&nbsp;;</li>
+      <li>jamais moins de 2 % des pixels ne sont gardés&nbsp;;</li>
+      <li>le fond est ajusté de nouveau sur les pixels gardés.</li>
+    </ul>
+    <p>La surface se construit en comblant les zones écartées à partir des pixels gardés par des filtres passe-bas
+    répétés (trois flous en boîte glissante qui équivalent à une gaussienne<a class="cite" href="#ref-3">[3]</a>), puis en filtrant une dernière fois. Le
+    rayon du filtre est «&nbsp;Échelle modèle&nbsp;» pour cent du petit côté de l’image réduite, 5 par défaut. Un dernier
+    passe-bas, de «&nbsp;Douceur modèle&nbsp;» fois ce rayon, adoucit le modèle&nbsp;; il est ramené à la pleine taille par
+    interpolation bilinéaire. Sur les bords de l’image, chaque flou prolonge l’image selon sa pente, pour que la surface
+    ne s’affaisse pas vers le bord.</p>
+    <p>Avec «&nbsp;Plan d’abord&nbsp;», un polynôme rigide (un plan par défaut) est ajusté et retiré en premier, et le modèle
+    souple travaille sur ce qu’il laisse. Cela aide sur des gradients aussi forts que les objets eux-mêmes&nbsp;: un ciel
+    urbain brillant, un fort gradient de Lune.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Le relevé H-alpha comme guide</h2>
+    <aside class="note"><b>Jamais pendant un calcul.</b> Un relevé est récupéré une fois par le bouton Obtenir relevé de
+    l’éditeur du Gradient, ou par le téléchargement pour usage hors ligne des réglages, et gardé sur le disque. Un calcul
+    ne fait que le lire.</aside>
+    <p>Là où un relevé H-alpha couvre le champ, FLOAT le reprojette sur l’empilement et s’en sert pour
+    choisir les échantillons&nbsp;: avec «&nbsp;Hors émission&nbsp;» activé, les échantillons que choisit le bloc (aucun placé) ne
+    tombent jamais là où le relevé montre de la nébulosité. Les extensions faibles d’une nébuleuse en émission ne sont
+    alors pas prises pour du ciel. Le relevé dit seulement où ne pas échantillonner&nbsp;; le modèle du ciel ne lit jamais
+    ses valeurs.</p>
+    <p>Le relevé est mis à l’échelle pour que son ciel vaille 0 et son émission brillante 1 (centiles 1 et 99,5 du
+    champ). Un échantillon est sur l’émission quand la médiane de ce niveau dans sa boîte dépasse 0,02. Le relevé n’est
+    utilisé que si son étendue vaut au moins 12 fois son propre bruit&nbsp;; un relevé qui ne montre que du bruit laisse tous
+    les échantillons. Il ne l’est pas non plus quand il laisserait moins de 5 % du champ couvert aux échantillons, ou
+    trop peu de ciel pour l’ajustement&nbsp;: le bloc choisit alors ses échantillons sur l’image seule, et le dit dans le
+    journal. Le modèle automatique ne prend pas d’échantillons&nbsp;: le relevé n’agit pas sur lui.</p>
+    <p>Avec le réglage du relevé sur «&nbsp;auto&nbsp;», FLOAT utilise NSNS quand il couvre au moins 95 % du champ, sinon la carte
+    du ciel entier de Finkbeiner.<a class="cite" href="#ref-4">[4]</a><a class="cite" href="#ref-5">[5]</a> Le réglage
+    peut aussi en nommer un, ou «&nbsp;aucun&nbsp;». Un champ que le bloc <a href="/fr/blocs/astrometrie/">Astrométrie</a> n’a pas identifié n’a pas de relevé.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les réglages du bloc. Les réglages du relevé appartiennent à l’étape Référence H-alpha qui l’alimente.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Méthode</th><td>Polynôme</td><td>Polynôme, RBF, Automatique</td><td>La manière de modéliser le gradient du ciel (sections 2 à 4).</td></tr>
+          <tr><th scope="row">Degré surface</th><td class="n">2</td><td class="n">1 – 5</td><td>Degré du polynôme. 3 ou 4 pour les grands champs aux gradients compliqués&nbsp;; un degré élevé sur un champ rempli de nébuleuse peut en prendre une partie pour du ciel.</td></tr>
+          <tr><th scope="row">Échantillons par côté</th><td class="n">16</td><td class="n">4 – 64</td><td>Sans échantillon placé. Polynôme&nbsp;: le champ est découpé en 4 fois ce nombre de blocs par côté. RBF&nbsp;: ce nombre d’échantillons sur le petit côté. Plus de blocs, plus petits, trouvent du ciel dans un champ chargé&nbsp;; moins de blocs, plus grands, moyennent plus de bruit.</td></tr>
+          <tr><th scope="row">Rejet objets</th><td class="n">2,5 σ</td><td class="n">1 – 10</td><td>Les échantillons plus éloignés de la surface que cette valeur sont pris pour des objets et écartés, tour à tour.</td></tr>
+          <tr><th scope="row">Lissage surface</th><td class="n">0,5</td><td class="n">0 – 1</td><td>RBF&nbsp;: à 0, la surface passe par chaque échantillon&nbsp;; plus haut, elle passe près d’eux, plus lisse.</td></tr>
+          <tr><th scope="row">Hors émission</th><td>activé</td><td>activé, désactivé</td><td>Les échantillons que choisit le bloc restent hors de la nébulosité que montre le relevé H-alpha. Les échantillons placés à la main sont toujours gardés.</td></tr>
+          <tr><th scope="row">Échelle modèle</th><td class="n">5</td><td class="n">1 – 10</td><td>Automatique&nbsp;: l’échelle en dessous de laquelle les variations sont prises pour des objets plutôt que pour du gradient. Plus haut ne garde que les grands gradients&nbsp;; plus bas suit des gradients plus locaux et peut prendre de grands objets faibles pour du ciel.</td></tr>
+          <tr><th scope="row">Douceur modèle</th><td class="n">1</td><td class="n">0 – 5</td><td>Automatique&nbsp;: lissage supplémentaire du modèle final (0&nbsp;: aucun).</td></tr>
+          <tr><th scope="row">Protection structures</th><td>activé</td><td>activé, désactivé</td><td>Automatique&nbsp;: masque les structures brillantes étendues pour que le modèle ne les prenne pas en compte.</td></tr>
+          <tr><th scope="row">Seuil protection</th><td class="n">0,05</td><td class="n">0 – 1</td><td>Automatique&nbsp;: la luminosité au-dessus du modèle, sur l’image ramenée entre 0 et 1, à partir de laquelle un pixel est pris pour une structure. Plus bas protège plus.</td></tr>
+          <tr><th scope="row">Extension protection</th><td class="n">0,5</td><td class="n">0 – 1</td><td>Automatique&nbsp;: l’étendue du masque de protection autour des structures.</td></tr>
+          <tr><th scope="row">Protection bruit</th><td class="n">0</td><td class="n">0 – 50</td><td>Automatique&nbsp;: quand il n’est pas 0, le seuil de protection vaut ce multiple du bruit du ciel, ce qui convient à une nébuleuse faible dans un champ où de brillantes étoiles fixent l’étendue.</td></tr>
+          <tr><th scope="row">Plan d’abord</th><td>désactivé</td><td>activé, désactivé</td><td>Automatique&nbsp;: un polynôme rigide est ajusté et retiré avant le modèle souple.</td></tr>
+          <tr><th scope="row">Degré plan</th><td class="n">1</td><td class="n">1 – 6</td><td>Degré de ce polynôme (1&nbsp;: un plan).</td></tr>
+          <tr><th scope="row">Réduction travail</th><td class="n">4 ×</td><td class="n">1, 2, 4, 8</td><td>Automatique&nbsp;: le modèle est calculé sur une copie réduite ce nombre de fois&nbsp;: plus rapide, plus grossier. L’échelle du fond lui-même ne change pas.</td></tr>
+          <tr><th scope="row">Échantillons placés</th><td>aucun</td><td>placés dans l’éditeur</td><td>Les échantillons placés sur l’image. Vide&nbsp;: la grille du bloc.</td></tr>
+          <tr><th scope="row">Ellipses exclues, Traits exclus</th><td>aucun</td><td>dessinés dans l’éditeur</td><td>Des zones qui n’entrent dans aucun des trois modèles.</td></tr>
+          <tr><th scope="row">Relevé H-alpha</th><td>auto</td><td>auto, nsns, finkbeiner, aucun</td><td>Le relevé qui guide les échantillons (section 5).</td></tr>
+          <tr><th scope="row">Couverture NSNS</th><td class="n">0,95</td><td class="n">0 – 1</td><td>En dessous de cette fraction du champ couverte par NSNS, «&nbsp;auto&nbsp;» passe à Finkbeiner.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Le polynôme et le modèle automatique se compensent.</strong> Le polynôme garde au mieux les structures
+      faibles très étendues, mais ne suit que les gradients de sa propre forme. Le modèle automatique retire au mieux
+      les gradients compliqués, et avec eux une partie des structures étendues les plus faibles.</li>
+      <li><strong>Un modèle qui ne regarde que l’image ne distingue pas un nuage faible très étendu d’un gradient.</strong>
+      Une échelle de modèle plus basse, un degré élevé et Plan d’abord peuvent chacun prendre une partie d’un grand objet
+      faible ou brillant pour du ciel.</li>
+      <li><strong>La RBF dépend de l’endroit où sont ses échantillons.</strong> Elle est à son meilleur avec des
+      échantillons placés à la main.</li>
+      <li><strong>Images empilées sans alignement.</strong> Quand une trop petite part de l’empilement est couverte par
+      toutes les images, le bloc ne peut pas modéliser le ciel et demande de placer <a href="/fr/blocs/alignement/">Alignement</a> avant
+      <a href="/fr/blocs/empilement/">Empilement</a>.</li>
+      <li><strong>Le relevé est un guide, pas une référence.</strong> Il n’existe pas pour tous les champs, et il n’est
+      pas utilisé quand le champ n’a pas été identifié. Une méthode qui ajustait le relevé comme une part du vrai ciel,
+      avec un gain, a été essayée puis retirée&nbsp;: elle ne rendait pas la surface plus souple, et sur un champ pauvre en
+      H-alpha et riche en poussière le gain ajusté s’emballait et attribuait au relevé une lumière qui n’était pas la
+      sienne.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Documentation de Siril (version 1.5.0), <i lang="en">Background Extraction</i> : « Sample-based method » (RBF, Polynomial) et « Automatic (sample-free) method ». <a href="https://siril.readthedocs.io/en/latest/processing/background.html">siril.readthedocs.io</a></li>
+      <li id="ref-2">Bookstein, F. L. 1989, <i lang="en">Principal warps: thin-plate splines and the decomposition of deformations</i>, IEEE Transactions on Pattern Analysis and Machine Intelligence 11, 567. <a href="https://doi.org/10.1109/34.24792">doi:10.1109/34.24792</a></li>
+      <li id="ref-3">Wells, W. M. 1986, <i lang="en">Efficient Synthesis of Gaussian Filters by Cascaded Uniform Filters</i>, IEEE Transactions on Pattern Analysis and Machine Intelligence 8, 234. <a href="https://doi.org/10.1109/TPAMI.1986.4767776">doi:10.1109/TPAMI.1986.4767776</a></li>
+      <li id="ref-4">Ziegenbalg, S. 2025, <i lang="en">Northern Sky Narrowband Survey (NSNS)</i>, DR0.2, H-alpha, intensité étalonnée sur les données de WHAM ; ciel nord, pixels HiPS de 6,4″ tirés de données à 5″ ; lu comme HiPS <i>simg.de/P/NSNS/DR0_2/halpha</i>. <a href="https://www.simg.de/nebulae3/dr0_2/">simg.de/nebulae3</a></li>
+      <li id="ref-5">Finkbeiner, D. P. 2003, <i lang="en">A Full-Sky H-alpha Template for Microwave Foreground Prediction</i>, ApJS 146, 407 (ciel entier, 6 minutes d’arc&nbsp;; lu comme HiPS <i>CDS/P/Finkbeiner</i>). <a href="https://arxiv.org/abs/astro-ph/0301558">arXiv:astro-ph/0301558</a></li>
+    </ol>
+  </section>
+</Doc>

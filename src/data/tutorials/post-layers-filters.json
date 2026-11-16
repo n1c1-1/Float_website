@@ -1,0 +1,529 @@
+{
+  "slug": "post-layers-filters",
+  "slugFr": "post-calques-filtres",
+  "section": "post",
+  "order": 2,
+  "title": {
+    "en": "Post: layers and filters",
+    "fr": "Post : calques et filtres"
+  },
+  "summary": {
+    "en": "The layers of Post are read, then two filters are added to the starless image: Local contrast for the dark globules and the folds of the ring, Saturation for the colour. A filter is switched off, changed, deleted and taken back, duplicated and dosed with its opacity, and the project is saved, closed and reopened with its filters.",
+    "fr": "Les calques de Post sont lus, puis deux filtres sont ajoutés à l’image sans étoiles : Contraste local pour les globules sombres et les plis de l’anneau, Saturation pour la couleur. Un filtre est éteint, changé, supprimé et repris, dupliqué et dosé avec son opacité, et le projet est enregistré, fermé et rouvert avec ses filtres."
+  },
+  "duration": {
+    "en": "About 12 min, with no computing",
+    "fr": "Environ 12 min, sans calcul"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial The full processing: stars apart done: a copy of its finished project (about 1.8 GB) is the starting point",
+      "Disk space: about 2 GB for the copy"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Le traitement complet : les étoiles à part fait : une copie de son projet terminé (environ 1,8 Go) est le point de départ",
+      "Place sur le disque : environ 2 Go pour la copie"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB",
+      "fr": "6,9 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project",
+        "fr": "Ouvrir le projet"
+      },
+      "text": {
+        "en": "On the Home screen click <b>Open project…</b> and choose a copy of the finished project of the tutorial <i>The full processing: stars apart</i>, taken before its Local contrast filter. The project opens up to date: nothing is to be computed.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez une copie du projet terminé du tutoriel <i>Le traitement complet : les étoiles à part</i>, prise avant son filtre Contraste local. Le projet s’ouvre à jour : rien n’est à calculer."
+      },
+      "check": {
+        "en": "The status bar reads all up to date, and the Run button is greyed.",
+        "fr": "La barre d’état indique tout à jour, et le bouton « Exécuter » est grisé."
+      },
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/01.png",
+        "fr": "/tutorials/post-layers-filters/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "The diagnosis, before any gesture",
+        "fr": "Le diagnostic, avant tout geste"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The picture is the one of the second tutorial: stars quieter and fewer, sky dark grey and neutral. Right, and to leave alone: the stars, with Strength at −0.5 and Small stars at −1.0, and the sky. Two points are to be corrected, read as in the table.",
+        "fr": "Cliquez sur <b>Post</b>. L’image est celle du deuxième tutoriel : des étoiles plus calmes et moins nombreuses, un ciel gris sombre et neutre. Ce qui va, et qu’on laisse : les étoiles, avec « Intensité » à −0,5 et « Petites étoiles » à −1,0, et le ciel. Deux points sont à corriger, lus comme dans le tableau."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "The dark globules and the folds of the ring are flat.",
+            "fr": "Les globules sombres et les plis de l’anneau sont plats."
+          },
+          "read": {
+            "en": "At 100 % on the globules at the top of the ring: they melt into the gas around them and the folds have no relief.",
+            "fr": "À 100 % sur les globules du haut de l’anneau : ils se fondent dans le gaz autour d’eux et les plis n’ont pas de relief."
+          },
+          "fix": {
+            "en": "Local contrast on the starless image.",
+            "fr": "« Contraste local » sur l’image sans étoiles."
+          },
+          "step": "filter"
+        },
+        {
+          "problem": {
+            "en": "The ring could be a little more vivid.",
+            "fr": "L’anneau pourrait être un peu plus vif."
+          },
+          "read": {
+            "en": "The ring is pink-red with magenta, correct but pale; the sky is a neutral grey that must stay so.",
+            "fr": "L’anneau est rose-rouge avec du magenta, juste mais pâle ; le ciel est un gris neutre qui doit le rester."
+          },
+          "fix": {
+            "en": "Saturation on the starless image.",
+            "fr": "« Saturation » sur l’image sans étoiles."
+          },
+          "step": "saturation"
+        }
+      ],
+      "detail": [
+        {
+          "src": "/tutorials/post-layers-filters/details/lc-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The globules at 100 %, flat.",
+            "fr": "Les globules à 100 %, plats."
+          }
+        },
+        {
+          "src": "/tutorials/post-layers-filters/details/sat-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The ring at 100 %, pale.",
+            "fr": "L’anneau à 100 %, pâle."
+          }
+        }
+      ],
+      "check": {
+        "en": "The globules look flat and the ring pale; the stars and the sky are as they should be.",
+        "fr": "Les globules paraissent plats et l’anneau pâle ; les étoiles et le ciel sont comme ils doivent être."
+      },
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/02.png",
+        "fr": "/tutorials/post-layers-filters/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 8.0,
+        "fr": 8.0
+      }
+    },
+    {
+      "id": "layers",
+      "title": {
+        "en": "The layers of Post",
+        "fr": "Les calques de Post"
+      },
+      "text": {
+        "en": "Click the combined layer: it holds two rows, <b>Stars</b> and <b>Starless image</b>. The stars are added over the starless image in Screen mode. Click <b>Stars</b>: its sliders, Strength and Small stars, act on the stars only. Click <b>Starless image</b>: its filters apply to it only, before the stars are put back.",
+        "fr": "Cliquez sur le calque combiné : il contient deux lignes, <b>Étoiles</b> et <b>Image sans étoiles</b>. Les étoiles sont ajoutées sur l’image sans étoiles en mode Écran. Cliquez sur <b>Étoiles</b> : ses curseurs, Intensité et Petites étoiles, n’agissent que sur les étoiles. Cliquez sur <b>Image sans étoiles</b> : ses filtres ne s’appliquent qu’à elle, avant que les étoiles soient remises."
+      },
+      "why": {
+        "en": "The Screen mode adds the light of the stars to the starless image without darkening it anywhere. The stars were separated from the gas so that a filter can be given to the gas alone.",
+        "fr": "Le mode Écran ajoute la lumière des étoiles à l’image sans étoiles sans l’assombrir nulle part. Les étoiles ont été séparées du gaz pour qu’un filtre puisse être donné au gaz seul."
+      },
+      "check": {
+        "en": "The Stars row shows Strength −0.5 and Small stars −1.0.",
+        "fr": "La ligne Étoiles indique Intensité −0,5 et Petites étoiles −1,0."
+      },
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/03.png",
+        "fr": "/tutorials/post-layers-filters/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 18.0,
+        "fr": 18.0
+      }
+    },
+    {
+      "id": "filter",
+      "title": {
+        "en": "A first filter: Local contrast",
+        "fr": "Un premier filtre : Contraste local"
+      },
+      "text": {
+        "en": "With <b>Starless image</b> chosen, click <b>Filter</b>: the families are Stretch, Contrast, Color, Detail, Noise and Combine. Open <b>Contrast</b> and choose <b>Local contrast</b>. The filter is a row nested under the starless image. Drag <b>Strength</b> to about 0.5 and leave <b>Scale</b> at 40 px, until the dark globules and the folds of the ring stand out from the gas around them.",
+        "fr": "Avec <b>Image sans étoiles</b> choisie, cliquez sur <b>Filtre</b> : les familles sont Étirement, Contraste, Couleur, Détail, Bruit et Combinaison. Ouvrez <b>Contraste</b> et choisissez <b>Contraste local</b>. Le filtre est une ligne imbriquée sous l’image sans étoiles. Faites glisser <b>Intensité</b> jusqu’à environ 0,5 et laissez <b>Échelle</b> à 40 px, jusqu’à ce que les globules sombres et les plis de l’anneau ressortent du gaz autour d’eux."
+      },
+      "why": {
+        "en": "The filter goes on the starless image and not on everything: over the stars the same filter makes them hard, square and haloed. That is the reason the stars were separated.",
+        "fr": "Le filtre se met sur l’image sans étoiles et non sur tout : sur les étoiles, le même filtre les rend dures, carrées et auréolées. C’est la raison pour laquelle les étoiles ont été séparées."
+      },
+      "check": {
+        "en": "At 100 % the globules stand out of the gas and the folds have relief.",
+        "fr": "À 100 % les globules ressortent du gaz et les plis ont du relief."
+      },
+      "pitfall": {
+        "en": "At Strength 1.2 the globules turn black with dark haloes and the gas becomes blotchy.",
+        "fr": "À « Intensité » 1,2, les globules deviennent noirs avec des halos sombres et le gaz devient moucheté."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/post-layers-filters/details/lc-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The globules at 100 % before the filter.",
+            "fr": "Les globules à 100 % avant le filtre."
+          }
+        },
+        {
+          "src": "/tutorials/post-layers-filters/details/lc-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right",
+            "fr": "Juste"
+          },
+          "caption": {
+            "en": "With Strength 0.5: the globules and the folds stand out.",
+            "fr": "Avec « Intensité » 0,5 : les globules et les plis ressortent."
+          }
+        },
+        {
+          "src": "/tutorials/post-layers-filters/details/lc-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "At 1.2: the globules are black with dark haloes, the gas is blotchy.",
+            "fr": "À 1,2 : les globules sont noirs avec des halos sombres, le gaz est moucheté."
+          }
+        },
+        {
+          "src": "/tutorials/post-layers-filters/details/lc-order.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "On the stars too",
+            "fr": "Sur les étoiles aussi"
+          },
+          "caption": {
+            "en": "The same filter over everything: the stars of the cluster are hard, square and haloed.",
+            "fr": "Le même filtre sur tout : les étoiles de l’amas sont dures, carrées et auréolées."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/04.png",
+        "fr": "/tutorials/post-layers-filters/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 40.0,
+        "fr": 40.0
+      }
+    },
+    {
+      "id": "saturation",
+      "title": {
+        "en": "A second filter: Saturation",
+        "fr": "Un second filtre : Saturation"
+      },
+      "text": {
+        "en": "Click <b>Filter</b> again, open <b>Color</b> and choose <b>Saturation</b>. The second filter is added above the first: filters apply from the bottom up. Drag <b>Strength</b> to about +20 %, all hues, until the red and pink of the ring are more vivid.",
+        "fr": "Cliquez de nouveau sur <b>Filtre</b>, ouvrez <b>Couleur</b> et choisissez <b>Saturation</b>. Le second filtre s’ajoute au-dessus du premier : les filtres s’appliquent de bas en haut. Faites glisser <b>Intensité</b> jusqu’à environ +20 %, toutes les teintes, jusqu’à ce que le rouge et le rose de l’anneau soient plus vifs."
+      },
+      "why": {
+        "en": "The colour of the Rosette is a pink red with magenta, and a red pushed by hand is the most common fault on this target. The sky, a neutral grey, does not take any colour. No mask is added: the same saturation with and without a mask gives the same sky, and a mask that changes nothing is not added.",
+        "fr": "La couleur de la Rosette est un rouge rosé avec du magenta, et un rouge poussé à la main est la faute la plus courante sur cette cible. Le ciel, un gris neutre, ne prend aucune couleur. Aucun masque n’est ajouté : la même saturation avec et sans masque donne le même ciel, et un masque qui ne change rien n’est pas ajouté."
+      },
+      "check": {
+        "en": "The ring is more vivid, its pink kept; the sky stays neutral.",
+        "fr": "L’anneau est plus vif, son rose gardé ; le ciel reste neutre."
+      },
+      "pitfall": {
+        "en": "At +70 the ring turns neon red and loses its pink nuances.",
+        "fr": "À +70 l’anneau devient rouge fluo et perd ses nuances de rose."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/post-layers-filters/details/sat-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The ring at 100 % before the filter.",
+            "fr": "L’anneau à 100 % avant le filtre."
+          }
+        },
+        {
+          "src": "/tutorials/post-layers-filters/details/sat-right.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Right",
+            "fr": "Juste"
+          },
+          "caption": {
+            "en": "With Strength +20 %: more vivid, pink kept.",
+            "fr": "Avec « Intensité » +20 % : plus vif, le rose gardé."
+          }
+        },
+        {
+          "src": "/tutorials/post-layers-filters/details/sat-far.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "caption": {
+            "en": "At +70: neon red, the pink nuances are lost.",
+            "fr": "À +70 : rouge fluo, les nuances de rose sont perdues."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/05.png",
+        "fr": "/tutorials/post-layers-filters/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 57.0,
+        "fr": 57.0
+      }
+    },
+    {
+      "id": "eye",
+      "title": {
+        "en": "Switch a filter off and on",
+        "fr": "Éteindre et rallumer un filtre"
+      },
+      "text": {
+        "en": "Click the eye of <b>Saturation</b>: the filter is switched off and the picture goes back to what it was before it. Click the eye again: the filter is back, with its setting. The same with <b>Local contrast</b>: the globules go flat when it is off.",
+        "fr": "Cliquez sur l’œil de <b>Saturation</b> : le filtre est éteint et l’image revient à ce qu’elle était avant lui. Cliquez de nouveau sur l’œil : le filtre revient, avec son réglage. De même avec <b>Contraste local</b> : les globules s’aplatissent quand il est éteint."
+      },
+      "check": {
+        "en": "Each eye changes the picture and nothing else.",
+        "fr": "Chaque œil change l’image et rien d’autre."
+      },
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/06.png",
+        "fr": "/tutorials/post-layers-filters/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 72.0,
+        "fr": 72.0
+      }
+    },
+    {
+      "id": "change",
+      "title": {
+        "en": "Change a setting afterwards",
+        "fr": "Changer un réglage après coup"
+      },
+      "text": {
+        "en": "Click <b>Local contrast</b>: its settings are still there. Drag <b>Strength</b> further, to see, then press <b>Ctrl+Z</b> to bring it back to 0.5. The filter above is applied again on the new result.",
+        "fr": "Cliquez sur <b>Contraste local</b> : ses réglages sont toujours là. Faites glisser <b>Intensité</b> plus loin, pour voir, puis appuyez sur <b>Ctrl+Z</b> pour la ramener à 0,5. Le filtre au-dessus est appliqué de nouveau sur le nouveau résultat."
+      },
+      "check": {
+        "en": "Strength reads 0.5 again.",
+        "fr": "« Intensité » indique de nouveau 0,5."
+      },
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/07.png",
+        "fr": "/tutorials/post-layers-filters/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 84.0,
+        "fr": 84.0
+      }
+    },
+    {
+      "id": "delete",
+      "title": {
+        "en": "Delete a filter and take it back",
+        "fr": "Supprimer un filtre et le reprendre"
+      },
+      "text": {
+        "en": "Select <b>Saturation</b> and click the trash button: the filter is deleted. Press <b>Ctrl+Z</b>: it is back, with its setting.",
+        "fr": "Sélectionnez <b>Saturation</b> et cliquez sur la corbeille : le filtre est supprimé. Appuyez sur <b>Ctrl+Z</b> : il revient, avec son réglage."
+      },
+      "check": {
+        "en": "The row Saturation disappears, then comes back at +20 %.",
+        "fr": "La ligne Saturation disparaît, puis revient à +20 %."
+      },
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/08.png",
+        "fr": "/tutorials/post-layers-filters/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 92.0,
+        "fr": 92.0
+      }
+    },
+    {
+      "id": "duplicate",
+      "title": {
+        "en": "Duplicate a filter",
+        "fr": "Dupliquer un filtre"
+      },
+      "text": {
+        "en": "Choose <b>Local contrast</b> and click <b>Duplicate</b> (Ctrl+J). What is copied is the chosen filter, here Local contrast, with its settings; the picture becomes stronger because the filter now applies twice. Click the trash button to delete the copy.",
+        "fr": "Choisissez <b>Contraste local</b> et cliquez sur <b>Dupliquer</b> (Ctrl+J). Ce qui est copié est le filtre choisi, ici Contraste local, avec ses réglages ; l’image devient plus forte parce que le filtre s’applique maintenant deux fois. Cliquez sur la corbeille pour supprimer la copie."
+      },
+      "check": {
+        "en": "A row <i>Local contrast (copy)</i> appears under Saturation, then goes.",
+        "fr": "Une ligne <i>Contraste local (copie)</i> apparaît sous Saturation, puis disparaît."
+      },
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/09.png",
+        "fr": "/tutorials/post-layers-filters/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 103.0,
+        "fr": 103.0
+      }
+    },
+    {
+      "id": "opacity",
+      "title": {
+        "en": "Blend mode and opacity",
+        "fr": "Mode de fusion et opacité"
+      },
+      "text": {
+        "en": "Click the combined layer: <b>Star blend mode</b> reads Screen, the mode in which the stars are added. Then choose <b>Local contrast</b> and drag its <b>Opacity</b> to about 55 %: the filter acts by half, which is the way to dose a filter. Press <b>Ctrl+Z</b>: Opacity is back at 100 % and the setting of the expert stays.",
+        "fr": "Cliquez sur le calque combiné : <b>Mode de fusion des étoiles</b> indique Écran, le mode dans lequel les étoiles sont ajoutées. Puis choisissez <b>Contraste local</b> et faites glisser son <b>Opacité</b> jusqu’à environ 55 % : le filtre agit à moitié, ce qui permet de doser un filtre. Appuyez sur <b>Ctrl+Z</b> : l’opacité revient à 100 % et le réglage de l’expert reste."
+      },
+      "check": {
+        "en": "At 55 % the globules are less marked; at 100 % they are as before.",
+        "fr": "À 55 % les globules sont moins marqués ; à 100 % ils sont comme avant."
+      },
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/10.png",
+        "fr": "/tutorials/post-layers-filters/fr/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 112.0,
+        "fr": 112.0
+      }
+    },
+    {
+      "id": "save",
+      "title": {
+        "en": "Save, close and reopen",
+        "fr": "Enregistrer, fermer et rouvrir"
+      },
+      "text": {
+        "en": "Press <b>Ctrl+S</b>: the layers and their filters are saved with the project. Open <b>File</b> and click <b>Close project</b>, then click the project on the Home screen and click <b>Post</b>. The filters are still there, and a click on one opens its settings, still editable.",
+        "fr": "Appuyez sur <b>Ctrl+S</b> : les calques et leurs filtres sont enregistrés avec le projet. Ouvrez <b>Fichier</b> et cliquez sur <b>Fermer projet</b>, puis cliquez sur le projet de l’écran d’accueil et sur <b>Post</b>. Les filtres sont toujours là, et un clic sur l’un ouvre ses réglages, toujours modifiables."
+      },
+      "check": {
+        "en": "Saturation and Local contrast are listed under Starless image, with their settings.",
+        "fr": "Saturation et Contraste local sont listés sous Image sans étoiles, avec leurs réglages."
+      },
+      "shot": {
+        "en": "/tutorials/post-layers-filters/en/11.png",
+        "fr": "/tutorials/post-layers-filters/fr/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 126.0,
+        "fr": 126.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/post-layers-filters/result.jpg",
+    "w": 2000,
+    "h": 1426,
+    "caption": {
+      "en": "The exported picture: Local contrast at 0.5 and Saturation at +20 % on the starless image, the stars unchanged.",
+      "fr": "L’image exportée : Contraste local à 0,5 et Saturation à +20 % sur l’image sans étoiles, les étoiles inchangées."
+    }
+  },
+  "blocks": [
+    "Post"
+  ],
+  "next": "post-masks",
+  "video": {
+    "en": {
+      "src": "/tutorials/post-layers-filters/en/video.mp4",
+      "captions": "/tutorials/post-layers-filters/en/captions.vtt",
+      "chapters": "/tutorials/post-layers-filters/en/chapters.vtt",
+      "poster": "/tutorials/post-layers-filters/en/poster.jpg",
+      "seconds": 149.0
+    },
+    "fr": {
+      "src": "/tutorials/post-layers-filters/fr/video.mp4",
+      "captions": "/tutorials/post-layers-filters/fr/captions.vtt",
+      "chapters": "/tutorials/post-layers-filters/fr/chapters.vtt",
+      "poster": "/tutorials/post-layers-filters/fr/poster.jpg",
+      "seconds": 149.0
+    }
+  }
+}

@@ -1,0 +1,141 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet.
+
+2
+00:00:03.000 --> 00:00:08.000
+Le projet s’ouvre sur son graphe, déjà calculé : la barre d’état dit tout à jour et « Exécuter » n’a rien à exécuter.
+
+3
+00:00:08.000 --> 00:00:11.000
+Cliquez sur « Tout afficher », puis repliez le panneau latéral.
+
+4
+00:00:11.000 --> 00:00:14.000
+Cliquez sur le bouton qui replie le panneau latéral.
+
+5
+00:00:14.000 --> 00:00:21.000
+Tout le graphe : quatre lignes, quatre workflows (S, H, O III, Étoiles), puis la combinaison S-H-O, les blocs « Combiner calques » et Post.
+
+6
+00:00:21.000 --> 00:00:24.000
+Ouvrez la vue « Tableau » : une ligne par session.
+
+7
+00:00:24.000 --> 00:00:31.000
+Trois sessions, une par filtre : O III / H-alpha, O III / S II, et Étoiles pour la nuit sans filtre.
+
+8
+00:00:31.000 --> 00:00:34.000
+Sélectionnez une carte de session.
+
+9
+00:00:34.000 --> 00:00:37.000
+Ouvrez « Réglages du bloc ».
+
+10
+00:00:37.000 --> 00:00:44.000
+La session a ses brutes et son propre flat ; les darks et les offsets sont un master commun aux sessions.
+
+11
+00:00:44.000 --> 00:00:47.000
+Cliquez sur « Replié » : une carte par workflow.
+
+12
+00:00:47.000 --> 00:00:54.000
+S a 13 brutes, H 10, O III 23 venues de deux sessions, Étoiles 49 ; H, O III et Étoiles sont sur la grille de S.
+
+13
+00:00:54.000 --> 00:01:01.000
+Seul S a un bloc Astrométrie : il résout le champ une fois, les autres lignes prennent sa grille.
+
+14
+00:01:01.000 --> 00:01:04.000
+Faites un clic droit sur le bloc Empilement de H.
+
+15
+00:01:04.000 --> 00:01:11.000
+Aligner sur : la référence est S, la méthode « Étoiles ». Les étoiles de l’empilement H sont posées sur celles de S.
+
+16
+00:01:11.000 --> 00:01:14.000
+Sélectionnez le bloc S-H-O : ses fils s’allument.
+
+17
+00:01:14.000 --> 00:01:21.000
+S-H-O n’est pas un empilement : il lit les images sans étoiles de S, H et O III.
+
+18
+00:01:21.000 --> 00:01:24.000
+Ouvrez « Réglages du bloc ».
+
+19
+00:01:24.000 --> 00:01:32.000
+Entrées : S et H alimentent les pixels rouges, O III les verts et bleus. Chaque filtre reçoit une teinte.
+
+20
+00:01:32.000 --> 00:01:35.000
+Sélectionnez le bloc « Combiner calques » après S-H-O.
+
+21
+00:01:35.000 --> 00:01:38.000
+Ouvrez « Réglages du bloc ».
+
+22
+00:01:38.000 --> 00:01:46.000
+Les étoiles remises viennent d’O III, pas de la nuit Étoiles.
+
+23
+00:01:46.000 --> 00:01:49.000
+Sélectionnez le bloc « Combiner calques » du bas.
+
+24
+00:01:49.000 --> 00:01:52.000
+Ouvrez « Réglages du bloc ».
+
+25
+00:01:52.000 --> 00:02:00.000
+Le workflow Étoiles reste dans le graphe, calculé, avec son propre « Combiner calques ».
+
+26
+00:02:00.000 --> 00:02:03.000
+Cliquez sur Post.
+
+27
+00:02:03.000 --> 00:02:11.000
+Post montre l’image terminée, version « Palette and finish ». Rien n’est changé ici.
+
+28
+00:02:11.000 --> 00:02:14.000
+Ouvrez le menu « Fichier ».
+
+29
+00:02:14.000 --> 00:02:17.000
+Cliquez sur « Nouveau projet ».
+
+30
+00:02:17.000 --> 00:02:20.000
+Cliquez sur « Depuis modèle ».
+
+31
+00:02:20.000 --> 00:02:27.000
+Dans l’onglet « Couleur », « Bi-bande x2 » est le modèle d’un capteur couleur avec deux filtres bi-bande et une session pour les étoiles.
+
+32
+00:02:27.000 --> 00:02:30.000
+Cliquez sur « Bi-bande x2 ».
+
+33
+00:02:30.000 --> 00:02:38.000
+Le modèle apporte le graphe, les sessions nommées par filtre et « Aligner sur » sur la grille de S. Il reste à ajouter les images.
+
+34
+00:02:38.000 --> 00:02:41.000
+Ouvrez la vue « Tableau » du nouveau projet.
+
+35
+00:02:41.000 --> 00:02:49.000
+Les sessions sont nommées par filtre, et H, O III et Étoiles sont déjà sur la grille de S. Les cellules des images sont vides.

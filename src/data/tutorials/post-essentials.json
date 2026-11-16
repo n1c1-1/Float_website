@@ -1,0 +1,579 @@
+{
+  "slug": "post-essentials",
+  "slugFr": "post-essentiel",
+  "section": "post",
+  "order": 1,
+  "title": {
+    "en": "Post: the essentials",
+    "fr": "Post : l’essentiel"
+  },
+  "summary": {
+    "en": "The picture of the first tutorial is read in Post before any gesture, then corrected with three gestures: Sky, Faint tones and Crop. Zoom, before and after, undo and redo, and the export complete the tour of the page.",
+    "fr": "L’image du premier tutoriel est lue dans Post avant tout geste, puis corrigée par trois gestes : Ciel, Tons faibles et Recadrage. Le zoom, avant et après, annuler et rétablir, et l’export complètent le tour de la page."
+  },
+  "duration": {
+    "en": "About 10 min, with no computing",
+    "fr": "Environ 10 min, sans calcul"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial My first image done: its finished project (about 1.1 GB) is the starting point",
+      "Disk space: about 1.2 GB for a copy of that project"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Ma première image fait : son projet terminé (environ 1,1 Go) est le point de départ",
+      "Place sur le disque : environ 1,2 Go pour une copie de ce projet"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB",
+      "fr": "6,9 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project",
+        "fr": "Ouvrir le projet"
+      },
+      "text": {
+        "en": "On the Home screen click <b>Open project…</b> and choose a copy of the finished project of the tutorial <i>My first image</i>. The project opens up to date: nothing is to be computed.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez une copie du projet terminé du tutoriel <i>Ma première image</i>. Le projet s’ouvre à jour : rien n’est à calculer."
+      },
+      "check": {
+        "en": "The status bar reads all up to date, and the Run button is greyed.",
+        "fr": "La barre d’état indique tout à jour, et le bouton « Exécuter » est grisé."
+      },
+      "shot": {
+        "en": "/tutorials/post-essentials/en/01.png",
+        "fr": "/tutorials/post-essentials/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "The diagnosis, before any gesture",
+        "fr": "Le diagnostic, avant tout geste"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The picture is the image of the workflow as it comes out of the processing, with the layer at its suggested settings, every slider at 0: a good picture already, with neutral colours, the ring pink-red and the stars of the cluster blue-white. Right, and to leave alone: the colours, the stars and the other sliders. Three points are to be corrected, read as in the table.",
+        "fr": "Cliquez sur <b>Post</b>. L’image est celle du workflow telle qu’elle sort du traitement, avec le calque à ses réglages suggérés, tous les curseurs à 0 : une belle image déjà, aux couleurs neutres, l’anneau rose-rouge et les étoiles de l’amas blanc-bleu. Ce qui va, et qu’on laisse : les couleurs, les étoiles et les autres curseurs. Trois points sont à corriger, lus comme dans le tableau."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "A grey veil over the sky.",
+            "fr": "Un voile gris sur le ciel."
+          },
+          "read": {
+            "en": "The sky looks grey and not dark. On the exported picture the sky measures 49, 49 and 49 in red, green and blue, on a scale of 255.",
+            "fr": "Le ciel paraît gris et non sombre. Sur l’image exportée, le ciel mesure 49, 49 et 49 en rouge, vert et bleu, sur une échelle de 255."
+          },
+          "fix": {
+            "en": "Bring the sky down with Sky.",
+            "fr": "Descendre le ciel avec « Ciel »."
+          },
+          "step": "sky"
+        },
+        {
+          "problem": {
+            "en": "The outer filaments of the ring are lost in the sky.",
+            "fr": "Les filaments extérieurs de l’anneau se perdent dans le ciel."
+          },
+          "read": {
+            "en": "Left and top of the ring, the nebula stops early: the Rosette looks smaller than it is.",
+            "fr": "À gauche et en haut de l’anneau, la nébuleuse s’arrête tôt : la Rosette paraît plus petite qu’elle n’est."
+          },
+          "fix": {
+            "en": "Lift the faint tones with Faint tones.",
+            "fr": "Remonter les tons faibles avec « Tons faibles »."
+          },
+          "step": "faint"
+        },
+        {
+          "problem": {
+            "en": "Black lines on the right and bottom edges, a dark spot at the far left.",
+            "fr": "Des lignes noires aux bords droit et bas, une tache sombre à l’extrême gauche."
+          },
+          "read": {
+            "en": "At 100 % on the edges: the black borders left by the alignment (27 px on the right, 13 px at the bottom, about 8 px at the top) and the shadow of a dust grain at the left edge.",
+            "fr": "À 100 % sur les bords : les bordures noires laissées par l’alignement (27 px à droite, 13 px en bas, environ 8 px en haut) et l’ombre d’un grain de poussière au bord gauche."
+          },
+          "fix": {
+            "en": "Crop the picture.",
+            "fr": "Recadrer l’image."
+          },
+          "step": "crop"
+        }
+      ],
+      "detail": [
+        {
+          "src": "/tutorials/post-essentials/details/edge.jpg",
+          "w": 600,
+          "h": 600,
+          "caption": {
+            "en": "The right edge at 100 % before the crop: a black line.",
+            "fr": "Le bord droit à 100 % avant le recadrage : une ligne noire."
+          },
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          }
+        },
+        {
+          "src": "/tutorials/post-essentials/details/dust.jpg",
+          "w": 600,
+          "h": 600,
+          "caption": {
+            "en": "The left edge at 100 % before the crop: the dark spot.",
+            "fr": "Le bord gauche à 100 % avant le recadrage : la tache sombre."
+          },
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          }
+        }
+      ],
+      "check": {
+        "en": "The sky is a light grey, the right and bottom edges have a thin black line.",
+        "fr": "Le ciel est d’un gris clair, les bords droit et bas ont une fine ligne noire."
+      },
+      "shot": {
+        "en": "/tutorials/post-essentials/en/02.png",
+        "fr": "/tutorials/post-essentials/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 8.0,
+        "fr": 8.0
+      }
+    },
+    {
+      "id": "layer",
+      "title": {
+        "en": "The workflow’s image is a layer",
+        "fr": "L’image du workflow est un calque"
+      },
+      "text": {
+        "en": "The page holds the layers on the left, the picture in the middle and the Properties on the right. The image of the workflow is one layer, <b>Color minimal</b>; its eye shows or hides it, and its sliders are the Properties.",
+        "fr": "La page contient les calques à gauche, l’image au centre et les propriétés à droite. L’image du workflow est un seul calque, <b>Couleur minimal</b> ; son œil l’affiche ou la masque, et ses curseurs sont les propriétés."
+      },
+      "check": {
+        "en": "One layer, Color minimal, with its eye on; the sliders Sky, Contrast and the others at 0.",
+        "fr": "Un seul calque, Couleur minimal, son œil allumé ; les curseurs Ciel, Contraste et les autres à 0."
+      },
+      "shot": {
+        "en": "/tutorials/post-essentials/en/03.png",
+        "fr": "/tutorials/post-essentials/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 11.0,
+        "fr": 11.0
+      }
+    },
+    {
+      "id": "sky",
+      "title": {
+        "en": "Sky: bring the sky down",
+        "fr": "Ciel : descendre le ciel"
+      },
+      "text": {
+        "en": "In the group <b>Nebula and background</b>, drag <b>Sky</b> towards darker, about a quarter of the way, here −1.5, until the grey veil becomes a dark grey sky.",
+        "fr": "Dans le groupe <b>Nébuleuse et fond</b>, faites glisser <b>Ciel</b> vers plus sombre, environ au quart du chemin, ici −1,5, jusqu’à ce que le voile gris devienne un ciel gris sombre."
+      },
+      "why": {
+        "en": "A sky kept dark grey and neutral, never black, is what most imagers keep: a black sky swallows the faint edges of the nebula and makes the object look cut out, and a light grey sky looks like fog.",
+        "fr": "Un ciel gris sombre et neutre, jamais noir, est ce que la plupart des astrophotographes gardent : un ciel noir avale les bords faibles de la nébuleuse et donne l’impression d’un objet découpé, et un ciel gris clair ressemble à du brouillard."
+      },
+      "check": {
+        "en": "The veil is gone: on the exported picture the sky measures 34, 34 and 34. The outer nebula looks fainter, and the faint arc stays visible at 100 %.",
+        "fr": "Le voile a disparu : sur l’image exportée, le ciel mesure 34, 34 et 34. La nébuleuse extérieure paraît plus faible, et l’arc faible reste visible à 100 %."
+      },
+      "pitfall": {
+        "en": "Pushed to −2.0, the faint arc fades and the sky turns to grain.",
+        "fr": "Poussé à −2,0, l’arc faible s’efface et le ciel devient du grain."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/post-essentials/details/sky-before.jpg",
+          "w": 600,
+          "h": 600,
+          "caption": {
+            "en": "The top of the ring at 100 % before: the sky is grey.",
+            "fr": "Le haut de l’anneau à 100 % avant : le ciel est gris."
+          },
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          }
+        },
+        {
+          "src": "/tutorials/post-essentials/details/sky-right.jpg",
+          "w": 600,
+          "h": 600,
+          "caption": {
+            "en": "The same zone with Sky at −1.5: the sky is dark grey and the faint arc stays visible.",
+            "fr": "La même zone avec « Ciel » à −1,5 : le ciel est gris sombre et l’arc faible reste visible."
+          },
+          "label": {
+            "en": "Right",
+            "fr": "Juste"
+          }
+        },
+        {
+          "src": "/tutorials/post-essentials/details/sky-far.jpg",
+          "w": 600,
+          "h": 600,
+          "caption": {
+            "en": "Pushed to −2.0: the faint arc fades and the sky turns to grain.",
+            "fr": "Poussé à −2,0 : l’arc faible s’efface et le ciel devient du grain."
+          },
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/post-essentials/en/04.png",
+        "fr": "/tutorials/post-essentials/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 28.0,
+        "fr": 28.0
+      }
+    },
+    {
+      "id": "faint",
+      "title": {
+        "en": "Faint tones: bring the outer filaments up",
+        "fr": "Tons faibles : faire monter les filaments extérieurs"
+      },
+      "text": {
+        "en": "Drag <b>Faint tones</b> towards brighter, here +1.0, until the outer filaments of the ring, left and top, come up out of the sky and the Rosette shows its real size.",
+        "fr": "Faites glisser <b>Tons faibles</b> vers plus clair, ici +1,0, jusqu’à ce que les filaments extérieurs de l’anneau, à gauche et en haut, sortent du ciel et que la Rosette montre sa vraie taille."
+      },
+      "why": {
+        "en": "The faint tones are the extensions of the nebula: they make the Rosette a rose and not a disc.",
+        "fr": "Les tons faibles sont les prolongements de la nébuleuse : ils font de la Rosette une rose et non un disque."
+      },
+      "check": {
+        "en": "The sky stays at 34. At 100 % the left filament is brighter and a fine grain appears in the sky, which does not show on the fitted view.",
+        "fr": "Le ciel reste à 34. À 100 %, le filament de gauche est plus clair et un grain fin apparaît dans le ciel, qui ne se voit pas sur la vue ajustée."
+      },
+      "pitfall": {
+        "en": "At +2.0 the grain is plain and the red fades to pink: too far.",
+        "fr": "À +2,0 le grain est net et le rouge pâlit en rose : trop loin."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/post-essentials/details/faint-before.jpg",
+          "w": 600,
+          "h": 600,
+          "caption": {
+            "en": "The left filaments at 100 % with Sky only.",
+            "fr": "Les filaments de gauche à 100 % avec « Ciel » seul."
+          },
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          }
+        },
+        {
+          "src": "/tutorials/post-essentials/details/faint-right.jpg",
+          "w": 600,
+          "h": 600,
+          "caption": {
+            "en": "With Faint tones at +1.0: the filament is brighter.",
+            "fr": "Avec « Tons faibles » à +1,0 : le filament est plus clair."
+          },
+          "label": {
+            "en": "Right",
+            "fr": "Juste"
+          }
+        },
+        {
+          "src": "/tutorials/post-essentials/details/faint-far.jpg",
+          "w": 600,
+          "h": 600,
+          "caption": {
+            "en": "At +2.0: the grain is plain and the red fades to pink.",
+            "fr": "À +2,0 : le grain est net et le rouge pâlit en rose."
+          },
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/post-essentials/en/05.png",
+        "fr": "/tutorials/post-essentials/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 33.0,
+        "fr": 33.0
+      }
+    },
+    {
+      "id": "zoom",
+      "title": {
+        "en": "Zoom and fit",
+        "fr": "Zoom et ajustement"
+      },
+      "text": {
+        "en": "Click <b>Actual size (1)</b> to see the pixels at 100 %, then <b>Fit (F)</b> to see the whole picture again.",
+        "fr": "Cliquez sur <b>Taille réelle (1)</b> pour voir les pixels à 100 %, puis sur <b>Adapter (F)</b> pour revoir l’image entière."
+      },
+      "why": {
+        "en": "The checks of the gestures above are made at 100 %: the grain of the sky and the faint arc only show there.",
+        "fr": "Les contrôles des gestes précédents se font à 100 % : le grain du ciel et l’arc faible ne se voient que là."
+      },
+      "check": {
+        "en": "The zoom reads 100 % after the first click, and the whole picture is back after the second.",
+        "fr": "Le zoom indique 100 % après le premier clic, et l’image entière revient après le second."
+      },
+      "shot": {
+        "en": "/tutorials/post-essentials/en/06.png",
+        "fr": "/tutorials/post-essentials/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 38.0,
+        "fr": 38.0
+      }
+    },
+    {
+      "id": "compare",
+      "title": {
+        "en": "Before and after",
+        "fr": "Avant et après"
+      },
+      "text": {
+        "en": "Open the <b>…</b> menu and click <b>Before / after</b>, then drag the divider: the layer with its suggested settings on one side, the settings made on the other. Press <b>C</b> to leave the comparison.",
+        "fr": "Ouvrez le menu <b>…</b> et cliquez sur <b>Avant / après</b>, puis faites glisser le séparateur : le calque aux réglages suggérés d’un côté, les réglages faits de l’autre. Appuyez sur <b>C</b> pour quitter la comparaison."
+      },
+      "check": {
+        "en": "The veil is on one side of the divider and the dark sky on the other.",
+        "fr": "Le voile est d’un côté du séparateur et le ciel sombre de l’autre."
+      },
+      "shot": {
+        "en": "/tutorials/post-essentials/en/07.png",
+        "fr": "/tutorials/post-essentials/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 45.0,
+        "fr": 45.0
+      }
+    },
+    {
+      "id": "crop",
+      "title": {
+        "en": "Crop",
+        "fr": "Recadrer"
+      },
+      "text": {
+        "en": "Click <b>Crop</b>. The frame covers the picture without the black borders, the dust spot and the outer band, about 3,500 × 2,500 px, and the ring comes nearer the centre. Click <b>Apply</b>.",
+        "fr": "Cliquez sur <b>Recadrage</b>. Le cadre couvre l’image sans les bordures noires, la tache de poussière et la bande extérieure, environ 3 500 × 2 500 px, et l’anneau se rapproche du centre. Cliquez sur <b>Valider</b>."
+      },
+      "why": {
+        "en": "A black edge or a dark stain at the border is the first thing the eye catches. The crop takes out the black borders of the alignment, the dust shadow at the left edge, and brings the ring nearer the centre.",
+        "fr": "Un bord noir ou une tache sombre en bordure est la première chose que l’œil attrape. Le recadrage retire les bordures noires de l’alignement, l’ombre de la poussière au bord gauche, et rapproche l’anneau du centre."
+      },
+      "check": {
+        "en": "No black line on any edge, the dark spot is outside, the sky reads 34 to 36, neutral. The corners keep comet-shaped stars: that is the coma of the telescope, and the tutorial <i>Repair instead of cropping</i> treats it.",
+        "fr": "Aucune ligne noire sur aucun bord, la tache sombre est dehors, le ciel mesure 34 à 36, neutre. Les coins gardent des étoiles en forme de comète : c’est la coma du télescope, et le tutoriel <i>Réparer au lieu de recadrer</i> la traite."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/post-essentials/details/frame.jpg",
+          "w": 1600,
+          "h": 1071,
+          "caption": {
+            "en": "The frame drawn on the whole picture: x 250 to 3750, y 170 to 2670.",
+            "fr": "Le cadre tracé sur l’image entière : x 250 à 3750, y 170 à 2670."
+          },
+          "label": {
+            "en": "The frame",
+            "fr": "Le cadre"
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/post-essentials/en/08.png",
+        "fr": "/tutorials/post-essentials/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 56.0,
+        "fr": 56.0
+      }
+    },
+    {
+      "id": "undo-redo",
+      "title": {
+        "en": "Undo and redo",
+        "fr": "Annuler et rétablir"
+      },
+      "text": {
+        "en": "Drag <b>Contrast</b> towards stronger, to see, then press <b>Ctrl+Z</b>: the last change of the page is undone. Click <b>Redo (Ctrl+Y)</b> to bring it back, and <b>Ctrl+Z</b> again to leave Contrast at 0.",
+        "fr": "Faites glisser <b>Contraste</b> vers plus fort, pour voir, puis appuyez sur <b>Ctrl+Z</b> : le dernier changement de la page est annulé. Cliquez sur <b>Rétablir (Ctrl+Y)</b> pour le ramener, et sur <b>Ctrl+Z</b> de nouveau pour laisser Contraste à 0."
+      },
+      "why": {
+        "en": "Contrast is left at 0: tried at +0.4, it only darkened the sky by 3 levels, with no visible change at 100 %.",
+        "fr": "Contraste reste à 0 : essayé à +0,4, il n’a fait que foncer le ciel de 3 niveaux, sans changement visible à 100 %."
+      },
+      "check": {
+        "en": "The status bar names the change undone, Contrast of Color minimal, and the slider is back at 0.",
+        "fr": "La barre d’état nomme le changement annulé, Contraste de Couleur minimal, et le curseur est revenu à 0."
+      },
+      "shot": {
+        "en": "/tutorials/post-essentials/en/09.png",
+        "fr": "/tutorials/post-essentials/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 65.0,
+        "fr": 65.0
+      }
+    },
+    {
+      "id": "export-format",
+      "title": {
+        "en": "Export: the format",
+        "fr": "Exporter : le format"
+      },
+      "text": {
+        "en": "Click <b>Export…</b>, choose the file with the folder button, then open the <b>Format</b> list: TIFF 16-bit, TIFF 32-bit float, FITS 32-bit float, PNG 16-bit and JPEG. Choose <b>JPEG</b>.",
+        "fr": "Cliquez sur <b>Exporter…</b>, choisissez le fichier avec le bouton dossier, puis ouvrez la liste <b>Format</b> : TIFF 16 bits, TIFF 32 bits flottant, FITS 32 bits virgule flottante, PNG 16 bits et JPEG. Choisissez <b>JPEG</b>."
+      },
+      "check": {
+        "en": "The Format field reads JPEG.",
+        "fr": "Le champ « Format » indique JPEG."
+      },
+      "shot": {
+        "en": "/tutorials/post-essentials/en/10.png",
+        "fr": "/tutorials/post-essentials/fr/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 78.0,
+        "fr": 78.0
+      }
+    },
+    {
+      "id": "export-include",
+      "title": {
+        "en": "Export: the size and what is included",
+        "fr": "Exporter : la taille et ce qui est inclus"
+      },
+      "text": {
+        "en": "Open the <b>Size</b> list: full resolution, or Web with the longest side at 2048 or 4096 px. Under <b>Include</b>, the processing history is ticked, a file written beside the picture; layers, masks and the night card are off.",
+        "fr": "Ouvrez la liste <b>Taille</b> : pleine résolution, ou Web avec le grand côté à 2048 ou 4096 px. Sous <b>Inclure</b>, l’historique du traitement est coché, un fichier écrit à côté de l’image ; calques, masques et fiche de nuit sont décochés."
+      },
+      "check": {
+        "en": "The size reads full resolution.",
+        "fr": "La taille indique pleine résolution."
+      },
+      "shot": {
+        "en": "/tutorials/post-essentials/en/11.png",
+        "fr": "/tutorials/post-essentials/fr/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 89.0,
+        "fr": 89.0
+      }
+    },
+    {
+      "id": "export-done",
+      "title": {
+        "en": "The file written",
+        "fr": "Le fichier écrit"
+      },
+      "text": {
+        "en": "Click <b>Export</b>. The window says how many files were written, and where: the picture and its processing history. The processing stays in the project: every setting can be changed again.",
+        "fr": "Cliquez sur <b>Exporter</b>. La fenêtre indique combien de fichiers ont été écrits, et où : l’image et son historique de traitement. Le traitement reste dans le projet : chaque réglage peut être repris."
+      },
+      "check": {
+        "en": "The window reads 2 files written.",
+        "fr": "La fenêtre indique 2 fichiers écrits."
+      },
+      "shot": {
+        "en": "/tutorials/post-essentials/en/12.png",
+        "fr": "/tutorials/post-essentials/fr/12.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 100.0,
+        "fr": 100.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/post-essentials/result.jpg",
+    "w": 2000,
+    "h": 1429,
+    "caption": {
+      "en": "The exported picture: the sky reads 34 to 36 and is neutral, the outer filaments of the ring are back, no black edge or dust spot remains. 0 % of the pixels are black and 0.27 % are white, the cores of the stars only; the sky noise is 5.2 levels.",
+      "fr": "L’image exportée : le ciel mesure 34 à 36 et il est neutre, les filaments extérieurs de l’anneau sont revenus, il ne reste ni bord noir ni tache de poussière. 0 % des pixels sont noirs et 0,27 % sont blancs, les cœurs d’étoiles seulement ; le bruit du ciel est de 5,2 niveaux."
+    }
+  },
+  "blocks": [
+    "Post"
+  ],
+  "next": "post-layers-filters",
+  "video": {
+    "en": {
+      "src": "/tutorials/post-essentials/en/video.mp4",
+      "captions": "/tutorials/post-essentials/en/captions.vtt",
+      "chapters": "/tutorials/post-essentials/en/chapters.vtt",
+      "poster": "/tutorials/post-essentials/en/poster.jpg",
+      "seconds": 111.0
+    },
+    "fr": {
+      "src": "/tutorials/post-essentials/fr/video.mp4",
+      "captions": "/tutorials/post-essentials/fr/captions.vtt",
+      "chapters": "/tutorials/post-essentials/fr/chapters.vtt",
+      "poster": "/tutorials/post-essentials/fr/poster.jpg",
+      "seconds": 111.0
+    }
+  }
+}

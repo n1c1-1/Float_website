@@ -1,0 +1,16 @@
+---
+import { ui, type Lang } from '../i18n/ui';
+import Picture from './Picture.astro';
+interface Props { lang: Lang; n: number; src?: string; alt?: string; plate?: boolean; zoom?: boolean; wide?: boolean; width?: number; height?: number; eager?: boolean; sizes?: string }
+const { lang, n, src, alt = '', plate = false, zoom = false, wide = false, width, height, eager = false, sizes } = Astro.props;
+const t = ui[lang];
+---
+<figure class={wide ? 'wide' : undefined} id={`fig-${n}`}>
+  {src
+    ? <div class={plate ? 'plate' : 'plain'}>
+        <Picture src={src} alt={alt} width={width} height={height} eager={eager} sizes={sizes}
+                 zoom={zoom ? src : undefined} title={zoom ? t.zoomHint : undefined} />
+      </div>
+    : <slot name="body" />}
+  <figcaption><b>{t.figure} {n}.</b><slot /></figcaption>
+</figure>

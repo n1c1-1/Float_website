@@ -1,0 +1,314 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Post" title="Post"
+  description="Post in FLOAT: the layer-based finishing page and the Output block that ends every workflow. Layers, masks, blend modes, filters, simplified sliders, versions and export, with the published sources.">
+
+  <p class="kicker">Block</p>
+  <h1>Post</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It is where the picture is finished: each workflow’s result is a layer, and every adjustment is a filter that can be changed or removed at any time.</dd></div><div><dt>What it shows</dt><dd>The final picture, the layers panel beside it, and a few sliders from 0 to 4 that start in the middle.</dd></div><div><dt>What can be set</dt><dd>Sky, Contrast and Saturation first; the default rendering is a sound starting point, and Export writes the final file, a 16-bit TIFF by default.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>The Output block, and what Post receives</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Layers</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Masks</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>The simplified sliders</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Filters</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Versions</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Export</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Settings</a></li>
+      <li><a href="#s9"><span class="secnum">9</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">Post is the page where the results of the workflows are finished. It follows the layer model
+    of image editors such as GIMP: the result of each workflow, or of any block, is a layer, with an opacity, a blend mode
+    and a mask. Each adjustment is a filter on its layer, which can be switched off, changed or removed on its own at any
+    time. Every workflow ends with an Output block, which brings its linear image to the screen with an automatic
+    stretch; Post shows that stretch with a few sliders, from 0 to 4, and the filters go on top.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Color</span></li><li><span>Stars/background</span></li>
+    <li class="here"><span>Post</span></li><li><span>Report</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>The Output block, and what Post receives</h2>
+    <aside class="note"><b>The sky.</b> The level removed is the one the <a href="/blocks/gradient/">Gradient</a> block measured between the objects. A
+    median over the whole field would take a nebula that fills it for sky, differently in each colour.</aside>
+    <p>The Output block ends every workflow. It is automatic and cannot be cut. It takes the last image of the chain, the
+    denoised stack if the workflow has <a href="/blocks/denoise/">Denoise</a>, else the stack with its gradient removed, and writes it as a linear image
+    in display colours with its sky taken off. If the workflow has <a href="/blocks/color/">Color</a>, the white balance of that block is applied. It also
+    writes the covered pixels and the statistics of the stretch, measured once on the whole image at full resolution:
+    median, median absolute deviation and the 99.995th percentile of the luminance and of each channel.</p>
+    <p>Two repairs are made there. The periodic pattern of a colour mosaic is notched out of the image. The places where
+    samples were clipped, the cores of the bright stars, take the colour of the light just around them, at the lowest
+    brightness every channel allows. A combination of filters, like a single stack, is not cropped: the whole frame is
+    shown and the user crops.</p>
+    <p>Post then renders that image. The default rendering, with every slider at 2, is a midtones transfer function from a
+    black point at the median minus 2.8 median absolute deviations to a white point at the 99.995th percentile, the median
+    sky brought to a display level of 0.25. With linked channels the stretch is made on the luminance, so that the colour
+    balance of the image is kept; without, each channel is stretched on its own, which neutralises a colour cast.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Layers</h2>
+    <aside class="note"><b>Reading the panel.</b> Read from the bottom up, the layers panel is the order of the
+    composition: a pixel layer, then its filters from the lowest to the highest, then the next row up.</aside>
+    <p>A layer is one of three kinds.</p>
+    <ul>
+      <li><strong>A workflow layer</strong> is the image of a workflow: its Output block’s image, or one of the images of
+      its <a href="/blocks/stars/">Stars/background</a> block (the starless image, the stars alone, or the two recombined). It is rendered by the
+      engine from its base and its sliders (section 4).</li>
+      <li><strong>An image layer</strong> is the result of any block (a stack, a gradient-removed or a denoised image) sent
+      from Inspect. It is stretched automatically and moved by the Sky, Contrast and Saturation sliders. Its pixels are
+      never saved in the composition, only the name of the result.</li>
+      <li><strong>A filter layer</strong> is one filter (section 5). It applies to the one pixel layer it is nested under,
+      or to everything below it when it is a row of its own.</li>
+    </ul>
+    <p>Each layer has an eye, an <strong>opacity</strong> from 0 to 100 % and a <strong>blend mode</strong>. The filters
+    have them too. The modes are the following, a being what is below and b the layer.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The blend modes of a layer or a filter.</caption>
+        <thead><tr><th>Mode</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Normal</th><td>b</td></tr>
+          <tr><th scope="row">Lighten</th><td>max(a, b)</td></tr>
+          <tr><th scope="row">Screen</th><td>1 − (1 − a)(1 − b)</td></tr>
+          <tr><th scope="row">Linear dodge (add)</th><td>min(a + b, 1)</td></tr>
+          <tr><th scope="row">Multiply</th><td>a × b</td></tr>
+          <tr><th scope="row">Soft light</th><td>(1 − 2b) a² + 2ab</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The mode is applied first, then the opacity and the mask mix the result with what is below:
+    below + (result − below) × opacity × mask.</p>
+    <h3>Stars and background</h3>
+    <p>A workflow with a Stars/background block comes in as one layer with two images, each with its own filters: the
+    starless image, stretched with the statistics of the whole image so that, recombined, it looks like the Output
+    block’s, and the stars alone. The stars are stretched on their own, black at 0 and the white and midtone of the whole
+    image, and go back on top in <strong>Screen</strong>, or in Linear dodge (add) or Lighten. Stretching them less is the
+    star reduction: none is needed on the recombined image. The stars of the layer are a group: the real stars and, when
+    the workflow has the Synthetic stars block, the synthetic ones beside them, each with its eye and its mask. Each side
+    may also have a mask of its own, applied to its image after its filters and before the two are put together.</p>
+    <p>For a combination of filters made on starless images, the Combine layers block puts the stars of another workflow
+    back on its image; the stars of a combination of stars are stretched with the statistics of the starless combination.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Masks</h2>
+    <p>Every layer and every filter may have a mask. A mask is made of parts, each added to what is there, subtracted from
+    it or intersected with it. A mask shows as a red overlay on the image.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The parts of a mask.</caption>
+        <thead><tr><th>Part</th><th>What it selects</th><th>Settings</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">H-alpha</th><td>The red excess of the image, the red minus the green (mostly Hα, with [N II] and [S II]), smoothed over 6 px, 0 at its median and 1 at its 97th percentile (measured on the whole field).</td><td>None</td></tr>
+          <tr><th scope="row">Luminance range</th><td>The pixels whose luminance lies between two levels, with soft edges.</td><td>From 40 %, To 100 %</td></tr>
+          <tr><th scope="row">Color range</th><td>The pixels near a hue, weighted by their saturation.</td><td>Hue 0° – 359°, width 40° (10° – 120°)</td></tr>
+          <tr><th scope="row">Linear gradient</th><td>A ramp across the image, from the top, bottom, left or right.</td><td>Position 50 %, softness 40 % (1 % – 100 %)</td></tr>
+          <tr><th scope="row">Brush</th><td>What is painted, with strokes that can be taken back one at a time.</td><td>Size 60 px, hardness 50 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Three settings act on the whole mask: <strong>Feather</strong> (0 to 60 px, blurs the edge), <strong>Density</strong>
+    (0 to 100 %, the share of the layer that shows where the mask is white) and <strong>Invert</strong>. A brush added to
+    an empty mask takes away from a full one: the layer stays shown everywhere and the first stroke hides.</p>
+    <p>The luminance and colour parts read the image they are on. A mask part is computed once for given settings and
+    reused, so that adding a part to a mask computes that part only.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>The simplified sliders</h2>
+    <aside class="note"><b>How a position is read.</b> At 2 a setting has the value of the layer’s base. At the other
+    positions the table’s step from position 2 is added, or its ratio to position 2 multiplies the base. Between whole
+    positions the value is linear, and it stays inside the setting’s bounds.</aside>
+    <p>A workflow layer is rendered from a base, a named rendering of the project or the suggestion, moved by its
+    sliders. Each slider runs from 0 to 4 and its position 2 is the base.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 3.</b>The sliders, and the setting each one moves, from position 0 to position 4, for the suggested base.</caption>
+        <thead><tr><th>Slider</th><th>Group</th><th>Ends</th><th>Setting</th><th>0 → 2 → 4</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Sky</th><td>Nebula and background</td><td>darker, brighter</td><td>Sky brightness</td><td class="n">0.15 → 0.25 → 0.37</td></tr>
+          <tr><th scope="row">Contrast</th><td>Nebula and background</td><td>softer, stronger</td><td>S-curve</td><td class="n">−0.35 → 0 → 0.5</td></tr>
+          <tr><th scope="row">Faint tones</th><td>Nebula and background</td><td>darker, brighter</td><td>Faint tones</td><td class="n">−0.8 → 0 → 1.6</td></tr>
+          <tr><th scope="row">Saturation</th><td>Nebula and background</td><td>paler, more vivid</td><td>Saturation</td><td class="n">0.6 → 1.2 → 1.85</td></tr>
+          <tr><th scope="row">Colours</th><td>Nebula and background</td><td>faded, true</td><td>Keep the colours</td><td class="n">0 → 0.5 → 1</td></tr>
+          <tr><th scope="row">H-alpha</th><td>Nebula and background</td><td>less, more</td><td>H-alpha</td><td class="n">−0.6 → 0 → 2</td></tr>
+          <tr><th scope="row">Noise smoothing</th><td>Nebula and background</td><td>less, more</td><td>Denoised share; faint area smoothing</td><td class="n">0.4 → 1 → 1; 0 → 0 → 1.6 px</td></tr>
+          <tr><th scope="row">Strength</th><td>Stars</td><td>subtler, bolder</td><td>Star strength</td><td class="n">0.25 → 0.6 → 1.6</td></tr>
+          <tr><th scope="row">Small stars</th><td>Stars</td><td>less, more</td><td>Small stars</td><td class="n">1 → 0 → 0</td></tr>
+          <tr><th scope="row">Star size</th><td>Stars</td><td>smaller, larger</td><td>Star size</td><td class="n">−3 → −1 → 1 px</td></tr>
+          <tr><th scope="row">Star color</th><td>Stars</td><td>whiter, more colorful</td><td>Star color</td><td class="n">0.4 → 1.2 → 2.3</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Faint tones</strong> raises or lowers the tones just above the sky without moving the sky: a generalised
+    hyperbolic stretch<a class="cite" href="#ref-1">[1]</a> of the range above the sky, its black point and symmetry point
+    at the sky, applied to the luminance with the colour ratios kept. <strong>Colours</strong> sets how much of the stretch
+    keeps the colours: at 0 each channel goes through the same curve, so that the faint colours turn grey and the bright
+    cores white; at 1 the luminance is stretched and the three channels scaled with it, which keeps the colours of the linear
+    image.<a class="cite" href="#ref-2">[2]</a> The base is 0.5, so that nebulae keep their colour and the bright cores their
+    structure. <strong>H-alpha</strong> adds the measured H-alpha emission to the red before the stretch, or takes it out;
+    it is the red above a continuum predicted from the green (mostly Hα, with [N II] and [S II]), the red-to-green ratio
+    of that continuum measured on the stars, as the continuum of a narrow-band Hα image is scaled on the
+    stars.<a class="cite" href="#ref-3">[3]</a>
+    <strong>Noise smoothing</strong> mixes the raw stack back into the denoised one below 2, and smooths the faint areas
+    above, the bright ones keeping full resolution.</p>
+    <p>A slider that a layer cannot offer is greyed, and its reason is shown: the star sliders work on the stars of the
+    <a href="/blocks/stars/">Stars/background</a> block; the stars layer holds the stars only; noise smoothing needs the <a href="/blocks/denoise/">Denoise</a> block and works on the
+    whole image; H-alpha is for colour cameras only, since in a palette combination H-alpha is its own channel and on a
+    monochrome image there is no red over a continuum.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Filters</h2>
+    <aside class="note"><b>At their defaults.</b> Every filter is the identity at its defaults: adding one changes nothing
+    until a setting is moved, and the composition keeps the image bit for bit.</aside>
+    <p>A filter is a layer of its own kind. Dropped onto a pixel layer it is nested under it and acts on it alone; between
+    two rows it acts on everything below. Each has an eye, an opacity, a blend mode and a mask. Switching it off, changing
+    it or removing it leaves every other filter as it is.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 4.</b>The filters of Post, and the method each follows.</caption>
+        <thead><tr><th>Family</th><th>Filter</th><th>Method</th></tr></thead>
+        <tbody>
+          <tr><th scope="row" rowspan="5">Stretch</th><td>Generalised hyperbolic stretch</td><td>Payne and Cranfield: a strong stretch around a chosen level, the shadows and highlights protected.<a class="cite" href="#ref-1">[1]</a> Factor ln(D + 1) 0 – 4, local intensity −5 – 15, symmetry point, shadow and highlight protection, black point.</td></tr>
+          <tr><td>Arcsinh stretch</td><td>pixel = x′ · asinh(L′ · stretch) / (L′ · asinh(stretch)), the colours kept.<a class="cite" href="#ref-2">[2]</a> Stretch 0 – 40, black point 0 – 0.2.</td></tr>
+          <tr><td>Histogram transformation</td><td>Shadows, midtones and highlights, through the midtones transfer function (m − 1) x / ((2m − 1) x − m).</td></tr>
+          <tr><td>Curves</td><td>One curve per channel (RGB/K, R, G, B, CIE L*, saturation, chroma, hue), 2 to 100 control points, Akima, natural cubic or linear interpolation.<a class="cite" href="#ref-4">[4]</a> Presets, the user’s own, and .acv files.</td></tr>
+          <tr><td>Levels</td><td>Black point 0 – 0.3, white point 0.7 – 1, gamma 0.5 – 2.</td></tr>
+          <tr><th scope="row" rowspan="4">Contrast</th><td>Local contrast</td><td>A large-radius unsharp mask: strength 0 – 1.5, scale 5 – 120 px.</td></tr>
+          <tr><td>Dehaze</td><td>The veil is measured as the background of a source extractor (meshes, 3σ clipping, mode, bicubic map)<a class="cite" href="#ref-5">[5]</a> and taken off with a haze model, the white kept.<a class="cite" href="#ref-6">[6]</a> Amount, scale 32 – 512 px.</td></tr>
+          <tr><td>Local histogram equalization</td><td>CLAHE on the CIE L* lightness.<a class="cite" href="#ref-7">[7]</a> Amount 0 – 1, contrast limit 1 – 8, kernel radius 16 – 512 px.</td></tr>
+          <tr><td>Highlight compression</td><td>A base and its detail by the guided filter;<a class="cite" href="#ref-8">[8]</a> the base is compressed above a knee, the detail kept. Strength, start 0.2 – 0.9, detail kept, scale 8 – 120 px.</td></tr>
+          <tr><th scope="row" rowspan="4">Color</th><td>Saturation</td><td>Saturation around the luminance, −100 to +150 %, by hue range, with a background protection that spares the noise of the sky.</td></tr>
+          <tr><td>Colour mixer</td><td>Hue, saturation and luminance of eight colour ranges (red, orange, yellow, green, aqua, blue, purple, magenta) in CIE L*c*h*. The grey background and the white star cores are left alone.</td></tr>
+          <tr><td>Green removal</td><td>The green held under a neutral made of red and blue; four protections, amount, preserve lightness.</td></tr>
+          <tr><td>Color balance</td><td>Gains on red and blue (temperature) and on green (tint).</td></tr>
+          <tr><th scope="row" rowspan="3">Detail</th><td>Sharpen</td><td>Unsharp mask: strength 0 – 2, radius 0.5 – 4 px.</td></tr>
+          <tr><td>Multiscale sharpening</td><td>Starlet wavelet layers (B3 spline à trous) of 1, 2, 4, 8 and 16 px, each raised or lowered on its own, on the lightness or on each channel.<a class="cite" href="#ref-9">[9]</a></td></tr>
+          <tr><td>Spot healing</td><td>A spot replaced by a patch of its neighbourhood and blended in by Poisson editing.<a class="cite" href="#ref-10">[10]</a> The source is found automatically, 2.2 to 3.2 radii away, by the patch search of PatchMatch,<a class="cite" href="#ref-11">[11]</a> and can be moved.</td></tr>
+          <tr><th scope="row" rowspan="3">Noise</th><td>Noise reduction</td><td>A Gaussian smoothing of the luminance and of the colour.</td></tr>
+          <tr><td>Multiscale noise reduction</td><td>Soft thresholding of the starlet layers,<a class="cite" href="#ref-9">[9]</a> each shrunk by k σ with σ estimated from the first layer; on the lightness, the chrominance or each channel.</td></tr>
+          <tr><td>Faint area smoothing</td><td>Smooths the areas fainter than a level (0.05 – 0.8), the brighter ones untouched, so that the faint extensions can be raised without their grain.</td></tr>
+          <tr><th scope="row">Combine</th><td>H-alpha to red</td><td>The engine’s H-alpha map added to the red channel.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Versions</h2>
+    <p>A project keeps several versions of the same edit, each with its own layers, filters, masks and its own Undo and Redo.
+    A click on the version’s name opens the list and a double-click renames it. A name must be given and must be
+    unique. New version makes a copy of the one shown, and a version can be deleted while another remains. A deleted
+    version can be brought back with Ctrl+Z. Layers copied into a new version keep the same settings, so a version’s
+    switch reuses what the other computed. The exported files carry the version’s name.</p>
+    <p>Nothing in Post renders in the interface thread. While a slider or the brush moves, a draft is shown (an eighth of
+    the image on the CPU, a quarter on a graphics card); on release the quarter, then the half-resolution image of the screen; and,
+    zoomed in, the visible region at full resolution, with a margin of 64 px so that the filters see their neighbours. A
+    newer request replaces an older one.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Export</h2>
+    <p>Export writes the whole composition at full resolution, each layer rendered on the whole grid. The files go to the
+    folder chosen and nowhere else; a folder inside the project’s results is refused. Each file is written under a
+    temporary name and takes its final one in a single step: a failure leaves the earlier file as it was.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 5.</b>The export formats. All are in sRGB, with the profile embedded where the format allows.</caption>
+        <thead><tr><th>Format</th><th>File</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">TIFF 16-bit</th><td>name_16bit.tif</td><td>The default. Zlib compression.</td></tr>
+          <tr><th scope="row">TIFF 32-bit float</th><td>name_32bit_float.tif</td><td>Zlib compression.</td></tr>
+          <tr><th scope="row">PNG 16-bit</th><td>name.png</td><td></td></tr>
+          <tr><th scope="row">JPEG</th><td>name.jpg</td><td>Quality 93 by default (50 – 100), chroma not subsampled (4:4:4): the colour of a star is not smeared.</td></tr>
+          <tr><th scope="row">FITS 32-bit float</th><td>name.fits</td><td>With the astrometric solution (WCS) and the processing history in its header, and the target, the dates and the total exposure when known.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The size is the full resolution (the drizzled grid) or a long side of 2048 or 4096 px, reduced by area averaging.
+    A quarter turn or a vertical mirror is applied without any resampling; the solution in a FITS header follows the turn.
+    The export can add a history file next to the image, each layer as a separate file, the masks, the night card, and the
+    sky grid and object names drawn into the picture.</p>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 6.</b>The settings of the Output block and of a mask.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Stretch</th><td>auto</td><td>auto</td><td>How the linear image is brought to the screen: black just below the sky, the sky at a set brightness.</td></tr>
+          <tr><th scope="row">Linked channels</th><td>on</td><td>on, off</td><td>One stretch for the three channels, which keeps the colour balance; off, each channel is stretched on its own.</td></tr>
+          <tr><th scope="row">Sky brightness</th><td class="n">0.25</td><td class="n">0.02 – 0.6</td><td>Display level of the median sky after the stretch.</td></tr>
+          <tr><th scope="row">Saturation</th><td class="n">1.2</td><td class="n">0 – 3</td><td>Colour saturation around the luminance, after the stretch.</td></tr>
+          <tr><th scope="row">Keep the colours</th><td class="n">0.5</td><td class="n">0 – 1</td><td>How much of the stretch keeps the colours.</td></tr>
+          <tr><th scope="row">Faint tones</th><td class="n">0</td><td class="n">−1 – 3</td><td>Raises or lowers the faint tones above the sky.</td></tr>
+          <tr><th scope="row">Feather</th><td class="n">0 px</td><td class="n">0 – 60</td><td>Blurs the edge of a mask.</td></tr>
+          <tr><th scope="row">Density</th><td class="n">100 %</td><td class="n">0 – 100</td><td>The share of the layer that shows where the mask is white.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s9"><span class="secnum">9</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>Post rendering is slow on integrated AMD graphics.</strong> Tested on Windows 11 with an RTX 4060 Ti, an
+      RTX 3070 and a laptop without an NVIDIA card. When the memory of the graphics card is full, the layer is rendered
+      again on the CPU, and a note says so.</li>
+      <li><strong>The Output stretch is automatic only.</strong> The other stretches are filters on a layer, not a setting
+      of the Output block.</li>
+      <li><strong>Layers pulled from <a href="/blocks/stacking/">Stacking</a> leave the graph early.</strong> A layer taken from a block before <a href="/blocks/denoise/">Denoise</a> has no
+      noise slider, and one taken before <a href="/blocks/stars/">Stars/background</a> has no star sliders; each says why.</li>
+      <li><strong>Without <a href="/blocks/color/">Color</a>, the colours are those of the camera.</strong> Each channel’s sky is made grey and scaled to
+      the same spread, so that the colour cast of the light pollution does not tint the preview; the gradient stays visible,
+      since removing it is the <a href="/blocks/gradient/">Gradient</a> block’s job.</li>
+      <li><strong>Not in this version.</strong> Colour profiles other than sRGB, and the linear outputs.</li>
+      <li><strong>The first Post’s arcsinh stretch around a symmetry point</strong> is hidden from the filter menu and
+      kept only so that the compositions that hold it still open.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Payne, D. &amp; Cranfield, M., <i>generalised hyperbolic stretch</i> (GHSastro). <a href="https://ghsastro.co.uk">ghsastro.co.uk</a></li>
+      <li id="ref-2">Lupton, R. et al. 2004, <i>Preparing Red-Green-Blue (RGB) Images from CCD Data</i>, PASP 116, 133. <a href="https://arxiv.org/abs/astro-ph/0312483">arXiv:astro-ph/0312483</a></li>
+      <li id="ref-3">James, P. A. et al. 2004, <i>The H alpha Galaxy Survey I. The galaxy sample, H alpha narrow-band observations and star formation parameters for 334 galaxies</i>, A&amp;A 414, 23. <a href="https://arxiv.org/abs/astro-ph/0311030">arXiv:astro-ph/0311030</a></li>
+      <li id="ref-4">Akima, H. 1970, <i>A new method of interpolation and smooth curve fitting based on local procedures</i>, J. ACM 17(4), 589. <a href="https://doi.org/10.1145/321607.321609">doi:10.1145/321607.321609</a></li>
+      <li id="ref-5">Bertin, E. &amp; Arnouts, S. 1996, <i>SExtractor: Software for source extraction</i>, A&amp;AS 117, 393. <a href="https://doi.org/10.1051/aas:1996164">doi:10.1051/aas:1996164</a></li>
+      <li id="ref-6">He, K., Sun, J. &amp; Tang, X. 2009, <i>Single Image Haze Removal Using Dark Channel Prior</i>, CVPR 2009 / IEEE TPAMI 33(12), 2011. <a href="https://doi.org/10.1109/TPAMI.2010.168">doi:10.1109/TPAMI.2010.168</a></li>
+      <li id="ref-7">Zuiderveld, K. 1994, <i>Contrast Limited Adaptive Histogram Equalization</i>, Graphics Gems IV, 474. <a href="https://doi.org/10.1016/B978-0-12-336156-1.50061-6">doi:10.1016/B978-0-12-336156-1.50061-6</a></li>
+      <li id="ref-8">He, K., Sun, J. &amp; Tang, X. 2013, <i>Guided Image Filtering</i>, IEEE TPAMI 35(6), 1397. <a href="https://doi.org/10.1109/TPAMI.2012.213">doi:10.1109/TPAMI.2012.213</a></li>
+      <li id="ref-9">Starck, J.-L. &amp; Murtagh, F. 2006, <i>Astronomical Image and Data Analysis</i>, 2nd ed., Springer. <a href="https://doi.org/10.1007/978-3-540-33025-7">doi:10.1007/978-3-540-33025-7</a></li>
+      <li id="ref-10">Pérez, P., Gangnet, M. &amp; Blake, A. 2003, <i>Poisson Image Editing</i>, SIGGRAPH 2003, ACM Trans. Graph. 22(3), 313. <a href="https://doi.org/10.1145/882262.882269">doi:10.1145/882262.882269</a></li>
+      <li id="ref-11">Barnes, C., Shechtman, E., Finkelstein, A. &amp; Goldman, D. B. 2009, <i>PatchMatch</i>, ACM Trans. Graph. 28(3). <a href="https://doi.org/10.1145/1531326.1531330">doi:10.1145/1531326.1531330</a></li>
+    </ol>
+  </section>
+</Doc>

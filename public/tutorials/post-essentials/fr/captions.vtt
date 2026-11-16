@@ -1,0 +1,105 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet du premier tutoriel.
+
+2
+00:00:04.000 --> 00:00:08.000
+Le projet s’ouvre à jour : rien n’est à calculer.
+
+3
+00:00:08.000 --> 00:00:11.000
+Cliquez sur « Post ».
+
+4
+00:00:11.000 --> 00:00:16.000
+Les calques à gauche, l’image au centre, les propriétés à droite.
+
+5
+00:00:16.000 --> 00:00:21.000
+L’image du workflow est un calque, « Couleur minimal ». Son œil l’affiche ou la masque.
+
+6
+00:00:21.000 --> 00:00:28.000
+Avant tout geste : un voile gris sur le ciel, des lignes noires aux bords droit et bas, une tache sombre à l’extrême gauche.
+
+7
+00:00:28.000 --> 00:00:33.000
+Faites glisser « Ciel » vers plus sombre, jusqu’à environ −1,5 : le voile gris disparaît.
+
+8
+00:00:33.000 --> 00:00:38.000
+Faites glisser « Tons faibles » vers plus clair, jusqu’à environ +1,0 : les filaments extérieurs sortent du ciel.
+
+9
+00:00:38.000 --> 00:00:42.000
+Cliquez sur « Taille réelle (1) » : les pixels à 100 %.
+
+10
+00:00:42.000 --> 00:00:45.000
+Cliquez sur « Adapter (F) » : l’image entière de nouveau.
+
+11
+00:00:45.000 --> 00:00:48.000
+Ouvrez le menu … : « Avant / après » s’y trouve.
+
+12
+00:00:48.000 --> 00:00:51.000
+Cliquez sur « Avant / après ».
+
+13
+00:00:51.000 --> 00:00:56.000
+Faites glisser le séparateur : le calque aux réglages suggérés d’un côté, les réglages faits de l’autre.
+
+14
+00:00:56.000 --> 00:01:01.000
+Cliquez sur « Recadrage » : le cadre apparaît sur l’image.
+
+15
+00:01:01.000 --> 00:01:05.000
+Cliquez sur « Valider » pour garder le recadrage.
+
+16
+00:01:05.000 --> 00:01:09.000
+Faites glisser « Contraste » vers plus fort, pour voir.
+
+17
+00:01:09.000 --> 00:01:14.000
+Appuyez sur Ctrl+Z : le dernier changement de la page est annulé, ici « Contraste ».
+
+18
+00:01:14.000 --> 00:01:18.000
+Cliquez sur « Rétablir (Ctrl+Y) » : le changement revient.
+
+19
+00:01:18.000 --> 00:01:21.000
+Cliquez sur « Exporter… ».
+
+20
+00:01:21.000 --> 00:01:24.000
+Choisissez le fichier avec le bouton dossier.
+
+21
+00:01:24.000 --> 00:01:29.000
+La liste « Format » propose TIFF 16 bits, TIFF 32 bits flottant, FITS 32 bits virgule flottante, PNG 16 bits et JPEG.
+
+22
+00:01:29.000 --> 00:01:34.000
+Taille : pleine résolution, ou Web avec le grand côté à 2048 ou 4096 px.
+
+23
+00:01:34.000 --> 00:01:40.000
+Inclure : l’historique du traitement est coché, un fichier écrit à côté de l’image. Calques, masques et fiche de nuit sont décochés.
+
+24
+00:01:40.000 --> 00:01:42.000
+Cliquez sur « Exporter ».
+
+25
+00:01:42.000 --> 00:01:47.000
+La fenêtre indique combien de fichiers ont été écrits, et où.
+
+26
+00:01:47.000 --> 00:01:51.000
+Le traitement reste dans le projet : chaque réglage peut être repris.

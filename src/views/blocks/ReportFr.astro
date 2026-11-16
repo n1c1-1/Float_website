@@ -1,0 +1,251 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Report" title="Rapport"
+  description="L’onglet Rapport de FLOAT : le compte rendu d’un traitement, avec la fiche de prise de vue, la nuit pose par pose, les valeurs mesurées par chaque bloc, la recette, et comment le copier ou l’exporter.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Rapport</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce que c’est</dt><dd>Le compte rendu d’un traitement, présenté comme un court rapport scientifique : ce qui a été pris, ce qui a été mesuré, ce qui a été fait.</dd></div><div><dt>Ce qu’il montre</dt><dd>La fiche de prise de vue, la taille des étoiles et le ciel de chaque pose au fil de la nuit, les valeurs mesurées par chaque bloc, et les réglages modifiés.</dd></div><div><dt>Ce qui s’exporte</dt><dd>Le rapport entier en PDF ou en PNG, la fiche de prise de vue en texte, et chaque section ou fiche de nuit en image.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>À quoi sert le rapport</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>La première page</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>La nuit, pose par pose</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Une section par bloc</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Recette et annexe</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Copie et export</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Contenu, section par section</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">L’onglet Rapport présente les mesures d’un workflow comme un court rapport scientifique&nbsp;: la
+    fiche de prise de vue, la taille des étoiles, le signal et le niveau du ciel de chaque pose, les valeurs que chaque
+    bloc a mesurées, les réglages modifiés. Il ne calcule rien lui-même. Chaque nombre est un fait qu’un bloc a déjà
+    écrit, et le rapport nomme le bloc dont il vient. Il se lit dans l’onglet comme un PDF, s’exporte en PDF ou en PNG,
+    et ses parties se copient en texte ou en image pour un forum.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Étoiles/fond</span></li><li><span>Post</span></li>
+    <li class="here"><span>Rapport</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>À quoi sert le rapport</h2>
+    <aside class="note"><b>Aucun chemin, aucun nom de dossier.</b> Un réglage dont la valeur désigne un emplacement sur
+    un disque est écarté, pour que le rapport puisse être partagé tel quel.</aside>
+    <p>Une image traitée ne dit pas ce qui a été photographié, comment était le ciel cette nuit-là, ni ce qui a été fait
+    pour l’obtenir. Le rapport est cette trace&nbsp;: ce qui a été pris, ce qui a été mesuré, ce qui a été fait. Il est
+    fait pour être gardé avec le projet ou publié avec l’image.</p>
+    <p>C’est un document, pas un tableau de bord&nbsp;: une page blanche, des sections numérotées, des tableaux à filets
+    fins, des figures noires avec leur légende. Les tableaux sont les faits des blocs eux-mêmes, ceux que montre
+    Inspecter. Les figures sont dessinées pour le rapport&nbsp;; Inspecter garde ses graphiques interactifs.</p>
+    <p>L’onglet a deux parties. À gauche, un formulaire pour ce que les fichiers ne disent pas, et les boutons de
+    copie. À droite, le rapport lui-même dans un lecteur PDF&nbsp;: ce qu’on voit est ce qu’on exporte. On zoome avec − et +,
+    avec Ctrl et la molette, et Ajuster largeur revient à la largeur de la page. Quand le projet contient plusieurs
+    workflows, une liste au-dessus du formulaire choisit celui que décrit le rapport.</p>
+    <p>Tant que le workflow n’a pas été lancé, le rapport le dit et ne montre rien d’autre. Si un bloc est périmé (une
+    nuit a été ajoutée depuis le dernier calcul), le rapport est fait des résultats qu’il avait et le dit en italique
+    rouge, au lieu d’affirmer que rien n’est calculé.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>La première page</h2>
+    <aside class="note"><b>Pourquoi la date est saisie.</b> L’horloge d’un appareil peut être fausse&nbsp;: la date n’est
+    donc jamais lue dans les fichiers. Elle n’apparaît que si elle a été saisie.</aside>
+    <p>La première page s’ouvre comme un article de revue. Elle porte le nom de la cible (la cible du projet, sinon son
+    nom), le nom du workflow et de la version de <a href="/fr/blocs/post/">Post</a> quand il y en a plusieurs, et une ligne de position&nbsp;: le centre du
+    champ en ascension droite et déclinaison (ICRS), la taille du champ et l’échelle en secondes d’arc par pixel, tous
+    trois issus du bloc <a href="/fr/blocs/astrometrie/">Astrométrie</a>. Vient ensuite l’image finale, telle que Post
+    l’a montrée en dernier (figure 1 du rapport), et une petite ligne avec le nom du programme, «&nbsp;Rapport de traitement&nbsp;» et la
+    date.</p>
+    <p>Deux tableaux suivent.</p>
+    <p><strong>Le tableau 1, Acquisition,</strong> liste la fiche de prise de vue dans l’ordre d’un message de forum.
+    Chaque ligne n’apparaît que si elle est connue.</p>
+    <ul>
+      <li>Appareil, avec son Gain ou sa sensibilité ISO. Les deux viennent des en-têtes des images&nbsp;; Gain est écrit
+      quand l’en-tête nomme un gain (une caméra d’astronomie), ISO sinon.</li>
+      <li>Instrument, Monture, Filtre, Lieu et Date. Les fichiers ne les disent pas&nbsp;: ils se saisissent dans le
+      formulaire à gauche de l’onglet, sont gardés dans le projet, et le formulaire du bloc Projet modifie les mêmes
+      valeurs. Annuler reprend une saisie.</li>
+      <li>Poses&nbsp;: les poses gardées, regroupées par temps de pose (par exemple 90 × 180 s), avec leur pose totale à la
+      seconde. Darks, Flats et Offsets&nbsp;: leurs nombres.</li>
+      <li>Échantillonnage, l’échelle des pixels finaux, quand ce n’est pas déjà celle de la ligne sous le titre.</li>
+    </ul>
+    <p>La focale, la taille des étoiles et le champ sont retirés de ce tableau quand ils sont donnés ailleurs sur la
+    page.</p>
+    <p><strong>Le tableau 2, Valeurs mesurées sur les poses de cette session,</strong> donne pour chaque valeur sa
+    grandeur et sa méthode de mesure. Une valeur n’est listée que si le bloc qui la mesure a tourné. Le tableau 1 de
+    cette page les liste.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les valeurs de l’en-tête du rapport, et le bloc dont chacune vient.</caption>
+        <thead><tr><th>Valeur</th><th>Grandeur</th><th>Méthode de mesure</th><th>Bloc</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Focale mesurée</th><td>en mm</td><td>Par l’astrométrie&nbsp;: le nombre d’étoiles utilisées et le résidu de l’ajustement, en secondes d’arc.</td><td>Astrométrie</td></tr>
+          <tr><th scope="row">FWHM des étoiles</th><td>médiane, en secondes d’arc</td><td>Largeur médiane des étoiles (ajustement de Moffat) sur les poses gardées, avec la meilleure pose. Donnée en pixels quand l’échelle sur le ciel n’est pas connue.</td><td><a href="/fr/blocs/alignement/">Alignement</a></td></tr>
+          <tr><th scope="row">Dérive du champ</th><td>en secondes d’arc</td><td>Déplacement du champ sur le capteur pendant la session (suivi et décalages volontaires), avec la vitesse par minute quand les heures de la première et de la dernière pose sont connues.</td><td>Alignement</td></tr>
+          <tr><th scope="row">Décalage des couleurs, corrigé</th><td>en pixels</td><td>Le plus grand des décalages du rouge et du bleu par rapport au vert, avec les deux, et le nombre d’étoiles sur lesquelles ils sont mesurés. Listé seulement quand la correction a été appliquée.</td><td><a href="/fr/blocs/empilement/">Empilement</a></td></tr>
+          <tr><th scope="row">Bruit du fond de ciel</th><td>÷ n</td><td>Le bruit du canal vert avant le Débruitage divisé par celui d’après, chacun valant 1,4826 fois l’écart absolu médian de l’image linéaire moins son flou gaussien (σ 2 px).</td><td><a href="/fr/blocs/debruitage/">Débruitage</a></td></tr>
+          <tr><th scope="row">Gradient du ciel, retiré</th><td>en %</td><td>Écart du fond d’un bord à l’autre du champ, rapporté à son niveau, modélisé sur un certain nombre d’échantillons.</td><td><a href="/fr/blocs/gradient/">Gradient</a></td></tr>
+          <tr><th scope="row">Étoiles Gaia DR3 dans le champ</th><td>un nombre</td><td>Les étoiles du catalogue dans le champ, et combien ont leur spectre mesuré.</td><td>Catalogues (l’étape que lit le bloc Couleur)</td></tr>
+          <tr><th scope="row">Réponse du capteur, reconstruite</th><td>un nombre</td><td>Les étoiles dont les spectres ont servi à reconstruire la réponse en couleur du capteur (section 4).</td><td><a href="/fr/blocs/couleur/">Couleur</a></td></tr>
+          <tr><th scope="row">Variation de transparence</th><td>en %</td><td>Le signal des étoiles d’une pose à l’autre&nbsp;: l’écart entre le 10e et le 90e centile, rapporté au 90e.</td><td>Alignement</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>La nuit, pose par pose</h2>
+    <aside class="note"><b>Minutes depuis la première pose.</b> L’axe horizontal compte à partir de la première pose de
+    la session, jamais d’après l’horloge, qui peut être fausse. Sans heures utilisables, il compte les numéros
+    d’image.</aside>
+    <p>Chaque session du workflow a une figure, avec jusqu’à trois panneaux sur un même axe horizontal. Chaque point est
+    une pose.</p>
+    <ul>
+      <li><strong>FWHM&nbsp;:</strong> la taille des étoiles, par l’ajustement de Moffat, en secondes d’arc quand l’échelle
+      sur le ciel est connue, sinon en pixels.</li>
+      <li><strong>Signal relatif (%)&nbsp;:</strong> le signal des étoiles de la pose par rapport aux meilleures (100 est le
+      meilleur dixième, et une pose peut le dépasser un peu).</li>
+      <li><strong>Niveau du ciel (ADU)&nbsp;:</strong> le niveau du ciel de la pose après calibration. Le panneau n’est
+      dessiné que si les statistiques de la calibration sont là.</li>
+    </ul>
+    <p>Les poses gardées sont des points noirs. Les poses écartées sont des cercles gris vides. La taille, le signal et
+    les heures viennent du bloc <a href="/fr/blocs/alignement/">Alignement</a>, le niveau du ciel de la <a href="/fr/blocs/calibration/">Calibration</a>. Les
+    poses écartées sont celles du bloc <a href="/fr/blocs/selection/">Sélection</a>, ou celles exclues à la main.</p>
+    <p>Quand le projet a plusieurs sessions, chacune a sa figure, titrée de son nom. Un petit tableau des valeurs de la
+    session l’accompagne&nbsp;: Images gardées, Pose totale, FWHM médiane, Meilleure FWHM et Pire FWHM (la médiane aussi en
+    pixels quand elle est en secondes d’arc), et Rondeur médiane. Avec une seule session, il n’est montré que si la
+    rondeur a été mesurée.</p>
+    <p>La même figure existe en fiche de nuit&nbsp;: l’image avec un titre («&nbsp;Fiche de nuit&nbsp;», la cible, le nom de la session
+    quand il y en a plusieurs) et un pied des mêmes valeurs, faite pour être publiée avec l’image finale. L’Export de
+    <a href="/fr/blocs/post/">Post</a> l’écrit à côté de l’image exportée, en PNG, une par session. Quand les faits de l’image sont connus, la fiche
+    dit aussi de quoi l’image entière est faite&nbsp;: son nombre de poses et sa pose totale, puis les mêmes pour chaque
+    session ou workflow quand il y en a plusieurs.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Une section par bloc</h2>
+    <aside class="note"><b>Valeurs masquées.</b> Quelques valeurs des blocs ne sont pas montrées, parce qu’un lecteur
+    n’en a pas l’usage&nbsp;: la plage de taille des étoiles, la taille du cache, le minimum des flats, l’intégration, la
+    pose empilée et la dérive en pixels. La taille des étoiles sur super-pixels de 2 × 2 est aussi écartée&nbsp;: elle
+    surestime les étoiles sous-échantillonnées, et le rapport cite celle de l’ajustement de Moffat.</aside>
+    <p>Après la première page, le rapport a une section numérotée pour chaque bloc du workflow, dans l’ordre de la
+    chaîne&nbsp;: <a href="/fr/blocs/calibration/">Calibration</a>, <a href="/fr/blocs/alignement/">Alignement</a>, <a href="/fr/blocs/selection/">Sélection</a>, <a href="/fr/blocs/empilement/">Empilement</a>, <a href="/fr/blocs/astrometrie/">Astrométrie</a>, <a href="/fr/blocs/gradient/">Gradient</a>, <a href="/fr/blocs/debruitage/">Débruitage</a>, <a href="/fr/blocs/couleur/">Couleur</a>,
+    <a href="/fr/blocs/etoiles/">Étoiles/fond</a>. Un bloc que le workflow n’a pas n’a pas de section. Chaque section s’ouvre par une phrase sur ce que
+    fait le bloc. Si le bloc n’a pas tourné, ou s’il est périmé, son état est écrit sous cette phrase.</p>
+    <p>Viennent ensuite les valeurs du bloc, une ligne chacune, avec le sens de la valeur à côté. Ce sont les valeurs que
+    montre Inspecter pour le bloc&nbsp;: le lecteur du rapport n’a pas besoin du manuel. Deux sections ajoutent une
+    figure.</p>
+    <h3>Alignement&nbsp;: dérive et résidu</h3>
+    <p>Une figure de deux panneaux en fonction du numéro d’image. Le haut donne le décalage de chaque pose par rapport à
+    la pose de référence, en x (trait plein) et en y (tirets), en secondes d’arc quand l’échelle est connue, sinon en
+    pixels. Le bas donne le résidu d’alignement de chaque pose, en pixels. La figure est omise si aucun décalage n’a
+    été mesuré.</p>
+    <h3>Couleur&nbsp;: réponse spectrale approchée du capteur</h3>
+    <p>Une figure des courbes rouge, verte et bleue du capteur, relatives à leur maximum, en fonction de la longueur
+    d’onde en nm. Les positions de Hβ (486,1 nm), [OIII] (500,7 nm) et Hα (656,3 nm) sont marquées en pointillés. Sa
+    légende donne le nombre d’étoiles utilisées.</p>
+    <p>Les courbes sont reconstruites à partir de la mesure que le bloc Couleur fait de
+    ses étoiles dans les couleurs de l’appareil, et des spectres Gaia XP de ces mêmes étoiles. Le flux d’une étoile dans
+    un canal est l’intégrale de son spectre par la courbe du canal, et chaque courbe est une somme positive de gaussiennes
+    lisses (un centre tous les 15 nm de 380 à 1000 nm), avec une pénalité sur sa rugosité, comme dans la recherche des
+    sensibilités d’un appareil à partir de spectres connus.<a class="cite" href="#ref-1">[1]</a> Les étoiles que
+    l’ajustement n’explique pas sont rejetées en quatre passes. Les courbes ne changent aucune couleur&nbsp;: c’est un
+    diagnostic. Le calcul prend environ une seconde et rien n’est stocké. Il faut au moins 50 étoiles de couleur, et les
+    spectres du catalogue&nbsp;; sans eux la figure est omise.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Recette et annexe</h2>
+    <p><strong>Recette</strong> est la section qui suit le dernier bloc. Elle écrit la chaîne sur une ligne, par exemple
+    Calibration → Alignement → Empilement, et dessous un tableau des réglages qui diffèrent des valeurs par défaut,
+    sous la forme «&nbsp;bloc · réglage&nbsp;» et sa valeur. Quand rien n’a été changé, elle dit que tous les réglages sont ceux
+    par défaut. Les valeurs qui ne sont pas simples (un nombre, un texte, oui ou non) et celles qui désignent un
+    emplacement sur un disque sont écartées.</p>
+    <p><strong>Annexe&nbsp;: réglages</strong> suit, avec un petit tableau de réglages par bloc. Elle liste les réglages
+    changés, et les autres sauf ceux du niveau avancé, qui ne changent rien d’utile à un lecteur. Des deux méthodes
+    d’empilement, elle ne liste que les réglages de celle qui a tourné. Les morceaux de l’annexe n’ont pas de titre
+    propre&nbsp;: ils ne sont pas proposés comme images à copier.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Copie et export</h2>
+    <p>Tout ce qui sort de l’onglet est fait à partir de ce que montre le lecteur.</p>
+    <ul>
+      <li><strong>Copier texte.</strong> La fiche de prise de vue en texte brut, affichée dans la boîte du formulaire&nbsp;:
+      la cible, puis une ligne par détail connu («&nbsp;Appareil&nbsp;: …&nbsp;», «&nbsp;Monture&nbsp;: …&nbsp;», «&nbsp;Poses&nbsp;: …&nbsp;», «&nbsp;Traitement&nbsp;:
+      FLOAT&nbsp;»), rien pour ce qui est inconnu. Une liste choisit la langue de ce texte, français ou anglais, quelle que soit
+      la langue de l’écran.</li>
+      <li><strong>Copier image.</strong> Une liste choisit la partie, et le bouton la place dans le presse-papiers en
+      image&nbsp;: la carte de la session (la première page), les fiches de nuit, puis chaque section numérotée. Les images
+      sont faites au double de la taille de la page.</li>
+      <li><strong>Exporter en PDF.</strong> Le rapport entier, sur des pages A4, avec un pied sur chacune (le titre, le
+      nom du programme, le numéro de page). Un morceau qui ne tient pas dans le reste d’une page passe en entier à la
+      suivante&nbsp;; aucun n’est coupé.</li>
+      <li><strong>Exporter en PNG.</strong> Le rapport entier en une seule image haute.</li>
+    </ul>
+    <p>Les deux exports proposent un fichier nommé d’après la cible, terminé par <i>_report</i>, dans le dossier du
+    projet. La ligne d’état dit quand le fichier est écrit. Les figures portent une virgule décimale en français.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Contenu, section par section</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Ce que contient le rapport, dans l’ordre de lecture.</caption>
+        <thead><tr><th>Partie</th><th>Ce qu’elle contient</th><th>D’où elle vient</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">En-tête</th><td>Cible, position, champ et échelle&nbsp;; l’image finale.</td><td><a href="/fr/blocs/astrometrie/">Astrométrie</a>&nbsp;; <a href="/fr/blocs/post/">Post</a></td></tr>
+          <tr><th scope="row">Tableau 1, Acquisition</th><td>Appareil, instrument, monture, filtre, lieu, date, poses et pose totale, darks, flats, offsets, échantillonnage.</td><td>Les en-têtes des images et l’inventaire&nbsp;; le formulaire de l’onglet</td></tr>
+          <tr><th scope="row">Tableau 2, Valeurs mesurées</th><td>Jusqu’à neuf valeurs, chacune avec sa méthode de mesure.</td><td>Le tableau 1 de cette page</td></tr>
+          <tr><th scope="row">La nuit, pose par pose</th><td>Taille des étoiles, signal relatif et niveau du ciel de chaque pose, par session.</td><td><a href="/fr/blocs/alignement/">Alignement</a>&nbsp;; <a href="/fr/blocs/calibration/">Calibration</a></td></tr>
+          <tr><th scope="row">De Calibration à Étoiles/fond</th><td>Une phrase, l’état, et les valeurs de chaque bloc du workflow, chacune avec son sens.</td><td>Les faits propres à chaque bloc</td></tr>
+          <tr><th scope="row">Dérive et résidu</th><td>Décalage et résidu de chaque pose, dans la section de l’Alignement.</td><td>Alignement</td></tr>
+          <tr><th scope="row">Réponse spectrale</th><td>Courbes rouge, verte et bleue, dans la section de la Couleur.</td><td><a href="/fr/blocs/couleur/">Couleur</a>&nbsp;; Catalogues</td></tr>
+          <tr><th scope="row">Recette</th><td>La chaîne, et les réglages changés par rapport aux valeurs par défaut.</td><td>Les réglages enregistrés des étapes</td></tr>
+          <tr><th scope="row">Annexe&nbsp;: réglages</th><td>Les réglages de chaque bloc, sauf les avancés laissés par défaut.</td><td>Les réglages enregistrés des étapes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Il ne mesure rien.</strong> Le rapport lit les fichiers que les blocs ont écrits. Une valeur qui n’a pas
+      été mesurée n’est pas listée, et la section d’un bloc qui n’a pas tourné le dit.</li>
+      <li><strong>Les détails que les fichiers ne donnent pas restent vides tant qu’on ne les saisit pas.</strong>
+      Instrument, monture, filtre, lieu et date ne sont jamais devinés. Le texte à coller ne contient que ce qui est
+      connu.</li>
+      <li><strong>La réponse spectrale est approchée.</strong> Les spectres d’étoiles sont larges et semblables&nbsp;: des
+      courbes différentes expliquent les mêmes étoiles à peu près aussi bien. Sur des étoiles synthétiques, les formes
+      reviennent proches des vraies, mais la réponse à la raie Hα est ressortie à 0,76 pour 0,59 en réalité, soit environ
+      30 % d’écart. Aucune bande d’erreur n’est tracée&nbsp;: ni le rééchantillonnage des étoiles ni la variation du lissage
+      n’ont mesuré cette erreur.</li>
+      <li><strong>Des tailles en pixels sans échelle.</strong> Si l’échelle sur le ciel n’est pas connue, la taille des
+      étoiles est donnée en pixels, et les figures le disent.</li>
+      <li><strong>Résultats périmés.</strong> Après une modification du workflow, le rapport montre les résultats que les
+      blocs avaient à leur dernier calcul, jusqu’à ce que le workflow soit relancé.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Finlayson, G., Hordley, S. &amp; Hubel, P. 1998, <i lang="en">Recovering device sensitivities with quadratic programming</i>, IS&amp;T/SID Color Imaging Conference 6, 90. <a href="https://doi.org/10.2352/cic.1998.6.1.art00020">doi:10.2352/cic.1998.6.1.art00020</a></li>
+    </ol>
+  </section>
+</Doc>

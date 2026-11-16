@@ -1,0 +1,428 @@
+{
+  "slug": "ngc7000-graph",
+  "slugFr": "ngc7000-graphe",
+  "section": "path",
+  "level": 4,
+  "order": 2,
+  "title": {
+    "en": "Reading the graph of an S-H-O image made with a colour camera",
+    "fr": "Lire le graphe d’une image S-H-O faite avec un capteur couleur"
+  },
+  "summary": {
+    "en": "A guided tour of the Graph page of a finished project: NGC 7000 in S-H-O, shot with a colour camera behind two dual-band filters. You see how the three sessions, the four workflows, Align on, the S-H-O combination and the source of the stars fit together, then how to start the same graph from a template.",
+    "fr": "Une visite guidée de la page Graphe d’un projet terminé : NGC 7000 en S-H-O, photographiée avec un capteur couleur derrière deux filtres bi-bande. Vous voyez comment s’articulent les trois sessions, les quatre workflows, « Aligner sur », la combinaison S-H-O et l’origine des étoiles, puis comment partir du même graphe depuis un modèle."
+  },
+  "duration": {
+    "en": "About 10 min: a 2 min 49 s video and the text, with no computing; recorded on a processor alone, without a graphics card",
+    "fr": "Environ 10 min : une vidéo de 2 min 49 s et le texte, sans calcul ; enregistrée sur un processeur seul, sans carte graphique"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "Having followed the Rosette tutorials, or knowing the Graph page"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Avoir suivi les tutoriels de la Rosette, ou connaître la page Graphe"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "NGC 7000 (North America Nebula) · Sony A7S, 300 s at ISO 2000 · two dual-band filters (O III / H-alpha, O III / S II) and a night without filter · 72 lights (6 h), master bias, dark and flats",
+      "fr": "NGC 7000 (nébuleuse de l’Amérique du Nord) · Sony A7S, 300 s à ISO 2000 · deux filtres bi-bande (O III / H-alpha, O III / S II) et une nuit sans filtre · 72 brutes (6 h), masters d’offset, de dark et de flats"
+    },
+    "author": "Thomas",
+    "note": {
+      "en": "Frames shown with their author’s agreement; they are not offered for download",
+      "fr": "Images montrées avec l’accord de leur auteur ; elles ne sont pas proposées au téléchargement"
+    }
+  },
+  "video": {
+    "en": {
+      "src": "/tutorials/ngc7000-graph/en/video.mp4",
+      "captions": "/tutorials/ngc7000-graph/en/captions.vtt",
+      "chapters": "/tutorials/ngc7000-graph/en/chapters.vtt",
+      "poster": "/tutorials/ngc7000-graph/en/poster.jpg",
+      "seconds": 169.0
+    },
+    "fr": {
+      "src": "/tutorials/ngc7000-graph/fr/video.mp4",
+      "captions": "/tutorials/ngc7000-graph/fr/captions.vtt",
+      "chapters": "/tutorials/ngc7000-graph/fr/chapters.vtt",
+      "poster": "/tutorials/ngc7000-graph/fr/poster.jpg",
+      "seconds": 169.0
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project",
+        "fr": "Ouvrir le projet"
+      },
+      "text": {
+        "en": "The tour starts from a finished project, opened from the Home screen with <b>Open project…</b>. It opens on its Graph page with every block up to date: the status bar reads all up to date and the Run button has nothing to run.",
+        "fr": "La visite part d’un projet terminé, ouvert depuis l’écran d’accueil avec <b>Ouvrir projet…</b>. Il s’ouvre sur sa page Graphe, tous les blocs à jour : la barre d’état dit tout à jour et le bouton Exécuter n’a rien à exécuter."
+      },
+      "why": {
+        "en": "A tour only reads. Nothing is computed and no setting is changed, so you can look at how the project is built without waiting for a run.",
+        "fr": "Une visite ne fait que lire. Rien n’est calculé et aucun réglage n’est changé : vous regardez comment le projet est construit sans attendre un calcul."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/01.png",
+        "fr": "/tutorials/ngc7000-graph/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "graph",
+      "title": {
+        "en": "See the whole graph",
+        "fr": "Voir tout le graphe"
+      },
+      "text": {
+        "en": "Click <b>Show all</b>, then fold the side panel with the button at the top of its right edge. The whole graph fits on the screen: four rows, one per workflow (S, H, O III and Stars), read from left to right, then the S-H-O combination, two Combine layers blocks and Post.",
+        "fr": "Cliquez sur <b>Tout afficher</b>, puis repliez le panneau latéral avec le bouton en haut de son bord droit. Tout le graphe tient à l’écran : quatre lignes, une par workflow (S, H, O III et Étoiles), lues de gauche à droite, puis la combinaison S-H-O, deux blocs Combiner calques et Post."
+      },
+      "why": {
+        "en": "A graph this wide hides its structure at the usual zoom. Fitting it first shows where each row goes before any block is read.",
+        "fr": "Un graphe aussi large cache sa structure au zoom habituel. L’ajuster d’abord montre où va chaque ligne avant de lire un bloc."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/02.png",
+        "fr": "/tutorials/ngc7000-graph/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 8.0,
+        "fr": 8.0
+      }
+    },
+    {
+      "id": "sessions",
+      "title": {
+        "en": "Three sessions, one per filter",
+        "fr": "Trois sessions, une par filtre"
+      },
+      "text": {
+        "en": "Open the <b>Table</b> view, which has one row per session. There are three: <b>O III / H-alpha</b> (10 lights), <b>O III / S II</b> (13 lights) and <b>Stars</b> (49 lights, the night without a filter). Each has its own flat; the darks and the bias are one master shared by all three.",
+        "fr": "Ouvrez la vue <b>Tableau</b>, qui a une ligne par session. Il y en a trois : <b>O III / H-alpha</b> (10 brutes), <b>O III / S II</b> (13 brutes) et <b>Étoiles</b> (49 brutes, la nuit sans filtre). Chacune a son propre flat ; les darks et les offsets sont un master commun aux trois."
+      },
+      "why": {
+        "en": "A flat belongs to a filter: a dust shadow or the vignetting is not the same behind each filter, so a flat made with one filter would correct another one badly. The dark and the bias do not depend on the filter, so one master serves every session.",
+        "fr": "Un flat appartient à un filtre : l’ombre d’une poussière ou le vignettage ne sont pas les mêmes derrière chaque filtre, et un flat fait avec un filtre corrigerait mal un autre filtre. Le dark et l’offset ne dépendent pas du filtre : un seul master sert toutes les sessions."
+      },
+      "pitfall": {
+        "en": "The Table shows the date written by the camera, 31 Dec 2013, because its clock was wrong: the real nights, 17 to 19 June 2025, are in the file names. It also lists two warnings, “Also in Lights of …”: the O III stack uses the lights of the two filters on purpose, so there is nothing to fix.",
+        "fr": "Le Tableau montre la date écrite par l’appareil, 31 déc. 2013, car son horloge était fausse : les vraies nuits, du 17 au 19 juin 2025, sont dans les noms de fichiers. Il liste aussi deux avertissements, « Aussi dans Brutes de … » : la pile O III emploie volontairement les brutes des deux filtres, il n’y a rien à corriger."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/03.png",
+        "fr": "/tutorials/ngc7000-graph/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 21.0,
+        "fr": 21.0
+      }
+    },
+    {
+      "id": "session-panel",
+      "title": {
+        "en": "Read a session",
+        "fr": "Lire une session"
+      },
+      "text": {
+        "en": "Back in <b>Blocks</b>, select a session card and open <b>Block settings</b>. The panel of O III / H-alpha gives its 10 lights used out of 10, its filter (none (colour camera): the dual-band filter sits in front of a colour sensor), its single flat, and a note on the darks and the bias: shared with the other sessions, one master.",
+        "fr": "De retour dans <b>Blocs</b>, sélectionnez une carte de session et ouvrez <b>Réglages du bloc</b>. Le panneau d’O III / H-alpha donne ses 10 brutes utilisées sur 10, son filtre (aucun (capteur couleur) : le filtre bi-bande est devant un capteur couleur), son unique flat, et une note sur les darks et les offsets : partagés avec les autres sessions, un seul master."
+      },
+      "why": {
+        "en": "This is where a session’s inputs are checked: that the flat is its own and that the shared masters are really shared.",
+        "fr": "C’est là que l’on vérifie les entrées d’une session : que le flat est bien le sien et que les masters communs le sont vraiment."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/04.png",
+        "fr": "/tutorials/ngc7000-graph/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 31.0,
+        "fr": 31.0
+      }
+    },
+    {
+      "id": "workflows",
+      "title": {
+        "en": "One workflow per channel",
+        "fr": "Un workflow par canal"
+      },
+      "text": {
+        "en": "Click <b>Folded</b>: one card per workflow. <b>S</b> stacks the 13 lights of O III / S II, <b>H</b> the 10 of O III / H-alpha, <b>O III</b> the 23 lights of both sessions together, and <b>Stars</b> the 49 lights of the night without a filter. The name of each workflow is the channel it makes.",
+        "fr": "Cliquez sur <b>Replié</b> : une carte par workflow. <b>S</b> empile les 13 brutes d’O III / S II, <b>H</b> les 10 d’O III / H-alpha, <b>O III</b> les 23 brutes des deux sessions ensemble, et <b>Étoiles</b> les 49 brutes de la nuit sans filtre. Le nom de chaque workflow est le canal qu’il fabrique."
+      },
+      "why": {
+        "en": "A dual-band filter lets two narrow lines through at once, and a colour sensor records them on pixels of different colours: H-alpha and S II are red lines and fall on the red pixels, O III is green-blue and falls on the green and blue pixels. Since both filters pass O III, the two sessions add up in one O III stack: 23 lights instead of 10 or 13.",
+        "fr": "Un filtre bi-bande laisse passer deux raies étroites à la fois, et un capteur couleur les enregistre sur des pixels de couleurs différentes : H-alpha et S II sont des raies rouges et tombent sur les pixels rouges, O III est vert-bleu et tombe sur les pixels verts et bleus. Les deux filtres laissant passer O III, les deux sessions s’additionnent dans une seule pile O III : 23 brutes au lieu de 10 ou 13."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/05.png",
+        "fr": "/tutorials/ngc7000-graph/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 44.0,
+        "fr": 44.0
+      }
+    },
+    {
+      "id": "reference",
+      "title": {
+        "en": "S is the reference",
+        "fr": "S est la référence"
+      },
+      "text": {
+        "en": "Back in <b>Blocks</b>, only the S row has an <b>Astrometry</b> block, which solves the field. The S card carries the tag <i>reference</i>; the cards of H, O III and Stars carry the tag <i>on the grid of “S”</i>.",
+        "fr": "De retour dans <b>Blocs</b>, seule la ligne S a un bloc <b>Astrométrie</b>, qui résout le champ. La carte S porte l’étiquette <i>référence</i> ; celles de H, d’O III et d’Étoiles portent <i>sur la grille de « S »</i>."
+      },
+      "why": {
+        "en": "Four stacks made separately do not fall on the same pixels. One of them, S, is solved and serves as the grid; the three others are brought onto it by Align on, so only S needs its own Astrometry block.",
+        "fr": "Quatre piles faites séparément ne tombent pas sur les mêmes pixels. L’une d’elles, S, est résolue et sert de grille ; les trois autres y sont ramenées par « Aligner sur », si bien que seule S a besoin de son bloc Astrométrie."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/06.png",
+        "fr": "/tutorials/ngc7000-graph/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 54.0,
+        "fr": 54.0
+      }
+    },
+    {
+      "id": "align-on",
+      "title": {
+        "en": "Align on",
+        "fr": "Aligner sur"
+      },
+      "text": {
+        "en": "Right-click the <b>Stacking</b> block of H and open <b>Align on</b>. The reference is S (checked) and the method is Stars (checked; Plate solutions is greyed). Press Escape to close the menu: nothing is changed.",
+        "fr": "Faites un clic droit sur le bloc <b>Empilement</b> de H et ouvrez <b>Aligner sur</b>. La référence est S (cochée) et la méthode est Étoiles (cochée ; Solutions astrométriques est grisée). Appuyez sur Échap pour fermer le menu : rien n’est changé."
+      },
+      "why": {
+        "en": "Before they are combined, the stacks must lie on the same pixels. Align on brings the stack onto the grid of S through the stars, right after Stacking, while the stars are there: it takes S’s size and framing, and what overflows is cut.",
+        "fr": "Avant d’être combinées, les piles doivent tomber sur les mêmes pixels. « Aligner sur » ramène la pile sur la grille de S grâce aux étoiles, juste après l’empilement, tant que les étoiles sont là : elle prend la taille et le cadrage de S, et ce qui dépasse est coupé."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/07.png",
+        "fr": "/tutorials/ngc7000-graph/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 61.0,
+        "fr": 61.0
+      }
+    },
+    {
+      "id": "sho",
+      "title": {
+        "en": "The S-H-O combination",
+        "fr": "La combinaison S-H-O"
+      },
+      "text": {
+        "en": "Select the <b>S-H-O</b> block: its wires light up and the rest of the graph dims. It is a combination, not a stack: its three inputs come from the Stars/background block at the end of S, of H and of O III, and it reads their starless image.",
+        "fr": "Sélectionnez le bloc <b>S-H-O</b> : ses fils s’allument et le reste du graphe s’estompe. C’est une combinaison, pas un empilement : ses trois entrées viennent du bloc Étoiles/fond en bout de S, de H et d’O III, et il lit leur image sans étoiles."
+      },
+      "why": {
+        "en": "The stars of each stack differ in size and colour from one filter to the other, since each is seen through different lines. Combining them would give coloured stars with fringes, so the stars are taken off first and the combination works on the nebula alone.",
+        "fr": "Les étoiles de chaque pile diffèrent en taille et en couleur d’un filtre à l’autre, chacune étant vue à travers des raies différentes. Les combiner donnerait des étoiles colorées avec des franges : on retire donc les étoiles d’abord et la combinaison travaille sur la nébuleuse seule."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/08.png",
+        "fr": "/tutorials/ngc7000-graph/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 71.0,
+        "fr": 71.0
+      }
+    },
+    {
+      "id": "sho-inputs",
+      "title": {
+        "en": "Which pixels feed which colour",
+        "fr": "Quels pixels pour quelle couleur"
+      },
+      "text": {
+        "en": "Open <b>Block settings</b>. Under <b>Inputs</b>, S II and Hα each take the red pixels of their starless image, and O III takes green + blue. The recipe gives each filter a hue: S II 15.5°, Hα 31.4° (warm) and O III 202.2° (blue-cyan).",
+        "fr": "Ouvrez <b>Réglages du bloc</b>. Sous <b>Entrées</b>, S II et Hα prennent chacun le rouge de leur image sans étoiles, et O III prend vert + bleu. La recette donne une teinte à chaque filtre : S II 15,5°, Hα 31,4° (chaudes) et O III 202,2° (bleu-cyan)."
+      },
+      "why": {
+        "en": "This is the one setting that says which pixels each channel uses: behind a dual-band filter the line is told by the pixel colour, red for H-alpha and S II, green and blue for O III. The hues then give the palette its look: gold and orange for the red lines, blue for O III.",
+        "fr": "C’est le réglage qui dit quels pixels sert chaque canal : derrière un filtre bi-bande, la raie se lit à la couleur du pixel, rouge pour H-alpha et S II, vert et bleu pour O III. Les teintes donnent ensuite son aspect à la palette : or et orange pour les raies rouges, bleu pour O III."
+      },
+      "pitfall": {
+        "en": "The values shown are the recipe’s own; this tour does not change them.",
+        "fr": "Les valeurs affichées sont celles de la recette ; cette visite ne les change pas."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/09.png",
+        "fr": "/tutorials/ngc7000-graph/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 81.0,
+        "fr": 81.0
+      }
+    },
+    {
+      "id": "stars-source",
+      "title": {
+        "en": "Where the stars come from",
+        "fr": "D’où viennent les étoiles"
+      },
+      "text": {
+        "en": "Close the panel, select the <b>Combine layers</b> block after S-H-O and open <b>Block settings</b>. Its inputs read: Starless S-H-O, Stars O III · stars alone. The stars put back on the S-H-O image are those of the O III workflow, not those of the Stars workflow.",
+        "fr": "Fermez le panneau, sélectionnez le bloc <b>Combiner calques</b> après S-H-O et ouvrez <b>Réglages du bloc</b>. Ses entrées disent : Sans étoiles S-H-O, Étoiles O III · étoiles seules. Les étoiles remises sur l’image S-H-O sont celles du workflow O III, pas celles du workflow Étoiles."
+      },
+      "why": {
+        "en": "The night without a filter was shot turned by 82° from the others, so its field does not cover the S-H-O field: with its stars, a whole wedge on the left has none and a seam appears. The O III stars cover exactly the same field and are the sharpest of the narrow-band ones. Their colour is not real, since they are seen through O III: the next tutorial whitens them.",
+        "fr": "La nuit sans filtre a été prise tournée de 82° par rapport aux autres : son champ ne couvre pas celui du S-H-O. Avec ses étoiles, tout un coin à gauche n’en a pas et une couture apparaît. Les étoiles d’O III couvrent exactement le même champ et sont les plus nettes des bandes étroites. Leur couleur n’est pas réelle, puisqu’elles sont vues à travers O III : le tutoriel suivant les blanchit."
+      },
+      "detail": {
+        "src": "/tutorials/ngc7000-graph/details/stars-source.jpg",
+        "w": 1600,
+        "h": 570,
+        "label": {
+          "en": "With the Clear night’s stars",
+          "fr": "Avec les étoiles de la nuit sans filtre"
+        },
+        "caption": {
+          "en": "Left, the stars of the night without a filter: a wedge at the left edge has no stars and a seam shows. Right, the stars of the O III workflow, which cover the whole field.",
+          "fr": "À gauche, les étoiles de la nuit sans filtre : un coin du bord gauche n’a pas d’étoiles et une couture se voit. À droite, les étoiles du workflow O III, qui couvrent tout le champ."
+        }
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/10.png",
+        "fr": "/tutorials/ngc7000-graph/fr/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 92.0,
+        "fr": 92.0
+      }
+    },
+    {
+      "id": "stars-kept",
+      "title": {
+        "en": "The Stars workflow stays",
+        "fr": "Le workflow Étoiles reste"
+      },
+      "text": {
+        "en": "Select the lower <b>Combine layers</b> block and open <b>Block settings</b>. It belongs to the Stars workflow: its inputs read Starless Stars · starless image and Stars Stars · stars alone, both from the night without a filter. Its layer is hidden in Post.",
+        "fr": "Sélectionnez le bloc <b>Combiner calques</b> du bas et ouvrez <b>Réglages du bloc</b>. Il appartient au workflow Étoiles : ses entrées disent Sans étoiles Étoiles · image sans étoiles et Étoiles Étoiles · étoiles seules, toutes deux de la nuit sans filtre. Son calque est masqué dans Post."
+      },
+      "why": {
+        "en": "With a night without a filter taken at the same angle as the others, this would be the right source of stars. Here it stays in the graph, computed, but its layer is hidden in Post.",
+        "fr": "Avec une nuit sans filtre prise sous le même angle que les autres, ce serait la bonne source d’étoiles. Ici, il reste dans le graphe, calculé, mais son calque est masqué dans Post."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/11.png",
+        "fr": "/tutorials/ngc7000-graph/fr/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 106.0,
+        "fr": 106.0
+      }
+    },
+    {
+      "id": "post",
+      "title": {
+        "en": "End on Post",
+        "fr": "Finir sur Post"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The active version is <b>Palette and finish</b>: on the starless image it stacks Colour mixer, Levels, Local contrast, Multiscale sharpening and Highlight compression, under the stars of the S-H-O Combine layers. The layer of the Stars workflow is hidden. Nothing is touched here.",
+        "fr": "Cliquez sur <b>Post</b>. La version active est <b>Palette and finish</b> : sur l’image sans étoiles elle empile Mélangeur de couleurs, Niveaux, Contraste local, Accentuation multi-échelle et Compression des hautes lumières, sous les étoiles du Combiner calques S-H-O. Le calque du workflow Étoiles est masqué. Rien n’est touché ici."
+      },
+      "why": {
+        "en": "Every wire of the graph ends in Post, which turns the combined stacks into the finished image. The next two tutorials do these Post gestures one by one.",
+        "fr": "Tous les fils du graphe aboutissent dans Post, qui transforme les piles combinées en image finie. Les deux tutoriels suivants refont ces gestes de Post un par un."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/12.png",
+        "fr": "/tutorials/ngc7000-graph/fr/12.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 120.0,
+        "fr": 120.0
+      }
+    },
+    {
+      "id": "own-data",
+      "title": {
+        "en": "How to get this graph for your own data",
+        "fr": "Obtenir ce graphe pour vos propres données"
+      },
+      "text": {
+        "en": "Open the File menu, click <b>New project</b>, then <b>From template</b>, and in the Color tab choose <b>Dual-band x2</b>: “A colour camera with two dual-band filters (O III/H-alpha and O III/S II) and a session for the stars.” The graph arrives with the four stacks, the sessions already named per filter, and H, O III and Stars already on the grid of S (see the Table). Only the frames are missing: add the lights of each session with the flat of its filter, then the darks and the bias, type the target and run.",
+        "fr": "Ouvrez le menu Fichier, cliquez sur <b>Nouveau projet</b>, puis sur <b>Depuis modèle</b>, et dans l’onglet Couleur choisissez <b>Bi-bande x2</b> : « Une caméra couleur avec deux filtres bi-bande (O III/H-alpha et O III/S II) et une session pour les étoiles. » Le graphe arrive avec les quatre piles, les sessions déjà nommées par filtre, et H, O III et Étoiles déjà sur la grille de S (voir le Tableau). Il ne manque que les images : ajoutez les brutes de chaque session avec le flat de son filtre, puis les darks et les offsets, saisissez la cible et lancez le calcul."
+      },
+      "why": {
+        "en": "A template saves building the four rows, the sessions’ names and Align on by hand.",
+        "fr": "Un modèle évite de construire à la main les quatre lignes, le nom des sessions et « Aligner sur »."
+      },
+      "pitfall": {
+        "en": "The template takes the stars of its Combine layers block from the Stars workflow. In this project they come from O III, because the night without a filter does not cover the field; that is a choice made on this project, and the template does not make it for you.",
+        "fr": "Le modèle prend les étoiles de son bloc Combiner calques dans le workflow Étoiles. Dans ce projet elles viennent d’O III, car la nuit sans filtre ne couvre pas le champ ; c’est un choix fait sur ce projet, que le modèle ne fait pas à votre place."
+      },
+      "shot": {
+        "en": "/tutorials/ngc7000-graph/en/13.png",
+        "fr": "/tutorials/ngc7000-graph/fr/13.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 131.0,
+        "fr": 131.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/ngc7000-graph/result.jpg",
+    "w": 2000,
+    "h": 1340,
+    "caption": {
+      "en": "NGC 7000 in S-H-O, 72 exposures of 300 s (6 h) with a colour camera and two dual-band filters, data by Thomas. On the left the nebula ends and the dense star clouds of the Milky Way show through.",
+      "fr": "NGC 7000 en S-H-O, 72 poses de 300 s (6 h) avec un capteur couleur et deux filtres bi-bande, données de Thomas. À gauche la nébuleuse s’arrête et les nuages d’étoiles denses de la Voie lactée apparaissent."
+    }
+  },
+  "blocks": [
+    "Calibration",
+    "Registration",
+    "Stacking",
+    "Astrometry",
+    "Denoise",
+    "Stars",
+    "Combination",
+    "Post"
+  ],
+  "next": "ngc7000-sho"
+}

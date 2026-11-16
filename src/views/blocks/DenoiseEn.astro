@@ -1,0 +1,227 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+import Compare from '../../components/Compare.astro';
+import Figure from '../../components/Figure.astro';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+const lang = 'en';
+const hasInspect = existsSync(join(process.cwd(), 'public', 'blocks', 'denoise', 'inspect-en.png'));
+---
+<Doc lang={lang} page="blocks" current="Denoise" title="Denoise"
+  description="The Denoise block of FLOAT: a Noise2Noise network that predicts one half-stack from the other, used as pretrained or adapted to the image, with its settings and limits.">
+
+  <p class="kicker">Block</p>
+  <h1>Denoise</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It removes most of the grain from the stacked image, before the colours are calibrated.</dd></div><div><dt>What it shows</dt><dd>A smoother sky and smoother faint nebulae; Inspect shows the image before and after, and the log says by how much the noise went down.</dd></div><div><dt>What can be set</dt><dd>Method: the default, Pretrained network, suits most nights; for a night without dithering the run advises Pretrained + adapted to the image, which takes minutes instead of seconds.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Before and after on a real image</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>What goes in, what comes out</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Noise2Noise between the half-stacks</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>The network</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Pretrained, or adapted to the image</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Four passes, and the sky level</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Settings</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Denoise block removes the noise of the stack with a Noise2Noise network: trained to
+    predict one half-stack from the other, whose noise is independent, it learns to estimate the signal both share
+    rather than a clean image it never saw. The network ships with FLOAT and runs in seconds; it can also first learn the noise of the image
+    on its own half-stacks. FLOAT proposes the length of that adaptation from the noise it measures.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Astrometry</span></li><li><span>Gradient</span></li><li><span>Deconvolution</span></li>
+    <li class="here"><span>Denoise</span></li><li><span>Color</span></li><li><span>Stars/background</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Before and after on a real image</h2>
+    <p>The comparison below uses one stack of the Rosette Nebula: 436 exposures of 15 s with a Sony A7S at ISO 4000, on a
+    130/900 Newtonian. The two images come from the same project, without the Denoise block and with it in its default
+    method, the pretrained network. Everything else is identical, and both are shown with the same stretch: the
+    workflow layer of Post at Sky 0.5 and Faint tones 3.0. The sky’s level is unchanged to about one level out of 255
+    (at most 1.2, measured as the median of the same faint tiles as Table 1); it only looks lighter on the denoised side
+    because the dark grains are gone. The crops are at 100 %: one image pixel is one screen pixel. Drag the divider, or
+    focus it and use the arrow keys. The block is added in <a href="/learn/">the tutorials</a>.</p>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>Noise in four zones of the stack, before and after Denoise. The figure is the spread of
+        the pixel values in the faintest 30 % of the 16-pixel tiles of each zone, measured on the displayed 8-bit image
+        (the stretch above, the same on both sides), in levels out of 255. The change is the reduction of that
+        spread.</caption>
+        <thead><tr><th>Zone</th><th>Box in the stack (x, y)</th><th>Before</th><th>After</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1 Bright nebula and dark globules</th><td class="n">1550–2250, 520–1220</td><td class="n">6.19</td><td class="n">2.67 (−57 %)</td></tr>
+          <tr><th scope="row">2 Faint nebula</th><td class="n">1936–2636, 241–941</td><td class="n">4.72</td><td class="n">1.39 (−71 %)</td></tr>
+          <tr><th scope="row">3 Star field</th><td class="n">2800–3500, 420–1120</td><td class="n">4.46</td><td class="n">0.97 (−78 %)</td></tr>
+          <tr><th scope="row">4 Sky (right of the ring, round stars)</th><td class="n">2750–3450, 1070–1770</td><td class="n">3.92</td><td class="n">0.83 (−79 %)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <Compare lang={lang} n={1} before="/blocks/denoise/bright-nebula-before.png" after="/blocks/denoise/bright-nebula-after.png" width={700} height={700}
+      alt="Zone 1, the bright nebula and dark globules: bright gas with dark globules, before and after Denoise.">
+      Zone 1, bright nebula and dark globules. The bright gas is smooth and the dark globules read more clearly against
+      it. The finest texture of the bright gas is a little softer. This is where Denoise removes the least noise (−57 %),
+      because there is more signal there.
+    </Compare>
+    <Compare lang={lang} n={2} before="/blocks/denoise/faint-nebula-before.png" after="/blocks/denoise/faint-nebula-after.png" width={700} height={700}
+      alt="Zone 2, the faint nebula: a faint arc of gas on the sky, before and after Denoise.">
+      Zone 2, faint nebula. The faint arc stands out from the sky as a smooth veil, where before it was a grainy texture.
+      Its shape and its edges are those of the stack.
+    </Compare>
+    <Compare lang={lang} n={3} before="/blocks/denoise/star-field-before.png" after="/blocks/denoise/star-field-after.png" width={700} height={700}
+      alt="Zone 3, the star field: stars on the sky between them, before and after Denoise.">
+      Zone 3, star field. The sky between the stars goes from mottled to even. The stars keep their size, their shape
+      and their colour at this scale.
+    </Compare>
+    <Compare lang={lang} n={4} before="/blocks/denoise/sky-before.png" after="/blocks/denoise/sky-after.png" width={700} height={700}
+      alt="Zone 4, the sky: stars on a dark background, before and after Denoise.">
+      Zone 4, sky, to the right of the ring, where the stars are round. The coloured grain of the empty sky is gone, and
+      the faint glow at the ring’s edge (left of the crop) can be seen. Every star, down to the faintest, is still there
+      with its colour. The spikes of the brightest star are a little softer.
+    </Compare>
+    <p>The one limit seen in these four zones is in the bright gas of zone 1: its finest texture is a little softer,
+    where the least noise is removed.</p>
+    {hasInspect && (
+      <Figure lang={lang} n={5} src="/blocks/denoise/inspect-en.png" alt="The Inspect page of FLOAT on the Denoise block, with its splitter between the image before and after." plate wide>
+        The same comparison in the application: the Inspect page on the Denoise block, with its splitter.
+      </Figure>
+    )}
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>What goes in, what comes out</h2>
+    <aside class="note"><b>The noise map.</b> The drizzle weights say how many frames reach each pixel, so how much
+    noise it holds. The block turns them into a map of the relative noise and gives it to the network beside the
+    image.</aside>
+    <p>The block reads the two half-stacks A and B (section 5 of the <a href="/blocks/stacking/#s5">Stacking</a> page),
+    as the image blocks before it in the graph left them: with the sky gradient removed when the graph has a
+    <a href="/blocks/gradient/">Gradient</a> block. It also reads the weight map of the stack.</p>
+    <p>It writes the denoised stack and the network, with the background and the noise of each colour it measured. When
+    a second Denoise block follows in the graph, it also denoises and keeps the two half-stacks for it. FLOAT reports
+    the noise of the green channel before and after, and their ratio, the correlation of the noise between neighbouring
+    pixels (section 5), and the number of adaptation steps. That noise is 1.4826 times the median absolute deviation of
+    the linear green channel minus its Gaussian blur (σ 2 px), over every fifth pixel of the field. The preview shows a central square of the
+    image before and after, side by side.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Noise2Noise between the half-stacks</h2>
+    <p>The two half-stacks show the same sky; their frame noise is independent. A network trained to predict one from
+    the other cannot predict the noise of its target, which it does not see in its input; what it can learn is the
+    signal common to both.<a class="cite" href="#ref-1">[1]</a> It learns this without any clean image.</p>
+    <p>During the adaptation (section 5) the pairs are used in both directions: for each tile, A predicts B or B predicts A, chosen at
+    random.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>The network</h2>
+    <p>A U-Net<a class="cite" href="#ref-2">[2]</a> of four levels, with 48, 96, 192 and 320 channels, and two 3 × 3
+    convolutions with a skip connection in each block. Its input has four channels: the image of the three colours, from
+    which the background of each colour is subtracted and which is divided by its noise and compressed by an arcsinh,
+    and the noise map. Its output is a correction added to the normalised image. The background and the noise of each
+    colour are measured on the half-stack (the median and 1.4826 times the median absolute deviation).</p>
+    <p>The image is processed in tiles of 512 pixels with a margin of 48 pixels; a graphics card with little free memory
+    gets smaller tiles, which can change the result at the seams of the tiles by a fraction of the noise. The full stack
+    carries less noise than a half-stack: its noise map is divided by √2.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Pretrained, or adapted to the image</h2>
+    <aside class="note"><b>Noise between neighbours.</b> A drizzled stack spreads each frame over neighbouring pixels,
+    so the noise of one pixel resembles that of its neighbour. Without any shift between frames, nothing is spread, and
+    the noise stays independent from one pixel to the next.</aside>
+    <p><strong>Pretrained.</strong> The network that ships with FLOAT, applied as it is. It takes seconds on a graphics
+    card and also runs on a processor. A monochrome stack of fewer than 30 frames gets a network made for monochrome
+    noise.</p>
+    <p><strong>Pretrained + adapted to the image.</strong> The same network first learns the noise of this image. It
+    trains all its weights on random tiles of 192 pixels of the two half-stacks, in batches of 12; each tile is turned by
+    a random multiple of 90 degrees, and the loss is weighted by the noise expected there. The learning rate follows a
+    single cycle, then falls. The adaptation has two lengths:</p>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The two lengths of the adaptation.</caption>
+        <thead><tr><th>Length</th><th>Steps</th><th>Peak learning rate</th><th>Time on a graphics card</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Short</th><td class="n">500</td><td class="n">2 × 10<sup>−4</sup></td><td>about 40 s</td></tr>
+          <tr><th scope="row">Long</th><td class="n">4000</td><td class="n">3 × 10<sup>−4</sup></td><td>about 5 min</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>On a processor, a step takes about 4 s.</p>
+    <p><strong>Which length.</strong> FLOAT measures the correlation of the noise between horizontally neighbouring
+    pixels, on the difference of the two half-stacks (green channel, a central square of 800 pixels, the sky only). It
+    runs from about 0.15 to 0.4 for a dithered session, and near 0 without dithering. Under 0.08, FLOAT proposes the
+    long adaptation, with the reason; otherwise the short one. A session without dithering has noise the pretrained
+    network has not seen, and it needs the long adaptation.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Four passes, and the sky level</h2>
+    <p>The network leaves a faint pattern on its own grid of 2, 4 and 8 pixels. To spread it, the block runs the network
+    four times, with the image moved by (0, 0), (0, 1), (1, 0) and (1, 1) pixels, and takes the mean. These four passes
+    cancel the period of 2 pixels exactly and take the pattern as a whole to less than half. “Fast pass” runs one pass instead of four, four
+    times faster; the pattern can then show in the sky under a strong stretch.</p>
+    <p>The network moves the level of the sky by a small amount that differs from one colour to the next, and a strong
+    stretch of a clean image shows it as a colour cast on the sky. The block measures, for each colour, the robust median
+    of the difference between the result and the input over the covered pixels, and takes it off: the sky level of each
+    colour stays what it was, and the objects of the field, which the network keeps, do not count in the measure.</p>
+    <p>On a monochrome stack, the network moves the three channels slightly apart; the block replaces them by their
+    mean, which keeps the image grey.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 3.</b>The settings of the block.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Method</th><td>Pretrained network</td><td>Pretrained network, Pretrained + adapted to the image</td><td>The network as it is, or first adapted to this image on its half-stacks (section 5).</td></tr>
+          <tr><th scope="row">Adaptation</th><td>automatic</td><td>Short, Long</td><td>How long the network learns the image: 500 or 4000 steps. Long for a session without dithering. Proposed from the noise correlation, with the reason.</td></tr>
+          <tr><th scope="row">Fast pass</th><td>off</td><td>on, off</td><td>One pass of the network instead of four: four times faster, but its grid pattern can show in the sky under a strong stretch.</td></tr>
+          <tr><th scope="row">Random seed</th><td class="n">0</td><td class="n">0 or more</td><td>Seed of the random choice of the tiles of the adaptation, for runs that can be reproduced.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>No dithering: the pretrained network is not enough.</strong> With the Pretrained method and a
+      correlation under 0.08, the run warns that the noise is nearly independent between neighbouring pixels, that the
+      network has not seen such noise, and that the Adapted method (long) denoises it much better.</li>
+      <li><strong>A longer adaptation is not always better.</strong> On one of the test images, the long adaptation
+      did slightly worse than the short one, and on another the pretrained network alone already did as well as
+      either.</li>
+      <li><strong>Few monochrome frames.</strong> The network for colour stacks turned the noise of monochrome stacks of
+      few frames into dots that look like stars. A stack of fewer than 30 frames therefore gets its own network, which
+      removes them and denoises as much, but brightens the faint stars by 8 to 11 % on the bench: it is for pictures, not
+      for photometry. Only the Pretrained method uses it.</li>
+      <li><strong>Training on each image was dropped.</strong> A network trained from zero on each image took about 21
+      minutes on a graphics card and was unusable on a processor. The pretrained network, with or without the short
+      adaptation, replaced it. The settings of that former method, saved in a project, are ignored.</li>
+      <li><strong>The grid pattern.</strong> It is reduced, not removed: four passes take it to less than half, one pass
+      leaves it whole.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Lehtinen, J. et al. 2018, <i>Noise2Noise: Learning Image Restoration without Clean Data</i>, ICML. <a href="https://arxiv.org/abs/1803.04189">arXiv:1803.04189</a></li>
+      <li id="ref-2">Ronneberger, O., Fischer, P. &amp; Brox, T. 2015, <i>U-Net: Convolutional Networks for Biomedical Image Segmentation</i>, MICCAI 2015, LNCS 9351, 234. <a href="https://doi.org/10.1007/978-3-319-24574-4_28">doi:10.1007/978-3-319-24574-4_28</a></li>
+    </ol>
+  </section>
+</Doc>

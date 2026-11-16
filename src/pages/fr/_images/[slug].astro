@@ -1,0 +1,9 @@
+---
+import View from '../../../views/ImageSheet.astro';
+import { images } from '../../../data/images';
+export function getStaticPaths() {
+  return images.map((sheet) => ({ params: { slug: sheet.slug.fr }, props: { sheet } }));
+}
+const { sheet } = Astro.props;
+---
+<View lang="fr" sheet={sheet} />

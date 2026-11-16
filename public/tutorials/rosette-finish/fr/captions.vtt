@@ -1,0 +1,137 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet du troisième tutoriel.
+
+2
+00:00:04.000 --> 00:00:08.000
+Le projet s’ouvre à jour : rien n’est à calculer.
+
+3
+00:00:08.000 --> 00:00:11.000
+Cliquez sur « Post ».
+
+4
+00:00:11.000 --> 00:00:17.000
+Post montre le champ entier du troisième tutoriel. Avant tout geste, regardez ce qui reste à finir.
+
+5
+00:00:17.000 --> 00:00:24.000
+Un voile reste sur le ciel : il mesure 33 à 34 sur une échelle de 0 à 255, et le but est environ 26. Les bords faibles de l’anneau ne s’en détachent pas. « Dévoilage » le lèvera.
+
+6
+00:00:24.000 --> 00:00:30.000
+L’anneau est rose et magenta, un peu pâle. « Saturation » le rendra plus vif, sans le pousser vers le rouge.
+
+7
+00:00:30.000 --> 00:00:37.000
+À taille réelle, la structure fine du gaz, les replis et les bords des globules sombres, est un peu molle. « Accentuation multi-échelle » la fera ressortir.
+
+8
+00:00:37.000 --> 00:00:44.000
+Ce qui va reste tel quel : le ciel neutre, le gaz débruité, les étoiles rondes et la tache réparée. Ni balance des couleurs ni réduction du bruit ne sont nécessaires.
+
+9
+00:00:44.000 --> 00:00:47.000
+Cliquez sur la ligne « Image sans étoiles » : tous les filtres de ce tutoriel s’y placent.
+
+10
+00:00:47.000 --> 00:00:50.000
+Cliquez sur « Filtre », puis « Contraste », puis « Dévoilage ».
+
+11
+00:00:50.000 --> 00:00:53.000
+Faites glisser « Quantité » vers la droite jusqu’à ce que le voile se lève sans assombrir l’anneau, ici 0,25.
+
+12
+00:00:53.000 --> 00:00:56.000
+Faites glisser « Échelle » vers la droite, jusqu’à 256 px ou à la valeur la plus proche que donne le curseur : ici 257 px.
+
+13
+00:00:56.000 --> 00:01:02.000
+Le ciel est plus profond, mais l’anneau a perdu une partie de sa lueur : « Dévoilage » agit partout sur l’image.
+
+14
+00:01:02.000 --> 00:01:05.000
+Cliquez sur « Ajouter un masque ».
+
+15
+00:01:05.000 --> 00:01:08.000
+Cliquez sur « Ajouter au masque », puis « Plage de luminosité ».
+
+16
+00:01:08.000 --> 00:01:11.000
+Faites glisser « À » vers 25 %, avec « De » à 0 % : la plage sélectionne le ciel et les tons faibles, pas l’anneau.
+
+17
+00:01:11.000 --> 00:01:14.000
+Faites glisser « Progressif » vers la droite, jusqu’à 8 px, pour que le bord du masque s’estompe.
+
+18
+00:01:14.000 --> 00:01:20.000
+La teinte rouge couvre ce que le masque cache : l’anneau. « Dévoilage » n’agit plus que sur le ciel et les tons faibles.
+
+19
+00:01:20.000 --> 00:01:26.000
+À 100 %, les bords faibles de l’anneau se détachent d’un ciel plus sombre, et l’anneau garde sa lueur.
+
+20
+00:01:26.000 --> 00:01:29.000
+Cliquez sur « Filtre », puis « Couleur », puis « Saturation ».
+
+21
+00:01:29.000 --> 00:01:32.000
+Faites glisser « Intensité » vers la droite jusqu’à ce que l’anneau soit plus vif tout en restant rose et magenta, ici 20 %.
+
+22
+00:01:32.000 --> 00:01:38.000
+À 100 %, le rouge et le rose de l’anneau sont plus vifs, et le ciel reste d’un gris neutre.
+
+23
+00:01:38.000 --> 00:01:41.000
+Cliquez sur « Filtre », puis « Détail », puis « Accentuation multi-échelle ».
+
+24
+00:01:41.000 --> 00:01:44.000
+Faites glisser l’échelle 4 px jusqu’à 0,3.
+
+25
+00:01:44.000 --> 00:01:47.000
+Faites glisser l’échelle 8 px jusqu’à 0,4.
+
+26
+00:01:47.000 --> 00:01:50.000
+Faites glisser l’échelle 16 px jusqu’à 0,3, et laissez 1 px et 2 px à 0.
+
+27
+00:01:50.000 --> 00:01:58.000
+À 100 %, les replis et les bords des globules sont plus nets. Sur l’image entière le changement est léger : cette partie est pour l’image à taille réelle, un tirage ou un lecteur qui zoome.
+
+28
+00:01:58.000 --> 00:02:01.000
+Cliquez sur « Filtre », puis « Bruit ».
+
+29
+00:02:01.000 --> 00:02:08.000
+« Réduction du bruit multi-échelle » et « Réduction du bruit » restent inutilisées : « Débruitage » a déjà fait leur travail, et une seule réduction du bruit suffit.
+
+30
+00:02:08.000 --> 00:02:12.000
+Cliquez sur « Exporter… ».
+
+31
+00:02:12.000 --> 00:02:15.000
+Choisissez « JPEG » dans « Format ».
+
+32
+00:02:15.000 --> 00:02:18.000
+Cliquez sur « Exporter ».
+
+33
+00:02:18.000 --> 00:02:23.000
+L’image est écrite, avec l’historique du traitement à côté.
+
+34
+00:02:23.000 --> 00:02:27.000
+L’image est exportée. Appuyez sur Ctrl+S pour garder le projet.

@@ -1,0 +1,460 @@
+{
+  "slug": "try-a-variant",
+  "slugFr": "essayer-une-variante",
+  "section": "path",
+  "level": 2,
+  "order": 3,
+  "title": {
+    "en": "Try a variant",
+    "fr": "Essayer une variante"
+  },
+  "summary": {
+    "en": "A variant of the workflow is started after Gradient to try the neural-network deconvolution (beta) beside the original. The two results are compared in Inspect and in Post, then the variant is deleted.",
+    "fr": "Une variante du workflow est démarrée après Gradient pour essayer la déconvolution par réseau de neurones (bêta) à côté de l’original. Les deux résultats sont comparés dans Inspection et dans Post, puis la variante est supprimée."
+  },
+  "duration": {
+    "en": "About 10 min, of which 3 min of computing on a PC with an RTX 4060 Ti graphics card (16 GB)",
+    "fr": "Environ 10 min, dont 3 min de calcul sur un PC avec une carte graphique RTX 4060 Ti (16 Go)"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial The full processing: stars apart done: a copy of its finished project (about 1.8 GB) is the starting point",
+      "Disk space: about 2 GB for the copy",
+      "A graphics card is advised: the Deconvolution block takes about 3 min on an RTX 4060 Ti graphics card (16 GB)"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Le traitement complet : les étoiles à part fait : une copie de son projet terminé (environ 1,8 Go) est le point de départ",
+      "Place sur le disque : environ 2 Go pour la copie",
+      "Une carte graphique est conseillée : le bloc Déconvolution prend environ 3 min sur une carte graphique RTX 4060 Ti (16 Go)"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB",
+      "fr": "6,9 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project",
+        "fr": "Ouvrir le projet"
+      },
+      "text": {
+        "en": "On the Home screen click <b>Open project…</b> and choose a copy of the finished project of the tutorial <i>The full processing: stars apart</i>. The project opens up to date: nothing is to be computed.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez une copie du projet terminé du tutoriel <i>Le traitement complet : les étoiles à part</i>. Le projet s’ouvre à jour : rien n’est à calculer."
+      },
+      "check": {
+        "en": "The status bar reads all up to date, and the Run button is greyed.",
+        "fr": "La barre d’état indique tout à jour, et le bouton « Exécuter » est grisé."
+      },
+      "shot": {
+        "en": "/tutorials/try-a-variant/en/01.png",
+        "fr": "/tutorials/try-a-variant/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "The diagnosis in Inspect",
+        "fr": "Le diagnostic dans Inspection"
+      },
+      "text": {
+        "en": "Click <b>Inspect</b>: the final image of the workflow is shown. Choose <b>100 %</b> in the zoom list and drag the frame of the overview onto the star field to the right of the cluster. Right, and to leave alone: the gas and the sky level (35, 34 and 34 in red, green and blue).",
+        "fr": "Cliquez sur <b>Inspection</b> : l’image finale du workflow s’affiche. Choisissez <b>100 %</b> dans la liste du zoom et faites glisser le cadre de l’aperçu sur le champ d’étoiles à droite de l’amas. Ce qui va, et qu’on laisse : le gaz et le niveau du ciel (35, 34 et 34 en rouge, vert et bleu)."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "The stars are a little soft.",
+            "fr": "Les étoiles sont un peu molles."
+          },
+          "read": {
+            "en": "At 100 % in the star field, the median width of the isolated, unsaturated stars measures 4.84 px.",
+            "fr": "À 100 % dans le champ d’étoiles, la largeur médiane des étoiles isolées et non saturées mesure 4,84 px."
+          },
+          "fix": {
+            "en": "Try the neural deconvolution in a variant, then measure again.",
+            "fr": "Essayer la déconvolution par réseau de neurones dans une variante, puis mesurer de nouveau."
+          },
+          "step": "block"
+        },
+        {
+          "problem": {
+            "en": "Faint stars are lost in the blur.",
+            "fr": "Des étoiles faibles se perdent dans le flou."
+          },
+          "read": {
+            "en": "In the same zone, 279 stars are detected, a star being detected when it stands 40 levels above the local background.",
+            "fr": "Dans la même zone, 279 étoiles sont détectées, une étoile étant détectée quand elle dépasse de 40 niveaux le fond local."
+          },
+          "fix": {
+            "en": "The same variant, counted again.",
+            "fr": "La même variante, comptée de nouveau."
+          },
+          "step": "block"
+        }
+      ],
+      "check": {
+        "en": "At 100 %, the stars of the field look a little soft.",
+        "fr": "À 100 %, les étoiles du champ paraissent un peu molles."
+      },
+      "shot": {
+        "en": "/tutorials/try-a-variant/en/02.png",
+        "fr": "/tutorials/try-a-variant/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 8.0,
+        "fr": 8.0
+      }
+    },
+    {
+      "id": "variant",
+      "title": {
+        "en": "Start a variant at Gradient",
+        "fr": "Démarrer une variante à Gradient"
+      },
+      "text": {
+        "en": "Click <b>Graph</b>, right-click the <b>Gradient</b> block and click <b>Variant here</b>. A second workflow, <b>Color minimal 2</b>, starts after Gradient, under the first one.",
+        "fr": "Cliquez sur <b>Graphe</b>, faites un clic droit sur le bloc <b>Gradient</b> et cliquez sur <b>Variante ici</b>. Un second workflow, <b>Couleur minimal 2</b>, démarre après Gradient, sous le premier."
+      },
+      "why": {
+        "en": "Applying the block in the first workflow would make every result after Gradient outdated, and the picture the project has would be lost. A variant is a second workflow that shares everything before the block: calibration, registration and stacking are not computed again, and the first picture stays. A variant is also made from a setting changed on a block already computed: its bar then offers <b>Apply</b>, <b>Try variant</b> and <b>Reset</b>.",
+        "fr": "Appliquer le bloc dans le premier workflow rendrait périmés tous les résultats après Gradient, et l’image que le projet possède serait perdue. Une variante est un second workflow qui partage tout ce qui précède le bloc : l’étalonnage, l’alignement et l’empilement ne sont pas recalculés, et la première image reste. Une variante se crée aussi depuis un réglage modifié sur un bloc déjà calculé : sa barre propose alors <b>Appliquer</b>, <b>Essayer variante</b> et <b>Réinitialiser</b>."
+      },
+      "check": {
+        "en": "The graph shows two rows after Astrometry, the second one under the label Color minimal 2, and the status bar reads all up to date.",
+        "fr": "Le graphe montre deux rangées après Astrométrie, la seconde sous l’étiquette Couleur minimal 2, et la barre d’état indique tout à jour."
+      },
+      "shot": {
+        "en": "/tutorials/try-a-variant/en/03.png",
+        "fr": "/tutorials/try-a-variant/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 25.0,
+        "fr": 25.0
+      }
+    },
+    {
+      "id": "block",
+      "title": {
+        "en": "Add the Deconvolution block",
+        "fr": "Ajouter le bloc Déconvolution"
+      },
+      "text": {
+        "en": "Double-click <b>Deconvolution</b> in the palette: the block is added to the variant, after Gradient and before Denoise. Choose <b>Neural network (beta)</b>.",
+        "fr": "Double-cliquez sur <b>Déconvolution</b> dans la palette : le bloc s’ajoute à la variante, après Gradient et avant Débruitage. Choisissez <b>Réseau de neurones (bêta)</b>."
+      },
+      "why": {
+        "en": "The block goes before Denoise because a deconvolution sharpens the noise too, and Denoise then cleans what it sharpened.",
+        "fr": "Le bloc va avant Débruitage parce qu’une déconvolution accentue aussi le bruit, et que Débruitage nettoie ensuite ce qu’elle a accentué."
+      },
+      "check": {
+        "en": "The status bar reads to run, and the Run button shows the estimate of the computation.",
+        "fr": "La barre d’état indique à exécuter, et le bouton « Exécuter » affiche l’estimation du calcul."
+      },
+      "shot": {
+        "en": "/tutorials/try-a-variant/en/04.png",
+        "fr": "/tutorials/try-a-variant/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 40.0,
+        "fr": 40.0
+      }
+    },
+    {
+      "id": "run",
+      "title": {
+        "en": "Run the variant",
+        "fr": "Exécuter la variante"
+      },
+      "text": {
+        "en": "Click <b>Run</b>. The <b>Run project</b> window lists every block: the shared blocks and the first workflow are up to date, and only the variant’s Deconvolution, Denoise and Stars/background are computed. The computation takes about 3 min on an RTX 4060 Ti graphics card (16 GB), about 2 min 20 s of it for Deconvolution.",
+        "fr": "Cliquez sur <b>Exécuter</b>. La fenêtre <b>Exécuter projet</b> liste chaque bloc : les blocs partagés et le premier workflow sont à jour, et seuls Déconvolution, Débruitage et Étoiles/fond de la variante sont calculés. Le calcul prend environ 3 min sur une carte graphique RTX 4060 Ti (16 Go), dont environ 2 min 20 s pour Déconvolution."
+      },
+      "why": {
+        "en": "Each block is computed once, and a change only runs again the blocks that follow it: nothing else is recomputed.",
+        "fr": "Chaque bloc est calculé une fois, et une modification ne relance que les blocs qui la suivent : rien d’autre n’est recalculé."
+      },
+      "check": {
+        "en": "The window ends with 3 blocks computed, and the status bar reads all up to date.",
+        "fr": "La fenêtre se termine par 3 blocs calculés, et la barre d’état indique tout à jour."
+      },
+      "shot": {
+        "en": "/tutorials/try-a-variant/en/05.png",
+        "fr": "/tutorials/try-a-variant/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 49.0,
+        "fr": 49.0
+      }
+    },
+    {
+      "id": "inspect",
+      "title": {
+        "en": "Compare in Inspect",
+        "fr": "Comparer dans Inspection"
+      },
+      "text": {
+        "en": "Click <b>Inspect</b>: the page opens on the variant’s Deconvolution block, with the stack before the block on the left of a divider and after it on the right. Choose <b>100 %</b>, drag the frame of the overview onto the same star field and drag the divider across the stars. Measured on the pictures of the two workflows: the median star width goes from 4.84 to 4.19 px (−13 %) and the stars detected from 279 to 382 (+37 %); in the faint arc the width goes from 4.95 to 4.53 px and the count from 395 to 530. The gas and the faint arc are unchanged.",
+        "fr": "Cliquez sur <b>Inspection</b> : la page s’ouvre sur le bloc Déconvolution de la variante, avec l’empilement avant le bloc à gauche d’un rideau et après le bloc à droite. Choisissez <b>100 %</b>, faites glisser le cadre de l’aperçu sur le même champ d’étoiles et faites glisser le rideau sur les étoiles. Mesuré sur les images des deux workflows : la largeur médiane des étoiles passe de 4,84 à 4,19 px (−13 %) et les étoiles détectées de 279 à 382 (+37 %) ; dans l’arc faible, la largeur passe de 4,95 à 4,53 px et le compte de 395 à 530. Le gaz et l’arc faible sont inchangés."
+      },
+      "check": {
+        "en": "Left of the divider the stars are soft, right of it they are tighter; the nebula looks the same on both sides.",
+        "fr": "À gauche du rideau les étoiles sont molles, à droite elles sont plus serrées ; la nébuleuse a le même aspect des deux côtés."
+      },
+      "detail": [
+        {
+          "src": {
+            "en": "/tutorials/try-a-variant/details/stars-before.jpg",
+            "fr": "/tutorials/try-a-variant/details/stars-before.jpg"
+          },
+          "w": 700,
+          "h": 700,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "A star field at 100 %, before.",
+            "fr": "Un champ d’étoiles à 100 %, avant."
+          }
+        },
+        {
+          "src": {
+            "en": "/tutorials/try-a-variant/details/stars-after.jpg",
+            "fr": "/tutorials/try-a-variant/details/stars-after.jpg"
+          },
+          "w": 700,
+          "h": 700,
+          "label": {
+            "en": "After",
+            "fr": "Après"
+          },
+          "caption": {
+            "en": "A star field at 100 %, after: the stars are tighter, and faint stars that were a blur appear.",
+            "fr": "Un champ d’étoiles à 100 %, après : les étoiles sont plus serrées, et des étoiles faibles qui étaient un flou apparaissent."
+          }
+        },
+        {
+          "src": {
+            "en": "/tutorials/try-a-variant/details/gas-before.jpg",
+            "fr": "/tutorials/try-a-variant/details/gas-before.jpg"
+          },
+          "w": 700,
+          "h": 700,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The bright gas with its dark globules at 100 %, before.",
+            "fr": "Le gaz brillant et ses globules sombres à 100 %, avant."
+          }
+        },
+        {
+          "src": {
+            "en": "/tutorials/try-a-variant/details/gas-after.jpg",
+            "fr": "/tutorials/try-a-variant/details/gas-after.jpg"
+          },
+          "w": 700,
+          "h": 700,
+          "label": {
+            "en": "After",
+            "fr": "Après"
+          },
+          "caption": {
+            "en": "The bright gas with its dark globules at 100 %, after: the small stars over the gas are sharper; the gas and the edges of the globules look the same.",
+            "fr": "Le gaz brillant et ses globules sombres à 100 %, après : les petites étoiles sur le gaz sont plus nettes ; le gaz et les bords des globules ont le même aspect."
+          }
+        },
+        {
+          "src": {
+            "en": "/tutorials/try-a-variant/details/arc-before.jpg",
+            "fr": "/tutorials/try-a-variant/details/arc-before.jpg"
+          },
+          "w": 700,
+          "h": 700,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The faint arc at 100 %, before.",
+            "fr": "L’arc faible à 100 %, avant."
+          }
+        },
+        {
+          "src": {
+            "en": "/tutorials/try-a-variant/details/arc-after.jpg",
+            "fr": "/tutorials/try-a-variant/details/arc-after.jpg"
+          },
+          "w": 700,
+          "h": 700,
+          "label": {
+            "en": "After",
+            "fr": "Après"
+          },
+          "caption": {
+            "en": "The faint arc at 100 %, after: the stars are finer over the faint gas, which is kept as it was.",
+            "fr": "L’arc faible à 100 %, après : les étoiles sont plus fines sur le gaz faible, qui reste tel qu’il était."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/try-a-variant/en/06.png",
+        "fr": "/tutorials/try-a-variant/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 65.0,
+        "fr": 65.0
+      }
+    },
+    {
+      "id": "post",
+      "title": {
+        "en": "Compare in Post",
+        "fr": "Comparer dans Post"
+      },
+      "text": {
+        "en": "Click <b>Post</b>: the two workflows give two layers, the variant’s on top with its eye switched off. Click the variant’s layer and give it the settings of the original’s: drag <b>Strength</b> to −0.5, <b>Small stars</b> to −1.0, <b>Sky</b> to −1.5 and <b>Faint tones</b> to +1.0. Click the eye of the top layer: the variant covers the original.",
+        "fr": "Cliquez sur <b>Post</b> : les deux workflows donnent deux calques, celui de la variante en haut, son œil éteint. Cliquez sur le calque de la variante et donnez-lui les réglages de celui de l’original : faites glisser <b>Intensité</b> à −0,5, <b>Petites étoiles</b> à −1,0, <b>Ciel</b> à −1,5 et <b>Tons faibles</b> à +1,0. Cliquez sur l’œil du calque du haut : la variante recouvre l’original."
+      },
+      "why": {
+        "en": "With the same stretch and star settings on both layers, the comparison is about the stars and not about a different stretch.",
+        "fr": "Avec les mêmes réglages d’étirement et d’étoiles sur les deux calques, la comparaison porte sur les étoiles et non sur un étirement différent."
+      },
+      "check": {
+        "en": "On the fitted view the two pictures are almost the same.",
+        "fr": "Sur la vue ajustée, les deux images sont presque les mêmes."
+      },
+      "shot": {
+        "en": "/tutorials/try-a-variant/en/07.png",
+        "fr": "/tutorials/try-a-variant/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 89.0,
+        "fr": 89.0
+      }
+    },
+    {
+      "id": "layers100",
+      "title": {
+        "en": "The difference is at 100 %",
+        "fr": "La différence est à 100 %"
+      },
+      "text": {
+        "en": "Zoom to about 100 % on the star field (Ctrl and the mouse wheel), then click the eye of the top layer off and on: the original’s stars are softer, the variant’s are tighter. The gain shows at 100 %, so the choice between the two depends on the use of the picture: a screen view or a large print.",
+        "fr": "Zoomez à environ 100 % sur le champ d’étoiles (Ctrl et la molette), puis cliquez sur l’œil du calque du haut pour l’éteindre et le rallumer : les étoiles de l’original sont plus molles, celles de la variante plus serrées. Le gain se voit à 100 %, donc le choix entre les deux dépend de l’usage de l’image : une vue sur écran ou un grand tirage."
+      },
+      "check": {
+        "en": "Between the two states of the eye the stars change: tighter with the variant, softer with the original.",
+        "fr": "Entre les deux états de l’œil, les étoiles changent : plus serrées avec la variante, plus molles avec l’original."
+      },
+      "shot": {
+        "en": "/tutorials/try-a-variant/en/08.png",
+        "fr": "/tutorials/try-a-variant/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 123.0,
+        "fr": 123.0
+      }
+    },
+    {
+      "id": "delete",
+      "title": {
+        "en": "Delete the variant",
+        "fr": "Supprimer la variante"
+      },
+      "text": {
+        "en": "Click <b>Graph</b>, right-click a block of the variant, point at the <b>Workflow “Color minimal 2”</b> entry and click <b>Delete workflow</b>. Press <b>Ctrl+S</b> to save the project.",
+        "fr": "Cliquez sur <b>Graphe</b>, faites un clic droit sur un bloc de la variante, pointez l’entrée <b>Workflow « Couleur minimal 2 »</b> et cliquez sur <b>Supprimer workflow</b>. Appuyez sur <b>Ctrl+S</b> pour enregistrer le projet."
+      },
+      "why": {
+        "en": "Either workflow can be deleted at any time: trying costs nothing. Without the variant the project is as it was, which is the starting point of the following tutorials.",
+        "fr": "L’un ou l’autre workflow peut être supprimé à tout moment : essayer ne coûte rien. Sans la variante, le projet est tel qu’il était, ce qui est le point de départ des tutoriels suivants."
+      },
+      "check": {
+        "en": "The notice reads “Color minimal 2” deleted, with Ctrl+Z to take it back, and the status bar reads 1 workflow.",
+        "fr": "L’avis indique « Couleur minimal 2 » supprimé, avec Ctrl+Z pour le reprendre, et la barre d’état indique 1 workflow."
+      },
+      "shot": {
+        "en": "/tutorials/try-a-variant/en/09.png",
+        "fr": "/tutorials/try-a-variant/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 136.0,
+        "fr": 136.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/try-a-variant/result.jpg",
+    "w": 2000,
+    "h": 1426,
+    "caption": {
+      "en": "The Rosette Nebula as the variant gives it, on the fitted view. At this scale the picture is almost the same as the original’s: the difference is in the stars, at 100 %.",
+      "fr": "La nébuleuse de la Rosette telle que la variante la donne, sur la vue ajustée. À cette échelle l’image est presque la même que celle de l’original : la différence est dans les étoiles, à 100 %."
+    }
+  },
+  "blocks": [
+    "Gradient",
+    "Deconvolution",
+    "Denoise",
+    "Post"
+  ],
+  "next": null,
+  "video": {
+    "en": {
+      "src": "/tutorials/try-a-variant/en/video.mp4",
+      "captions": "/tutorials/try-a-variant/en/captions.vtt",
+      "chapters": "/tutorials/try-a-variant/en/chapters.vtt",
+      "poster": "/tutorials/try-a-variant/en/poster.jpg",
+      "seconds": 155.0
+    },
+    "fr": {
+      "src": "/tutorials/try-a-variant/fr/video.mp4",
+      "captions": "/tutorials/try-a-variant/fr/captions.vtt",
+      "chapters": "/tutorials/try-a-variant/fr/chapters.vtt",
+      "poster": "/tutorials/try-a-variant/fr/poster.jpg",
+      "seconds": 155.0
+    }
+  }
+}

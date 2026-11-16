@@ -1,0 +1,129 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.000
+Sur l’écran d’accueil, cliquez sur « Nouveau projet ».
+
+2
+00:00:03.000 --> 00:00:06.000
+Le projet s’ouvre sur une page vierge : cliquez sur « Depuis modèle ».
+
+3
+00:00:06.000 --> 00:00:09.000
+Dans l’onglet « Couleur », cliquez sur « Couleur minimal ».
+
+4
+00:00:09.000 --> 00:00:13.000
+Dans le panneau « Session 1 », cliquez sur « Ajouter brutes » et choisissez les 436 fichiers de la nuit.
+
+5
+00:00:13.000 --> 00:00:16.000
+Cliquez sur « Ouvrir images » : les fichiers de la session s’ouvrent dans « Inspection ».
+
+6
+00:00:16.000 --> 00:00:19.000
+Sur la ligne « Darks », cliquez sur +, puis « Ajouter dossier… » et choisissez les darks.
+
+7
+00:00:19.000 --> 00:00:22.000
+Faites de même sur la ligne « Flats » avec les flats.
+
+8
+00:00:22.000 --> 00:00:27.000
+« Correspondances » vérifie les darks et les flats face aux brutes.
+
+9
+00:00:27.000 --> 00:00:30.000
+Cliquez sur « Graphe » pour revenir au workflow.
+
+10
+00:00:30.000 --> 00:00:34.000
+Cliquez sur le bloc du projet et saisissez NGC 2237 dans « Cible » : la position est trouvée.
+
+11
+00:00:34.000 --> 00:00:37.000
+Cliquez sur « Exécuter ». Le bouton donne la durée prévue.
+
+12
+00:00:37.000 --> 00:00:41.000
+Nommez le projet « Rosette », choisissez son dossier avec « Parcourir… », puis cliquez sur « Enregistrer ».
+
+13
+00:00:41.000 --> 00:00:45.000
+L’exécution démarre : elle liste ses blocs et la durée prévue de chacun.
+
+14
+00:00:45.000 --> 00:00:48.000
+Cliquez sur « Fermer » : l’exécution continue.
+
+15
+00:00:48.000 --> 00:00:52.000
+Sur le graphe, chaque bloc montre son avancement.
+
+16
+00:00:52.000 --> 00:00:57.000
+Non montré en temps réel : l’exécution a duré 36 min 10 s sur une carte graphique (RTX 4060 Ti).
+
+17
+00:00:57.000 --> 00:01:00.000
+Chaque bloc calculé a sa barre en vert.
+
+18
+00:01:00.000 --> 00:01:03.000
+Cliquez sur « Post ».
+
+19
+00:01:03.000 --> 00:01:08.000
+Post montre l’image du workflow en un calque. Regardez avant de toucher à quoi que ce soit.
+
+20
+00:01:08.000 --> 00:01:12.000
+Le ciel vide est d’un gris laiteux, pas sombre : « Ciel » va le corriger.
+
+21
+00:01:12.000 --> 00:01:16.000
+Les filaments extérieurs de l’anneau se détachent à peine du ciel : « Tons faibles » les fera ressortir.
+
+22
+00:01:16.000 --> 00:01:20.000
+À 100 %, une ligne noire longe le bord droit : « Recadrage » l’enlèvera.
+
+23
+00:01:20.000 --> 00:01:24.000
+À l’extrême gauche, une tache sombre est l’ombre d’une poussière : « Recadrage » la laissera dehors.
+
+24
+00:01:24.000 --> 00:01:27.000
+Faites glisser « Ciel » vers la gauche jusqu’à ce que le voile gris disparaisse : ici environ −1,5.
+
+25
+00:01:27.000 --> 00:01:30.000
+Faites glisser « Tons faibles » vers la droite jusqu’à ce que les filaments extérieurs ressortent : ici environ +1.
+
+26
+00:01:30.000 --> 00:01:33.000
+Cliquez sur « Recadrage ».
+
+27
+00:01:33.000 --> 00:01:36.000
+Faites glisser les coins du cadre vers l’intérieur : gardez tout l’anneau, laissez les bords dehors.
+
+28
+00:01:36.000 --> 00:01:39.000
+Cliquez sur « Valider » pour garder le recadrage.
+
+29
+00:01:39.000 --> 00:01:43.000
+Cliquez sur « Exporter… » : TIFF 16 bits est le format par défaut.
+
+30
+00:01:43.000 --> 00:01:46.000
+Cliquez sur « Exporter ».
+
+31
+00:01:46.000 --> 00:01:51.000
+L’image est écrite, avec l’historique du traitement à côté.
+
+32
+00:01:51.000 --> 00:01:55.000
+Votre première image est faite. Tutoriel suivant : régler un bloc.

@@ -1,0 +1,234 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+import Compare from '../../components/Compare.astro';
+import Figure from '../../components/Figure.astro';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+const lang = 'fr';
+const hasInspect = existsSync(join(process.cwd(), 'public', 'blocks', 'denoise', 'inspect-fr.png'));
+---
+<Doc lang={lang} page="blocks" current="Denoise" title="Débruitage"
+  description="Le bloc Débruitage de FLOAT : un réseau Noise2Noise qui prédit un demi-empilement à partir de l’autre, pré-entraîné ou adapté à l’image, avec ses réglages et ses limites.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Débruitage</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il retire l’essentiel du grain de l’image empilée, avant la calibration des couleurs.</dd></div><div><dt>Ce qu’on voit</dt><dd>Un ciel et des nébuleuses faibles plus lisses ; Inspecter montre l’image avant et après, et le journal dit de combien le bruit a baissé.</dd></div><div><dt>Ce qui se règle</dt><dd>Méthode : la valeur par défaut, Réseau pré-entraîné, convient à la plupart des nuits ; pour une nuit sans dithering, le calcul conseille Pré-entraîné + adapté à l’image, qui prend des minutes au lieu de secondes.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Avant et après sur une image réelle</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Noise2Noise entre les demi-empilements</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Le réseau</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Pré-entraîné, ou adapté à l’image</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Quatre passes, et le niveau du ciel</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Réglages</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Débruitage retire le bruit de l’empilement avec un réseau Noise2Noise : entraîné à
+    prédire un demi-empilement à partir de l’autre, dont le bruit est indépendant, il apprend à estimer le signal commun
+    aux deux plutôt qu’une image propre qu’il n’a jamais vue. Le réseau est livré avec FLOAT et s’exécute en quelques
+    secondes&nbsp;; il peut aussi apprendre d’abord le bruit de l’image sur ses propres demi-empilements. FLOAT propose la
+    durée de cette adaptation d’après le bruit qu’il mesure.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Astrométrie</span></li><li><span>Gradient</span></li><li><span>Déconvolution</span></li>
+    <li class="here"><span>Débruitage</span></li><li><span>Couleur</span></li><li><span>Étoiles/fond</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Avant et après sur une image réelle</h2>
+    <p>La comparaison ci-dessous utilise un empilement de la nébuleuse de la Rosette : 436 poses de 15 s avec un Sony A7S
+    à 4000 ISO, sur un Newton 130/900. Les deux images viennent du même projet, sans le bloc Débruitage et avec lui dans
+    sa méthode par défaut, le réseau pré-entraîné. Tout le reste est identique, et les deux sont montrées avec le même
+    étirement : le calque de workflow de Post à Ciel 0,5 et Tons faibles 3,0. Le niveau du ciel est inchangé à environ un
+    niveau près sur 255 (1,2 au plus, mesuré comme la médiane des mêmes tuiles faibles que le tableau 1) ; il paraît
+    seulement plus clair du côté débruité parce que les grains sombres ont disparu. Les détails sont à 100 % : un pixel
+    de l’image est un pixel de l’écran. Faites glisser le séparateur, ou sélectionnez-le et utilisez les flèches. Le
+    bloc s’ajoute dans <a href="/fr/apprendre/">les tutoriels</a>.</p>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Le bruit dans quatre zones de l’empilement, avant et après Débruitage. La valeur est la
+        dispersion des valeurs des pixels dans les 30 % de tuiles de 16 pixels les plus faibles de chaque zone, mesurée
+        sur l’image affichée en 8 bits (l’étirement ci-dessus, le même des deux côtés), en niveaux sur 255. Le changement
+        est la réduction de cette dispersion.</caption>
+        <thead><tr><th>Zone</th><th>Cadre dans l’empilement (x, y)</th><th>Avant</th><th>Après</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1 Nébuleuse brillante et globules sombres</th><td class="n">1550–2250, 520–1220</td><td class="n">6,19</td><td class="n">2,67 (−57 %)</td></tr>
+          <tr><th scope="row">2 Nébuleuse faible</th><td class="n">1936–2636, 241–941</td><td class="n">4,72</td><td class="n">1,39 (−71 %)</td></tr>
+          <tr><th scope="row">3 Champ d’étoiles</th><td class="n">2800–3500, 420–1120</td><td class="n">4,46</td><td class="n">0,97 (−78 %)</td></tr>
+          <tr><th scope="row">4 Ciel (à droite de l’anneau, étoiles rondes)</th><td class="n">2750–3450, 1070–1770</td><td class="n">3,92</td><td class="n">0,83 (−79 %)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <Compare lang={lang} n={1} before="/blocks/denoise/bright-nebula-before.png" after="/blocks/denoise/bright-nebula-after.png" width={700} height={700}
+      alt="Zone 1, la nébuleuse brillante et les globules sombres : du gaz brillant avec des globules sombres, avant et après Débruitage.">
+      Zone 1, nébuleuse brillante et globules sombres. Le gaz brillant est lisse et les globules sombres se lisent mieux
+      sur lui. La texture la plus fine du gaz brillant est un peu plus douce. C’est là que Débruitage retire le moins de
+      bruit (−57 %), parce qu’il y a plus de signal.
+    </Compare>
+    <Compare lang={lang} n={2} before="/blocks/denoise/faint-nebula-before.png" after="/blocks/denoise/faint-nebula-after.png" width={700} height={700}
+      alt="Zone 2, la nébuleuse faible : un arc de gaz faible sur le ciel, avant et après Débruitage.">
+      Zone 2, nébuleuse faible. L’arc faible se détache du ciel comme un voile lisse, là où il était avant une texture
+      granuleuse. Sa forme et ses bords sont ceux de l’empilement.
+    </Compare>
+    <Compare lang={lang} n={3} before="/blocks/denoise/star-field-before.png" after="/blocks/denoise/star-field-after.png" width={700} height={700}
+      alt="Zone 3, le champ d’étoiles : des étoiles et le ciel entre elles, avant et après Débruitage.">
+      Zone 3, champ d’étoiles. Le ciel entre les étoiles passe de tacheté à uniforme. Les étoiles gardent leur taille,
+      leur forme et leur couleur à cette échelle.
+    </Compare>
+    <Compare lang={lang} n={4} before="/blocks/denoise/sky-before.png" after="/blocks/denoise/sky-after.png" width={700} height={700}
+      alt="Zone 4, le ciel : des étoiles sur un fond sombre, avant et après Débruitage.">
+      Zone 4, ciel, à droite de l’anneau, là où les étoiles sont rondes. Le grain coloré du ciel vide a disparu, et la
+      faible lueur au bord de l’anneau (à gauche du détail) se voit. Chaque étoile, jusqu’à la plus faible, est toujours
+      là, avec sa couleur. Les aigrettes de l’étoile la plus brillante sont un peu plus douces.
+    </Compare>
+    <p>La seule limite vue dans ces quatre zones est dans le gaz brillant de la zone 1 : sa texture la plus fine est un
+    peu plus douce, là où l’on retire le moins de bruit.</p>
+    {hasInspect && (
+      <Figure lang={lang} n={5} src="/blocks/denoise/inspect-fr.png" alt="La page Inspecter de FLOAT sur le bloc Débruitage, avec son séparateur entre l’image avant et après." plate wide>
+        La même comparaison dans l’application : la page Inspecter sur le bloc Débruitage, avec son séparateur.
+      </Figure>
+    )}
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Ce qui entre, ce qui sort</h2>
+    <aside class="note"><b>La carte du bruit.</b> Les poids du drizzle disent combien d’images atteignent chaque pixel,
+    donc combien de bruit il contient. Le bloc en tire une carte du bruit relatif et la donne au réseau à côté de
+    l’image.</aside>
+    <p>Le bloc lit les deux demi-empilements A et B (section 5 de la page <a href="/fr/blocs/empilement/#s5">Empilement</a>),
+    tels que les blocs d’image qui le précèdent dans le graphe les ont laissés&nbsp;: sans le gradient du ciel quand le graphe
+    a un bloc <a href="/fr/blocs/gradient/">Gradient</a>. Il lit aussi la carte des poids de l’empilement.</p>
+    <p>Il écrit l’empilement débruité et le réseau, avec le fond et le bruit de chaque couleur qu’il a mesurés. Quand un
+    deuxième bloc Débruitage suit dans le graphe, il débruite aussi les deux demi-empilements et les lui garde. FLOAT
+    indique le bruit du canal vert avant et après, et leur rapport, la corrélation du bruit entre pixels voisins
+    (section 5) et le nombre de pas d’adaptation. Ce bruit vaut 1,4826 fois l’écart absolu médian du canal vert linéaire
+    moins son flou gaussien (σ 2 px), sur un pixel sur cinq du champ. L’aperçu montre un carré central de l’image avant et
+    après, côte à côte.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Noise2Noise entre les demi-empilements</h2>
+    <p>Les deux demi-empilements montrent le même ciel ; leur bruit de pose est indépendant. Un réseau entraîné à prédire
+    l’un à partir de l’autre ne peut pas prédire le bruit de sa cible, qu’il ne voit pas dans son entrée&nbsp;; ce qu’il peut
+    apprendre est le signal commun aux deux.<a class="cite" href="#ref-1">[1]</a> Il l’apprend sans aucune image
+    propre.</p>
+    <p>Pendant l’adaptation (section 5), les paires servent dans les deux sens&nbsp;: pour chaque tuile, A prédit B ou B
+    prédit A, au hasard.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Le réseau</h2>
+    <p>Un U-Net<a class="cite" href="#ref-2">[2]</a> à quatre niveaux, de 48, 96, 192 et 320 canaux, avec dans chaque
+    bloc deux convolutions 3 × 3 et une connexion de saut. Son entrée a quatre canaux&nbsp;: l’image des trois couleurs, dont
+    on retire le fond de chaque couleur et qu’on divise par son bruit puis comprime par un arcsinh, et la carte du bruit.
+    Sa sortie est une correction ajoutée à l’image normalisée. Le fond et le bruit de chaque couleur sont mesurés sur le
+    demi-empilement (la médiane et 1,4826 fois l’écart absolu médian).</p>
+    <p>L’image est traitée par tuiles de 512 pixels avec une marge de 48 pixels&nbsp;; une carte graphique qui a peu de
+    mémoire libre reçoit des tuiles plus petites, ce qui peut changer le résultat aux raccords des tuiles d’une fraction du
+    bruit. L’empilement entier porte moins de bruit qu’un demi-empilement&nbsp;: sa carte du bruit est divisée par √2.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Pré-entraîné, ou adapté à l’image</h2>
+    <aside class="note"><b>Le bruit entre voisins.</b> Un empilement en drizzle étale chaque image sur les pixels
+    voisins&nbsp;: le bruit d’un pixel ressemble donc à celui de son voisin. Sans aucun décalage entre les images, rien n’est
+    étalé, et le bruit reste indépendant d’un pixel à l’autre.</aside>
+    <p><strong>Réseau pré-entraîné.</strong> Le réseau livré avec FLOAT, appliqué tel quel. Il prend quelques secondes
+    sur une carte graphique et s’exécute aussi sur un processeur. Un empilement monochrome de moins de 30 images reçoit
+    un réseau fait pour le bruit monochrome.</p>
+    <p><strong>Pré-entraîné + adapté à l’image.</strong> Le même réseau apprend d’abord le bruit de cette image. Il
+    entraîne tous ses poids sur des tuiles tirées au hasard de 192 pixels des deux demi-empilements, par lots de 12&nbsp;;
+    chaque tuile est tournée d’un multiple de 90 degrés tiré au hasard, et l’erreur est pondérée par le bruit attendu à
+    cet endroit. Le taux d’apprentissage suit un cycle unique, puis décroît. L’adaptation a deux durées&nbsp;:</p>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Les deux durées de l’adaptation.</caption>
+        <thead><tr><th>Durée</th><th>Pas</th><th>Taux d’apprentissage maximal</th><th>Temps sur une carte graphique</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Courte</th><td class="n">500</td><td class="n">2 × 10<sup>−4</sup></td><td>environ 40 s</td></tr>
+          <tr><th scope="row">Longue</th><td class="n">4000</td><td class="n">3 × 10<sup>−4</sup></td><td>environ 5 min</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Sur un processeur, un pas prend environ 4 s.</p>
+    <p><strong>Quelle durée.</strong> FLOAT mesure la corrélation du bruit entre pixels voisins horizontaux, sur la
+    différence des deux demi-empilements (canal vert, un carré central de 800 pixels, le ciel seulement). Elle va
+    d’environ 0,15 à 0,4 pour une session avec dithering, et vaut près de 0 sans dithering. Sous 0,08, FLOAT propose
+    l’adaptation longue, avec la raison&nbsp;; sinon la courte. Une session sans dithering a un bruit que le réseau
+    pré-entraîné n’a pas vu, et il lui faut l’adaptation longue.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Quatre passes, et le niveau du ciel</h2>
+    <p>Le réseau laisse un faible motif sur sa propre grille de 2, 4 et 8 pixels. Pour l’étaler, le bloc exécute le réseau
+    quatre fois, avec l’image décalée de (0, 0), (0, 1), (1, 0) et (1, 1) pixels, et fait la moyenne. Ces quatre passes
+    annulent exactement la période de 2 pixels et ramènent l’ensemble du motif à moins de la moitié. «&nbsp;Passe rapide&nbsp;»
+    n’exécute qu’une passe au lieu de quatre, quatre fois plus vite&nbsp;; le motif peut alors se voir dans le ciel sous un
+    fort étirement.</p>
+    <p>Le réseau déplace un peu le niveau du ciel, d’une quantité qui diffère d’une couleur à l’autre, et un fort
+    étirement d’une image propre le montre comme une dominante sur le ciel. Le bloc mesure, pour chaque couleur, la
+    médiane robuste de la différence entre le résultat et l’entrée sur les pixels couverts, et la retire&nbsp;: le niveau du
+    ciel de chaque couleur reste ce qu’il était, et les objets du champ, que le réseau garde, ne comptent pas dans la
+    mesure.</p>
+    <p>Sur un empilement monochrome, le réseau écarte un peu les trois canaux l’un de l’autre&nbsp;; le bloc les remplace par
+    leur moyenne, ce qui garde l’image grise.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 3.</b>Les réglages du bloc.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Méthode</th><td>Réseau pré-entraîné</td><td>Réseau pré-entraîné, Pré-entraîné + adapté à l’image</td><td>Le réseau tel quel, ou d’abord adapté à cette image sur ses demi-empilements (section 5).</td></tr>
+          <tr><th scope="row">Adaptation</th><td>automatique</td><td>Courte, Longue</td><td>La durée pendant laquelle le réseau apprend l’image&nbsp;: 500 ou 4000 pas. Longue pour une session sans dithering. Proposée d’après la corrélation du bruit, avec la raison.</td></tr>
+          <tr><th scope="row">Passe rapide</th><td>désactivé</td><td>activé, désactivé</td><td>Une passe du réseau au lieu de quatre&nbsp;: quatre fois plus rapide, mais son motif de grille peut se voir dans le ciel sous un fort étirement.</td></tr>
+          <tr><th scope="row">Graine aléatoire</th><td class="n">0</td><td class="n">0 ou plus</td><td>Graine du tirage au hasard des tuiles de l’adaptation, pour des calculs reproductibles.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Sans dithering, le réseau pré-entraîné ne suffit pas.</strong> Avec la méthode pré-entraînée et une
+      corrélation sous 0,08, le calcul avertit que le bruit est presque indépendant entre pixels voisins, que le réseau
+      n’a pas vu un tel bruit, et que la méthode adaptée (longue) le débruite bien mieux.</li>
+      <li><strong>Une adaptation plus longue n’est pas toujours meilleure.</strong> Sur l’une des images d’essai,
+      l’adaptation longue a fait un peu moins bien que la courte, et sur une autre le réseau pré-entraîné seul faisait
+      déjà aussi bien que l’une ou l’autre.</li>
+      <li><strong>Peu d’images monochromes.</strong> Le réseau des empilements en couleur transformait le bruit
+      d’empilements monochromes de peu d’images en points qui ressemblent à des étoiles. Un empilement de moins de
+      30 images reçoit donc son propre réseau, qui les retire et débruite autant, mais éclaircit les étoiles faibles de
+      8 à 11 % sur le banc d’essai&nbsp;: il est fait pour les images, pas pour la photométrie. Seule la méthode pré-entraînée
+      s’en sert.</li>
+      <li><strong>L’entraînement sur chaque image a été abandonné.</strong> Un réseau entraîné depuis zéro sur chaque
+      image prenait environ 21 minutes sur une carte graphique et était inutilisable sur un processeur. Le réseau
+      pré-entraîné, avec ou sans l’adaptation courte, l’a remplacé. Les réglages de cette ancienne méthode, enregistrés
+      dans un projet, sont ignorés.</li>
+      <li><strong>Le motif de grille.</strong> Il est réduit, pas supprimé&nbsp;: quatre passes le ramènent à moins de la
+      moitié, une passe le laisse entier.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Lehtinen, J. et al. 2018, <i lang="en">Noise2Noise: Learning Image Restoration without Clean Data</i>, ICML. <a href="https://arxiv.org/abs/1803.04189">arXiv:1803.04189</a></li>
+      <li id="ref-2">Ronneberger, O., Fischer, P. &amp; Brox, T. 2015, <i lang="en">U-Net: Convolutional Networks for Biomedical Image Segmentation</i>, MICCAI 2015, LNCS 9351, 234. <a href="https://doi.org/10.1007/978-3-319-24574-4_28">doi:10.1007/978-3-319-24574-4_28</a></li>
+    </ol>
+  </section>
+</Doc>

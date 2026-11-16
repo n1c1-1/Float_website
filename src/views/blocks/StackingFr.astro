@@ -1,0 +1,232 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import Figure from '../../components/Figure.astro';
+import DrizzleDemo from '../../components/DrizzleDemo.astro';
+import Chart from '../../components/Chart.astro';
+import { coverageFigure, rejectionFigure } from '../../data/charts/figures';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Stacking" title="Empilement"
+  description="Le bloc Empilement de FLOAT : drizzle Bayer ou empilement classique, choix de l’échelle drizzle et de la taille de goutte, rejet des valeurs aberrantes, les deux demi-empilements, avec les sources publiées.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Empilement</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il additionne les images alignées de la nuit en une seule, chacune comptant selon sa qualité, et écarte les traînées de satellites, les avions et les rayons cosmiques.</dd></div><div><dt>Ce qu’on voit</dt><dd>Dans Inspecter, l’empilement, ses deux demi-empilements et le poids de chaque image, avec les images empilées, la pose empilée et la part de pixels rejetés ; dans le Rapport, les valeurs de l’empilement et le décalage des couleurs corrigé.</dd></div><div><dt>Ce qui se règle</dt><dd>La Méthode d’empilement et l’Échelle drizzle, que FLOAT propose avec leur raison, et le Seuil rejet (3&nbsp;σ) ; les valeurs proposées conviennent à la plupart des nuits.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Le drizzle Bayer</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Échelle et taille de goutte</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Le rejet des valeurs aberrantes</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Deux demi-empilements</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>La méthode classique</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Réglages</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Empilement réunit les images alignées d’une session en une seule. Il propose deux
+    méthodes&nbsp;: le drizzle Bayer, qui dépose chaque pixel brut de couleur à sa position alignée, sans dématriçage ni
+    interpolation, et l’empilement classique, qui dématrice et interpole d’abord chaque image. FLOAT mesure les images
+    et propose la méthode, l’échelle drizzle et la taille de goutte, chacune avec la raison du choix&nbsp;; chaque valeur
+    reste réglable à la main.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Calibration</span></li><li><span>Alignement</span></li><li><span>Sélection</span></li>
+    <li class="here"><span>Empilement</span></li><li><span>Astrométrie</span></li><li><span>Gradient</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</h2>
+    <aside class="note"><b>Le poids d’une image</b> vaut (transparence / bruit)² × netteté. Une image n’est écartée que
+    si son poids est inférieur à 5 % du meilleur&nbsp;; les poids s’occupent des autres, si bien que presque toutes les
+    images sont gardées.</aside>
+    <p>Le bloc reçoit les images calibrées, l’alignement de chacune (un polynôme cubique qui place ses pixels sur
+    l’image de référence), la taille de ses étoiles et le poids que le bloc <a href="/fr/blocs/selection/">Sélection</a> lui a donné.</p>
+    <p>Il écrit l’empilement, deux demi-empilements faits d’images distinctes, la carte de couverture de chaque couleur et, pour
+    chaque image, son poids ou la raison de son exclusion. Inspecter les montre tous.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Le drizzle Bayer</h2>
+    <p>Un capteur couleur enregistre une seule couleur par pixel&nbsp;: dans chaque carré de 2 × 2 pixels, un rouge, deux
+    verts, un bleu. Le dématriçage complète les deux couleurs manquantes de chaque pixel par interpolation. Le drizzle
+    Bayer saute cette étape. Chaque échantillon brut est déposé sur la grille de sortie là où l’alignement de son
+    image le place, sous la forme d’un petit carré, et seulement dans sa couleur. La valeur d’un pixel de sortie est la
+    moyenne pondérée des gouttes qui le touchent.<a class="cite" href="#ref-1">[1]</a></p>
+    <aside class="note"><b>À essayer.</b> Aucun décalage, avec n’importe quel nombre d’images&nbsp;: les trous ne se
+    comblent jamais. Puis le rouge à 2× avec 15 images, et avec 150.</aside>
+    <p>La méthode repose sur le décalage des images entre elles. Le rouge et le bleu ne représentent chacun qu’un quart
+    des échantillons&nbsp;: une image seule laisse vides trois pixels de sortie sur quatre dans ces couleurs. Ce sont les
+    décalages d’une image à l’autre, par dithering ou par la dérive de la monture, qui remplissent la grille.</p>
+    <p>Les images rouge et bleue des étoiles sont alignées sur la verte pour toute la nuit, contre le chromatisme latéral
+    et la dispersion atmosphérique. Le décalage de chaque couleur est une surface du second degré sur le champ, ajustée
+    sur les étoiles isolées et non saturées de la première moyenne (au moins 50, bien au-dessus du bruit et sous la
+    moitié de la saturation) ; les échantillons rouges et bleus sont ensuite déposés là où tombent les verts de la même
+    étoile. Les décalages au centre et dans les coins sont donnés dans le journal et dans le Rapport.</p>
+
+    <Figure lang={lang} n={1} wide>
+      <DrizzleDemo slot="body" lang={lang} />
+      La couverture de la grille de sortie par les échantillons d’une couleur. Traits épais&nbsp;: pixels du capteur&nbsp;;
+      traits fins&nbsp;: pixels de sortie. Carrés orange&nbsp;: les gouttes de la première image&nbsp;; points&nbsp;: les centres des
+      gouttes des autres images (jusqu’à 60 images). Plus un pixel de sortie est sombre, plus il a reçu de surface de
+      gouttes&nbsp;; un pixel hachuré n’en a reçu aucune. Modèle simplifié de ce que calcule le bloc&nbsp;: des décalages seuls,
+      tirés au hasard, sur un carré de 12 × 12 pixels du capteur.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Échelle et taille de goutte</h2>
+    <aside class="note"><q lang="en">Statistics performed on the drizzled weight image in the region of interest
+    should yield an RMS value (standard deviation) that is less than 20% of the median value.</q><br />DrizzlePac
+    Handbook, §7.3.<a class="cite" href="#ref-2">[2]</a></aside>
+    <p>Avant d’empiler, FLOAT calcule la carte de la figure 1 à partir de l’alignement réel des images que la
+    sélection garde, sur une grille de petites zones du champ. Il applique ensuite la règle du manuel de DrizzlePac&nbsp;:
+    l’écart-type de la carte de poids doit rester sous 20 % de sa médiane. La variation est mesurée pour chaque
+    couleur&nbsp;; le rouge et le bleu décident.</p>
+    <ul>
+      <li>Une échelle de 1,5 ou 2 n’est proposée que si les étoiles sont sous-échantillonnées (une largeur de moins de
+      2 pixels) et si la règle est respectée à cette échelle. Le drizzle ne restitue du détail que dans ce
+      cas.<a class="cite" href="#ref-1">[1]</a></li>
+      <li>La taille de goutte est alors la plus petite valeur, par pas de 0,05 à partir de 1 / échelle, qui respecte
+      la règle.</li>
+      <li>À l’échelle 1, la taille de goutte vaut 1.</li>
+    </ul>
+    <p>L’estimation prend environ 0,5 s pour 100 images et 1,5 s pour 300, sur un cœur du processeur. Après
+    l’empilement, la même statistique est mesurée sur la carte de poids réellement obtenue.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>La méthode que FLOAT propose, selon la série d’images.</caption>
+        <thead><tr><th>Série</th><th>Proposition</th><th>Pourquoi</th></tr></thead>
+        <tbody>
+          <tr><td>Capteur couleur, moins de 15 images</td><td>Classique</td><td>Trop peu d’images pour que les échantillons rouges et bleus couvrent la grille.</td></tr>
+          <tr><td>Capteur couleur, couverture du rouge ou du bleu variant de 20 % ou plus à 1×</td><td>Classique</td><td>La règle des 20 % n’est pas respectée.<a class="cite" href="#ref-2">[2]</a></td></tr>
+          <tr><td>Capteur couleur, assez d’images bien décalées</td><td>Drizzle Bayer, à l’échelle que donne la règle</td><td>La règle est respectée.</td></tr>
+          <tr><td>Capteur couleur, étoiles de moins de 2 px, couverture tenue à 1,5× ou 2×</td><td>Drizzle Bayer à 1,5× ou 2×</td><td>Étoiles sous-échantillonnées&nbsp;: la grille plus fine restitue du détail.<a class="cite" href="#ref-1">[1]</a></td></tr>
+          <tr><td>Capteur monochrome</td><td>Classique&nbsp;; drizzle seulement avec des étoiles de moins de 2 px, 15 images et la couverture tenue à 1,5× ou 2×</td><td>Pas de mosaïque de couleurs&nbsp;: le drizzle n’apporte du détail que si les étoiles sont sous-échantillonnées.</td></tr>
+          <tr><td>Images déjà en couleur (JPEG, PNG, TIFF)</td><td>Classique</td><td>Pas de mosaïque d’échantillons bruts à déposer.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>La figure 2 montre la carte de poids obtenue sur une vraie nuit&nbsp;: avec des étoiles de 2,1 px, l’échelle est
+    restée à 1, et la couverture de chaque couleur varie de 1,5 à 3,1 %, très en dessous des 20 % de la règle.</p>
+
+    <Figure lang={lang} n={2}>
+      <Chart slot="body" {...coverageFigure(lang)} />
+      Distribution de la carte de poids de l’empilement, chaque couleur rapportée à sa médiane, par classes de 0,01,
+      sur le champ privé d’un dixième de chaque côté. Données&nbsp;: les Pléiades, 1344 des 1348 poses de 13 s, drizzle
+      Bayer à l’échelle 1 avec des gouttes de 1 pixel. La légende donne la variation de chaque couleur (écart-type sur
+      médiane)&nbsp;; l’estimation faite avant l’empilement était de 2,5, 1,1 et 2,5 %.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Le rejet des valeurs aberrantes</h2>
+    <p>Satellites, avions, rayons cosmiques et pixels chauds sont écartés échantillon par échantillon. Le drizzle Bayer
+    a trois manières de les trouver.</p>
+    <h3>Sur les pixels bruts</h3>
+    <p>Un sigma clipping contre la dispersion mesurée en chaque point de sortie. Une première passe garde la moyenne
+    pondérée et l’écart-type des échantillons déposés là&nbsp;; une deuxième écarte les échantillons plus éloignés que le
+    seuil (3 écarts-types) et mesure de nouveau les deux&nbsp;; une troisième juge chaque échantillon contre ces valeurs et
+    dépose ceux qui sont gardés. Il n’y a pas de modèle de bruit&nbsp;: la dispersion est celle que montrent les images en
+    ce point. C’est le principe du sigma clipping de Siril, avec la moyenne pondérée pour centre.<a class="cite" href="#ref-3">[3]</a></p>
+    <p>La figure 3 montre ce que ce rejet a retiré de chaque image d’une longue série&nbsp;: quelques centièmes de pour cent
+    des échantillons, surtout au-dessus de la moyenne, et quelques images qui se détachent.</p>
+
+    <Figure lang={lang} n={3}>
+      <Chart slot="body" {...rejectionFigure(lang)} />
+      Part des échantillons de chaque image empilée écartés par le rejet sur les pixels bruts, en fonction du temps
+      écoulé depuis la première pose. Données&nbsp;: les Pléiades, 1344 poses de 13 s, seuil de 5 écarts-types (la valeur
+      par défaut quand cet empilement a été fait). En bleu, les échantillons au-dessus de la moyenne (médiane 0,029 %
+      par image)&nbsp;; en orange, en dessous (0,007 %). Cinq images perdent plus de 0,1 %, la plus touchée 0,20 %.
+    </Figure>
+    <h3>Selon les poses</h3>
+    <aside class="note"><b>Pourquoi 11 valeurs.</b> Parmi N valeurs, l’écart-type contient la valeur aberrante
+    elle-même&nbsp;: celle-ci ne peut donc pas s’écarter de la moyenne de plus de (N − 1) / √N écarts-types (l’écart-type
+    pris avec N − 1), soit 2,85 pour 10 valeurs et 3,02 pour 11.<a class="cite" href="#ref-4">[4]</a></aside>
+    <p>Avec N valeurs, une valeur aberrante atteint au plus (N − 1) / √N écarts-types&nbsp;: moins de 3 en dessous de
+    11 valeurs. Dans un drizzle Bayer, le rouge et le bleu ne reçoivent en un point qu’environ un quart des images, et
+    un sigma clipping à 3 peut manquer de valeurs. Les valeurs de chaque image sont alors gardées pour chaque point
+    de sortie, et le rejet est choisi selon leur nombre&nbsp;: par percentile, sigma clipping winsorisé, ou ajustement
+    linéaire. FLOAT propose cette manière quand les couleurs tiennent trop peu de valeurs par point.</p>
+    <h3>Rejet de l’empilement classique</h3>
+    <p>Le rejet de la méthode classique s’applique aux images dématricées et alignées, et ce qu’il rejette dans une
+    image est retiré des gouttes de cette image sur les mêmes pixels de sortie.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Deux demi-empilements</h2>
+    <p>Les images sont réparties à tour de rôle, par blocs de 20, entre deux demi-empilements A et B construits de la
+    même façon. Les deux montrent le même ciel ; le bruit de leurs images est indépendant. Leur différence donne le
+    bruit de l’empilement : à poids égaux, le bruit de l’empilement vaut la moitié de l’écart-type de A − B (en
+    général, cet écart-type multiplié par √(w<sub>A</sub> w<sub>B</sub>) / (w<sub>A</sub> + w<sub>B</sub>), w étant la
+    somme des poids des images de chaque moitié). Le bloc <a href="/fr/blocs/debruitage/">Débruitage</a> s’en sert
+    comme d’une paire : un réseau qui prédit une moitié à partir de l’autre ne garde que ce que les deux
+    contiennent.<a class="cite" href="#ref-5">[5]</a></p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>La méthode classique</h2>
+    <p>Chaque image est dématricée avec RCD,<a class="cite" href="#ref-6">[6]</a> les couleurs équilibrées avant et
+    l’équilibre retiré après, comme le font les convertisseurs de fichiers bruts. Elle est rééchantillonnée sur la
+    grille de référence avec Lanczos-4, écrêté pour contenir les anneaux sombres que Lanczos-4 dessine autour des
+    étoiles brillantes. Les images sont ensuite combinées avec un rejet choisi selon leur nombre&nbsp;: par percentile en
+    dessous de 6 images, sigma clipping winsorisé de 6 à 15, ajustement linéaire à partir de 16. La combinaison elle-même se choisit&nbsp;: la moyenne pondérée de ce que le rejet garde (par défaut), la médiane, le maximum (traînées d’étoiles, météores et satellites sont gardés), le minimum ou la somme. Les quatre dernières ne rejettent rien et donnent le même poids à chaque image.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Les principaux réglages du bloc. Les valeurs «&nbsp;automatiques&nbsp;» sont affichées dans FLOAT avec leur raison.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Méthode d’empilement</th><td>automatique</td><td>Drizzle Bayer, Classique</td><td>La méthode classique convient aux images peu nombreuses ou à peine décalées, dont les pixels rouges et bleus laissent des trous dans un drizzle.</td></tr>
+          <tr><th scope="row">Échelle drizzle</th><td>automatique</td><td class="n">1 – 3 ×</td><td>Résolution de sortie par rapport au capteur. Les valeurs plus hautes coûtent de la mémoire et ajoutent du bruit.</td></tr>
+          <tr><th scope="row">Taille goutte</th><td>automatique</td><td class="n">0,3 – 1</td><td>Taille de la goutte déposée par rapport au pixel d’entrée. Des gouttes plus petites donnent plus de netteté mais plus de bruit, avec un risque de trous.</td></tr>
+          <tr><th scope="row">Rejet (drizzle)</th><td>automatique</td><td>Sur les pixels bruts, Selon les poses, Rejet de l’empilement classique</td><td>La manière de trouver les valeurs aberrantes (section 4).</td></tr>
+          <tr><th scope="row">Seuil rejet</th><td class="n">3 σ</td><td class="n">2 – 20</td><td>Plus haut, il garde plus d’échantillons&nbsp;; plus bas, il retire plus de traînées mais peut entamer le cœur des étoiles par forte turbulence.</td></tr>
+          <tr><th scope="row">Bloc demi-empilements</th><td class="n">20 images</td><td class="n">1 – 200</td><td>La taille des blocs d’images répartis à tour de rôle entre les demi-empilements A et B.</td></tr>
+          <tr><th scope="row">Combinaison (Classique)</th><td>moyenne</td><td>moyenne, médiane, maximum, minimum, somme</td><td>Avec la méthode classique&nbsp;: comment les valeurs des images en chaque pixel font l’empilement.</td></tr>
+          <tr><th scope="row">Retrait motif</th><td>désactivé</td><td>activé, désactivé</td><td>Mesure le motif fixe du capteur et le soustrait de chaque image (section 8).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Le retrait du motif est désactivé par défaut.</strong> Il mesure le motif fixe du capteur comme la
+      médiane des images en coordonnées du capteur, et le soustrait, contre les stries qu’on appelle bruit de marche.
+      Sur certains empilements, l’estimation contenait aussi la trace des étoiles faibles sur le capteur, et la
+      soustraire dessinait les stries mêmes qu’elle devait retirer.</li>
+      <li><strong>Pas de drizzle Bayer pour des images déjà en couleur.</strong> Une image JPEG, PNG ou TIFF n’a pas de
+      mosaïque d’échantillons bruts à déposer&nbsp;: la méthode classique est utilisée
+      (<a href={`${release.repo}/issues/57`}>ticket 57</a>).</li>
+      <li><strong>Peu d’images en un point, pas de rejet.</strong> Là où moins de trois images couvrent un point, sur
+      les bords du champ, rien n’est rejeté.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Fruchter, A. S. &amp; Hook, R. N. 2002, <i lang="en">Drizzle: A Method for the Linear Reconstruction of Undersampled Images</i>, PASP 114, 144. <a href="https://arxiv.org/abs/astro-ph/9808087">arXiv:astro-ph/9808087</a></li>
+      <li id="ref-2"><i lang="en">The DrizzlePac Handbook</i>, version 3, Space Telescope Science Institute, §7.3 «&nbsp;Inspecting Drizzled Products after User Reprocessing&nbsp;». <a href="https://hst-docs.stsci.edu/drizzpac">hst-docs.stsci.edu/drizzpac</a></li>
+      <li id="ref-3">Documentation de Siril, <i>Empilement</i>, «&nbsp;Algorithmes de rejet&nbsp;». <a href="https://siril.readthedocs.io/en/stable/preprocessing/stacking.html">siril.readthedocs.io</a></li>
+      <li id="ref-4">Samuelson, P. A. 1968, <i lang="en">How Deviant Can You Be?</i>, JASA 63, 1522. <a href="https://doi.org/10.1080/01621459.1968.10480944">doi:10.1080/01621459.1968.10480944</a></li>
+      <li id="ref-5">Lehtinen, J. et al. 2018, <i lang="en">Noise2Noise: Learning Image Restoration without Clean Data</i>, ICML. <a href="https://arxiv.org/abs/1803.04189">arXiv:1803.04189</a></li>
+      <li id="ref-6">Sanz Rodríguez, L., <i lang="en">Ratio Corrected Demosaicing (RCD)</i>, version 2.3. <a href="https://github.com/LuisSR/RCD-Demosaicing">github.com/LuisSR/RCD-Demosaicing</a></li>
+    </ol>
+  </section>
+</Doc>

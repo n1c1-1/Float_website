@@ -1,0 +1,542 @@
+{
+  "slug": "second-night",
+  "slugFr": "seconde-nuit",
+  "section": "path",
+  "level": 2,
+  "order": 5,
+  "title": {
+    "en": "Add a second night",
+    "fr": "Ajouter une seconde nuit"
+  },
+  "summary": {
+    "en": "A second night of the same target is added to the project of the first tutorial as a second session of its workflow, named by its night, with its 358 lights and the darks and flats of the first night reused. The computation takes 38 min, then the project is opened again: 754 frames are kept of 794, Post is unchanged, and the faint gas has 3 to 12 % less noise at 100 %.",
+    "fr": "Une seconde nuit de la même cible est ajoutée au projet du premier tutoriel comme seconde session de son workflow, nommée par sa nuit, avec ses 358 brutes et les darks et flats de la première nuit repris. Le calcul dure 38 min, puis le projet est rouvert : 754 images sont gardées sur 794, Post est inchangé, et le gaz faible a 3 à 12 % de bruit en moins à 100 %."
+  },
+  "duration": {
+    "en": "About 10 min for the gestures, plus 38 min of computing on a PC with an RTX 4060 Ti graphics card (16 GB)",
+    "fr": "Environ 10 min pour les gestes, plus 38 min de calcul sur un PC avec une carte graphique RTX 4060 Ti (16 Go)"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial My first image done: its finished project is the starting point",
+      "The frames of the second night: 358 lights of 15 s, 4.3 GB"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Ma première image fait : son projet terminé est le point de départ",
+      "Les images de la seconde nuit : 358 brutes de 15 s, 4,3 Go"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats · second night: 358 lights of 15 s (1.5 h), 28 December 2024",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats · seconde nuit : 358 brutes de 15 s (1,5 h), 28 décembre 2024"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB, plus 4.3 GB for the second night",
+      "fr": "6,9 Go, plus 4,3 Go pour la seconde nuit"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "video": {
+    "en": {
+      "src": "/tutorials/second-night/en/video.mp4",
+      "captions": "/tutorials/second-night/en/captions.vtt",
+      "chapters": "/tutorials/second-night/en/chapters.vtt",
+      "poster": "/tutorials/second-night/en/poster.jpg",
+      "seconds": 174.0
+    },
+    "fr": {
+      "src": "/tutorials/second-night/fr/video.mp4",
+      "captions": "/tutorials/second-night/fr/captions.vtt",
+      "chapters": "/tutorials/second-night/fr/chapters.vtt",
+      "poster": "/tutorials/second-night/fr/poster.jpg",
+      "seconds": 174.0
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project of the first tutorial",
+        "fr": "Ouvrir le projet du premier tutoriel"
+      },
+      "text": {
+        "en": "On the Home screen click <b>Open project…</b> and choose the finished project of the first tutorial, or a copy of its folder. The project opens up to date, with one night: 436 lights, 1.8 h of light.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez le projet terminé du premier tutoriel, ou une copie de son dossier. Le projet s’ouvre à jour, avec une nuit : 436 brutes, 1,8 h de pose."
+      },
+      "check": {
+        "en": "The status bar reads all up to date.",
+        "fr": "La barre d’état indique tout à jour."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/01.png",
+        "fr": "/tutorials/second-night/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "Diagnosis in Post",
+        "fr": "Le diagnostic dans Post"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The picture is the one of the first tutorial. Before any gesture, zoom to 100 % (Ctrl and the mouse wheel over the picture) on a faint filament of the gas, then come back to the whole picture with the fit button. Right, and to leave alone: everything else, the layer, its sliders, the crop and the colours.",
+        "fr": "Cliquez sur <b>Post</b>. L’image est celle du premier tutoriel. Avant tout geste, zoomez à 100 % (Ctrl et la molette au-dessus de l’image) sur un filament faible du gaz, puis revenez à l’image entière avec le bouton d’ajustement. Ce qui va, et qu’on laisse : tout le reste, le calque, ses curseurs, le recadrage et les couleurs."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "A grain lies in the faint gas at 100 %.",
+            "fr": "Un grain recouvre le gaz faible à 100 %."
+          },
+          "read": {
+            "en": "At 100 % on the faint filament at the left of the ring, the gas is speckled with fine grain. On the fitted view it does not show.",
+            "fr": "À 100 % sur le filament faible à gauche de l’anneau, le gaz est piqueté d’un grain fin. Sur la vue ajustée, il ne se voit pas."
+          },
+          "fix": {
+            "en": "Add a second night to the workflow.",
+            "fr": "Ajouter une seconde nuit au workflow."
+          },
+          "step": "session"
+        },
+        {
+          "problem": {
+            "en": "The picture holds 1.8 h of light, from one night.",
+            "fr": "L’image tient 1,8 h de pose, d’une seule nuit."
+          },
+          "read": {
+            "en": "The Table and the Inspect page read 436 lights of 15 s for the session of the 29th. The night of the 28th adds 358 lights, 1.5 h.",
+            "fr": "Le Tableau et la page Inspection indiquent 436 brutes de 15 s pour la session du 29. La nuit du 28 en ajoute 358, soit 1,5 h."
+          },
+          "fix": {
+            "en": "Add the lights of the second night.",
+            "fr": "Ajouter les brutes de la seconde nuit."
+          },
+          "step": "lights"
+        }
+      ],
+      "check": {
+        "en": "The faint gas shows a fine grain at 100 %, and none on the whole picture.",
+        "fr": "Le gaz faible montre un grain fin à 100 %, et aucun sur l’image entière."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/02.png",
+        "fr": "/tutorials/second-night/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 9.0,
+        "fr": 9.0
+      }
+    },
+    {
+      "id": "session",
+      "title": {
+        "en": "Add a Session block",
+        "fr": "Ajouter un bloc Session"
+      },
+      "text": {
+        "en": "Click <b>Graph</b>, click the card of the workflow’s first block, then double-click <b>Session</b> in the palette. The window says: <i>Session 2 added to “Color minimal”: it stacks with its sessions</i>, then <i>Calibration added: its stack is calibrated together</i>.",
+        "fr": "Cliquez sur <b>Graphe</b>, cliquez sur la carte du premier bloc du workflow, puis double-cliquez sur <b>Session</b> dans la palette. La fenêtre indique : <i>Session 2 ajoutée à « Couleur minimal » : elle s’empile avec ses sessions</i>, puis <i>Calibration ajoutée : son empilement est calibré ensemble</i>."
+      },
+      "why": {
+        "en": "The new night is a second session of the same workflow, and not more files in the first session: each night keeps its own frames, and both are stacked together into one picture.",
+        "fr": "La nouvelle nuit est une seconde session du même workflow, et non des fichiers de plus dans la première session : chaque nuit garde ses propres images, et les deux s’empilent ensemble en une seule image."
+      },
+      "check": {
+        "en": "A second row, Session 2, appears under Session 1 in the Preprocessing band.",
+        "fr": "Une seconde ligne, Session 2, apparaît sous Session 1 dans la bande Prétraitement."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/03.png",
+        "fr": "/tutorials/second-night/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 25.0,
+        "fr": 25.0
+      }
+    },
+    {
+      "id": "name",
+      "title": {
+        "en": "Name the session by its night",
+        "fr": "Nommer la session par sa nuit"
+      },
+      "text": {
+        "en": "Click <b>Table</b>. Click the new session’s name, press F2 and type <b>28 Dec 2024</b>, then name the first session <b>29 Dec 2024</b> the same way.",
+        "fr": "Cliquez sur <b>Tableau</b>. Cliquez sur le nom de la nouvelle session, appuyez sur F2 et tapez <b>28 Dec 2024</b>, puis nommez de la même façon la première session <b>29 Dec 2024</b>."
+      },
+      "why": {
+        "en": "A name that says the night tells the two sessions apart in the Table, in Inspect and in the menus.",
+        "fr": "Un nom qui dit la nuit distingue les deux sessions dans le Tableau, dans Inspection et dans les menus."
+      },
+      "check": {
+        "en": "The Table reads 29 Dec 2024 and 28 Dec 2024.",
+        "fr": "Le Tableau indique 29 Dec 2024 et 28 Dec 2024."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/04.png",
+        "fr": "/tutorials/second-night/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 42.0,
+        "fr": 42.0
+      }
+    },
+    {
+      "id": "lights",
+      "title": {
+        "en": "Add the lights of the second night",
+        "fr": "Ajouter les brutes de la seconde nuit"
+      },
+      "text": {
+        "en": "With the new session selected, click <b>Inspect</b>. In the <b>Lights</b> group click <b>+</b>, then <b>Add folder…</b>, and choose the folder of the night of 28 December: 358 lights of 15 s at ISO 4000, 1.5 h.",
+        "fr": "La nouvelle session étant sélectionnée, cliquez sur <b>Inspection</b>. Dans le groupe <b>Brutes</b> cliquez sur <b>+</b>, puis sur <b>Ajouter dossier…</b>, et choisissez le dossier de la nuit du 28 décembre : 358 brutes de 15 s à 4000 ISO, 1,5 h."
+      },
+      "why": {
+        "en": "The lights are the exposures of the target: the second night brings 1.5 h on top of the 1.8 h of the first.",
+        "fr": "Les brutes sont les poses de la cible : la seconde nuit apporte 1,5 h en plus des 1,8 h de la première."
+      },
+      "check": {
+        "en": "The Lights group reads 358, and the Run button gives an estimate.",
+        "fr": "Le groupe Brutes indique 358, et le bouton Exécuter donne une estimation."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/05.png",
+        "fr": "/tutorials/second-night/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 60.0,
+        "fr": 60.0
+      }
+    },
+    {
+      "id": "calib",
+      "title": {
+        "en": "Reuse the darks and the flats of the first night",
+        "fr": "Reprendre les darks et les flats de la première nuit"
+      },
+      "text": {
+        "en": "In the <b>Darks</b> group click <b>+</b> and choose <b>Use the frames of “29 Dec 2024”</b>. Do the same in the <b>Flats</b> group.",
+        "fr": "Dans le groupe <b>Darks</b> cliquez sur <b>+</b> et choisissez <b>Prendre celles de « 29 Dec 2024 »</b>. Faites de même dans le groupe <b>Flats</b>."
+      },
+      "why": {
+        "en": "The two nights come from the same camera, with the same settings and the same telescope, a day apart: the darks and the flats of the first night fit the second. The masters are shared, one for both sessions.",
+        "fr": "Les deux nuits viennent du même appareil, avec les mêmes réglages et le même télescope, à un jour d’écart : les darks et les flats de la première nuit conviennent à la seconde. Les masters sont partagés, un seul pour les deux sessions."
+      },
+      "check": {
+        "en": "Each group reads “shared with 29 Dec 2024: one master”.",
+        "fr": "Chaque groupe indique « partagés avec 29 Dec 2024 : un seul master »."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/06.png",
+        "fr": "/tutorials/second-night/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 76.0,
+        "fr": 76.0
+      }
+    },
+    {
+      "id": "run",
+      "title": {
+        "en": "Run",
+        "fr": "Exécuter"
+      },
+      "text": {
+        "en": "Click <b>Run</b>. The <b>Run project</b> window lists what is computed: the calibration, the registration, the stacking and the blocks that follow, each with its estimate.",
+        "fr": "Cliquez sur <b>Exécuter</b>. La fenêtre <b>Exécuter projet</b> liste ce qui est calculé : la calibration, l’alignement, l’empilement et les blocs qui suivent, chacun avec son estimation."
+      },
+      "why": {
+        "en": "The calibration, the registration and the stacking take the two nights into account, since the sessions of a stack are stacked together. The blocks after the stack follow.",
+        "fr": "La calibration, l’alignement et l’empilement prennent en compte les deux nuits, puisque les sessions d’un empilement s’empilent ensemble. Les blocs après l’empilement suivent."
+      },
+      "check": {
+        "en": "The window lists the blocks with their estimates, and the status bar reads Running.",
+        "fr": "La fenêtre liste les blocs avec leurs estimations, et la barre d’état indique En cours."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/07.png",
+        "fr": "/tutorials/second-night/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 94.0,
+        "fr": 94.0
+      }
+    },
+    {
+      "id": "cut",
+      "title": {
+        "en": "The computation",
+        "fr": "Le calcul"
+      },
+      "text": {
+        "en": "The computation took <b>38 min</b> on an RTX 4060 Ti graphics card (16 GB). It is not shown in real time: the film resumes in the finished project.",
+        "fr": "Le calcul a duré <b>38 min</b> sur une carte graphique RTX 4060 Ti (16 Go). Il n’est pas montré en temps réel : le film reprend dans le projet terminé."
+      },
+      "why": {
+        "en": "The stages are: inventory 0.1 min, calibration 12.6 min for the 794 frames of the two nights, registration 2.4 min, stacking 22.3 min, the rest under 1 min.",
+        "fr": "Les étapes sont : inventaire 0,1 min, calibration 12,6 min pour les 794 images des deux nuits, alignement 2,4 min, empilement 22,3 min, le reste moins de 1 min."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/08.png",
+        "fr": "/tutorials/second-night/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 106.0,
+        "fr": 106.0
+      }
+    },
+    {
+      "id": "result",
+      "title": {
+        "en": "The two nights registered",
+        "fr": "Les deux nuits alignées"
+      },
+      "text": {
+        "en": "In the finished project, on the Graph page, click the <b>Selection</b> card and the settings button on the right edge. The panel reads <b>754 of 794 frames kept</b>.",
+        "fr": "Dans le projet terminé, sur la page Graphe, cliquez sur la carte <b>Sélection</b> puis sur le bouton de réglages au bord droit. Le panneau indique <b>754 images sur 794 gardées</b>."
+      },
+      "why": {
+        "en": "The two nights are turned by 178° from each other, with no meridian flip, and they register with a residual of 0.29 px. 754 frames of the 794 are kept for the stack.",
+        "fr": "Les deux nuits sont tournées de 178° l’une par rapport à l’autre, sans retournement au méridien, et elles s’alignent avec un résidu de 0,29 px. 754 images des 794 sont gardées pour l’empilement."
+      },
+      "check": {
+        "en": "The two sessions, 29 Dec 2024 and 28 Dec 2024, are in the Preprocessing band.",
+        "fr": "Les deux sessions, 29 Dec 2024 et 28 Dec 2024, sont dans la bande Prétraitement."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/09.png",
+        "fr": "/tutorials/second-night/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 119.0,
+        "fr": 119.0
+      }
+    },
+    {
+      "id": "report",
+      "title": {
+        "en": "The light in the report",
+        "fr": "La pose dans le rapport"
+      },
+      "text": {
+        "en": "Click <b>Report</b>. The shooting details read 754 frames of 15 s, 3 h 08 of light, and frames kept 754/794.",
+        "fr": "Cliquez sur <b>Rapport</b>. Les détails de prise de vue indiquent 754 images de 15 s, 3 h 08 de pose, et images gardées 754/794."
+      },
+      "check": {
+        "en": "Frames: 754 × 15 s (3 h 08).",
+        "fr": "Images : 754 × 15 s (3 h 08)."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/10.png",
+        "fr": "/tutorials/second-night/fr/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 131.0,
+        "fr": 131.0
+      }
+    },
+    {
+      "id": "post",
+      "title": {
+        "en": "Post is unchanged",
+        "fr": "Post est inchangé"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The layer and its sliders are the same as before, and at the fitted size the picture is the same.",
+        "fr": "Cliquez sur <b>Post</b>. Le calque et ses curseurs sont les mêmes qu’avant, et à la taille ajustée l’image est la même."
+      },
+      "why": {
+        "en": "The settings of Post act on whatever the blocks before it deliver: a better stack goes through the same layer without any new gesture.",
+        "fr": "Les réglages de Post agissent sur ce que livrent les blocs qui le précèdent : un meilleur empilement passe par le même calque sans aucun nouveau geste."
+      },
+      "check": {
+        "en": "Sky and Faint tones read the same values as in the first tutorial.",
+        "fr": "Ciel et Tons faibles ont les mêmes valeurs que dans le premier tutoriel."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/11.png",
+        "fr": "/tutorials/second-night/fr/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 141.0,
+        "fr": 141.0
+      }
+    },
+    {
+      "id": "grain",
+      "title": {
+        "en": "The gain at 100 %",
+        "fr": "Le gain à 100 %"
+      },
+      "text": {
+        "en": "Zoom to 100 % on the same faint filament as in the diagnosis. The gas has less grain: the noise is 3 to 12 % lower, measured on four zones of the picture.",
+        "fr": "Zoomez à 100 % sur le même filament faible que dans le diagnostic. Le gaz a moins de grain : le bruit est plus bas de 3 à 12 %, mesuré sur quatre zones de l’image."
+      },
+      "why": {
+        "en": "The gain shows at 100 % and not on the whole picture.",
+        "fr": "Le gain se voit à 100 % et non sur l’image entière."
+      },
+      "check": {
+        "en": "At 100 %, the faint gas is smoother than in the diagnosis.",
+        "fr": "À 100 %, le gaz faible est plus lisse que dans le diagnostic."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/second-night/details/filament-one.jpg",
+          "w": 440,
+          "h": 416,
+          "label": {
+            "en": "One night",
+            "fr": "Une nuit"
+          },
+          "caption": {
+            "en": "The faint filament at the left of the ring, 436 frames.",
+            "fr": "Le filament faible à gauche de l’anneau, 436 images."
+          }
+        },
+        {
+          "src": "/tutorials/second-night/details/filament-two.jpg",
+          "w": 440,
+          "h": 416,
+          "label": {
+            "en": "Two nights",
+            "fr": "Deux nuits"
+          },
+          "caption": {
+            "en": "The same filament with two nights, 754 frames: less grain.",
+            "fr": "Le même filament avec deux nuits, 754 images : moins de grain."
+          }
+        },
+        {
+          "src": "/tutorials/second-night/details/arc-one.jpg",
+          "w": 440,
+          "h": 416,
+          "label": {
+            "en": "One night",
+            "fr": "Une nuit"
+          },
+          "caption": {
+            "en": "The faint arc at the top of the ring, 436 frames.",
+            "fr": "L’arc faible en haut de l’anneau, 436 images."
+          }
+        },
+        {
+          "src": "/tutorials/second-night/details/arc-two.jpg",
+          "w": 440,
+          "h": 416,
+          "label": {
+            "en": "Two nights",
+            "fr": "Deux nuits"
+          },
+          "caption": {
+            "en": "The same arc with two nights, 754 frames.",
+            "fr": "Le même arc avec deux nuits, 754 images."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/second-night/en/12.png",
+        "fr": "/tutorials/second-night/fr/12.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 151.0,
+        "fr": 151.0
+      }
+    },
+    {
+      "id": "export",
+      "title": {
+        "en": "Export",
+        "fr": "Exporter"
+      },
+      "text": {
+        "en": "Click <b>Export…</b>, choose <b>JPEG</b> in <b>Format</b> and click <b>Export</b>.",
+        "fr": "Cliquez sur <b>Exporter…</b>, choisissez <b>JPEG</b> dans <b>Format</b> et cliquez sur <b>Exporter</b>."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/13.png",
+        "fr": "/tutorials/second-night/fr/13.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 159.0,
+        "fr": 159.0
+      }
+    },
+    {
+      "id": "exported",
+      "title": {
+        "en": "The image is written",
+        "fr": "L’image est écrite"
+      },
+      "text": {
+        "en": "The window says how many files were written: the image and its processing history. Close it.",
+        "fr": "La fenêtre indique combien de fichiers ont été écrits : l’image et son historique de traitement. Fermez-la."
+      },
+      "shot": {
+        "en": "/tutorials/second-night/en/14.png",
+        "fr": "/tutorials/second-night/fr/14.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 169.0,
+        "fr": 169.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/second-night/result.jpg",
+    "w": 2000,
+    "h": 1426,
+    "caption": {
+      "en": "The Rosette Nebula from the two nights: 754 frames kept of 794, 3 h 08 of light. At the fitted size the picture is the same as with one night, and at 100 % the faint gas has 3 to 12 % less noise.",
+      "fr": "La nébuleuse de la Rosette des deux nuits : 754 images gardées sur 794, 3 h 08 de pose. À la taille ajustée l’image est la même qu’avec une nuit, et à 100 % le gaz faible a 3 à 12 % de bruit en moins."
+    }
+  },
+  "blocks": [
+    "Calibration",
+    "Registration",
+    "Stacking",
+    "Post"
+  ]
+}

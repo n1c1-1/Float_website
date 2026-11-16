@@ -1,0 +1,441 @@
+{
+  "slug": "post-versions",
+  "slugFr": "post-versions",
+  "section": "post",
+  "order": 4,
+  "title": {
+    "en": "Post: the versions of an image",
+    "fr": "Post : les versions d’une image"
+  },
+  "summary": {
+    "en": "Two versions of the Rosette are kept side by side in one project: Whole field, the picture as it is for a screen view, and Finish, with Dehaze under a luminance mask, Saturation and Multiscale sharpening for full size. The versions are switched, undone, deleted and taken back, exported to their own files and saved.",
+    "fr": "Deux versions de la Rosette sont gardées côte à côte dans un même projet : Tout le champ, l’image telle qu’elle est pour une vue sur écran, et Finition, avec Dévoilage sous un masque de luminosité, Saturation et Accentuation multi-échelle pour la pleine taille. Les versions sont changées, annulées, supprimées et reprises, exportées dans leurs fichiers et enregistrées."
+  },
+  "duration": {
+    "en": "About 15 min, with no computing",
+    "fr": "Environ 15 min, sans calcul"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial Repair instead of cropping done: a copy of its finished project (about 2 GB) is the starting point",
+      "Disk space: about 2 GB for the copy"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Réparer au lieu de recadrer fait : une copie de son projet terminé (environ 2 Go) est le point de départ",
+      "Place sur le disque : environ 2 Go pour la copie"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "6.9 GB",
+      "fr": "6,9 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "steps": [
+    {
+      "id": "open",
+      "title": {
+        "en": "Open the project",
+        "fr": "Ouvrir le projet"
+      },
+      "text": {
+        "en": "On the Home screen click <b>Open project…</b> and choose a copy of the finished project of the tutorial <i>Repair instead of cropping</i>. The project opens up to date: nothing is to be computed.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez une copie du projet terminé du tutoriel <i>Réparer au lieu de recadrer</i>. Le projet s’ouvre à jour : rien n’est à calculer."
+      },
+      "check": {
+        "en": "The status bar reads all up to date, and the Run button is greyed.",
+        "fr": "La barre d’état indique tout à jour, et le bouton « Exécuter » est grisé."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/01.png",
+        "fr": "/tutorials/post-versions/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "The diagnosis, before any gesture",
+        "fr": "Le diagnostic, avant tout geste"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. The picture is the whole field, with round stars to the edges and a sky at 33 to 34. Right, and to leave alone: the field, the stars and the sky neutrality. Three points are to be corrected in a second version, read as in the table; the first version stays as it is. The <b>Version</b> list holds Version 1.",
+        "fr": "Cliquez sur <b>Post</b>. L’image est le champ entier, aux étoiles rondes jusqu’aux bords et au ciel à 33 ou 34. Ce qui va, et qu’on laisse : le champ, les étoiles et la neutralité du ciel. Trois points sont à corriger dans une seconde version, lus comme dans le tableau ; la première version reste telle quelle. La liste <b>Version</b> contient Version 1."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "A veil is left on the sky.",
+            "fr": "Un voile reste sur le ciel."
+          },
+          "read": {
+            "en": "The sky is a dark grey that measures 33 to 34 on the exported picture, and the faint edges of the ring do not stand out from it. The aim is about 26.",
+            "fr": "Le ciel est un gris sombre qui mesure 33 à 34 sur l’image exportée, et les bords faibles de l’anneau ne s’en détachent pas. Le but est environ 26."
+          },
+          "fix": {
+            "en": "Dehaze on the starless image, under a luminance mask.",
+            "fr": "« Dévoilage » sur l’image sans étoiles, sous un masque de luminosité."
+          },
+          "step": "dehaze"
+        },
+        {
+          "problem": {
+            "en": "The ring could be a little more vivid.",
+            "fr": "L’anneau pourrait être un peu plus vif."
+          },
+          "read": {
+            "en": "The red and the pink of the ring are a little pale. The colour of the Rosette is a pink red with magenta: the aim is a little more vividness, not a redder ring.",
+            "fr": "Le rouge et le rose de l’anneau sont un peu pâles. La couleur de la Rosette est un rouge rosé avec du magenta : le but est un peu plus de vivacité, pas un anneau plus rouge."
+          },
+          "fix": {
+            "en": "Saturation on the starless image.",
+            "fr": "« Saturation » sur l’image sans étoiles."
+          },
+          "step": "finish"
+        },
+        {
+          "problem": {
+            "en": "The fine structure of the gas is soft at full size.",
+            "fr": "La structure fine du gaz est molle à taille réelle."
+          },
+          "read": {
+            "en": "At 100 % on the dark globules the folds and the edges are a little soft.",
+            "fr": "À 100 % sur les globules sombres, les replis et les bords sont un peu mous."
+          },
+          "fix": {
+            "en": "Multiscale sharpening on the starless image.",
+            "fr": "« Accentuation multi-échelle » sur l’image sans étoiles."
+          },
+          "step": "finish"
+        }
+      ],
+      "check": {
+        "en": "The Version list shows one version.",
+        "fr": "La liste « Version » montre une version."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/02.png",
+        "fr": "/tutorials/post-versions/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 8.0,
+        "fr": 8.0
+      }
+    },
+    {
+      "id": "first",
+      "title": {
+        "en": "Name the first version",
+        "fr": "Nommer la première version"
+      },
+      "text": {
+        "en": "Double-click the name of the version, type <b>Whole field</b> and press <b>Enter</b>: this is the picture as it is, for a screen view.",
+        "fr": "Double-cliquez sur le nom de la version, tapez <b>Tout le champ</b> et appuyez sur <b>Entrée</b> : c’est l’image telle qu’elle est, pour une vue sur écran."
+      },
+      "why": {
+        "en": "One version is for a screen view, the other finished for full size, kept side by side in the same project.",
+        "fr": "Une version sert à la vue sur écran, l’autre est finie pour la pleine taille, gardées côte à côte dans le même projet."
+      },
+      "check": {
+        "en": "The Version field reads Whole field.",
+        "fr": "Le champ « Version » indique Tout le champ."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/03.png",
+        "fr": "/tutorials/post-versions/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 19.0,
+        "fr": 19.0
+      }
+    },
+    {
+      "id": "second",
+      "title": {
+        "en": "A second version",
+        "fr": "Une seconde version"
+      },
+      "text": {
+        "en": "Click <b>New version</b>: a copy of this one, with its own Undo. Rename it <b>Finish</b>, the version for full size.",
+        "fr": "Cliquez sur <b>Nouvelle version</b> : une copie de celle-ci, avec son propre Annuler. Renommez-la <b>Finition</b>, la version pour la pleine taille."
+      },
+      "check": {
+        "en": "The status bar says Version 2 is a copy of Version 1 and its own Undo starts here.",
+        "fr": "La barre d’état dit que Version 2 est une copie de Version 1 et que son propre Annuler commence ici."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/04.png",
+        "fr": "/tutorials/post-versions/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 28.0,
+        "fr": 28.0
+      }
+    },
+    {
+      "id": "dehaze",
+      "title": {
+        "en": "Dehaze under a luminance mask",
+        "fr": "Dévoilage sous un masque de luminosité"
+      },
+      "text": {
+        "en": "Click <b>Starless image</b>, then <b>Filter</b>, open <b>Contrast</b> and choose <b>Dehaze</b>. Drag <b>Amount</b> to about 0.25 and <b>Scale</b> to about 256 px. With the filter selected, click the mask button, then <b>Add to mask</b> and <b>Luminance range</b>: set the part from 0 to 25 % with a <b>Feather</b> of about 8 px.",
+        "fr": "Cliquez sur <b>Image sans étoiles</b>, puis sur <b>Filtre</b>, ouvrez <b>Contraste</b> et choisissez <b>Dévoilage</b>. Faites glisser <b>Quantité</b> jusqu’à environ 0,25 et <b>Échelle</b> jusqu’à environ 256 px. Le filtre étant sélectionné, cliquez sur le bouton de masque, puis sur <b>Ajouter au masque</b> et <b>Plage de luminosité</b> : réglez la partie de 0 à 25 % avec un <b>Progressif</b> d’environ 8 px."
+      },
+      "why": {
+        "en": "Dehaze takes away a large-scale veil, the residual light of the sky. Without the mask it would also lower the nebula, its brightest 5 % going from 145 to 132; with the mask it acts only on the dark tones.",
+        "fr": "Dévoilage retire un voile à grande échelle, la lumière résiduelle du ciel. Sans le masque, il assombrirait aussi la nébuleuse, ses 5 % les plus brillants passant de 145 à 132 ; avec le masque, il n’agit que sur les tons sombres."
+      },
+      "check": {
+        "en": "The sky reads about 26 on the exported picture.",
+        "fr": "Le ciel mesure environ 26 sur l’image exportée."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/05.png",
+        "fr": "/tutorials/post-versions/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 37.0,
+        "fr": 37.0
+      }
+    },
+    {
+      "id": "finish",
+      "title": {
+        "en": "Saturation and Multiscale sharpening",
+        "fr": "Saturation et Accentuation multi-échelle"
+      },
+      "text": {
+        "en": "Click <b>Starless image</b>, <b>Filter</b>, <b>Color</b>, <b>Saturation</b>, and drag <b>Strength</b> to about +20 %. Then add <b>Multiscale sharpening</b> from <b>Detail</b>: <b>4 px</b> to 0.3, <b>8 px</b> to 0.4 and <b>16 px</b> to 0.3, the 1 px and 2 px scales left at 0.",
+        "fr": "Cliquez sur <b>Image sans étoiles</b>, <b>Filtre</b>, <b>Couleur</b>, <b>Saturation</b>, et faites glisser <b>Intensité</b> jusqu’à environ +20 %. Ajoutez ensuite <b>Accentuation multi-échelle</b> depuis <b>Détail</b> : <b>4 px</b> à 0,3, <b>8 px</b> à 0,4 et <b>16 px</b> à 0,3, les échelles de 1 px et 2 px laissées à 0."
+      },
+      "why": {
+        "en": "Saturation without a mask: the sky, a neutral grey, does not take any colour. The 1 and 2 px scales stay at 0 because they would bring the grain back. On the fitted view the sharpening changes almost nothing: it is for the full-size picture, a print or a viewer who zooms in.",
+        "fr": "Saturation sans masque : le ciel, un gris neutre, ne prend aucune couleur. Les échelles de 1 et 2 px restent à 0 parce qu’elles feraient revenir le grain. Sur la vue ajustée, l’accentuation ne change presque rien : elle sert à l’image en pleine taille, un tirage ou un lecteur qui zoome."
+      },
+      "check": {
+        "en": "Three filters are listed under the starless image.",
+        "fr": "Trois filtres sont listés sous l’image sans étoiles."
+      },
+      "detail": [
+        {
+          "src": "/tutorials/post-versions/details/finish-before.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "caption": {
+            "en": "The dark globules at 100 % before the sharpening.",
+            "fr": "Les globules sombres à 100 % avant l’accentuation."
+          }
+        },
+        {
+          "src": "/tutorials/post-versions/details/finish-after.jpg",
+          "w": 600,
+          "h": 600,
+          "label": {
+            "en": "After",
+            "fr": "Après"
+          },
+          "caption": {
+            "en": "With 4 px 0.3, 8 px 0.4 and 16 px 0.3: the folds and edges are crisper.",
+            "fr": "Avec 4 px 0,3, 8 px 0,4 et 16 px 0,3 : les replis et les bords sont plus nets."
+          }
+        }
+      ],
+      "shot": {
+        "en": "/tutorials/post-versions/en/06.png",
+        "fr": "/tutorials/post-versions/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 57.0,
+        "fr": 57.0
+      }
+    },
+    {
+      "id": "switch",
+      "title": {
+        "en": "Switch between the versions",
+        "fr": "Passer d’une version à l’autre"
+      },
+      "text": {
+        "en": "Open the <b>Version</b> list and pick <b>Whole field</b>: the picture changes at once, with its own settings. Pick <b>Finish</b> again.",
+        "fr": "Ouvrez la liste <b>Version</b> et choisissez <b>Tout le champ</b> : l’image change aussitôt, avec ses propres réglages. Choisissez de nouveau <b>Finition</b>."
+      },
+      "check": {
+        "en": "Whole field shows no filter under the starless image except the ones it had.",
+        "fr": "Tout le champ ne montre aucun des filtres de Finition."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/07.png",
+        "fr": "/tutorials/post-versions/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 69.0,
+        "fr": 69.0
+      }
+    },
+    {
+      "id": "undo",
+      "title": {
+        "en": "Undo inside a version",
+        "fr": "Annuler dans une version"
+      },
+      "text": {
+        "en": "Click <b>Undo</b>: it takes back the last change of this version only, here the 16 px value. Click <b>Redo</b> to bring it back.",
+        "fr": "Cliquez sur <b>Annuler</b> : il reprend le dernier changement de cette version seulement, ici la valeur de 16 px. Cliquez sur <b>Rétablir</b> pour le ramener."
+      },
+      "check": {
+        "en": "Whole field is untouched by the Undo.",
+        "fr": "Tout le champ n’est pas touchée par Annuler."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/08.png",
+        "fr": "/tutorials/post-versions/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 82.0,
+        "fr": 82.0
+      }
+    },
+    {
+      "id": "delete",
+      "title": {
+        "en": "Delete a version and take it back",
+        "fr": "Supprimer une version et la reprendre"
+      },
+      "text": {
+        "en": "Click the bin: the version shown is deleted, and the status bar offers it back. Press <b>Ctrl+Z</b>: the version comes back with its settings.",
+        "fr": "Cliquez sur la corbeille : la version affichée est supprimée, et la barre d’état la propose de nouveau. Appuyez sur <b>Ctrl+Z</b> : la version revient avec ses réglages."
+      },
+      "check": {
+        "en": "The list holds both versions again.",
+        "fr": "La liste contient de nouveau les deux versions."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/09.png",
+        "fr": "/tutorials/post-versions/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 91.0,
+        "fr": 91.0
+      }
+    },
+    {
+      "id": "export",
+      "title": {
+        "en": "Export each version to its own file",
+        "fr": "Exporter chaque version dans son fichier"
+      },
+      "text": {
+        "en": "With Finish shown, click <b>Export…</b>, choose the file with the folder button, choose <b>JPEG</b> and click <b>Export</b>. Pick <b>Whole field</b> in the list and export the second file.",
+        "fr": "Finition étant affichée, cliquez sur <b>Exporter…</b>, choisissez le fichier avec le bouton dossier, choisissez <b>JPEG</b> et cliquez sur <b>Exporter</b>. Choisissez <b>Tout le champ</b> dans la liste et exportez le second fichier."
+      },
+      "check": {
+        "en": "The dialog says how many files were written, and where.",
+        "fr": "La fenêtre indique combien de fichiers ont été écrits, et où."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/10.png",
+        "fr": "/tutorials/post-versions/fr/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 100.0,
+        "fr": 100.0
+      }
+    },
+    {
+      "id": "save",
+      "title": {
+        "en": "Save, close and reopen",
+        "fr": "Enregistrer, fermer et rouvrir"
+      },
+      "text": {
+        "en": "Press <b>Ctrl+S</b>: both versions are saved with the project. Open <b>File</b>, click <b>Close project</b>, click the project on the Home screen and <b>Post</b>: both versions are still in the list, each with its settings.",
+        "fr": "Appuyez sur <b>Ctrl+S</b> : les deux versions sont enregistrées avec le projet. Ouvrez <b>Fichier</b>, cliquez sur <b>Fermer projet</b>, cliquez sur le projet de l’écran d’accueil et sur <b>Post</b> : les deux versions sont toujours dans la liste, chacune avec ses réglages."
+      },
+      "check": {
+        "en": "The list shows Whole field and Finish.",
+        "fr": "La liste montre Tout le champ et Finition."
+      },
+      "shot": {
+        "en": "/tutorials/post-versions/en/11.png",
+        "fr": "/tutorials/post-versions/fr/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 111.0,
+        "fr": 111.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/post-versions/result.jpg",
+    "w": 2000,
+    "h": 1319,
+    "caption": {
+      "en": "The export of the Finish version: a darker sky, a more vivid ring and crisper fine structure at full size.",
+      "fr": "L’export de la version Finition : un ciel plus sombre, un anneau plus vif et une structure fine plus nette en pleine taille."
+    }
+  },
+  "blocks": [
+    "Post"
+  ],
+  "next": null,
+  "video": {
+    "en": {
+      "src": "/tutorials/post-versions/en/video.mp4",
+      "captions": "/tutorials/post-versions/en/captions.vtt",
+      "chapters": "/tutorials/post-versions/en/chapters.vtt",
+      "poster": "/tutorials/post-versions/en/poster.jpg",
+      "seconds": 127.0
+    },
+    "fr": {
+      "src": "/tutorials/post-versions/fr/video.mp4",
+      "captions": "/tutorials/post-versions/fr/captions.vtt",
+      "chapters": "/tutorials/post-versions/fr/chapters.vtt",
+      "poster": "/tutorials/post-versions/fr/poster.jpg",
+      "seconds": 127.0
+    }
+  }
+}

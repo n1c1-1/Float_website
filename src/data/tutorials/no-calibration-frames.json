@@ -1,0 +1,881 @@
+{
+  "slug": "no-calibration-frames",
+  "slugFr": "sans-darks-ni-flats",
+  "section": "path",
+  "level": 2,
+  "order": 2,
+  "title": {
+    "en": "Without darks or flats",
+    "fr": "Sans darks ni flats"
+  },
+  "summary": {
+    "en": "A night of light frames alone, with no darks and no flats, goes through the whole workflow to a finished image of NGC 7000 and the Pelican. The window says what it does about the missing frames, and Post corrects what they would have corrected: the corners, the veil and the green of the sky.",
+    "fr": "Une nuit de brutes seules, sans darks ni flats, traverse tout le workflow jusqu’à une image terminée de NGC 7000 et du Pélican. La fenêtre dit ce qu’elle fait des images absentes, et Post corrige ce qu’elles auraient corrigé : les coins, le voile et le vert du ciel."
+  },
+  "duration": {
+    "en": "About 1 h 05, of which 47 min of computing on a PC with an RTX 4060 Ti graphics card (16 GB)",
+    "fr": "Environ 1 h 05, dont 41 min de calcul sur un PC avec une carte graphique RTX 4060 Ti (16 Go)"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial My first image done",
+      "Disk space: about 14 GB for the calibrated frames, and 3 GB for the project"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Ma première image fait",
+      "Place sur le disque : environ 14 Go pour les images calibrées, et 3 Go pour le projet"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "NGC 7000 (North America Nebula) and the Pelican · Sony A7S, 10 s at ISO 4000 · 580 lights, no darks, no flats",
+      "fr": "NGC 7000 (nébuleuse de l’Amérique du Nord) et le Pélican · Sony A7S, 10 s à 4000 ISO · 580 brutes, sans darks ni flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "size": {
+      "en": "7.1 GB",
+      "fr": "7,1 Go"
+    },
+    "note": {
+      "en": "The frames will be offered for download; the link will be given here",
+      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
+    }
+  },
+  "video": {
+    "fr": {
+      "src": "/tutorials/no-calibration-frames/fr/video.mp4",
+      "captions": "/tutorials/no-calibration-frames/fr/captions.vtt",
+      "chapters": "/tutorials/no-calibration-frames/fr/chapters.vtt",
+      "poster": "/tutorials/no-calibration-frames/fr/poster.jpg",
+      "seconds": 237.0
+    },
+    "en": {
+      "src": "/tutorials/no-calibration-frames/en/video.mp4",
+      "captions": "/tutorials/no-calibration-frames/en/captions.vtt",
+      "chapters": "/tutorials/no-calibration-frames/en/chapters.vtt",
+      "poster": "/tutorials/no-calibration-frames/en/poster.jpg",
+      "seconds": 237.0
+    }
+  },
+  "steps": [
+    {
+      "id": "home",
+      "title": {
+        "en": "Home",
+        "fr": "Accueil"
+      },
+      "text": {
+        "en": "This tutorial starts from light frames alone: 580 exposures of NGC 7000, with no darks and no flats. Start FLOAT and click <b>New project</b>.",
+        "fr": "Ce tutoriel part de brutes seules : 580 poses de NGC 7000, sans darks ni flats. Lancez FLOAT et cliquez sur <b>Nouveau projet</b>."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/01.png",
+        "en": "/tutorials/no-calibration-frames/en/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 0.0,
+        "en": 0.0
+      }
+    },
+    {
+      "id": "gallery",
+      "title": {
+        "en": "The Color full template",
+        "fr": "Le modèle Couleur complet"
+      },
+      "text": {
+        "en": "The project opens on a blank page. Click <b>From template</b>, then, in the <b>Color</b> tab, click <b>Color full</b>: the whole workflow appears, from Calibration to Stars/background.",
+        "fr": "Le projet s’ouvre sur une page vierge. Cliquez sur <b>Depuis modèle</b>, puis, dans l’onglet <b>Couleur</b>, sur <b>Couleur complet</b> : tout le workflow apparaît, de Calibration à Étoiles/fond."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/02.png",
+        "en": "/tutorials/no-calibration-frames/en/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 3.0,
+        "en": 3.0
+      }
+    },
+    {
+      "id": "lights",
+      "title": {
+        "en": "Add the lights",
+        "fr": "Ajouter les brutes"
+      },
+      "text": {
+        "en": "In the Session 1 panel, click <b>Add lights</b> and choose the 580 files of the folder. Nothing else is added: the Darks and Flats rows stay at none.",
+        "fr": "Dans le panneau « Session 1 », cliquez sur <b>Ajouter brutes</b> et choisissez les 580 fichiers du dossier. Rien d’autre n’est ajouté : les lignes « Darks » et « Flats » restent à aucun."
+      },
+      "check": {
+        "en": "The panel reads 580 / 580 lights used, and Darks, Flats, Bias and Dark flats read none.",
+        "fr": "Le panneau indique 580 / 580 brutes utilisées, et Darks, Flats, Offsets et Darks de flat indiquent aucun."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/03.png",
+        "en": "/tutorials/no-calibration-frames/en/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 9.0,
+        "en": 9.0
+      }
+    },
+    {
+      "id": "darks-note",
+      "title": {
+        "en": "What the window says about the darks",
+        "fr": "Ce que la fenêtre dit des darks"
+      },
+      "text": {
+        "en": "Click <b>Open frames</b>, then the <b>Calibration</b> step and its <b>Darks</b> tab. The window says what Calibration does without darks: it subtracts the master bias, or the camera’s black level, and finds the hot pixels on the lights themselves.",
+        "fr": "Cliquez sur <b>Ouvrir images</b>, puis sur l’étape <b>Calibration</b> et son onglet <b>Darks</b>. La fenêtre dit ce que fait la calibration sans darks : elle soustrait le master d’offset, ou le niveau de noir de l’appareil, et trouve les pixels chauds sur les brutes elles-mêmes."
+      },
+      "check": {
+        "en": "The Darks and Flats zones of the Files page only read none, optional: the explanation is in the Calibration step.",
+        "fr": "Les zones Darks et Flats de la page Fichiers indiquent seulement aucun, facultatif : l’explication est dans l’étape Calibration."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/04.png",
+        "en": "/tutorials/no-calibration-frames/en/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 18.0,
+        "en": 18.0
+      }
+    },
+    {
+      "id": "flats-note",
+      "title": {
+        "en": "What the window says about the flats",
+        "fr": "Ce que la fenêtre dit des flats"
+      },
+      "text": {
+        "en": "Click the <b>Flats</b> tab. The window says what stays in the image without flats: the vignetting and the dust shadows. Post will finish what the Gradient block leaves.",
+        "fr": "Cliquez sur l’onglet <b>Flats</b>. La fenêtre dit ce qui reste dans l’image sans flats : le vignetage et les ombres des poussières. Post finira ce que le bloc Gradient laisse."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/05.png",
+        "en": "/tutorials/no-calibration-frames/en/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 28.0,
+        "en": 28.0
+      }
+    },
+    {
+      "id": "checks",
+      "title": {
+        "en": "The session checks",
+        "fr": "Les vérifications de la session"
+      },
+      "text": {
+        "en": "Click the <b>Session 1</b> step, then the <b>Sessions</b> tab. Under Checks, three lines give the same facts: no darks, no flats, and no bias, so the camera’s black level (512 ADU) is used. A fourth line gives the disk space the calibrated frames need.",
+        "fr": "Cliquez sur l’étape <b>Session 1</b>, puis sur l’onglet <b>Sessions</b>. Sous « Vérifications », trois lignes donnent les mêmes faits : pas de darks, pas de flats, et pas d’offsets, donc le niveau de noir de l’appareil (512 ADU) est utilisé. Une quatrième ligne donne la place disque que demandent les images calibrées."
+      },
+      "check": {
+        "en": "The Calibration matching panel of the Files page stays empty: there is nothing to match the lights against.",
+        "fr": "Le panneau « Correspondances » de la page Fichiers reste vide : il n’y a rien à rapprocher des brutes."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/06.png",
+        "en": "/tutorials/no-calibration-frames/en/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 34.0,
+        "en": 34.0
+      }
+    },
+    {
+      "id": "target",
+      "title": {
+        "en": "The target",
+        "fr": "La cible"
+      },
+      "text": {
+        "en": "Click <b>Graph</b> to go back to the workflow, click the project block and type <b>NGC 7000</b> in <b>Target</b>: the position is found.",
+        "fr": "Cliquez sur <b>Graphe</b> pour revenir au workflow, cliquez sur le bloc du projet et saisissez <b>NGC 7000</b> dans <b>Cible</b> : la position est trouvée."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/07.png",
+        "en": "/tutorials/no-calibration-frames/en/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 44.0,
+        "en": 44.0
+      }
+    },
+    {
+      "id": "run",
+      "title": {
+        "en": "Run",
+        "fr": "Exécuter"
+      },
+      "text": {
+        "en": "Click <b>Run</b>. Name the project <b>NGC 7000</b>, pick its folder with <b>Browse…</b>, then click <b>Save</b>. The button gave the time the run should take.",
+        "fr": "Cliquez sur <b>Exécuter</b>. Nommez le projet <b>NGC 7000</b>, choisissez son dossier avec <b>Parcourir…</b>, puis cliquez sur <b>Enregistrer</b>. Le bouton donnait la durée prévue."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/08.png",
+        "en": "/tutorials/no-calibration-frames/en/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 51.0,
+        "en": 51.0
+      }
+    },
+    {
+      "id": "computing",
+      "title": {
+        "en": "The run",
+        "fr": "L’exécution"
+      },
+      "text": {
+        "en": "The run lists its blocks and the time each should take, then goes on in the background. On the graph, each block shows its progress.",
+        "fr": "L’exécution liste ses blocs et la durée prévue de chacun, puis continue en arrière-plan. Sur le graphe, chaque bloc montre son avancement."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/09.png",
+        "en": "/tutorials/no-calibration-frames/en/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 58.0,
+        "en": 58.0
+      }
+    },
+    {
+      "id": "done",
+      "title": {
+        "en": "The run is done",
+        "fr": "L’exécution est terminée"
+      },
+      "text": {
+        "en": "The run is not shown in real time. It took 47 min on a PC with an RTX 4060 Ti graphics card: calibration 6.3 min, registration 3.6 min, stacking 31.5 min, which the window gave to the processor, and about 3 min for everything else.",
+        "fr": "L’exécution n’est pas montrée en temps réel. Elle a duré 41 min sur un PC avec une carte graphique RTX 4060 Ti : calibration 4,9 min, alignement 5,0 min, empilement 28,3 min, que la fenêtre a confié au processeur, et environ 3 min pour tout le reste."
+      },
+      "check": {
+        "en": "388 frames of the 580 are kept for the stack, 1.1 h of exposure.",
+        "fr": "388 images sur les 580 sont gardées pour l’empilement, soit 1,1 h de pose."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/10.png",
+        "en": "/tutorials/no-calibration-frames/en/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 66.0,
+        "en": 66.0
+      }
+    },
+    {
+      "id": "facts",
+      "title": {
+        "en": "What Calibration did instead",
+        "fr": "Ce que la calibration a fait à la place"
+      },
+      "text": {
+        "en": "Click <b>Inspect</b>, then the <b>Calibration</b> step. Its measures give what was done instead of the missing frames: 2161 hot pixels found on the lights and replaced by their same-colour neighbours, a dark level of 512.0 ADU (the camera’s black level), and a flat minimum of 1.000, since no flat divides the image.",
+        "fr": "Cliquez sur <b>Inspection</b>, puis sur l’étape <b>Calibration</b>. Ses mesures donnent ce qui a été fait à la place des images absentes : 2161 pixels chauds trouvés dans les brutes et remplacés par leurs voisins de même couleur, un niveau des darks de 512,0 ADU (le niveau de noir de l’appareil), et un minimum du flat de 1,000, puisqu’aucun flat ne divise l’image."
+      },
+      "why": {
+        "en": "Without darks the hot pixels are found on the lights themselves; without flats the Gradient block’s sky model takes part of the vignetting, and Post finishes it.",
+        "fr": "Sans darks, les pixels chauds sont trouvés sur les brutes elles-mêmes ; sans flats, le modèle de ciel du bloc Gradient prend une part du vignetage, et Post termine."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/11.png",
+        "en": "/tutorials/no-calibration-frames/en/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 71.0,
+        "en": 71.0
+      }
+    },
+    {
+      "id": "diagnosis",
+      "title": {
+        "en": "Diagnosis in Post",
+        "fr": "Le diagnostic dans Post"
+      },
+      "text": {
+        "en": "Click <b>Post</b>. Before any gesture, look at the image as the workflow gives it: what is wrong, how to read it, which gesture corrects it, and what is already right. Zoom to 100 % with Ctrl and the mouse wheel, and come back with the fit button.",
+        "fr": "Cliquez sur <b>Post</b>. Avant tout geste, regardez l’image telle que le workflow la donne : ce qui ne va pas, comment le lire, quel geste le corrige, et ce qui est déjà juste. Zoomez à 100 % avec Ctrl et la molette, et revenez avec le bouton d’ajustement."
+      },
+      "diagnosis": [
+        {
+          "problem": {
+            "en": "The corners are dark and the edges are black.",
+            "fr": "Les coins sont sombres et les bords sont noirs."
+          },
+          "read": {
+            "en": "In the fitted view the four corners fall to near black. At 100 % on a corner, the vignetting darkens the field and a black band runs along the border.",
+            "fr": "Dans la vue ajustée, les quatre coins tombent presque au noir. À 100 % sur un coin, le vignetage assombrit le champ et une bande noire longe le bord."
+          },
+          "fix": {
+            "en": "Crop to the middle of the frame.",
+            "fr": "Recadrer sur le milieu du cadre."
+          },
+          "step": "crop"
+        },
+        {
+          "problem": {
+            "en": "The sky is cyan-green.",
+            "fr": "Le ciel est vert-cyan."
+          },
+          "read": {
+            "en": "Look at the dark lanes at the top right and at the empty sky: they lean teal instead of neutral. At 100 % the sky shows the same tint.",
+            "fr": "Regardez les zones sombres en haut à droite et le ciel vide : elles tirent sur le bleu-vert au lieu d’être neutres. À 100 %, le ciel montre la même teinte."
+          },
+          "fix": {
+            "en": "Color balance, then Green removal, both under a luminance mask.",
+            "fr": "Balance des couleurs, puis Retrait du vert, tous deux sous un masque de luminosité."
+          },
+          "step": "balance"
+        },
+        {
+          "problem": {
+            "en": "A veil still lies on the sky, lighter around the centre.",
+            "fr": "Un voile reste sur le ciel, plus clair autour du centre."
+          },
+          "read": {
+            "en": "In the fitted view the sky is brighter around the centre than at the edges: the veil the flats would have removed.",
+            "fr": "Dans la vue ajustée, le ciel est plus clair autour du centre que sur les bords : le voile que les flats auraient retiré."
+          },
+          "fix": {
+            "en": "Dehaze on the starless image.",
+            "fr": "Dévoilage sur l’image sans étoiles."
+          },
+          "step": "dehaze"
+        },
+        {
+          "problem": {
+            "en": "The nebula looks a little flat.",
+            "fr": "La nébuleuse paraît un peu plate."
+          },
+          "read": {
+            "en": "In the fitted view the Wall and the edge of the Pelican barely stand out of the gas, and the faint gas is dim.",
+            "fr": "Dans la vue ajustée, le Mur et le bord du Pélican se détachent à peine du gaz, et le gaz faible est terne."
+          },
+          "fix": {
+            "en": "Raise Contrast and Faint tones.",
+            "fr": "Monter « Contraste » et « Tons faibles »."
+          },
+          "step": "contrast"
+        },
+        {
+          "problem": {
+            "en": "A dense star field covers the gas.",
+            "fr": "Un champ d’étoiles dense couvre le gaz."
+          },
+          "read": {
+            "en": "At 100 % on the Milky Way at the left, the stars are so many that the gas shows only between them.",
+            "fr": "À 100 % sur la Voie lactée à gauche, les étoiles sont si nombreuses que le gaz n’apparaît qu’entre elles."
+          },
+          "fix": {
+            "en": "The four star sliders, gently.",
+            "fr": "Les quatre curseurs d’étoiles, doucement."
+          },
+          "step": "stars"
+        }
+      ],
+      "check": {
+        "en": "Already right, to leave alone: the red of the nebula and its structure, the colour of the stars, and the noise, which the Denoise block has done.",
+        "fr": "Déjà juste, à ne pas toucher : le rouge de la nébuleuse et sa structure, la couleur des étoiles, et le bruit, que le bloc Débruitage a traité."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/12.png",
+        "en": "/tutorials/no-calibration-frames/en/12.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 82.0,
+        "en": 82.0
+      }
+    },
+    {
+      "id": "crop",
+      "title": {
+        "en": "Crop",
+        "fr": "Recadrer"
+      },
+      "text": {
+        "en": "Click <b>Crop</b>, drag the top-left handle inward, then the bottom-right one, until the frame is about 5080 × 3600 px (here 5074 × 3602): NGC 7000 and the Pelican fill it and the corners are out. Click <b>Apply</b>.",
+        "fr": "Cliquez sur <b>Recadrage</b>, faites glisser la poignée en haut à gauche vers l’intérieur, puis celle en bas à droite, jusqu’à un cadre d’environ 5080 × 3600 px (ici 5074 × 3602) : NGC 7000 et le Pélican le remplissent et les coins sont dehors. Cliquez sur <b>Valider</b>."
+      },
+      "why": {
+        "en": "The vignetted corners and the black borders are the part of the frame the flats would have evened out; leaving them out gives a clean frame, and it puts NGC 7000 and the Pelican in it.",
+        "fr": "Les coins vignetés et les bords noirs sont la partie du cadre que les flats auraient uniformisée ; les laisser dehors donne un cadre net, et cela y place NGC 7000 et le Pélican."
+      },
+      "detail": [
+        {
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "src": "/tutorials/no-calibration-frames/details/crop-before.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "A corner at 100 %: dark and vignetted.",
+            "fr": "Un coin à 100 % : sombre et vigneté."
+          }
+        },
+        {
+          "label": {
+            "en": "Cropped",
+            "fr": "Recadré"
+          },
+          "src": "/tutorials/no-calibration-frames/details/crop-after.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "The cropped picture: no dark corner, no black border.",
+            "fr": "L’image recadrée : plus de coin sombre, plus de bord noir."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/13.png",
+        "en": "/tutorials/no-calibration-frames/en/13.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 124.0,
+        "en": 124.0
+      }
+    },
+    {
+      "id": "contrast",
+      "title": {
+        "en": "Contrast and Faint tones",
+        "fr": "Contraste et Tons faibles"
+      },
+      "text": {
+        "en": "Drag <b>Contrast</b> to the right until the Wall and the edge of the Pelican stand out: here +0.8. Then drag <b>Faint tones</b> to the right until the faint gas comes up: here +0.6.",
+        "fr": "Faites glisser <b>Contraste</b> vers la droite jusqu’à ce que le Mur et le bord du Pélican ressortent : ici +0,8. Puis faites glisser <b>Tons faibles</b> vers la droite jusqu’à ce que le gaz faible remonte : ici +0,6."
+      },
+      "why": {
+        "en": "The nebula is a little flat: Contrast separates its bright structures from the gas, and Faint tones raises the dim gas without lifting the sky.",
+        "fr": "La nébuleuse est un peu plate : « Contraste » sépare ses structures claires du gaz, et « Tons faibles » relève le gaz terne sans relever le ciel."
+      },
+      "detail": [
+        {
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "src": "/tutorials/no-calibration-frames/details/contrast-before.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "After the crop, sliders at zero.",
+            "fr": "Après le recadrage, curseurs à zéro."
+          }
+        },
+        {
+          "label": {
+            "en": "Right setting",
+            "fr": "Bon réglage"
+          },
+          "src": "/tutorials/no-calibration-frames/details/contrast-right.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "Contrast +0.8 and Faint tones +0.6: the Wall stands out and the faint gas comes up.",
+            "fr": "Contraste +0,8 et Tons faibles +0,6 : le Mur ressort et le gaz faible remonte."
+          }
+        },
+        {
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "src": "/tutorials/no-calibration-frames/details/contrast-far.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "Contrast at +2, the end of its slider: the gas hardens and the sky darkens.",
+            "fr": "Contraste à +2, bout du curseur : le gaz durcit et le ciel s’assombrit."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/14.png",
+        "en": "/tutorials/no-calibration-frames/en/14.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 133.0,
+        "en": 133.0
+      }
+    },
+    {
+      "id": "dehaze",
+      "title": {
+        "en": "Dehaze",
+        "fr": "Dévoilage"
+      },
+      "text": {
+        "en": "Click the <b>Starless image</b> row, then <b>Filter</b>, <b>Contrast</b>, <b>Dehaze</b>. Drag <b>Amount</b> until the light veil of the sky is gone without swallowing the faint gas: here about 0.25. Keep <b>Scale</b> wide, about 256 px.",
+        "fr": "Cliquez sur la ligne <b>Image sans étoiles</b>, puis sur <b>Filtre</b>, <b>Contraste</b>, <b>Dévoilage</b>. Faites glisser <b>Quantité</b> jusqu’à ce que le voile clair du ciel disparaisse sans avaler le gaz faible : ici environ 0,25. Gardez <b>Échelle</b> large, environ 256 px."
+      },
+      "why": {
+        "en": "Without flats a large veil stays on the sky. Dehaze measures it at a wide scale and takes it off; the wide scale leaves the nebula’s own structures alone.",
+        "fr": "Sans flats, un grand voile reste sur le ciel. « Dévoilage » le mesure à grande échelle et le retire ; la grande échelle laisse en paix les structures de la nébuleuse."
+      },
+      "detail": [
+        {
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "src": "/tutorials/no-calibration-frames/details/dehaze-before.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "The veil lies on the sky.",
+            "fr": "Le voile couvre le ciel."
+          }
+        },
+        {
+          "label": {
+            "en": "Right setting",
+            "fr": "Bon réglage"
+          },
+          "src": "/tutorials/no-calibration-frames/details/dehaze-right.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "Amount 0.25: the sky is darker and the faint gas is kept.",
+            "fr": "Quantité 0,25 : le ciel est plus sombre et le gaz faible est gardé."
+          }
+        },
+        {
+          "label": {
+            "en": "Pushed too far",
+            "fr": "Poussé trop loin"
+          },
+          "src": "/tutorials/no-calibration-frames/details/dehaze-far.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "Amount 0.7: the sky is almost black and the faint gas is swallowed.",
+            "fr": "Quantité 0,7 : le ciel est presque noir et le gaz faible est avalé."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/15.png",
+        "en": "/tutorials/no-calibration-frames/en/15.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 139.0,
+        "en": 139.0
+      }
+    },
+    {
+      "id": "balance",
+      "title": {
+        "en": "Color balance",
+        "fr": "Balance des couleurs"
+      },
+      "text": {
+        "en": "Click <b>Filter</b>, <b>Color</b>, <b>Color balance</b>. Drag <b>Temperature</b> to the right end and <b>Green / magenta</b> to the left end: +1 and −1. On the whole image the balance also warms the nebula; the next step keeps it off.",
+        "fr": "Cliquez sur <b>Filtre</b>, <b>Couleur</b>, <b>Balance des couleurs</b>. Faites glisser <b>Température</b> jusqu’au bout à droite et <b>Vert / magenta</b> jusqu’au bout à gauche : +1 et −1. Sur toute l’image, la balance réchauffe aussi la nébuleuse ; l’étape suivante l’en protège."
+      },
+      "why": {
+        "en": "Without flats the sky of this image is green. The balance brings it most of the way to neutral, at the ends of its sliders.",
+        "fr": "Sans flats, le ciel de cette image est vert. La balance le ramène presque au neutre, aux extrémités de ses curseurs."
+      },
+      "detail": [
+        {
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "src": "/tutorials/no-calibration-frames/details/balance-before.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "The sky leans cyan-green.",
+            "fr": "Le ciel tire sur le vert-cyan."
+          }
+        },
+        {
+          "label": {
+            "en": "Balance without a mask",
+            "fr": "Balance sans masque"
+          },
+          "src": "/tutorials/no-calibration-frames/details/balance-nomask.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "The same balance on the whole image warms the nebula to an orange red.",
+            "fr": "La même balance sur toute l’image réchauffe la nébuleuse jusqu’à un rouge orangé."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/16.png",
+        "en": "/tutorials/no-calibration-frames/en/16.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 151.0,
+        "en": 151.0
+      }
+    },
+    {
+      "id": "mask",
+      "title": {
+        "en": "Under a luminance mask",
+        "fr": "Sous un masque de luminosité"
+      },
+      "text": {
+        "en": "Click the mask button, <b>Add to mask</b>, <b>Luminance range</b>. Set the range from 0 to about 22 % so that only the sky is in it, and soften the edge with the feather: here about 8 px.",
+        "fr": "Cliquez sur le bouton de masque, <b>Ajouter au masque</b>, <b>Plage de luminosité</b>. Réglez la plage de 0 à environ 22 % pour que seul le ciel y soit, et adoucissez le bord avec le progressif : ici environ 8 px."
+      },
+      "why": {
+        "en": "The balance must act on the dark tones only: under the mask the sky turns neutral and the nebula keeps its red.",
+        "fr": "La balance ne doit agir que sur les tons sombres : sous le masque, le ciel devient neutre et la nébuleuse garde son rouge."
+      },
+      "detail": [
+        {
+          "label": {
+            "en": "Without the mask",
+            "fr": "Sans le masque"
+          },
+          "src": "/tutorials/no-calibration-frames/details/balance-nomask.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "The nebula is warmed to an orange red.",
+            "fr": "La nébuleuse est réchauffée jusqu’à un rouge orangé."
+          }
+        },
+        {
+          "label": {
+            "en": "With the mask",
+            "fr": "Avec le masque"
+          },
+          "src": "/tutorials/no-calibration-frames/details/balance-mask.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "The sky is neutral and the nebula keeps its red.",
+            "fr": "Le ciel est neutre et la nébuleuse garde son rouge."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/17.png",
+        "en": "/tutorials/no-calibration-frames/en/17.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 164.0,
+        "en": 164.0
+      }
+    },
+    {
+      "id": "green",
+      "title": {
+        "en": "Green removal",
+        "fr": "Retrait du vert"
+      },
+      "text": {
+        "en": "A little green is left in the sky. Click <b>Filter</b>, <b>Color</b>, <b>Green removal</b>, and drag <b>Amount</b> until the sky has no green left: here about 0.6. A mask does not copy from one filter to the next: draw it again the same way, with the mask button, <b>Add to mask</b>, <b>Luminance range</b>, from 0 to 22 %, feather 8.",
+        "fr": "Il reste un peu de vert dans le ciel. Cliquez sur <b>Filtre</b>, <b>Couleur</b>, <b>Retrait du vert</b>, et faites glisser <b>Quantité</b> jusqu’à ce qu’il ne reste plus de vert dans le ciel : ici environ 0,6. Un masque ne se copie pas d’un filtre à l’autre : dessinez-le de nouveau de la même façon, avec le bouton de masque, <b>Ajouter au masque</b>, <b>Plage de luminosité</b>, de 0 à 22 %, progressif 8."
+      },
+      "why": {
+        "en": "The balance finishes close to neutral and a little green is left; Green removal finishes it, and the mask keeps both filters off the nebula.",
+        "fr": "La balance s’arrête près du neutre avec un peu de vert ; « Retrait du vert » finit le travail, et le masque garde les deux filtres loin de la nébuleuse."
+      },
+      "detail": [
+        {
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "src": "/tutorials/no-calibration-frames/details/green-before.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "After the balance under the mask.",
+            "fr": "Après la balance sous le masque."
+          }
+        },
+        {
+          "label": {
+            "en": "Right setting",
+            "fr": "Bon réglage"
+          },
+          "src": "/tutorials/no-calibration-frames/details/green-after.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "Green removal 0.6 under the same mask: the sky is neutral.",
+            "fr": "Retrait du vert 0,6 sous le même masque : le ciel est neutre."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/18.png",
+        "en": "/tutorials/no-calibration-frames/en/18.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 180.0,
+        "en": 180.0
+      }
+    },
+    {
+      "id": "stars",
+      "title": {
+        "en": "The star sliders",
+        "fr": "Les curseurs d’étoiles"
+      },
+      "text": {
+        "en": "Click the top layer and drag the star sliders gently: <b>Strength</b> −0.5, <b>Small stars</b> −1.0, <b>Star size</b> −0.5, <b>Star color</b> +0.3. The gas shows through the dense star field.",
+        "fr": "Cliquez sur le calque du haut et faites glisser doucement les curseurs d’étoiles : <b>Intensité</b> −0,5, <b>Petites étoiles</b> −1,0, <b>Taille des étoiles</b> −0,5, <b>Couleur des étoiles</b> +0,3. Le gaz apparaît à travers le champ d’étoiles dense."
+      },
+      "why": {
+        "en": "The Milky Way field is dense. Fainter, smaller stars let the gas show without changing the nebula, and a little more colour keeps the stars alive.",
+        "fr": "Le champ de la Voie lactée est dense. Des étoiles plus discrètes et plus petites laissent voir le gaz sans toucher à la nébuleuse, et un peu plus de couleur garde les étoiles vivantes."
+      },
+      "detail": [
+        {
+          "label": {
+            "en": "Before",
+            "fr": "Avant"
+          },
+          "src": "/tutorials/no-calibration-frames/details/stars-before.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "The stars cover the gas.",
+            "fr": "Les étoiles couvrent le gaz."
+          }
+        },
+        {
+          "label": {
+            "en": "Right setting",
+            "fr": "Bon réglage"
+          },
+          "src": "/tutorials/no-calibration-frames/details/stars-after.jpg",
+          "w": 872,
+          "h": 619,
+          "caption": {
+            "en": "The stars are quieter and the gas shows through.",
+            "fr": "Les étoiles sont plus calmes et le gaz apparaît."
+          }
+        }
+      ],
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/19.png",
+        "en": "/tutorials/no-calibration-frames/en/19.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 202.0,
+        "en": 202.0
+      }
+    },
+    {
+      "id": "export",
+      "title": {
+        "en": "Export",
+        "fr": "Exporter"
+      },
+      "text": {
+        "en": "Click <b>Export…</b>, choose <b>JPEG</b> in <b>Format</b>, check the file, on the tutorial drive, then click <b>Export</b>.",
+        "fr": "Cliquez sur <b>Exporter…</b>, choisissez <b>JPEG</b> dans <b>Format</b>, vérifiez le fichier, sur le disque des tutoriels, puis cliquez sur <b>Exporter</b>."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/20.png",
+        "en": "/tutorials/no-calibration-frames/en/20.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 212.0,
+        "en": 212.0
+      }
+    },
+    {
+      "id": "exported",
+      "title": {
+        "en": "Exported and saved",
+        "fr": "Exporté et enregistré"
+      },
+      "text": {
+        "en": "The image is written, with its processing history beside it. Press <b>Ctrl+S</b> to keep the project.",
+        "fr": "L’image est écrite, avec l’historique du traitement à côté. Appuyez sur <b>Ctrl+S</b> pour garder le projet."
+      },
+      "shot": {
+        "fr": "/tutorials/no-calibration-frames/fr/21.png",
+        "en": "/tutorials/no-calibration-frames/en/21.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "fr": 227.0,
+        "en": 227.0
+      }
+    }
+  ],
+  "result": {
+    "src": "/tutorials/no-calibration-frames/result.jpg",
+    "w": 2000,
+    "h": 1417,
+    "caption": {
+      "en": "NGC 7000 and the Pelican, 388 exposures of 10 s kept out of 580 (1.1 h), lights alone, without darks or flats.",
+      "fr": "NGC 7000 et le Pélican, 388 poses de 10 s gardées sur 580 (1,1 h), brutes seules, sans darks ni flats."
+    }
+  },
+  "blocks": [
+    "Calibration",
+    "Registration",
+    "Selection",
+    "Stacking",
+    "Astrometry",
+    "Gradient",
+    "Denoise",
+    "Color",
+    "Stars",
+    "Post"
+  ],
+  "next": null
+}

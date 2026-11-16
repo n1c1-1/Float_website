@@ -1,0 +1,105 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the project of the first tutorial.
+
+2
+00:00:04.000 --> 00:00:08.000
+The project opens up to date: nothing is to be computed.
+
+3
+00:00:08.000 --> 00:00:11.000
+Click Post.
+
+4
+00:00:11.000 --> 00:00:16.000
+Layers on the left, the picture in the middle, Properties on the right.
+
+5
+00:00:16.000 --> 00:00:21.000
+The image of the workflow is one layer, Color minimal. Its eye shows or hides it.
+
+6
+00:00:21.000 --> 00:00:28.000
+Before any gesture: a grey veil over the sky, black lines on the right and bottom edges, a dark spot at the far left.
+
+7
+00:00:28.000 --> 00:00:33.000
+Drag Sky towards darker, to about −1.5: the grey veil goes.
+
+8
+00:00:33.000 --> 00:00:38.000
+Drag Faint tones towards brighter, to about +1.0: the outer filaments rise out of the sky.
+
+9
+00:00:38.000 --> 00:00:42.000
+Click Actual size (1): the pixels at 100 %.
+
+10
+00:00:42.000 --> 00:00:45.000
+Click Fit (F): the whole picture again.
+
+11
+00:00:45.000 --> 00:00:48.000
+Open the … menu: Before / after is there.
+
+12
+00:00:48.000 --> 00:00:51.000
+Click Before / after.
+
+13
+00:00:51.000 --> 00:00:56.000
+Drag the divider: the layer with its suggested settings on one side, the settings made on the other.
+
+14
+00:00:56.000 --> 00:01:01.000
+Click Crop: the frame appears over the picture.
+
+15
+00:01:01.000 --> 00:01:05.000
+Click Apply to keep the crop.
+
+16
+00:01:05.000 --> 00:01:09.000
+Drag Contrast towards stronger, to see.
+
+17
+00:01:09.000 --> 00:01:14.000
+Press Ctrl+Z: the last change of the page is undone, here Contrast.
+
+18
+00:01:14.000 --> 00:01:18.000
+Click Redo (Ctrl+Y): the change comes back.
+
+19
+00:01:18.000 --> 00:01:21.000
+Click Export…
+
+20
+00:01:21.000 --> 00:01:24.000
+Choose the file with the folder button.
+
+21
+00:01:24.000 --> 00:01:29.000
+The Format list offers TIFF 16-bit, TIFF 32-bit float, FITS 32-bit float, PNG 16-bit and JPEG.
+
+22
+00:01:29.000 --> 00:01:34.000
+Size: full resolution, or Web with the longest side at 2048 or 4096 px.
+
+23
+00:01:34.000 --> 00:01:40.000
+Include: the processing history is ticked, a file written beside the picture. Layers, masks and the night card are off.
+
+24
+00:01:40.000 --> 00:01:42.000
+Click Export.
+
+25
+00:01:42.000 --> 00:01:47.000
+The window says how many files were written, and where.
+
+26
+00:01:47.000 --> 00:01:51.000
+The processing stays in the project: every setting can be changed again.

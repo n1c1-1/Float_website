@@ -1,0 +1,186 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import Figure from '../../components/Figure.astro';
+import Chart from '../../components/Chart.astro';
+import { selectionFigure } from '../../data/charts/figures';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Selection" title="Sélection"
+  description="Le bloc Sélection de FLOAT : ce qui est mesuré sur chaque image, la formule du poids, les quatre modes de sélection, les images exclues à la main et les réglages, avec la source publiée.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Sélection</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>Il donne à chaque image un poids selon sa transparence, son bruit et la finesse de ses étoiles, pour que les bonnes images comptent davantage dans l’empilement ; seules les images très mauvaises sont écartées.</dd></div><div><dt>Ce qu’on voit</dt><dd>Le graphique de Sélection, avec le poids de chaque image au long de la nuit, et la liste des images écartées, chacune avec sa raison ; l’empilement les enregistre.</dd></div><div><dt>Ce qui se règle</dt><dd>Sélection images : Automatique (par défaut) garde presque toutes les images et laisse travailler les poids ; Seuils permet de fixer une Transparence minimale et une Taille max étoiles.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Ce qui est mesuré</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Le poids d’une image</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Les quatre modes</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Les images écartées dans tous les modes</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Réglages</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Le bloc Sélection décide quelles images entrent dans l’empilement et combien pèse chacune.
+    Chaque image reçoit un poids calculé d’après sa transparence, son bruit et la taille de ses étoiles. Par défaut,
+    presque toutes les images sont gardées et les poids s’occupent des mauvaises ; seule une image sous 5 % du meilleur
+    poids est écartée. Trois autres modes filtrent davantage. Chaque image écartée est listée avec sa raison.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Calibration</span></li><li><span>Alignement</span></li><li class="here"><span>Sélection</span></li>
+    <li><span>Empilement</span></li><li><span>Astrométrie</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Ce qui entre, ce qui sort</h2>
+    <p>Le bloc n’a pas de calcul propre. Il lit les mesures que <a href="/fr/blocs/alignement/">l’Alignement</a> a prises sur chaque image (transparence,
+    taille des étoiles, rondeur, bruit), les images non alignées, celles sans pixel utilisable et celles que
+    l’utilisateur a exclues à la main. Ses règles sont appliquées quand l’empilement est fait, avec les réglages de la
+    section 6, qui sont conservés avec ceux de l’empilement.</p>
+    <p>Il donne, pour chaque image, un poids, ou la raison de son exclusion. Le bloc <a href="/fr/blocs/empilement/">Empilement</a> les lit et les
+    enregistre avec l’empilement. Un workflow sans bloc Sélection empile les images telles quelles, avec le même
+    poids.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Ce qui est mesuré</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les mesures que lit le bloc, toutes prises par l’Alignement.</caption>
+        <thead><tr><th>Mesure</th><th>Ce qu’elle dit</th><th>Où elle agit</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Transparence</th><td>Le flux des étoiles de l’image par rapport à l’image de référence, dans une ouverture fixe. Nuages, voile et rosée l’abaissent.</td><td>Le poids ; les filtres de transparence.</td></tr>
+          <tr><th scope="row">Taille des étoiles</th><td>La FWHM des étoiles. Le vent, la dérive de la mise au point et la turbulence l’augmentent. Les filtres lisent l’ajustement de Moffat ; pour un alignement fait sans lui, la taille grossière mesurée sur des super-pixels de 2 × 2.</td><td>Le poids (taille grossière) ; les filtres de taille d’étoiles.</td></tr>
+          <tr><th scope="row">Rondeur</th><td>Petit axe sur grand axe des étoiles, 1 pour des étoiles rondes. Le vent et les erreurs de suivi l’abaissent.</td><td>Le filtre de rondeur du mode k × σ.</td></tr>
+          <tr><th scope="row">Bruit</th><td>Le bruit de l’image, mesuré sur la différence de super-pixels voisins. Si l’alignement ne l’a pas mesuré, la dispersion des pixels de l’image, que les nébuleuses et les étoiles du champ gonflent.</td><td>Le poids.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>La manière de mesurer chacune est décrite sur la page <a href="/fr/blocs/alignement/">Alignement</a>.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Le poids d’une image</h2>
+    <aside class="note"><b>Pourquoi pas de coupe nette.</b> Une fois les poids justes, le rejet d’images entières
+    devient une opération dommageable, comme le montrent Zackay et Ofek.<a class="cite" href="#ref-1">[1]</a> C’est
+    pourquoi le réglage par défaut en écarte si peu.</aside>
+    <p>Le poids d’une image alignée est</p>
+    <p><b>poids = (transparence / bruit)² × (FWHM<sub>5</sub> / FWHM)²</b>,</p>
+    <p>où FWHM est la taille des étoiles de l’image et FWHM<sub>5</sub> le 5e centile des tailles d’étoiles de la nuit.
+    Les poids sont divisés par le plus grand, si bien que la meilleure image pèse 1. Une image non alignée, ou dont le
+    bruit n’est pas mesuré, n’a pas de poids.</p>
+    <p>Le premier facteur est le rapport signal sur bruit, au carré : une image voilée ou bruyante pèse moins. Le
+    second est la netteté : une image aux étoiles plus grosses pèse moins. Le bloc <a href="/fr/blocs/empilement/">Empilement</a> utilise le poids dans la
+    moyenne des gouttes.</p>
+    <p>La figure 1 montre ces poids sur une nuit, dans le mode par défaut&nbsp;: les premières images, de faible
+    transparence et aux étoiles plus grosses, pèsent peu mais restent dans l’empilement, et trois seulement tombent
+    sous le minimum.</p>
+
+    <Figure lang={lang} n={1}>
+      <Chart slot="body" {...selectionFigure(lang)} />
+      Poids de chaque image, rapporté à la meilleure, en fonction du temps écoulé depuis la première pose, avec le
+      minimum de 5 % du mode Automatique (trait gris). Données&nbsp;: les Pléiades, 1348 poses de 13 s. Le poids médian
+      passe de 0,17 sur les 30 premières minutes à 0,91 entre 240 et 270 minutes, puis retombe à 0,61. En bleu, les
+      1344 images empilées&nbsp;; cercles orange, les trois écartées, à 1,2 à 2,9 % du meilleur poids. L’image non alignée
+      n’a pas de poids et n’est pas tracée.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Les quatre modes</h2>
+    <aside class="note"><b>Le sigma robuste</b> d’un filtre k × σ vaut 1,4826 fois l’écart absolu médian, et son centre
+    est la médiane, si bien que les valeurs aberrantes que le filtre doit trouver ne le gonflent pas.<a class="cite" href="#ref-2">[2]</a>
+    Une seule passe est faite.</aside>
+    <p>Le réglage <b>Sélection images</b> choisit le mode. Les statistiques d’un filtre, la médiane et le sigma, sont
+    mesurées sur toutes les images alignées, y compris celles exclues à la main, si bien qu’exclure une image à la
+    main ne change jamais le sort d’une autre.</p>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Les quatre modes de Sélection images.</caption>
+        <thead><tr><th>Mode</th><th>Images écartées</th><th>Poids</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Automatique (défaut)</th><td>Celles sous 5 % du meilleur poids, en plus des images de la section 5.</td><td>La formule de la section 3.</td></tr>
+          <tr><th scope="row">k × σ</th><td>Celles dont la taille d’étoiles dépasse la médiane de la nuit de plus de 2,5 sigmas robustes, ou dont la rondeur ou la transparence tombe sous cette médiane de plus de 2,5 sigmas. Puis celles sous 5 % du meilleur poids parmi les images restantes.</td><td>La formule de la section 3.</td></tr>
+          <tr><th scope="row">Seuils</th><td>Celles dont la transparence est sous Transparence minimale fois le 90e centile des images alignées, puis celles dont la taille d’étoiles dépasse Taille max étoiles fois la médiane. Pas de poids minimal.</td><td>La formule de la section 3.</td></tr>
+          <tr><th scope="row">Toutes</th><td>Seulement les images de la section 5. Aucun filtre, aucun poids minimal.</td><td>Égal pour toutes les images.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Dans le mode k × σ, seule la mauvaise queue de chaque critère compte : grosses étoiles, faible rondeur, faible
+    transparence. Le filtre sur le niveau du ciel existe dans le code de sélection, mais l’empilement ne lui donne
+    aucune mesure et il ne s’applique pas. Une image sans valeur pour un critère n’est jamais écartée pour lui.</p>
+    <p>En mode Seuils, l’ordre des tests décide de la raison affichée : non alignée, aucun pixel utilisable, exclue à la
+    main, transparence faible, grosses étoiles. Dans les autres modes : non alignée, aucun pixel utilisable, exclue à
+    la main, les filtres, pas de mesure du poids, puis le poids minimal.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Les images écartées dans tous les modes</h2>
+    <ul>
+      <li><strong>Les images non alignées.</strong> <a href="/fr/blocs/alignement/">L’Alignement</a> n’a pas pu les apparier avec assez d’étoiles.</li>
+      <li><strong>Les images sans pixel utilisable.</strong> La <a href="/fr/blocs/calibration/">calibration</a> n’a pas pu les mesurer : une image
+      blanche, par exemple.</li>
+      <li><strong>Les images exclues à la main.</strong> L’utilisateur exclut une image, une à une ou par seuils depuis
+      le graphique de Sélection, et elle reste dehors quelle que soit sa qualité. Si un fichier désigné comme exclu
+      n’est pas parmi les brutes, le journal le dit.</li>
+    </ul>
+    <p>Les images écartées, avec le poids et la raison de chacune, sont enregistrées avec l’empilement. Un empilement
+    demande au moins deux images ; avec moins, il s’arrête et dit quelle cause les a retirées : trop peu de brutes,
+    trop peu d’images alignées, trop d’exclusions à la main, ou des seuils trop stricts.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 3.</b>Les réglages de la sélection.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Sélection images</th><td>Automatique</td><td>Automatique, k × σ, Seuils, Toutes</td><td>Quelles images sont écartées (section 4). Les images exclues à la main sont écartées dans tous les cas.</td></tr>
+          <tr><th scope="row">Filtre transparence</th><td>activé</td><td>activé, désactivé</td><td>Avec k × σ : si les images sont aussi écartées pour une transparence faible. Désactivé, ce filtre les garde, avec le poids plus faible que leur donne leur transparence.</td></tr>
+          <tr><th scope="row">Transparence minimale</th><td class="n">0,6</td><td class="n">0 – 1</td><td>Avec Seuils : les images dont le flux d’étoiles tombe sous cette fraction de celui des meilleures sont écartées. 0 garde tout, les images peu transparentes recevant quand même un poids faible.</td></tr>
+          <tr><th scope="row">Taille max étoiles</th><td class="n">2 × médiane</td><td class="n">1 – 5 × médiane</td><td>Avec Seuils : les images dont les étoiles dépassent ce multiple de la taille médiane sont écartées (vent, dérive de la mise au point, erreur de suivi).</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>La valeur de Transparence minimale est proposée d’après la nuit : 0,3 quand plus de la moitié des images sont sous
+    60 % du 90e centile de la transparence (seules les pires sont alors écartées), sinon 0,6 (aucune image ne tombe
+    alors dessous quand la transparence est stable). Les 2,5 sigmas du mode k × σ et le poids minimal de 5 % sont
+    fixes.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Pas de tri par défaut.</strong> Seuls 5 % du meilleur poids font une coupe. Une image peu transparente
+      ou aux grosses étoiles reste dans l’empilement avec un poids faible.</li>
+      <li><strong>Les filtres sont une option.</strong> Le mode k × σ prend 2,5 comme constante sur la taille des
+      étoiles, la rondeur et la transparence ; le niveau du ciel n’est pas filtré, car un ciel plus brillant ajoute
+      seulement du bruit, que les poids comptent déjà.</li>
+      <li><strong>Un filtre demande une dispersion.</strong> Si toutes les images ont la même valeur, un filtre k × σ n’en
+      exclut aucune et le dit.</li>
+      <li><strong>Les seuils n’utilisent pas le poids minimal.</strong> Dans ce mode, une image au poids très faible mais
+      au-dessus des seuils reste.</li>
+      <li><strong>La taille grossière dans le poids.</strong> La netteté du poids utilise la taille grossière de
+      <a href="/fr/blocs/alignement/">l’Alignement</a>, non celle de Moffat.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Zackay, B. &amp; Ofek, E. O. 2017, <i lang="en">How to coadd images? I. Optimal source detection and photometry using ensembles of images</i>, ApJ 836, 187. <a href="https://arxiv.org/abs/1512.06872">arXiv:1512.06872</a></li>
+      <li id="ref-2">Hampel, F. R. 1974, <i lang="en">The Influence Curve and its Role in Robust Estimation</i>, JASA 69, 383. <a href="https://doi.org/10.1080/01621459.1974.10482962">doi:10.1080/01621459.1974.10482962</a></li>
+    </ol>
+  </section>
+</Doc>

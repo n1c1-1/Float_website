@@ -1,0 +1,37 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:08.000
+Ouvrir le projet
+
+2
+00:00:08.000 --> 00:00:25.000
+Le diagnostic dans Inspection
+
+3
+00:00:25.000 --> 00:00:40.000
+Démarrer une variante à Gradient
+
+4
+00:00:40.000 --> 00:00:49.000
+Ajouter le bloc Déconvolution
+
+5
+00:00:49.000 --> 00:01:05.000
+Exécuter la variante
+
+6
+00:01:05.000 --> 00:01:29.000
+Comparer dans Inspection
+
+7
+00:01:29.000 --> 00:02:03.000
+Comparer dans Post
+
+8
+00:02:03.000 --> 00:02:16.000
+La différence est à 100 %
+
+9
+00:02:16.000 --> 00:02:35.000
+Supprimer la variante

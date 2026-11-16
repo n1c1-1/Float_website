@@ -1,0 +1,125 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.000
+On the Home screen, click Open project… and pick the project.
+
+2
+00:00:03.000 --> 00:00:06.000
+Click Post.
+
+3
+00:00:06.000 --> 00:00:13.000
+Post opens on one visible layer, S-H-O · Combine layers; the layer of the Stars workflow is added hidden. Nothing is offered to compute.
+
+4
+00:00:13.000 --> 00:00:16.000
+Select the S-H-O · Combine layers layer.
+
+5
+00:00:16.000 --> 00:00:24.000
+Read the picture as the software gives it: a grey veil over the nebula, flat colours, and crowded pink stars.
+
+6
+00:00:24.000 --> 00:00:27.000
+Open the zoom list.
+
+7
+00:00:27.000 --> 00:00:30.000
+Choose 100 %.
+
+8
+00:00:30.000 --> 00:00:38.000
+At 100 %, the top-left corner: the stars are comet-shaped, the sky is a lifted grey, and the edge is black.
+
+9
+00:00:38.000 --> 00:00:41.000
+Click Crop.
+
+10
+00:00:41.000 --> 00:00:44.000
+Drag the top-left corner in until the comet stars and the black edge are outside the box.
+
+11
+00:00:44.000 --> 00:00:50.000
+The box now holds 3655 × 2450 px.
+
+12
+00:00:50.000 --> 00:00:53.000
+Click Apply.
+
+13
+00:00:53.000 --> 00:00:59.000
+The picture is cropped and centred on the North America and the wall.
+
+14
+00:00:59.000 --> 00:01:02.000
+Drag Sky to the left until the veil is gone and the sky is a dark grey: about −0,5.
+
+15
+00:01:02.000 --> 00:01:08.000
+The sky is now a dark grey.
+
+16
+00:01:08.000 --> 00:01:11.000
+Drag Contrast up until the wall and the dark lanes stand out: about +0,9.
+
+17
+00:01:11.000 --> 00:01:14.000
+Drag Faint tones up until the outer filaments come up: about +0,5.
+
+18
+00:01:14.000 --> 00:01:20.000
+The wall and the lanes have depth and the faint gas shows.
+
+19
+00:01:20.000 --> 00:01:23.000
+Drag Saturation up until the palette has its colours: about +1,0.
+
+20
+00:01:23.000 --> 00:01:29.000
+Gold and orange for H-alpha and S II, blue for O III.
+
+21
+00:01:29.000 --> 00:01:32.000
+Drag Star color toward white: about −1,5.
+
+22
+00:01:32.000 --> 00:01:38.000
+The stars lose their false pink.
+
+23
+00:01:38.000 --> 00:01:41.000
+Drag Star size toward smaller: about −0,4.
+
+24
+00:01:41.000 --> 00:01:44.000
+Drag Small stars toward less: about −0,3.
+
+25
+00:01:44.000 --> 00:01:50.000
+Fewer and smaller small stars over the gas.
+
+26
+00:01:50.000 --> 00:01:53.000
+Click the version name to rename it.
+
+27
+00:01:53.000 --> 00:01:58.000
+The version is now called Default S-H-O.
+
+28
+00:01:58.000 --> 00:02:01.000
+Click Export.
+
+29
+00:02:01.000 --> 00:02:04.000
+Choose the JPEG format.
+
+30
+00:02:04.000 --> 00:02:09.000
+Check the file, on the tutorial drive, then click Export.
+
+31
+00:02:09.000 --> 00:02:14.000
+Save the project with Ctrl+S.

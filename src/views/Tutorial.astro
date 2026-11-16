@@ -1,0 +1,190 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import Picture from '../components/Picture.astro';
+import { blocks, blockUrl, routes, type Lang } from '../i18n/ui';
+import { bySlug, tutorialUrl, neighbours, levelNames, tr } from '../data/tutorials';
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+const fr = lang === 'fr';
+const t = bySlug(slug)!;
+const { prev, next } = neighbours(t);
+
+// a media file is used only when it exists: the page never shows a broken player or a broken image
+const has = (p?: string) => !!p && existsSync(join(process.cwd(), 'public', p));
+const v = t.video[lang];
+const hasVideo = has(v?.src);
+const poster = has(v?.poster) ? v!.poster : undefined;
+const captions = has(v?.captions) ? v!.captions : undefined;
+const chapters = has(v?.chapters) ? v!.chapters : undefined;
+const stamp = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const first = t.steps[0];
+// a block is linked only once its two pages exist
+const pages = import.meta.glob('./blocks/*.astro');
+const written = (k: string) => `./blocks/${k}En.astro` in pages && `./blocks/${k}Fr.astro` in pages;
+const usedLinks = (t.blocks ?? []).map((k) => blocks.find((b) => b.key === k)).filter((b): b is (typeof blocks)[number] => !!b && written(b.key));
+const rubric = t.section === 'post' ? 'Post' : (fr ? 'Parcours' : 'The path');
+const level = t.section === 'path' && t.level ? levelNames[t.level][lang] : undefined;
+const L = fr
+  ? { dur: 'Durée', needs: 'Il faut', data: 'Données', licence: 'licence', video: 'La vidéo', chapters: 'Chapitres', see: 'Résultat attendu', avoid: 'À éviter', why: 'Pourquoi', result: 'Le résultat', at100: 'À 100 %', diag: 'Le diagnostic avant de toucher à Post.', dProblem: 'Ce qui ne va pas', dRead: 'Comment on le lit', dFix: 'Ce qui le corrige', show: 'Voir dans la vidéo', blocks: 'Blocs utilisés', prev: 'Précédent', next: 'Suivant', back: 'Tous les tutoriels', info: 'Fiche du tutoriel.', size: 'taille', tab: 'Tableau 1.' }
+  : { dur: 'Duration', needs: 'Requirements', data: 'Data set', licence: 'licence', video: 'The video', chapters: 'Chapters', see: 'Expected result', avoid: 'To avoid', why: 'Why', result: 'The result', at100: 'At 100 %', diag: 'The diagnosis before touching Post.', dProblem: 'What is wrong', dRead: 'How it is read', dFix: 'What corrects it', show: 'Show in the video', blocks: 'Blocks used', prev: 'Previous', next: 'Next', back: 'All tutorials', info: 'The tutorial at a glance.', size: 'size', tab: 'Table 1.' };
+---
+<Base lang={lang} page="learn" title={t.title[lang]} description={t.summary[lang]}
+  paths={{ en: tutorialUrl(t, 'en'), fr: tutorialUrl(t, 'fr') }}>
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <p class="kicker">{rubric}{level && ` · ${t.level} ${level}`}</p>
+    <h1>{t.title[lang]}</h1>
+    <p class="measure lead">{t.summary[lang]}</p>
+
+    <div class="tbl-wrap measure">
+      <table class="tbl sheet">
+        <caption><b>{L.tab}</b>{L.info}</caption>
+        <tbody>
+          <tr><th scope="row">{L.dur}</th><td>{t.duration[lang]}</td></tr>
+          <tr><th scope="row">{L.needs}</th><td><ul class="plain-list">{t.needs[lang].map((n) => <li>{n}</li>)}</ul></td></tr>
+          <tr><th scope="row">{L.data}</th><td>
+            {t.data.url ? <a href={t.data.url}>{tr(t.data.name, lang)}</a> : tr(t.data.name, lang)}, {tr(t.data.author, lang)}{t.data.licence && `; ${L.licence} ${tr(t.data.licence, lang)}`}{t.data.size && `; ${L.size} ${tr(t.data.size, lang)}`}{t.data.note && `. ${tr(t.data.note, lang)}`}
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    {t.result && has(t.result.src) && (
+      <section class="sec" aria-label={L.result}>
+        <figure class="result">
+          <div class="plate"><Picture src={t.result.src} alt={tr(t.result.caption, lang)} width={t.result.w} height={t.result.h} eager zoom={t.result.src} /></div>
+          <figcaption><b>{L.result}.</b> {tr(t.result.caption, lang)}</figcaption>
+        </figure>
+      </section>
+    )}
+
+    {(hasVideo || poster) && (
+      <section class="sec" aria-label={L.video}>
+        <div class="vplate" style={first ? `max-width: ${first.w}px` : undefined}>
+          {hasVideo
+            ? <video id="tvideo" controls preload="metadata" playsinline poster={poster} src={v!.src}
+                style={first ? `aspect-ratio: ${first.w} / ${first.h}` : undefined}>
+                {captions && <track kind="subtitles" default srclang={lang} label={fr ? 'Français' : 'English'} src={captions} />}
+                {chapters && <track kind="chapters" srclang={lang} label={L.chapters} src={chapters} />}
+              </video>
+            : <img src={poster} alt="" width={first?.w} height={first?.h} />}
+        </div>
+        {hasVideo && (
+          <ol class="chapters" aria-label={L.chapters}>
+            {t.steps.map((s, i) => (
+              <li><button type="button" data-seek={s.at[lang]}><span class="secnum">{i + 1}</span>{s.title[lang]}<span class="at">{stamp(s.at[lang])}</span></button></li>
+            ))}
+          </ol>
+        )}
+      </section>
+    )}
+
+    {t.steps.map((s, i) => (
+      <section class="sec" id={s.id}>
+        <h2><span class="secnum">{i + 1}</span>{s.title[lang]}</h2>
+        <div class="split">
+          <div class="stext">
+            <p set:html={s.text[lang]} />
+            {s.why && <p class="snote"><b>{L.why}.</b> <Fragment set:html={s.why[lang]} /></p>}
+            {s.check && <p class="snote"><b>{L.see}.</b> <Fragment set:html={s.check[lang]} /></p>}
+            {s.pitfall && <p class="snote avoid"><b>{L.avoid}.</b> <Fragment set:html={s.pitfall[lang]} /></p>}
+            {hasVideo && <p class="meta"><button type="button" class="linkbtn" data-seek={s.at[lang]}>{L.show} ({stamp(s.at[lang])})</button></p>}
+            {[s.detail ?? []].flat().filter((d) => has(tr(d.src, lang))).map((d) => (
+              <figure class="detail">
+                <img src={tr(d.src, lang)} width={d.w} height={d.h} loading="lazy" alt={tr(d.caption, lang)} />
+                <figcaption><b>{d.label ? tr(d.label, lang) : L.at100}.</b> {tr(d.caption, lang)}</figcaption>
+              </figure>
+            ))}
+          </div>
+          {has(s.shot[lang]) && <Figure lang={lang} n={i + 1} src={s.shot[lang]} plate zoom width={s.w} height={s.h} alt={s.title[lang]}>{s.title[lang]}.</Figure>}
+        </div>
+        {s.table && (
+          <div class="tbl-wrap measure">
+            <table class="tbl diag">
+              <caption><b>{tr(s.table.caption, lang)}</b></caption>
+              <thead><tr>{s.table.head.map((h) => <th scope="col">{tr(h, lang)}</th>)}</tr></thead>
+              <tbody>
+                {s.table.rows.map((r) => <tr><th scope="row" set:html={tr(r[0], lang)} />{r.slice(1).map((c) => <td set:html={tr(c, lang)} />)}</tr>)}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {s.diagnosis && (
+          <div class="tbl-wrap">
+            <table class="tbl diag">
+              <caption><b>{L.diag}</b></caption>
+              <thead><tr><th scope="col">{L.dProblem}</th><th scope="col">{L.dRead}</th><th scope="col">{L.dFix}</th></tr></thead>
+              <tbody>
+                {s.diagnosis.map((d) => {
+                  const k = d.step ? t.steps.findIndex((x) => x.id === d.step) : -1;
+                  return <tr><th scope="row" set:html={d.problem[lang]} /><td set:html={d.read[lang]} /><td><Fragment set:html={d.fix[lang]} />{k >= 0 && <> (<a href={`#${d.step}`}>{fr ? 'étape' : 'step'} {k + 1}</a>)</>}</td></tr>;
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    ))}
+
+    {usedLinks.length > 0 && (
+      <section class="sec">
+        <h2>{L.blocks}</h2>
+        <ul class="plain-list">{usedLinks.map((b) => <li><a href={blockUrl(b, lang)}>{b[lang]}</a></li>)}</ul>
+      </section>
+    )}
+
+    <nav class="sec pn" aria-label={L.back}>
+      <div>{prev && <a href={tutorialUrl(prev, lang)}>← {L.prev} : {prev.title[lang]}</a>}</div>
+      <div><a href={routes.learn[lang]}>{L.back}</a></div>
+      <div class="r">{next && <a href={tutorialUrl(next, lang)}>{L.next} : {next.title[lang]} →</a>}</div>
+    </nav>
+  </div>
+</Base>
+
+<script>
+  // Seek the video to a step; works before the video has loaded (waits for the metadata, then jumps).
+  const video = document.querySelector<HTMLVideoElement>('#tvideo');
+  document.querySelectorAll<HTMLElement>('[data-seek]').forEach((b) => {
+    b.addEventListener('click', () => {
+      if (!video) return;
+      const at = Number(b.dataset.seek) || 0;
+      const go = () => { video.currentTime = at; video.play().catch(() => {}); };
+      if (video.readyState >= 1) go();
+      else { video.addEventListener('loadedmetadata', go, { once: true }); video.load(); }
+      video.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+  });
+</script>
+
+<style>
+  .lead { font-size: 1.2rem; line-height: 1.5; }
+  .plain-list { list-style: none; padding: 0; margin: 0; }
+  .plain-list li { margin: 0 0 0.2rem; }
+  .vplate { background: var(--plate); padding: clamp(0.5rem, 1vw, 1rem); line-height: 0; }
+  .vplate video, .vplate img { display: block; width: 100%; height: auto; background: var(--plate); }
+  .chapters { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 0 2rem; font-family: var(--sans); font-size: 0.95rem; }
+  .chapters li { margin: 0; border-top: 1px solid var(--rule); }
+  .chapters button { all: unset; box-sizing: border-box; display: flex; gap: 0.2rem; width: 100%; padding: 0.5rem 0; cursor: pointer; }
+  .chapters button:hover { color: var(--orange-ink); }
+  .chapters button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  .chapters .at { margin-left: auto; color: var(--muted); font-family: var(--mono); font-size: 0.85em; }
+  .snote { font-family: var(--sans); font-size: 0.92rem; border-left: 3px solid var(--rule); padding-left: 0.8rem; color: var(--muted); }
+  .snote.avoid { border-left-color: var(--orange); }
+  .result { margin: 0; max-width: 72rem; }
+  .diag { margin-top: 1.4rem; max-width: 72rem; }
+  .diag th[scope="row"] { font-weight: 600; width: 28%; }
+  .diag td { vertical-align: top; }
+  .detail { margin: 1rem 0 0; }
+  .detail img { display: block; max-width: 100%; height: auto; background: var(--plate); image-rendering: auto; }
+  .detail figcaption { font-family: var(--sans); font-size: 0.88rem; color: var(--muted); margin-top: 0.4rem; }
+  .detail figcaption b { color: var(--ink); }
+  .snote b { color: var(--ink); }
+  .linkbtn { all: unset; cursor: pointer; text-decoration: underline; text-decoration-color: var(--orange); text-decoration-thickness: 1.5px; text-underline-offset: 0.2em; }
+  .linkbtn:hover { color: var(--orange-ink); }
+  .linkbtn:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  .pn { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; font-family: var(--sans); font-size: 0.95rem; }
+  .pn .r { text-align: right; }
+  @media (max-width: 40rem) { .pn { grid-template-columns: 1fr; } .pn .r { text-align: left; } }
+</style>

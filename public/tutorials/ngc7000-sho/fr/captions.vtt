@@ -1,0 +1,125 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet.
+
+2
+00:00:03.000 --> 00:00:06.000
+Cliquez sur Post.
+
+3
+00:00:06.000 --> 00:00:13.000
+Post s’ouvre sur un seul calque visible, S-H-O · Combiner calques ; le calque du workflow Étoiles est ajouté, masqué. Rien n’est proposé au calcul.
+
+4
+00:00:13.000 --> 00:00:16.000
+Sélectionnez le calque S-H-O · Combiner calques.
+
+5
+00:00:16.000 --> 00:00:24.000
+Lisez l’image telle que le logiciel la donne : un voile gris sur la nébuleuse, des couleurs plates et des étoiles serrées et roses.
+
+6
+00:00:24.000 --> 00:00:27.000
+Ouvrez la liste du zoom.
+
+7
+00:00:27.000 --> 00:00:30.000
+Choisissez 100 %.
+
+8
+00:00:30.000 --> 00:00:38.000
+À 100 %, le coin en haut à gauche : les étoiles ont des queues de comète, le ciel est un gris relevé et le bord est noir.
+
+9
+00:00:38.000 --> 00:00:41.000
+Cliquez sur Recadrage.
+
+10
+00:00:41.000 --> 00:00:44.000
+Tirez le coin supérieur gauche vers l’intérieur jusqu’à écarter les étoiles en comète et le bord noir.
+
+11
+00:00:44.000 --> 00:00:50.000
+Le cadre fait maintenant 3655 × 2450 px.
+
+12
+00:00:50.000 --> 00:00:53.000
+Cliquez sur Appliquer.
+
+13
+00:00:53.000 --> 00:00:59.000
+L’image est recadrée et centrée sur l’Amérique du Nord et le mur.
+
+14
+00:00:59.000 --> 00:01:02.000
+Tirez Ciel vers la gauche jusqu’à ce que le voile disparaisse et que le ciel soit un gris sombre : environ −0,8.
+
+15
+00:01:02.000 --> 00:01:08.000
+Le ciel est maintenant un gris sombre.
+
+16
+00:01:08.000 --> 00:01:11.000
+Tirez Contraste vers la droite jusqu’à faire ressortir le mur et les bandes sombres : environ +0,8.
+
+17
+00:01:11.000 --> 00:01:14.000
+Tirez Tons faibles vers la droite jusqu’à faire monter les filaments extérieurs : environ +0,4.
+
+18
+00:01:14.000 --> 00:01:20.000
+Le mur et les bandes sombres ont du relief et le gaz faible apparaît.
+
+19
+00:01:20.000 --> 00:01:23.000
+Tirez Saturation vers la droite jusqu’à ce que la palette retrouve ses couleurs : environ +0,8.
+
+20
+00:01:23.000 --> 00:01:29.000
+Or et orange pour H-alpha et S II, bleu pour O III.
+
+21
+00:01:29.000 --> 00:01:32.000
+Tirez Couleur des étoiles vers le blanc : environ −2,0.
+
+22
+00:01:32.000 --> 00:01:38.000
+Les étoiles perdent leur rose artificiel.
+
+23
+00:01:38.000 --> 00:01:41.000
+Tirez Taille des étoiles vers plus petites : environ −0,5.
+
+24
+00:01:41.000 --> 00:01:44.000
+Tirez Petites étoiles vers moins : environ −0,4.
+
+25
+00:01:44.000 --> 00:01:50.000
+Moins d’étoiles, et plus petites, sur le gaz.
+
+26
+00:01:50.000 --> 00:01:53.000
+Cliquez sur le nom de la version pour la renommer.
+
+27
+00:01:53.000 --> 00:01:58.000
+La version s’appelle maintenant Default S-H-O.
+
+28
+00:01:58.000 --> 00:02:01.000
+Cliquez sur Exporter.
+
+29
+00:02:01.000 --> 00:02:04.000
+Choisissez le format JPEG.
+
+30
+00:02:04.000 --> 00:02:09.000
+Vérifiez le fichier, sur le disque des tutoriels, puis cliquez sur Exporter.
+
+31
+00:02:09.000 --> 00:02:14.000
+Enregistrez le projet avec Ctrl+S.

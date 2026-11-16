@@ -1,0 +1,121 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.000
+On the Home screen, click Open project… and choose the project of the tutorial Repair instead of cropping.
+
+2
+00:00:04.000 --> 00:00:08.000
+The project opens up to date: nothing is to be computed.
+
+3
+00:00:08.000 --> 00:00:11.000
+Click Post.
+
+4
+00:00:11.000 --> 00:00:19.000
+Before any gesture: a veil on the sky, the ring a little pale, the fine structure soft at full size. The Version list holds Version 1.
+
+5
+00:00:19.000 --> 00:00:24.000
+Double-click the name of the version, type Whole field and press Enter: this is the picture as it is, for a screen view.
+
+6
+00:00:24.000 --> 00:00:28.000
+The first version is named Whole field.
+
+7
+00:00:28.000 --> 00:00:33.000
+Click New version: a copy of this one, with its own Undo.
+
+8
+00:00:33.000 --> 00:00:37.000
+Rename it Finish, the version for full size.
+
+9
+00:00:37.000 --> 00:00:40.000
+Click Starless image.
+
+10
+00:00:40.000 --> 00:00:44.000
+Click Filter, open Contrast and choose Dehaze.
+
+11
+00:00:44.000 --> 00:00:48.000
+Drag Amount to about 0.25 and Scale to about 256 px.
+
+12
+00:00:48.000 --> 00:00:52.000
+With the filter selected, click the mask button, then Add to mask and Luminance range.
+
+13
+00:00:52.000 --> 00:00:57.000
+Set the part to 0 to 25 % with a Feather of about 8 px: Dehaze acts on the dark tones only.
+
+14
+00:00:57.000 --> 00:01:01.000
+Click Filter, open Color and choose Saturation: drag Strength to about +20 %.
+
+15
+00:01:01.000 --> 00:01:05.000
+Click Filter, open Detail and choose Multiscale sharpening.
+
+16
+00:01:05.000 --> 00:01:09.000
+Raise 4 px to 0.3, 8 px to 0.4 and 16 px to 0.3; leave 1 px and 2 px at 0.
+
+17
+00:01:09.000 --> 00:01:13.000
+Open the Version list: two versions.
+
+18
+00:01:13.000 --> 00:01:18.000
+Pick Whole field: the picture changes at once, with its own settings.
+
+19
+00:01:18.000 --> 00:01:22.000
+Pick Finish again.
+
+20
+00:01:22.000 --> 00:01:27.000
+Click Undo: it takes back the last change of this version only, here the 16 px value.
+
+21
+00:01:27.000 --> 00:01:31.000
+Click Redo to bring it back.
+
+22
+00:01:31.000 --> 00:01:36.000
+Click the bin: the version shown is deleted, and Ctrl+Z offers it back.
+
+23
+00:01:36.000 --> 00:01:40.000
+Press Ctrl+Z: the version comes back with its settings.
+
+24
+00:01:40.000 --> 00:01:44.000
+With Finish shown, click Export… and write a first file.
+
+25
+00:01:44.000 --> 00:01:48.000
+Pick Whole field and export the second file.
+
+26
+00:01:48.000 --> 00:01:51.000
+Each version has its own file.
+
+27
+00:01:51.000 --> 00:01:55.000
+Press Ctrl+S: both versions are saved with the project.
+
+28
+00:01:55.000 --> 00:01:58.000
+Open File, then click Close project.
+
+29
+00:01:58.000 --> 00:02:01.000
+Click the project to open it again.
+
+30
+00:02:01.000 --> 00:02:07.000
+Both versions are still in the list, each with its settings.

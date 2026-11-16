@@ -1,0 +1,326 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import { release } from '../../i18n/ui';
+const lang = 'fr';
+---
+<Doc lang={lang} page="blocks" current="Post" title="Post"
+  description="Post dans FLOAT : la page de finition par calques et le bloc Sortie qui termine chaque workflow. Calques, masques, modes de fusion, filtres, curseurs simplifiés, versions et export, avec les sources publiées.">
+
+  <p class="kicker">Bloc</p>
+  <h1>Post</h1>
+  <p class="meta">FLOAT 0.2.0 · bêta du {release.date.fr}</p>
+
+  <dl class="inshort"><div><dt>Ce qu’il fait</dt><dd>C’est là que l’image est terminée : le résultat de chaque workflow est un calque, et chaque réglage est un filtre que l’on peut modifier ou retirer à tout moment.</dd></div><div><dt>Ce qu’on voit</dt><dd>L’image finale, le panneau des calques à côté, et quelques curseurs de 0 à 4 qui partent du milieu.</dd></div><div><dt>Ce qui se règle</dt><dd>Ciel, Contraste et Saturation d’abord ; le rendu par défaut est un bon point de départ, et l’export écrit le fichier final, un TIFF 16 bits par défaut.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>Sur cette page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>Le bloc Sortie, et ce que reçoit Post</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Les calques</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Les masques</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>Les curseurs simplifiés</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Les filtres</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Les versions</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>L’export</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Réglages</a></li>
+      <li><a href="#s9"><span class="secnum">9</span>Limites, et ce qui a été essayé</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>Références</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Résumé">Post est la page où l’on termine les résultats des workflows. Il suit le modèle de calques des
+    éditeurs d’images comme GIMP&nbsp;: le résultat de chaque workflow, ou de n’importe quel bloc, est un calque, avec une
+    opacité, un mode de fusion et un masque. Chaque réglage est un filtre sur son calque, que l’on peut désactiver,
+    modifier ou retirer seul, à tout moment. Chaque workflow se termine par un bloc Sortie, qui amène son image linéaire à
+    l’écran par un étirement automatique&nbsp;; Post montre cet étirement avec quelques curseurs, de 0 à 4, et les filtres
+    s’ajoutent par-dessus.</p>
+  </div>
+
+  <ol class="chain" aria-label="Place dans le graphe">
+    <li><span>Couleur</span></li><li><span>Étoiles/fond</span></li>
+    <li class="here"><span>Post</span></li><li><span>Rapport</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>Le bloc Sortie, et ce que reçoit Post</h2>
+    <aside class="note"><b>Le ciel.</b> Le niveau retiré est celui que le bloc <a href="/fr/blocs/gradient/">Gradient</a> a mesuré entre les objets. Une
+    médiane sur tout le champ prendrait pour du ciel une nébuleuse qui le remplit, différemment dans chaque
+    couleur.</aside>
+    <p>Le bloc Sortie termine chaque workflow. Il est automatique et ne peut pas être coupé. Il prend la dernière image de
+    la chaîne, l’empilement débruité si le workflow a un <a href="/fr/blocs/debruitage/">Débruitage</a>, sinon l’empilement dont le gradient est retiré, et
+    l’écrit comme une image linéaire aux couleurs de l’écran, son ciel retiré. Si le workflow a un bloc <a href="/fr/blocs/couleur/">Couleur</a>, la balance
+    des blancs de ce bloc est appliquée. Il écrit aussi les pixels couverts et les statistiques de l’étirement, mesurées une
+    fois sur toute l’image en pleine résolution&nbsp;: médiane, écart absolu médian et 99,995e centile de la luminance et de
+    chaque canal.</p>
+    <p>Deux réparations y sont faites. Le motif périodique d’une mosaïque de couleurs est retiré de l’image par un filtre
+    en fréquence. Les endroits où des échantillons ont été écrêtés, les cœurs des étoiles brillantes, prennent la couleur de
+    la lumière qui les entoure, à la plus faible luminosité que tous les canaux permettent. Une combinaison de filtres,
+    comme un empilement seul, n’est pas recadrée&nbsp;: tout le champ est montré et c’est à l’utilisateur de recadrer.</p>
+    <p>Post rend ensuite cette image. Le rendu par défaut, tous les curseurs à 2, est une fonction de transfert des tons
+    moyens depuis un point noir à la médiane moins 2,8 écarts absolus médians jusqu’à un point blanc au 99,995e centile, le
+    ciel médian amené à un niveau d’affichage de 0,25. Avec les canaux liés, l’étirement se fait sur la luminance, de sorte
+    que l’équilibre des couleurs de l’image est conservé&nbsp;; sinon chaque canal est étiré seul, ce qui neutralise une
+    dominante.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Les calques</h2>
+    <aside class="note"><b>Lire le panneau.</b> Lu de bas en haut, le panneau des calques est l’ordre de la composition&nbsp;:
+    un calque de pixels, puis ses filtres du plus bas au plus haut, puis la rangée suivante.</aside>
+    <p>Un calque est de l’un de ces trois types.</p>
+    <ul>
+      <li><strong>Un calque de workflow</strong> est l’image d’un workflow&nbsp;: l’image de son bloc Sortie, ou l’une des
+      images de son bloc <a href="/fr/blocs/etoiles/">Étoiles/fond</a> (l’image sans étoiles, les étoiles seules, ou les deux recombinées). Il est rendu
+      par le moteur à partir de sa base et de ses curseurs (section 4).</li>
+      <li><strong>Un calque image</strong> est le résultat d’un bloc quelconque (un empilement, une image sans gradient ou
+      débruitée) envoyé depuis Inspecter. Il est étiré automatiquement et déplacé par les curseurs Ciel, Contraste et
+      Saturation. Ses pixels ne sont jamais enregistrés dans la composition, seulement le nom du résultat.</li>
+      <li><strong>Un calque de filtre</strong> est un filtre (section 5). Il s’applique au seul calque de pixels sous
+      lequel il est rangé, ou à tout ce qui est dessous quand il forme une rangée à lui.</li>
+    </ul>
+    <p>Chaque calque a un œil, une <strong>opacité</strong> de 0 à 100 % et un <strong>mode de fusion</strong>. Les filtres
+    aussi. Les modes sont les suivants, a étant ce qui est dessous et b le calque.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 1.</b>Les modes de fusion d’un calque ou d’un filtre.</caption>
+        <thead><tr><th>Mode</th><th>Résultat</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Normal</th><td>b</td></tr>
+          <tr><th scope="row">Éclaircir</th><td>max(a, b)</td></tr>
+          <tr><th scope="row">Écran</th><td>1 − (1 − a)(1 − b)</td></tr>
+          <tr><th scope="row">Densité linéaire − (ajout)</th><td>min(a + b, 1)</td></tr>
+          <tr><th scope="row">Multiplier</th><td>a × b</td></tr>
+          <tr><th scope="row">Lumière douce</th><td>(1 − 2b) a² + 2ab</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Le mode est appliqué d’abord, puis l’opacité et le masque mêlent le résultat à ce qui est dessous&nbsp;:
+    dessous + (résultat − dessous) × opacité × masque.</p>
+    <h3>Étoiles et fond</h3>
+    <p>Un workflow qui a un bloc Étoiles/fond arrive comme un calque à deux images, chacune avec ses propres filtres&nbsp;:
+    l’image sans étoiles, étirée avec les statistiques de toute l’image pour que, recombinée, elle ressemble à celle du
+    bloc Sortie, et les étoiles seules. Les étoiles sont étirées à part, noir à 0 et blanc et ton moyen de toute l’image,
+    et reviennent par-dessus en <strong>Écran</strong>, ou en Densité linéaire − (ajout) ou en Éclaircir. Les étirer moins
+    est la réduction des étoiles&nbsp;: il n’en faut aucune sur l’image recombinée. Les étoiles du calque forment un groupe&nbsp;:
+    les vraies étoiles et, quand le workflow a le bloc Étoiles de synthèse, les étoiles synthétiques à côté, chacune
+    avec son œil et son masque. Chaque côté peut aussi avoir un masque propre, appliqué à son image après ses filtres et
+    avant que les deux soient réunies.</p>
+    <p>Pour une combinaison de filtres faite sur des images sans étoiles, le bloc Combiner calques remet sur son image les
+    étoiles d’un autre workflow&nbsp;; les étoiles d’une combinaison d’étoiles sont étirées avec les statistiques de la
+    combinaison sans étoiles.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Les masques</h2>
+    <p>Chaque calque et chaque filtre peut avoir un masque. Un masque est fait de parties, chacune ajoutée à ce qui est là,
+    soustraite ou intersectée. Un masque s’affiche en surimpression rouge sur l’image.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 2.</b>Les parties d’un masque.</caption>
+        <thead><tr><th>Partie</th><th>Ce qu’elle sélectionne</th><th>Réglages</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Émission H-alpha</th><td>L’excès de rouge de l’image, le rouge moins le vert (surtout Hα, avec [N II] et [S II]), lissé sur 6 px, 0 à sa médiane et 1 à son 97e centile (mesurés sur tout le champ).</td><td>Aucun</td></tr>
+          <tr><th scope="row">Plage de luminosité</th><td>Les pixels dont la luminance est entre deux niveaux, aux bords doux.</td><td>De 40 %, À 100 %</td></tr>
+          <tr><th scope="row">Plage de couleur</th><td>Les pixels proches d’une teinte, pondérés par leur saturation.</td><td>Teinte 0° – 359°, largeur 40° (10° – 120°)</td></tr>
+          <tr><th scope="row">Dégradé linéaire</th><td>Une rampe sur l’image, depuis le haut, le bas, la gauche ou la droite.</td><td>Position 50 %, douceur 40 % (1 % – 100 %)</td></tr>
+          <tr><th scope="row">Pinceau</th><td>Ce qui est peint, par traits que l’on peut reprendre un à un.</td><td>Taille 60 px, dureté 50 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Trois réglages agissent sur tout le masque&nbsp;: <strong>Progressif</strong> (0 à 60 px, adoucit le bord),
+    <strong>Densité</strong> (0 à 100 %, la part du calque qui se montre là où le masque est blanc) et
+    <strong>Inverser</strong>. Un pinceau ajouté à un masque vide retranche d’un masque plein&nbsp;: le calque reste montré
+    partout et le premier trait cache.</p>
+    <p>Les parties de luminosité et de couleur lisent l’image sur laquelle elles sont. Une partie de masque est calculée une
+    fois pour des réglages donnés, puis réutilisée, si bien qu’ajouter une partie à un masque ne calcule que cette
+    partie.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>Les curseurs simplifiés</h2>
+    <aside class="note"><b>Lire une position.</b> À 2, un réglage a la valeur de la base du calque. Aux autres positions,
+    on ajoute le pas du tableau depuis la position 2, ou son rapport à la position 2 multiplie la base. Entre deux positions
+    entières, la valeur est linéaire, et elle reste dans les bornes du réglage.</aside>
+    <p>Un calque de workflow est rendu à partir d’une base, un rendu nommé du projet ou la suggestion, déplacée par ses
+    curseurs. Chaque curseur va de 0 à 4 et sa position 2 est la base.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 3.</b>Les curseurs, et le réglage que chacun déplace, de la position 0 à la position 4, pour la base suggérée.</caption>
+        <thead><tr><th>Curseur</th><th>Groupe</th><th>Extrémités</th><th>Réglage</th><th>0 → 2 → 4</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Ciel</th><td>Nébuleuse et fond</td><td>plus sombre, plus clair</td><td>Luminosité du ciel</td><td class="n">0,15 → 0,25 → 0,37</td></tr>
+          <tr><th scope="row">Contraste</th><td>Nébuleuse et fond</td><td>plus doux, plus fort</td><td>Courbe en S</td><td class="n">−0,35 → 0 → 0,5</td></tr>
+          <tr><th scope="row">Tons faibles</th><td>Nébuleuse et fond</td><td>plus sombres, plus clairs</td><td>Tons faibles</td><td class="n">−0,8 → 0 → 1,6</td></tr>
+          <tr><th scope="row">Saturation</th><td>Nébuleuse et fond</td><td>plus pâle, plus vif</td><td>Saturation</td><td class="n">0,6 → 1,2 → 1,85</td></tr>
+          <tr><th scope="row">Couleurs</th><td>Nébuleuse et fond</td><td>fanées, vraies</td><td>Garder couleurs</td><td class="n">0 → 0,5 → 1</td></tr>
+          <tr><th scope="row">H-alpha</th><td>Nébuleuse et fond</td><td>moins, plus</td><td>H-alpha</td><td class="n">−0,6 → 0 → 2</td></tr>
+          <tr><th scope="row">Lissage du bruit</th><td>Nébuleuse et fond</td><td>moins, plus</td><td>Part débruitée&nbsp;; lissage des zones faibles</td><td class="n">0,4 → 1 → 1&nbsp;; 0 → 0 → 1,6 px</td></tr>
+          <tr><th scope="row">Intensité</th><td>Étoiles</td><td>plus discrètes, plus franches</td><td>Intensité des étoiles</td><td class="n">0,25 → 0,6 → 1,6</td></tr>
+          <tr><th scope="row">Petites étoiles</th><td>Étoiles</td><td>moins, plus</td><td>Petites étoiles</td><td class="n">1 → 0 → 0</td></tr>
+          <tr><th scope="row">Taille des étoiles</th><td>Étoiles</td><td>plus petites, plus grandes</td><td>Taille des étoiles</td><td class="n">−3 → −1 → 1 px</td></tr>
+          <tr><th scope="row">Couleur des étoiles</th><td>Étoiles</td><td>plus blanches, plus colorées</td><td>Couleur des étoiles</td><td class="n">0,4 → 1,2 → 2,3</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Tons faibles</strong> relève ou abaisse les tons juste au-dessus du ciel sans déplacer le ciel&nbsp;: un étirement
+    hyperbolique généralisé<a class="cite" href="#ref-1">[1]</a> de la plage au-dessus du ciel, son point noir et son point
+    de symétrie au ciel, appliqué à la luminance en gardant les rapports de couleur. <strong>Couleurs</strong> règle la part
+    de l’étirement qui garde les couleurs&nbsp;: à 0, chaque canal passe par la même courbe, de sorte que les couleurs faibles
+    virent au gris et les cœurs brillants au blanc&nbsp;; à 1, la luminance est étirée et les trois canaux sont multipliés avec
+    elle, ce qui garde les couleurs de l’image linéaire.<a class="cite" href="#ref-2">[2]</a> La base est 0,5, pour que les
+    nébuleuses gardent leur couleur et les cœurs brillants leur structure. <strong>H-alpha</strong> ajoute l’émission H-alpha
+    mesurée au rouge avant l’étirement, ou la retire ; c’est le rouge au-dessus d’un continuum prédit d’après le vert
+    (surtout Hα, avec [N II] et [S II]), le rapport du rouge au vert de ce continuum étant mesuré sur les étoiles, comme
+    on met à l’échelle sur les étoiles le continuum d’une image Hα en bande étroite.<a class="cite" href="#ref-3">[3]</a> <strong>Lissage du bruit</strong> remélange l’empilement brut
+    à l’empilement débruité en dessous de 2, et lisse les zones faibles au-dessus, les zones brillantes gardant leur pleine
+    résolution.</p>
+    <p>Un curseur qu’un calque ne peut pas offrir est grisé, et sa raison est affichée&nbsp;: les curseurs d’étoiles agissent sur
+    les étoiles du bloc <a href="/fr/blocs/etoiles/">Étoiles/fond</a>&nbsp;; le calque d’étoiles ne contient que les étoiles&nbsp;; le lissage du bruit demande le bloc
+    <a href="/fr/blocs/debruitage/">Débruitage</a> et agit sur toute l’image&nbsp;; H-alpha est réservé aux caméras couleur, puisque dans une combinaison en palette
+    l’H-alpha est un canal à part et qu’une image monochrome n’a pas de rouge au-dessus d’un continuum.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Les filtres</h2>
+    <aside class="note"><b>À leurs valeurs par défaut.</b> Chaque filtre est l’identité à ses valeurs par défaut&nbsp;: en
+    ajouter un ne change rien tant qu’un réglage n’est pas déplacé, et la composition garde l’image bit pour bit.</aside>
+    <p>Un filtre est un calque d’une sorte à part. Déposé sur un calque de pixels, il est rangé dessous et n’agit que sur
+    lui&nbsp;; entre deux rangées, il agit sur tout ce qui est dessous. Chacun a un œil, une opacité, un mode de fusion et un
+    masque. Le désactiver, le modifier ou le retirer laisse tous les autres filtres comme ils sont.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 4.</b>Les filtres de Post, et la méthode que chacun suit.</caption>
+        <thead><tr><th>Famille</th><th>Filtre</th><th>Méthode</th></tr></thead>
+        <tbody>
+          <tr><th scope="row" rowspan="5">Étirement</th><td>Étirement hyperbolique généralisé</td><td>Payne et Cranfield&nbsp;: un fort étirement autour d’un niveau choisi, les ombres et les hautes lumières protégées.<a class="cite" href="#ref-1">[1]</a> Facteur ln(D + 1) 0 – 4, intensité locale −5 – 15, point de symétrie, protection des ombres et des hautes lumières, point noir.</td></tr>
+          <tr><td>Étirement arcsinh</td><td>pixel = x′ · asinh(L′ · étirement) / (L′ · asinh(étirement)), les couleurs conservées.<a class="cite" href="#ref-2">[2]</a> Étirement 0 – 40, point noir 0 – 0,2.</td></tr>
+          <tr><td>Transformation d’histogramme</td><td>Ombres, tons moyens et hautes lumières, par la fonction de transfert des tons moyens (m − 1) x / ((2m − 1) x − m).</td></tr>
+          <tr><td>Courbes</td><td>Une courbe par canal (RVB/K, R, V, B, L* CIE, saturation, chroma, teinte), de 2 à 100 points de contrôle, interpolation d’Akima, spline cubique naturelle ou linéaire.<a class="cite" href="#ref-4">[4]</a> Préréglages, les siens, et fichiers .acv.</td></tr>
+          <tr><td>Niveaux</td><td>Point noir 0 – 0,3, point blanc 0,7 – 1, gamma 0,5 – 2.</td></tr>
+          <tr><th scope="row" rowspan="4">Contraste</th><td>Contraste local</td><td>Un masque flou de grand rayon&nbsp;: intensité 0 – 1,5, échelle 5 – 120 px.</td></tr>
+          <tr><td>Dévoilage</td><td>Le voile est mesuré comme le fond d’un extracteur de sources (mailles, écrêtage à 3σ, mode, carte bicubique)<a class="cite" href="#ref-5">[5]</a> et retiré avec un modèle de brume, le blanc conservé.<a class="cite" href="#ref-6">[6]</a> Quantité, échelle 32 – 512 px.</td></tr>
+          <tr><td>Égalisation locale d’histogramme</td><td>CLAHE sur la luminosité L* CIE.<a class="cite" href="#ref-7">[7]</a> Quantité 0 – 1, limite de contraste 1 – 8, rayon du noyau 16 – 512 px.</td></tr>
+          <tr><td>Compression des hautes lumières</td><td>Une base et son détail par le filtre guidé&nbsp;;<a class="cite" href="#ref-8">[8]</a> la base est comprimée au-dessus d’un genou, le détail conservé. Intensité, début 0,2 – 0,9, détail gardé, échelle 8 – 120 px.</td></tr>
+          <tr><th scope="row" rowspan="4">Couleur</th><td>Saturation</td><td>Saturation autour de la luminance, de −100 à +150 %, par plage de teintes, avec une protection du fond qui épargne le bruit du ciel.</td></tr>
+          <tr><td>Mélangeur de couleurs</td><td>Teinte, saturation et luminance de huit plages de couleurs (rouge, orange, jaune, vert, aqua, bleu, violet, magenta) en L*c*h* CIE. Le fond gris et les cœurs d’étoiles blancs sont laissés tels quels.</td></tr>
+          <tr><td>Retrait du vert</td><td>Le vert tenu sous un neutre fait de rouge et de bleu&nbsp;; quatre protections, quantité, conservation de la luminosité.</td></tr>
+          <tr><td>Balance des couleurs</td><td>Gains sur le rouge et le bleu (température) et sur le vert (teinte).</td></tr>
+          <tr><th scope="row" rowspan="3">Détail</th><td>Netteté</td><td>Masque flou&nbsp;: intensité 0 – 2, rayon 0,5 – 4 px.</td></tr>
+          <tr><td>Accentuation multi-échelle</td><td>Couches d’ondelettes starlet (spline B3 à trous) de 1, 2, 4, 8 et 16 px, chacune relevée ou abaissée seule, sur la luminosité ou sur chaque canal.<a class="cite" href="#ref-9">[9]</a></td></tr>
+          <tr><td>Tampon correcteur</td><td>Un défaut remplacé par un morceau de son voisinage et raccordé par l’édition de Poisson.<a class="cite" href="#ref-10">[10]</a> La source est trouvée automatiquement, à 2,2 à 3,2 rayons, par la recherche de morceaux de PatchMatch,<a class="cite" href="#ref-11">[11]</a> et peut être déplacée.</td></tr>
+          <tr><th scope="row" rowspan="3">Bruit</th><td>Réduction du bruit</td><td>Un lissage gaussien de la luminance et de la couleur.</td></tr>
+          <tr><td>Réduction du bruit multi-échelle</td><td>Seuillage doux des couches starlet,<a class="cite" href="#ref-9">[9]</a> chacune réduite de k σ, σ estimé sur la première couche&nbsp;; sur la luminosité, la chrominance ou chaque canal.</td></tr>
+          <tr><td>Lissage des zones faibles</td><td>Lisse les zones plus faibles qu’un niveau (0,05 – 0,8), les plus claires intactes, pour que les extensions faibles puissent être relevées sans leur grain.</td></tr>
+          <tr><th scope="row">Combinaison</th><td>H-alpha dans le rouge</td><td>La carte H-alpha du moteur ajoutée au canal rouge.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Les versions</h2>
+    <p>Un projet garde plusieurs versions d’une même retouche, chacune avec ses calques, ses filtres, ses masques et ses
+    propres Annuler et Rétablir. Un clic sur le nom de la version ouvre la liste et un double-clic la renomme. Un nom est
+    obligatoire et doit être unique. Nouvelle version fait une copie de celle qui est affichée, et une version peut être
+    supprimée tant qu’il en reste une autre. Une version supprimée revient avec Ctrl+Z. Les calques copiés dans une
+    nouvelle version gardent les mêmes réglages&nbsp;: le passage de l’une à l’autre réutilise ce que l’autre a calculé. Les
+    fichiers exportés portent le nom de la version.</p>
+    <p>Rien dans Post ne se calcule dans le fil de l’interface. Pendant qu’un curseur ou le pinceau bouge, un brouillon est
+    montré (un huitième de l’image sur le processeur, un quart sur une carte graphique)&nbsp;; au relâchement, le quart, puis l’image à la
+    demi-résolution de l’écran&nbsp;; et, en zoomant, la région visible en pleine résolution, avec une marge de 64 px pour que
+    les filtres voient leurs voisins. Une demande plus récente remplace une plus ancienne.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>L’export</h2>
+    <p>L’export écrit toute la composition en pleine résolution, chaque calque rendu sur toute la grille. Les fichiers vont
+    dans le dossier choisi et nulle part ailleurs&nbsp;; un dossier à l’intérieur des résultats du projet est refusé. Chaque
+    fichier est écrit sous un nom provisoire et prend son nom définitif en une seule étape&nbsp;: un échec laisse le fichier
+    précédent comme il était.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 5.</b>Les formats d’export. Tous sont en sRGB, avec le profil intégré quand le format le permet.</caption>
+        <thead><tr><th>Format</th><th>Fichier</th><th>Remarques</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">TIFF 16-bit</th><td>nom_16bit.tif</td><td>Le format par défaut. Compression zlib.</td></tr>
+          <tr><th scope="row">TIFF 32-bit float</th><td>nom_32bit_float.tif</td><td>Compression zlib.</td></tr>
+          <tr><th scope="row">PNG 16-bit</th><td>nom.png</td><td></td></tr>
+          <tr><th scope="row">JPEG</th><td>nom.jpg</td><td>Qualité 93 par défaut (50 – 100), chrominance non sous-échantillonnée (4:4:4)&nbsp;: la couleur d’une étoile n’est pas étalée.</td></tr>
+          <tr><th scope="row">FITS 32-bit float</th><td>nom.fits</td><td>Avec la solution astrométrique (WCS) et l’historique du traitement dans son en-tête, et la cible, les dates et la pose totale quand ils sont connus.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>La taille est la pleine résolution (la grille drizzlée) ou un grand côté de 2048 ou 4096 px, réduit par moyenne de
+    surface. Un quart de tour ou un miroir vertical s’applique sans aucun rééchantillonnage&nbsp;; la solution d’un en-tête FITS
+    suit la rotation. L’export peut ajouter un fichier d’historique à côté de l’image, chaque calque en fichier séparé, les
+    masques, la fiche de nuit, et la grille du ciel et les noms d’objets dessinés dans l’image.</p>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Réglages</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Tableau 6.</b>Les réglages du bloc Sortie et d’un masque.</caption>
+        <thead><tr><th>Réglage</th><th>Valeur</th><th>Plage</th><th>Ce qu’il fait</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Étirement</th><td>auto</td><td>auto</td><td>La manière d’amener l’image linéaire à l’écran&nbsp;: le noir juste sous le ciel, le ciel à une luminosité fixée.</td></tr>
+          <tr><th scope="row">Canaux liés</th><td>activé</td><td>activé, désactivé</td><td>Un seul étirement pour les trois canaux, qui garde l’équilibre des couleurs&nbsp;; désactivé, chaque canal est étiré seul.</td></tr>
+          <tr><th scope="row">Luminosité du ciel</th><td class="n">0,25</td><td class="n">0,02 – 0,6</td><td>Niveau d’affichage du ciel médian après l’étirement.</td></tr>
+          <tr><th scope="row">Saturation</th><td class="n">1,2</td><td class="n">0 – 3</td><td>Saturation des couleurs autour de la luminance, après l’étirement.</td></tr>
+          <tr><th scope="row">Garder couleurs</th><td class="n">0,5</td><td class="n">0 – 1</td><td>La part de l’étirement qui garde les couleurs.</td></tr>
+          <tr><th scope="row">Tons faibles</th><td class="n">0</td><td class="n">−1 – 3</td><td>Relève ou abaisse les tons faibles au-dessus du ciel.</td></tr>
+          <tr><th scope="row">Progressif</th><td class="n">0 px</td><td class="n">0 – 60</td><td>Adoucit le bord d’un masque.</td></tr>
+          <tr><th scope="row">Densité</th><td class="n">100 %</td><td class="n">0 – 100</td><td>La part du calque qui se montre là où le masque est blanc.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s9"><span class="secnum">9</span>Limites, et ce qui a été essayé</h2>
+    <ul>
+      <li><strong>Le rendu de Post est lent sur les cartes graphiques AMD intégrées.</strong> Testé sous Windows 11 avec une
+      RTX 4060 Ti, une RTX 3070 et un portable sans carte NVIDIA. Quand la mémoire de la carte graphique est pleine, le
+      calque est rendu de nouveau sur le processeur, et une note le dit.</li>
+      <li><strong>L’étirement de la Sortie est seulement automatique.</strong> Les autres étirements sont des filtres sur un
+      calque, non un réglage du bloc Sortie.</li>
+      <li><strong>Les calques tirés de l’<a href="/fr/blocs/empilement/">Empilement</a> quittent le graphe plus tôt.</strong> Un calque pris avant le <a href="/fr/blocs/debruitage/">Débruitage</a>
+      n’a pas de curseur de bruit, et un calque pris avant <a href="/fr/blocs/etoiles/">Étoiles/fond</a> n’a pas de curseurs d’étoiles&nbsp;; chacun en donne la
+      raison.</li>
+      <li><strong>Sans bloc <a href="/fr/blocs/couleur/">Couleur</a>, les couleurs sont celles de la caméra.</strong> Le ciel de chaque canal est rendu gris
+      et ramené à la même dispersion, pour que la dominante de la pollution lumineuse ne teinte pas l’aperçu&nbsp;; le gradient
+      reste visible, puisque le retirer est le travail du bloc <a href="/fr/blocs/gradient/">Gradient</a>.</li>
+      <li><strong>Pas dans cette version.</strong> Les profils de couleur autres que sRGB, et les sorties
+      linéaires.</li>
+      <li><strong>L’étirement arcsinh autour d’un point de symétrie du premier Post</strong> est caché du menu des filtres et
+      conservé seulement pour que les compositions qui le contiennent s’ouvrent encore.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">Références</h2>
+    <ol class="refs">
+      <li id="ref-1">Payne, D. &amp; Cranfield, M., <i lang="en">generalised hyperbolic stretch</i> (GHSastro). <a href="https://ghsastro.co.uk">ghsastro.co.uk</a></li>
+      <li id="ref-2">Lupton, R. et al. 2004, <i lang="en">Preparing Red-Green-Blue (RGB) Images from CCD Data</i>, PASP 116, 133. <a href="https://arxiv.org/abs/astro-ph/0312483">arXiv:astro-ph/0312483</a></li>
+      <li id="ref-3">James, P. A. et al. 2004, <i lang="en">The H alpha Galaxy Survey I. The galaxy sample, H alpha narrow-band observations and star formation parameters for 334 galaxies</i>, A&amp;A 414, 23. <a href="https://arxiv.org/abs/astro-ph/0311030">arXiv:astro-ph/0311030</a></li>
+      <li id="ref-4">Akima, H. 1970, <i lang="en">A new method of interpolation and smooth curve fitting based on local procedures</i>, J. ACM 17(4), 589. <a href="https://doi.org/10.1145/321607.321609">doi:10.1145/321607.321609</a></li>
+      <li id="ref-5">Bertin, E. &amp; Arnouts, S. 1996, <i lang="en">SExtractor: Software for source extraction</i>, A&amp;AS 117, 393. <a href="https://doi.org/10.1051/aas:1996164">doi:10.1051/aas:1996164</a></li>
+      <li id="ref-6">He, K., Sun, J. &amp; Tang, X. 2009, <i lang="en">Single Image Haze Removal Using Dark Channel Prior</i>, CVPR 2009 / IEEE TPAMI 33(12), 2011. <a href="https://doi.org/10.1109/TPAMI.2010.168">doi:10.1109/TPAMI.2010.168</a></li>
+      <li id="ref-7">Zuiderveld, K. 1994, <i lang="en">Contrast Limited Adaptive Histogram Equalization</i>, Graphics Gems IV, 474. <a href="https://doi.org/10.1016/B978-0-12-336156-1.50061-6">doi:10.1016/B978-0-12-336156-1.50061-6</a></li>
+      <li id="ref-8">He, K., Sun, J. &amp; Tang, X. 2013, <i lang="en">Guided Image Filtering</i>, IEEE TPAMI 35(6), 1397. <a href="https://doi.org/10.1109/TPAMI.2012.213">doi:10.1109/TPAMI.2012.213</a></li>
+      <li id="ref-9">Starck, J.-L. &amp; Murtagh, F. 2006, <i lang="en">Astronomical Image and Data Analysis</i>, 2nd ed., Springer. <a href="https://doi.org/10.1007/978-3-540-33025-7">doi:10.1007/978-3-540-33025-7</a></li>
+      <li id="ref-10">Pérez, P., Gangnet, M. &amp; Blake, A. 2003, <i lang="en">Poisson Image Editing</i>, SIGGRAPH 2003, ACM Trans. Graph. 22(3), 313. <a href="https://doi.org/10.1145/882262.882269">doi:10.1145/882262.882269</a></li>
+      <li id="ref-11">Barnes, C., Shechtman, E., Finkelstein, A. &amp; Goldman, D. B. 2009, <i lang="en">PatchMatch</i>, ACM Trans. Graph. 28(3). <a href="https://doi.org/10.1145/1531326.1531330">doi:10.1145/1531326.1531330</a></li>
+    </ol>
+  </section>
+</Doc>

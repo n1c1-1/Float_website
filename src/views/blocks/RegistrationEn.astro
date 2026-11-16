@@ -1,0 +1,234 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import Figure from '../../components/Figure.astro';
+import Chart from '../../components/Chart.astro';
+import { registrationFigure } from '../../data/charts/figures';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Registration" title="Registration"
+  description="The Registration block of FLOAT: star detection, triangle matching, the cubic polynomial fitted to each frame, the reference frame, the measures taken on every frame, and several sessions registered together.">
+
+  <p class="kicker">Block</p>
+  <h1>Registration</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It finds the stars of every frame and works out how each frame must be moved, turned and slightly bent to lie exactly on a chosen reference frame; on the way it measures the sharpness and the clarity of every frame.</dd></div><div><dt>What it shows</dt><dd>In Inspect, a chart of the star size and the transparency of every frame over the night, with the reference frame, the frames aligned, the alignment error and the drift; in the Report, the star size and the drift of the field.</dd></div><div><dt>What can be set</dt><dd>Usually nothing: the defaults suit most nights. Lower the Detection threshold (to 5) for very short or faint frames with few stars, and Min pairs for very sparse fields.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>What goes in, what comes out</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>Detecting the stars</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>What is measured on each frame</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>The reference frame</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Matching and the polynomial</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>Frames that do not match at first</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>Several sessions</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Settings</a></li>
+      <li><a href="#s9"><span class="secnum">9</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Registration block finds the stars of every calibrated frame, picks one frame as the
+    reference and fits for each other frame a cubic polynomial of 10 terms that maps its sensor pixels onto the
+    reference. The same pass measures, for each frame, the size and roundness of its stars, its noise and its
+    transparency; the Selection and Stacking blocks use these measures. Frames that cannot be matched with enough
+    stars are left out, each with the reason.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Calibration</span></li><li class="here"><span>Registration</span></li><li><span>Selection</span></li>
+    <li><span>Stacking</span></li><li><span>Astrometry</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>What goes in, what comes out</h2>
+    <p>The block receives the calibrated frames of the session, still in the sensor’s mosaic. It does not resample
+    them. It writes, for every frame, the coefficients of its polynomial, the number of star pairs matched with the
+    reference and the residual of the fit, together with the measures of section 3. The <a href="/blocks/stacking/">Stacking</a> block drops the
+    raw pixels through these polynomials.</p>
+    <p>It also draws a chart of the transparency and the star size of every frame over the night, and reports the
+    reference frame, the number of frames aligned, the median residual in pixels and the drift of the field over the
+    night.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>Detecting the stars</h2>
+    <aside class="note"><b>Why 2 × 2.</b> Averaging each cell of 2 × 2 pixels gives one value for the red, the two
+    greens and the blue together, so that stars are found on a plane with no mosaic. A cell holding a saturated or
+    missing pixel is masked.</aside>
+    <p>Each frame is reduced to <b>2 × 2 super-pixels</b>. The background is estimated on boxes of 64 super-pixels and
+    subtracted. Stars are the sources standing above the <b>Detection threshold</b> (8 sigma by default) over at least
+    4 pixels, deblended, left out if the extraction flags them or if they cover 200 pixels or more. The
+    brightest <b>2500</b> are kept. For a sensor with an X-Trans mosaic, the colours are levelled first, since its
+    cells hold unequal mixes of colours.</p>
+    <p>Each star gets a position refined with a weighted centroid, a half-flux radius, and its flux in four circular
+    apertures of 3, 5, 8 and 12 super-pixels in radius, each with a background ring. The positions are written in
+    sensor coordinates.</p>
+    <p>The detection runs in parallel, one frame per task. The catalogues done are saved every 50 frames and at least
+    every 15 s, so that a stop or a crash keeps them and the next run goes on from them.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>What is measured on each frame</h2>
+    <aside class="note"><b>Why a second size.</b> A half-flux radius on 2 × 2 super-pixels overestimates the width of
+    undersampled stars about twofold. The Moffat fit, on the samples of one colour at their true positions, does
+    not: on synthetic Moffat stars of known width (1.3 to 5 px, β from 2.5 to 4.5, sampled at the pixel centres,
+    peaks 400 to 4000 times the noise) it is within 2 % on a plane and 3 % on one colour of a
+    mosaic.<a class="cite" href="#ref-1">[1]</a></aside>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The measures of each frame.</caption>
+        <thead><tr><th>Measure</th><th>How</th><th>Used by</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Star size (FWHM), coarse</th><td>Four times the median half-flux radius, in super-pixels, of the 300 brightest stars, taken as Gaussian, in sensor pixels.</td><td>The reference frame; the sharpness in the weight.</td></tr>
+          <tr><th scope="row">Star size (FWHM), Moffat</th><td>An elliptical Moffat profile is fitted to up to 150 isolated, unsaturated stars on the green samples at native resolution. A star is kept if its roundness is at least 0.5, its beta at least 1.5 and its residual at most 0.2 of its amplitude. The frame’s value is the median of the geometric mean of the two axes. Not measured (no value) under 10 stars.</td><td>The drizzle scale rule; the star-size filter of the <a href="/blocks/selection/">Selection</a> block.</td></tr>
+          <tr><th scope="row">Roundness</th><td>Minor axis over major axis of the Moffat fit (1 is round), median of the stars. Also measured coarsely on the detections.</td><td>The roundness filter of the Selection block.</td></tr>
+          <tr><th scope="row">Noise</th><td>Adjacent super-pixels differ by their noise alone, since the sky and the objects larger than a few pixels cancel. The noise is 1.4826 times the median absolute deviation of these differences, divided by √2.</td><td>The weight of the frame.</td></tr>
+          <tr><th scope="row">Transparency</th><td>Median of the flux ratio, frame over reference, of the stars matched within 1.5 px through the polynomial, in a fixed aperture. At least 10 stars are needed.</td><td>The weight; the transparency filter.</td></tr>
+          <tr><th scope="row">Pairs and residual</th><td>The number of stars matched with the reference, and the root mean square of their remaining distance, in pixels.</td><td>Keeping or leaving out the frame.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The aperture of the transparency is the smallest of the four, at least three half-flux radii of the larger stars
+    (90th percentile over the night). It then holds nearly all the light of a star whatever the seeing. A flux counted
+    only above the detection threshold follows the seeing: on one test set, a frame with stars of 5.3 px read 0.78
+    for 0.91 and its weight was cut.</p>
+    <p>Figure 1 shows both sizes for every frame of one night: the stars shrink as the night goes on, and the coarse
+    size, 1.4 times the Moffat one at the start of the night and 2.3 times at the end, follows the change only in
+    part.</p>
+
+    <Figure lang={lang} n={1}>
+      <Chart slot="body" {...registrationFigure(lang)} />
+      Star size (FWHM) of each frame, in sensor pixels, against the time since the first frame. Data: the Pleiades,
+      1348 frames of 13 s. Black: the coarse size, 4.75 px in the median of the first 30 minutes and 4.19 px in the
+      last; orange: the Moffat fit, 3.31 px then 1.81 px. Four coarse and two Moffat values above 6 px lie outside the
+      plot; the frame that was not aligned has no value.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>The reference frame</h2>
+    <p>The reference is the <b>sharpest frame of the middle of the night</b>: among the frames that hold at least the
+    median number of stars, those between 30 % and 70 % of the session in time order are kept, and the one with the
+    smallest coarse star size wins. If no frame of the middle qualifies, the whole set of frames with enough stars is
+    used.</p>
+    <p>A frame of another field in the folder would align almost none of the others. If the reference aligns fewer than
+    half of the frames, the next sharpest frames are tried in turn, up to five, and the one that aligns the most
+    is kept. A frame already aligned by a reference tried is not tried again. A session aligned on its first
+    reference never pays for this. When another reference is used, the log says so.</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Matching and the polynomial</h2>
+    <aside class="note"><b>Ten terms.</b> In coordinates u and v scaled to the range -1 to 1 over the frame: 1, u, v,
+    u², uv, v², u³, u²v, uv², v³, one polynomial for x and one for y. The first three alone are an affine map.</aside>
+    <p>The usual case is a drift of the field. The shift between a frame and the reference is found by <b>voting on
+    the differences</b> between the positions of their stars, in bins of 2 px within 400 px, first with the 150
+    brightest stars, then with 400 and with 1000, because on a dense field the brightest detections change from one
+    frame to the next. A peak counts only if it stands 8 Poisson sigmas over the chance pairs. If none does, the vote
+    is made over half the frame. The shift is refined on nearest neighbours.</p>
+    <p>From this first guess the fit runs in 7 passes. The first three are an <b>affine map</b>, from the starting
+    tolerance (4 px), which extends the matches from where the guess is right to the whole field. The next four fit
+    the <b>cubic polynomial</b>, the matching tolerance shrinking with the residuals, to four times their robust
+    spread and not below 0.8 px. At least 30 matched stars are needed. The affine pass comes first because a cubic
+    fitted on a guess that is right only near the centre locked on a third of the stars, 6 px off at the edges, for
+    a rotation of 0.7 degree with a 0.2 % change of scale.</p>
+    <p>A polynomial of order 3, rather than a rotation and a shift, absorbs field rotation, refraction and optical
+    distortion down to a fraction of a pixel.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>Frames that do not match at first</h2>
+    <p>When the shift matches fewer than 30 % of the stars, the block tries other ways, in this order.</p>
+    <ul>
+      <li><strong>A field rotation</strong>, as an alt-azimuth mount makes it: a vote on the position differences
+      for each trial angle, from -45 to 45 degrees in steps of 0.5. The rotated fit is kept if it matches more stars
+      with a small residual.</li>
+      <li><strong>A 180° rotation</strong>, from a meridian flip or a camera put back the other way round. The angle of
+      the last frame found rotated is tried first for the next ones, since a series shares it.</li>
+      <li><strong>Any angle</strong>, as when a camera was turned in its adapter between two nights (82 degrees on one
+      test set). The triangles of each star and its nearest neighbours are matched by their shape, which a rotation,
+      a shift or a change of scale does not alter.<a class="cite" href="#ref-2">[2]</a><a class="cite" href="#ref-3">[3]</a><a class="cite" href="#ref-4">[4]</a>
+      Every transform the triangles propose is scored on the stars it brings within 2 px of a reference star, and
+      the best one starts the fit. The triangles come from the 50 brightest stars, then from 150 and 300 while no fit
+      stands. The frame is accepted on the same share of matched stars and the same residual as a 180° rotation.</li>
+      <li><strong>Phase correlation</strong>, when the stars give no clear vote (a dense field): the shift is read from
+      the images themselves, reduced four times, with the sky taken off, the brightest stars clipped and a Hann
+      window; it is accepted when the peak is at least 0.1. The polynomial is then fitted as before.<a class="cite" href="#ref-5">[5]</a></li>
+      <li><strong>A sparse field</strong>, when the median frame holds fewer than 100 stars: the triangle matching
+      alone, with a similarity (rotation, scale, shift: four unknowns, since a polynomial would follow the noise of so
+      few stars) fitted by least squares.<a class="cite" href="#ref-6">[6]</a> It must match at least Min pairs stars,
+      with a residual under 1 px and a scale within 5 % of 1. The log says how many frames were aligned this
+      way.</li>
+    </ul>
+    <p>A frame matched on fewer star pairs than <b>Min pairs</b> is left out. So is a frame whose residual is far above
+    the others: more than 8 times the median, and at least 2.5 px, which marks a wrong match and not a softer frame.
+    The log gives, for up to 30 frames left out, the reason: no stars (a dark or a covered frame), too few stars to
+    match, too few star pairs with the reference, or a residual too large.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>Several sessions</h2>
+    <p>When a project holds several sessions, each is calibrated with its own master frames. A joining step then puts
+    their calibrated frames, one session after the other, into one set on a single intensity scale (the lowest of the
+    sessions), and the Registration block reads this set as it reads one session. All the frames, from all the
+    sessions, are therefore aligned on <b>one reference frame</b> and stacked together.</p>
+    <p>The sessions must share the sensor: the same width, height and mosaic, or the join stops with an error. The
+    saturation level of the joined set is, at each pixel, the lowest of the sessions’. The sessions’ own results stay
+    as they are. The join needs at least two sessions.</p>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The settings of the block.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Detection threshold</th><td class="n">8 σ</td><td class="n">3 – 50</td><td>Minimum significance of the stars used for alignment. Lower it (5) for very short or very faint frames with few stars; raise it in dense Milky Way fields to keep only clean stars.</td></tr>
+          <tr><th scope="row">Stars per frame</th><td class="n">2500</td><td class="n">100 – 20,000</td><td>Brightest stars kept per frame for matching and for the polynomial.</td></tr>
+          <tr><th scope="row">Min pairs</th><td class="n">10</td><td class="n">3 – 200</td><td>Fewest star pairs a frame must match with the reference to be kept. Lower it for very sparse fields; raise it to be stricter.</td></tr>
+          <tr><th scope="row">Align frames</th><td>on</td><td>on, off</td><td>Off when the block is cut: the frames are taken as already aligned and each stays where it is. The stars are still measured, to weigh and select the frames.</td></tr>
+          <tr><th scope="row">Parallel workers</th><td>automatic</td><td class="n">1 – 64</td><td>CPU processes used to detect stars. The automatic value is the number of cores minus two, at most 12.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>With Align frames off, each frame gets the identity map. Its residual and transparency are still computed, with
+    its stars matched to the reference’s within 3 px, and the transparency is set to 1 when fewer than 5 stars match.</p>
+  </section>
+
+  <section>
+    <h2 id="s9"><span class="secnum">9</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>Too few stars stops the block.</strong> If the median frame holds fewer stars than Min pairs, the
+      block stops and advises lowering the detection threshold or checking the focus and the exposure.</li>
+      <li><strong>Sparse fields get a similarity, not a polynomial.</strong> With few stars, a rotation, a scale and a
+      shift are all the data support; the distortion terms are zero. The search for a rotation does not include a
+      mirror image.</li>
+      <li><strong>A rotation is searched only when the shift fails.</strong> A frame within 45 degrees of the reference that
+      the shift or the rotation search aligns, or leaves out, is not given to the any-angle search, so that its fate
+      does not change.</li>
+      <li><strong>Chance pairs in a dense field.</strong> On one test set of 1800 stars a frame, 330 chance pairs at
+      6.5 px beat 138 true ones at 0.3 px. The rotated fit is therefore kept only if it matches more stars with a small
+      residual, and the residual check of section 6 was added.</li>
+      <li><strong>Moffat measures can be missing.</strong> With fewer than 10 isolated, unsaturated stars in a frame, its
+      Moffat star size has no value; the filters then do not judge that frame on it.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">Moffat, A. F. J. 1969, <i>A Theoretical Investigation of Focal Stellar Images in the Photographic Emulsion and Application to Photographic Photometry</i>, A&amp;A 3, 455. <a href="https://ui.adsabs.harvard.edu/abs/1969A%26A.....3..455M/abstract">ADS 1969A&amp;A.....3..455M</a></li>
+      <li id="ref-2">Valdes, F. et al. 1995, <i>FOCAS Automatic Catalog Matching Algorithms</i>, PASP 107, 1119. <a href="https://doi.org/10.1086/133667">doi:10.1086/133667</a></li>
+      <li id="ref-3">Groth, E. J. 1986, <i>A pattern-matching algorithm for two-dimensional coordinate lists</i>, AJ 91, 1244. <a href="https://doi.org/10.1086/114099">doi:10.1086/114099</a></li>
+      <li id="ref-4">Beroiz, M., Cabral, J. B. &amp; Sanchez, B. 2020, <i>Astroalign: A Python module for astronomical image registration</i>, Astronomy and Computing 32, 100384. <a href="https://arxiv.org/abs/1909.02946">arXiv:1909.02946</a></li>
+      <li id="ref-5">Kuglin, C. D. &amp; Hines, D. C. 1975, <i>The phase correlation image alignment method</i>, IEEE Conference on Cybernetics and Society.</li>
+      <li id="ref-6">Umeyama, S. 1991, <i>Least-squares estimation of transformation parameters between two point patterns</i>, IEEE Transactions on Pattern Analysis and Machine Intelligence 13, 376. <a href="https://doi.org/10.1109/34.88573">doi:10.1109/34.88573</a></li>
+    </ol>
+  </section>
+</Doc>

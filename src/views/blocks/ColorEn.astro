@@ -1,0 +1,226 @@
+---
+import Doc from '../../layouts/Doc.astro';
+import Figure from '../../components/Figure.astro';
+import Chart from '../../components/Chart.astro';
+import { colourFitFigure, responseFigure } from '../../data/charts/figures';
+import { release } from '../../i18n/ui';
+const lang = 'en';
+---
+<Doc lang={lang} page="blocks" current="Color" title="Color"
+  description="The Color block of FLOAT: colour calibration on the Gaia XP spectra of the field’s stars, the G2V white, which stars are left out, one factor per colour, the fallback balance, settings and limits, with the published sources.">
+
+  <p class="kicker">Block</p>
+  <h1>Color</h1>
+  <p class="meta">FLOAT 0.2.0 · beta of {release.date.en}</p>
+
+  <dl class="inshort"><div><dt>What it does</dt><dd>It sets the colour balance of the image from the stars of the field, whose true colours are known from the Gaia catalogue.</dd></div><div><dt>What it shows</dt><dd>A neutral sky and stars with their natural colours; Inspect lists every star measured, and whether it was used.</dd></div><div><dt>What can be set</dt><dd>Usually nothing: the defaults suit most fields; White reference chooses which star colour looks white, and Minimum stars can be lowered for a narrow field with few stars.</dd></div></dl>
+
+  <aside class="note toc">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#s1"><span class="secnum">1</span>What goes in, what comes out</a></li>
+      <li><a href="#s2"><span class="secnum">2</span>The stars and their spectra</a></li>
+      <li><a href="#s3"><span class="secnum">3</span>Measuring the stars</a></li>
+      <li><a href="#s4"><span class="secnum">4</span>The white and the factors</a></li>
+      <li><a href="#s5"><span class="secnum">5</span>Where the matrix is applied</a></li>
+      <li><a href="#s6"><span class="secnum">6</span>The fallback balance</a></li>
+      <li><a href="#s7"><span class="secnum">7</span>An approximation of the sensor’s response</a></li>
+      <li><a href="#s8"><span class="secnum">8</span>Settings</a></li>
+      <li><a href="#s9"><span class="secnum">9</span>Limits, and what was tried</a></li>
+      <li><a href="#refs"><span class="secnum">&nbsp;</span>References</a></li>
+    </ol>
+  </aside>
+
+  <div class="abstract">
+    <p data-label="Summary">The Color block calibrates the colours of the stack on the stars of the field. The
+    isolated stars of the field are measured on the stack and compared with the colours their Gaia XP spectra give. For red
+    and blue, a robust straight line through the stars gives the factor that brings a white reference, a G2V star by
+    default, to neutral; green stays at 1. The camera’s channels are not mixed. When the stars cannot calibrate the
+    colours, a fallback balance takes over and the block says why.</p>
+  </div>
+
+  <ol class="chain" aria-label="Position in the graph">
+    <li><span>Deconvolution</span></li><li><span>Denoise</span></li>
+    <li class="here"><span>Color</span></li><li><span>Stars/background</span></li><li><span>Post</span></li>
+  </ol>
+
+  <section>
+    <h2 id="s1"><span class="secnum">1</span>What goes in, what comes out</h2>
+    <aside class="note"><b>XP spectra</b> are the low-resolution spectra of Gaia DR3.<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a>
+    FLOAT brings all of them to the range 400 to 800 nm.</aside>
+    <p>The block reads the stack with the sky removed by the <a href="/blocks/gradient/">Gradient</a> block, the stars the Catalogs block selected with
+    their Gaia XP spectra, and the stack’s map of the pixels near saturation. The Catalogs block needs the solution of
+    the <a href="/blocks/astrometry/">Astrometry</a> block to place those stars.</p>
+    <p>It writes one factor per camera channel, stored as a diagonal 3 × 3 matrix: a white balance of the camera’s
+    colours, not a conversion to sRGB, so the camera’s primaries are kept. It also writes a table of every catalogue
+    star with what was measured, what was expected, and whether the star was used or why not. Inspect shows the
+    table.</p>
+    <p>The block does not work on a monochrome image, which has no colours to calibrate.</p>
+  </section>
+
+  <section>
+    <h2 id="s2"><span class="secnum">2</span>The stars and their spectra</h2>
+    <p>The colour stars are Gaia DR3 stars<a class="cite" href="#ref-3">[3]</a> of the field with an XP spectrum,
+    between the Bright limit (G 7.5) and the Faint limit (G 14). Each one must be isolated: every other star within
+    40 arcseconds is at least 3 magnitudes fainter. The Catalogs block takes no star within 60 pixels of the edge, and
+    the Color block sets aside any star within 50 pixels of the edge of the stack (Table 1).</p>
+    <p>At most 4000 stars are kept. When there are more, they are spread evenly over the magnitudes, not the brightest
+    only: on a wide field taken with a camera lens, the brightest thousands are all saturated.</p>
+    <p>The spectra are the Gaia XP spectra, in the sampled form that Demleitner and Andrae published,<a class="cite" href="#ref-4">[4]</a>
+    or the compact form of the offline catalogue, installed once (see the <a href="/blocks/astrometry/">Astrometry</a> block). When services with
+    different wavelength grids answer, all spectra are brought to 400–800 nm. From its spectrum, each star gets its expected
+    colour, as a point in the CIE XYZ colour space.</p>
+  </section>
+
+  <section>
+    <h2 id="s3"><span class="secnum">3</span>Measuring the stars</h2>
+    <p>Each star is measured on the stack by aperture photometry in each colour, within the Photometry aperture, over its
+    own local background taken in a ring from 2.5 to 3.6 times the aperture’s radius. By default the aperture’s radius is
+    0.7 times the star FWHM measured by <a href="/blocks/registration/">Registration</a>, times the drizzle scale, and
+    at least 4 pixels.</p>
+
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 1.</b>The stars that are left out, and why. Inspect gives the reason of each one.</caption>
+        <thead><tr><th>Reason</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Edge</td><td>Within 50 pixels of the edge of the stack.</td></tr>
+          <tr><td>Not measured</td><td>Empty pixels in its aperture.</td></tr>
+          <tr><td>Not positive</td><td>No positive flux in every colour: faint, or on a dark background.</td></tr>
+          <tr><td>Saturated</td><td>A sample near saturation in at least one frame, within the aperture or one pixel beyond it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The saturated stars are found with the stack’s map of the samples near saturation. For a stack made before it
+    kept that map, a star is saturated when its peak exceeds 45 % of the brightest pixels of the channel.</p>
+  </section>
+
+  <section>
+    <h2 id="s4"><span class="secnum">4</span>The white and the factors</h2>
+    <aside class="note"><b>Why G2V.</b> The White reference is the colour temperature rendered neutral: a 5778 K
+    blackbody, close to the Sun’s spectrum. A G2V star appears white, hotter stars blue and cooler ones orange. The <a href="/blocks/post/">Post</a> block can still warm or cool the
+    image without touching this calibration.</aside>
+    <p>The white reference is the light of a blackbody at 5778 K. The expected XYZ colour of each star is adapted from
+    this white to D65 (Bradford transform) and converted to linear sRGB, so that the white reference comes out neutral.</p>
+    <p>For red and for blue, FLOAT takes the ratio of the colour to green, measured on the stack, against the same
+    ratio expected from the Gaia spectra. A straight line is fitted through the stars with the Theil–Sen
+    estimator,<a class="cite" href="#ref-7">[7]</a><a class="cite" href="#ref-8">[8]</a> the median of the slopes of all pairs of stars, which is robust to the scatter of single stars. The line is read at the
+    ratio of the white reference, 1. The factor is the inverse of the measured ratio there. Green is 1.</p>
+    <p>Figure 1 shows the two fits on a real stack: each star is one point per ratio, and the factors are read where
+    the lines cross the white reference.</p>
+
+    <Figure lang={lang} n={1}>
+      <Chart slot="body" {...colourFitFigure(lang)} />
+      Ratio to green measured on the stack against the ratio expected from the star’s Gaia XP spectrum, for red
+      (filled dots) and blue (rings), with the Theil–Sen lines. Data: the Pleiades, 1344 frames of 13 s, 537 of the 605
+      catalogue stars of the field. At the white reference (grey line), the red line reads 1.903 and the blue one
+      0.792: before the common scaling, the factors are 0.526 for red and 1.263 for blue, green 1; after it, 0.427,
+      0.812 and 1.026. Settings: the defaults, the Photometry aperture automatic (4 px).
+    </Figure>
+    <p>The three factors are then scaled by a common constant (divided by the mean of their inverses); the colours do
+    not depend on it. This is the matrix. With fewer than 20 usable stars, no factor is computed. By default, 50 stars
+    are required (Minimum stars): the scatter of the measured ratios is 5 to 7 %, and 50 stars give each factor an
+    error of about 0.7 to 1 % (the scatter divided by √50).</p>
+  </section>
+
+  <section>
+    <h2 id="s5"><span class="secnum">5</span>Where the matrix is applied</h2>
+    <p>The matrix is applied to the linear image, after the <a href="/blocks/gradient/">Gradient</a> block. Every block that reads
+    the image after Color receives it multiplied by the matrix: the stack, and its two half-stacks.</p>
+    <p>The raw files’ daylight white balance, when the stack was multiplied by it, is taken back exactly by this
+    calibration, which measures the white on the stars.</p>
+  </section>
+
+  <section>
+    <h2 id="s6"><span class="secnum">6</span>The fallback balance</h2>
+    <p>The stars cannot calibrate the colours when the field is not identified, when no Gaia star of the field is
+    available, or when fewer than Minimum stars were measured. The setting If calibration fails chooses. With Fallback
+    balance, the run goes on, the block is drawn in orange and its tooltip gives the reason. With Stop, the block
+    fails.</p>
+    <p>The fallback balance is a calibration without photometry, in two steps. First, the sky level of each channel, the
+    median of its pixels after clipping at 3 standard deviations what stands above the sky, is taken off, so that the
+    background is neutral. Then red and blue are scaled so that the median ratio to green of the field’s stars, up to
+    2000 of them, is 1, the grey-world assumption<a class="cite" href="#ref-5">[5]</a> taken on the stars. With fewer
+    than 10 measurable stars, the camera’s colours are kept.</p>
+  </section>
+
+  <section>
+    <h2 id="s7"><span class="secnum">7</span>An approximation of the sensor’s response</h2>
+    <aside class="note"><b>A diagnostic only.</b> The curves change no colour: the colours of the image come from the
+    factors of section 4, not from these curves.</aside>
+    <p>The stars that calibrate the colours also tell something about the camera. The flux of a star in one channel is
+    the integral of its spectrum times the channel’s response. With the Gaia XP spectra of the colour stars and the
+    fluxes measured on the stack, FLOAT solves for the three responses that explain them best. Each curve is a sum,
+    with no negative term, of Gaussians of standard deviation 12 nm centred every 15 nm from 380 to 1000 nm; the roughness of the
+    curve is penalised, as in the recovery of camera sensitivities from known spectra,<a class="cite" href="#ref-6">[6]</a>
+    and the stars the fit cannot explain are rejected over four passes.</p>
+    <p>The curves are computed in about a second when they are shown, from what the Catalogs and Color blocks saved;
+    nothing more is stored. Inspect shows them under Color, with the colour each wavelength takes, and the <a href="/blocks/report/">Report</a>
+    prints them. Figure 2 shows the three curves rebuilt for one camera.</p>
+
+    <Figure lang={lang} n={2}>
+      <Chart slot="body" {...responseFigure(lang)} />
+      Approximate response of the red, green and blue channels against wavelength, relative to the strongest, rebuilt
+      from the colour stars of figure 1. Data: the Pleiades, 537 stars, spectra from 400 to 800 nm; the median misfit of
+      the stars’ fluxes is 7.8 % in red, 8.5 % in green and 8.7 % in blue. The grey lines mark Hβ, [OIII] and Hα. Star
+      spectra are broad and alike, so many curves explain the stars equally well: the shapes are approximate, and the
+      response at a narrow line such as Hα can be well off (section 9). Here the blue curve is highest at 400 nm, the
+      edge of the spectra, and the red one has two peaks: details of this kind are the least constrained.
+    </Figure>
+  </section>
+
+  <section>
+    <h2 id="s8"><span class="secnum">8</span>Settings</h2>
+    <div class="tbl-wrap wide">
+      <table class="tbl">
+        <caption><b>Table 2.</b>The settings of the block, and the three of the Catalogs block that choose its stars. The Advanced ones are marked.</caption>
+        <thead><tr><th>Setting</th><th>Value</th><th>Range</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">If calibration fails</th><td>Fallback balance</td><td>Fallback balance, Stop</td><td>What the block does when the stars cannot calibrate the colours (section 6).</td></tr>
+          <tr><th scope="row">Minimum stars</th><td class="n">50</td><td class="n">20 – 2000</td><td>The fewest measured stars with a Gaia spectrum the calibration accepts. 50 gives each factor about 1 % of uncertainty.</td></tr>
+          <tr><th scope="row">Photometry aperture (Advanced)</th><td>automatic</td><td class="n">1.5 – 30 px, step 0.5</td><td>Radius of the aperture that measures the stars. Automatic: 0.7 times the star FWHM measured by Registration, times the drizzle scale, at least 4 px. Larger is safer in poor seeing but noisier.</td></tr>
+          <tr><th scope="row">White reference</th><td class="n">5778 K</td><td class="n">3000 – 12,000 K, step 100</td><td>Colour temperature rendered as neutral white. A 5778 K blackbody is close to the Sun’s spectrum, a G2V star.</td></tr>
+          <tr><th scope="row">Bright limit (Advanced)</th><td class="n">G 7.5</td><td class="n">3 – 15, step 0.5</td><td>Brightest Gaia stars whose XP spectrum is used.</td></tr>
+          <tr><th scope="row">Faint limit (Advanced)</th><td class="n">G 14</td><td class="n">8 – 17.5, step 0.5</td><td>Faintest Gaia stars whose XP spectrum is used.</td></tr>
+          <tr><th scope="row">Star count (Advanced)</th><td class="n">4000</td><td class="n">100 – 20,000</td><td>Maximum number of XP spectra used.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="s9"><span class="secnum">9</span>Limits, and what was tried</h2>
+    <ul>
+      <li><strong>No colour matrix.</strong> An earlier version rebuilt the sensor’s sensitivity curves from the stars
+      and fitted a 3 × 3 colour matrix on them. The stars do not constrain such a matrix where the spectra are alike,
+      and it mixed the channels arbitrarily: the H-alpha of the Rosette and of the Heart came out magenta. It was taken
+      out, and the block applies one factor per colour.</li>
+      <li><strong>The camera’s spectral response is a diagnostic only.</strong> Inspect shows an approximation of it,
+      recomputed when it is shown, from what the Catalogs and Color blocks saved. It changes no colour. On synthetic stars with
+      known curves, the shapes came back within 0.02 of the maximum in the median over the visible, but the response at
+      H-alpha came out 0.76 for a true 0.59. No error band is drawn: neither resampling the stars nor varying the
+      smoothing measured that error.<a class="cite" href="#ref-6">[6]</a></li>
+      <li><strong>A white balance does not mix channels.</strong> It leaves the hue as the camera’s filters give it: an
+      emission seen a little by the blue pixels stays a little blue.</li>
+      <li><strong>Too few stars with a spectrum.</strong> A narrow field holds few of them. When the installed star
+      spectra stop at a magnitude brighter than the Faint limit, the colour stars between the two have none, and the
+      log says so. The full star spectra are installed from Settings › Catalogs &amp; astrometry.</li>
+      <li><strong>Saturated stars are left out.</strong> On a wide field taken with a lens, many of the brightest are.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="refs">References</h2>
+    <ol class="refs">
+      <li id="ref-1">De Angeli, F. et al. 2023, <i>Gaia Data Release 3: Processing and validation of BP/RP low-resolution spectral data</i>, A&amp;A 674, A2. <a href="https://arxiv.org/abs/2206.06143">arXiv:2206.06143</a></li>
+      <li id="ref-2">Montegriffo, P. et al. 2023, <i>Gaia Data Release 3: External calibration of BP/RP low-resolution spectroscopic data</i>, A&amp;A 674, A3. <a href="https://arxiv.org/abs/2206.06205">arXiv:2206.06205</a></li>
+      <li id="ref-3">Gaia Collaboration, Vallenari, A. et al. 2023, <i>Gaia Data Release 3: Summary of the content and survey properties</i>, A&amp;A 674, A1. <a href="https://arxiv.org/abs/2208.00211">arXiv:2208.00211</a></li>
+      <li id="ref-4">Demleitner, M. &amp; Andrae, R. 2022, <i>Monte Carlo sampled DR3 XP spectra</i>, GAVO Data Center. <a href="https://doi.org/10.21938/W:hWbPah3wBabuqewQULTA">doi:10.21938/W:hWbPah3wBabuqewQULTA</a></li>
+      <li id="ref-5">Buchsbaum, G. 1980, <i>A spatial processor model for object colour perception</i>, J. Franklin Inst. 310, 1. <a href="https://doi.org/10.1016/0016-0032(80)90058-7">doi:10.1016/0016-0032(80)90058-7</a></li>
+      <li id="ref-6">Finlayson, G., Hordley, S. &amp; Hubel, P. 1998, <i>Recovering device sensitivities with quadratic programming</i>, IS&amp;T/SID Color Imaging Conference 6, 90. <a href="https://doi.org/10.2352/cic.1998.6.1.art00020">doi:10.2352/cic.1998.6.1.art00020</a></li>
+      <li id="ref-7">Theil, H. 1950, <i>A rank-invariant method of linear and polynomial regression analysis</i>, I, Proc. Kon. Ned. Akad. Wetensch. 53, 386.</li>
+      <li id="ref-8">Sen, P. K. 1968, <i>Estimates of the Regression Coefficient Based on Kendall’s Tau</i>, J. Am. Stat. Assoc. 63, 1379. <a href="https://doi.org/10.1080/01621459.1968.10480934">doi:10.1080/01621459.1968.10480934</a></li>
+    </ol>
+  </section>
+</Doc>

@@ -1,0 +1,153 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.000
+Sur l’écran d’accueil, cliquez sur « Ouvrir projet… » et choisissez le projet du tutoriel précédent.
+
+2
+00:00:03.000 --> 00:00:06.000
+Cliquez sur Post.
+
+3
+00:00:06.000 --> 00:00:13.000
+Post s’ouvre sur la version Default S-H-O, l’image du tutoriel précédent.
+
+4
+00:00:13.000 --> 00:00:16.000
+Lisez l’image : ouvrez la liste du zoom et choisissez 100 %.
+
+5
+00:00:16.000 --> 00:00:24.000
+À 100 % sur le mur : la structure est molle, et le ciel et les ombres ne sont pas encore profonds.
+
+6
+00:00:24.000 --> 00:00:30.000
+Vue ajustée : l’orange du mur et le cyan de la zone bleue sont encore proches l’un de l’autre.
+
+7
+00:00:30.000 --> 00:00:33.000
+Cliquez sur « Nouvelle version » : elle duplique la version actuelle.
+
+8
+00:00:33.000 --> 00:00:36.000
+Cliquez sur le nom de la version pour renommer la copie.
+
+9
+00:00:36.000 --> 00:00:41.000
+La copie s’appelle Palette and finish ; Default S-H-O reste telle quelle.
+
+10
+00:00:41.000 --> 00:00:44.000
+Sélectionnez le sous-calque « Image sans étoiles » : les filtres ajoutés agissent sur lui seul.
+
+11
+00:00:44.000 --> 00:00:47.000
+Cliquez sur « Filtre », puis « Couleur », puis « Mélangeur de couleurs ».
+
+12
+00:00:47.000 --> 00:00:50.000
+Orange · teinte : tirez à environ +10°.
+
+13
+00:00:50.000 --> 00:00:53.000
+Orange · saturation : environ +25 %.
+
+14
+00:00:53.000 --> 00:00:56.000
+Rouge · saturation : environ +15 %.
+
+15
+00:00:56.000 --> 00:00:59.000
+Jaune · saturation : environ +20 %.
+
+16
+00:00:59.000 --> 00:01:02.000
+Cyan · saturation : environ +55 %.
+
+17
+00:01:02.000 --> 00:01:05.000
+Bleu · saturation : environ +35 %.
+
+18
+00:01:05.000 --> 00:01:08.000
+Bleu · teinte : environ −10°.
+
+19
+00:01:08.000 --> 00:01:15.000
+L’or de H-alpha et S II et le cyan d’O III sont maintenant nettement séparés.
+
+20
+00:01:15.000 --> 00:01:18.000
+Cliquez sur « Filtre », puis « Étirement », puis « Niveaux ».
+
+21
+00:01:18.000 --> 00:01:21.000
+Montez un peu le point noir, jusqu’à ce que le ciel soit plus profond et les bandes sombres vraiment sombres : environ 0,02.
+
+22
+00:01:21.000 --> 00:01:24.000
+Baissez légèrement Gamma : environ 0,95.
+
+23
+00:01:24.000 --> 00:01:27.000
+Cliquez sur « Filtre », puis « Contraste », puis « Contraste local ».
+
+24
+00:01:27.000 --> 00:01:30.000
+Montez Intensité jusqu’à faire ressortir les plis du mur et les bandes sombres : environ 0,4.
+
+25
+00:01:30.000 --> 00:01:33.000
+Réglez Échelle sur un grand rayon : environ 80 px.
+
+26
+00:01:33.000 --> 00:01:36.000
+Cliquez sur « Filtre », puis « Détail », puis « Accentuation multi-échelle ».
+
+27
+00:01:36.000 --> 00:01:39.000
+2 px : environ 0,15.
+
+28
+00:01:39.000 --> 00:01:42.000
+4 px : environ 0,35.
+
+29
+00:01:42.000 --> 00:01:45.000
+8 px : environ 0,5.
+
+30
+00:01:45.000 --> 00:01:48.000
+16 px : environ 0,4.
+
+31
+00:01:48.000 --> 00:01:54.000
+La texture la plus fine revient, et le mur commence à brûler.
+
+32
+00:01:54.000 --> 00:01:57.000
+Cliquez sur « Filtre », puis « Contraste », puis « Compression des hautes lumières ».
+
+33
+00:01:57.000 --> 00:02:00.000
+Montez Intensité jusqu’à ce que le rouge du mur garde sa texture : environ 0,5.
+
+34
+00:02:00.000 --> 00:02:07.000
+L’image finie : cinq filtres sur l’image sans étoiles, dans cet ordre.
+
+35
+00:02:07.000 --> 00:02:10.000
+Cliquez sur Exporter.
+
+36
+00:02:10.000 --> 00:02:13.000
+Choisissez le format JPEG.
+
+37
+00:02:13.000 --> 00:02:18.000
+Vérifiez le fichier, sur le disque des tutoriels, puis cliquez sur Exporter.
+
+38
+00:02:18.000 --> 00:02:23.000
+Enregistrez le projet avec Ctrl+S.

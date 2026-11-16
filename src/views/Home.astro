@@ -1,0 +1,218 @@
+---
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import Picture from '../components/Picture.astro';
+import GraphTour from '../components/GraphTour.astro';
+import Chart from '../components/Chart.astro';
+import { registrationFigure, selectionFigure, rejectionFigure, colourFitFigure } from '../data/charts/figures';
+import { routes, release, version, blocks, blockUrl, type Lang } from '../i18n/ui';
+// hero: the figure beside the abstract. 'stages' (the default: one zone at four stages) or 'curves' (four measured curves, kept)
+interface Props { lang: Lang; hero?: 'curves' | 'stages' }
+const { lang, hero = 'stages' } = Astro.props;
+const fr = lang === 'fr';
+const r = (k: string) => routes[k][lang]!;
+
+const methods = fr
+  ? [
+      ['Alignement', 'Décalage par vote sur les positions des étoiles, puis polynôme cubique ; appariement de triangles pour les grandes rotations et les champs pauvres', 'Triangles : Groth 1986, AJ 91, 1244 ; Valdes et al. 1995, PASP 107, 1119', 'https://doi.org/10.1086/114099'],
+      ['Empilement', 'Drizzle sur les pixels bruts de couleur, sans dématriçage', 'Fruchter & Hook 2002, PASP 114, 144', 'https://arxiv.org/abs/astro-ph/9808087'],
+      ['Astrométrie', 'Première solution par Asterion, sinon la recherche de FLOAT (à l’aveugle, d’après Astrometry.net) ; ajustement fin sur Gaia DR3', 'Astrometry.net : Lang et al. 2010, AJ 139, 1782', 'https://arxiv.org/abs/0910.2233'],
+      ['Couleur', 'Balance des blancs photométrique sur les spectres Gaia XP des étoiles du champ : un facteur par couleur', 'Montegriffo et al. 2023, A&A 674, A3', 'https://arxiv.org/abs/2206.06205'],
+      ['Débruitage', 'Noise2Noise entre deux demi-empilements indépendants', 'Lehtinen et al. 2018, ICML', 'https://arxiv.org/abs/1803.04189'],
+      ['Déconvolution', 'Richardson-Lucy avec traitement des étoiles saturées, ou réseau NAFNet (bêta)', 'Richardson 1972 ; Lucy 1974 ; Whyte et al. 2014 ; Chen et al. 2022', 'https://arxiv.org/abs/2204.04676'],
+      ['Étoiles/fond', 'Réseau NAFNet sur l’image linéaire : image sans étoiles et étoiles seules, dont la somme redonne l’image', 'Chen et al. 2022, ECCV', 'https://arxiv.org/abs/2204.04676'],
+      ['Post', 'Étirement arcsinh, filtre guidé, ondelettes, CLAHE, tampon correcteur', 'Lupton et al. 2004, PASP 116, 133', 'https://arxiv.org/abs/astro-ph/0312483'],
+    ]
+  : [
+      ['Registration', 'Shift by vote on star positions, then a cubic polynomial; triangle matching for large rotations and sparse fields', 'Triangles: Groth 1986, AJ 91, 1244; Valdes et al. 1995, PASP 107, 1119', 'https://doi.org/10.1086/114099'],
+      ['Stacking', 'Drizzle from the raw colour pixels, without debayering', 'Fruchter & Hook 2002, PASP 114, 144', 'https://arxiv.org/abs/astro-ph/9808087'],
+      ['Astrometry', 'First solution by Asterion, else FLOAT’s own search (blind solving after Astrometry.net); fine fit on Gaia DR3', 'Astrometry.net: Lang et al. 2010, AJ 139, 1782', 'https://arxiv.org/abs/0910.2233'],
+      ['Color', 'Photometric white balance on the Gaia XP spectra of the stars in the field: one factor per colour', 'Montegriffo et al. 2023, A&A 674, A3', 'https://arxiv.org/abs/2206.06205'],
+      ['Denoise', 'Noise2Noise between two independent half-stacks', 'Lehtinen et al. 2018, ICML', 'https://arxiv.org/abs/1803.04189'],
+      ['Deconvolution', 'Richardson-Lucy with the handling of saturated stars, or a NAFNet network (beta)', 'Richardson 1972; Lucy 1974; Whyte et al. 2014; Chen et al. 2022', 'https://arxiv.org/abs/2204.04676'],
+      ['Stars/background', 'A NAFNet network on the linear image: the starless image and the stars alone, which add up to the image', 'Chen et al. 2022, ECCV', 'https://arxiv.org/abs/2204.04676'],
+      ['Post', 'Arcsinh stretch, guided filter, wavelets, CLAHE, spot healing', 'Lupton et al. 2004, PASP 116, 133', 'https://arxiv.org/abs/astro-ph/0312483'],
+    ];
+const panels = [
+  { key: 'Registration', what: { en: 'star size of each frame', fr: 'taille des étoiles de chaque pose' }, fig: registrationFigure(lang) },
+  { key: 'Selection', what: { en: 'weight of each frame', fr: 'poids de chaque pose' }, fig: selectionFigure(lang) },
+  { key: 'Stacking', what: { en: 'samples rejected in each frame', fr: 'échantillons rejetés dans chaque pose' }, fig: rejectionFigure(lang) },
+  { key: 'Color', what: { en: 'colour of each star against Gaia', fr: 'couleur de chaque étoile contre Gaia' }, fig: colourFitFigure(lang) },
+];
+const stages = [
+  { src: '/images/stages/stage1-raw.jpg', what: { en: 'raw frame, 15 s', fr: 'pose brute, 15 s' } },
+  { src: '/images/stages/stage2-stack.jpg', what: { en: 'stack, 435 frames', fr: 'empilement, 435 poses' } },
+  { src: '/images/stages/stage3-processed.jpg', what: { en: 'processed, linear', fr: 'image traitée, linéaire' } },
+  { src: '/images/stages/stage4-final.jpg', what: { en: 'finished image', fr: 'image finie' } },
+];
+// the blocks of a typical chain, in order, for the screens where the tour is not shown
+const chain = ['Calibration', 'Registration', 'Selection', 'Stacking', 'Astrometry', 'Gradient', 'Denoise', 'Color', 'Stars', 'Post'];
+const blockName = (key: string) => blocks.find((x) => x.key === key)![lang];
+// the table's rows, in order, and the block each one describes; linked once the block's two views exist
+const rowBlocks = ['Registration', 'Stacking', 'Astrometry', 'Color', 'Denoise', 'Deconvolution', 'Stars', 'Post'];
+const views = import.meta.glob('./blocks/*.astro');
+const blockHref = (key: string) => {
+  const b = blocks.find((x) => x.key === key);
+  return b && `./blocks/${key}En.astro` in views && `./blocks/${key}Fr.astro` in views ? blockUrl(b, lang) : null;
+};
+---
+<Base lang={lang} page="home" title="FLOAT"
+  description={fr
+    ? 'FLOAT : traitement du ciel profond, des brutes à l’image finale, sous la forme d’un graphe de blocs. Licence GPL v3.'
+    : 'FLOAT: deep-sky processing from the raw frames to the final image, as a graph of blocks. GPL v3 licence.'}>
+  <div class="wide-page">
+
+    <header class="hero-head">
+      <p class="kicker">FLOw for AsTrophotography</p>
+      <h1>FLOAT</h1>
+      <p class="meta">{fr ? `Version ${version} · ${release.date.fr}` : `Version ${version} · ${release.date.en}`}</p>
+    </header>
+
+    <section class="hero hero-paper">
+      <div>
+        <div class="abstract">
+          <p data-label={fr ? 'Résumé' : 'Abstract'}>{fr
+            ? 'FLOAT est un logiciel de traitement des images du ciel profond, des poses brutes à l’image finie. Le traitement s’y construit bloc par bloc, sous la forme d’un graphe : calibration, alignement, sélection, empilement, astrométrie, fond de ciel, couleurs, débruitage, séparation des étoiles, puis la retouche avec des calques et des filtres. Chaque bloc s’ouvre, se règle et se relance ; seul ce qui suit une modification est recalculé. Un workflow peut partir de n’importe quel bloc d’un autre, pour comparer deux réglages ou deux méthodes sur les mêmes poses.'
+            : 'FLOAT is software for processing deep-sky images, from the raw frames to the finished image. The processing is built block by block, as a graph: calibration, registration, selection, stacking, astrometry, sky background, colours, denoising, star separation, then retouching with layers and filters. Each block can be opened, adjusted and run again; only what follows a change is computed again. A workflow can branch from any block of another, to compare two settings or two methods on the same frames.'}</p>
+          <p>{fr
+            ? 'Chaque méthode est une méthode publiée, citée dans l’interface à côté de ses réglages : empilement par drizzle sur les pixels bruts, balance des couleurs mesurée sur les spectres Gaia des étoiles du champ, débruitage entre deux demi-empilements indépendants. Chaque valeur automatique est donnée avec la raison de son choix. Chaque projet a son rapport, qui dit ce qui a été pris, ce qui a été mesuré et ce qui a été fait. Les poses peuvent venir d’un appareil photo reflex ou hybride, d’une caméra couleur ou d’une caméra monochrome avec filtres. Licence GPL v3.'
+            : 'Every method is a published one, cited in the interface next to its settings: drizzle stacking from the raw pixels, a colour balance measured on the Gaia spectra of the stars in the field, denoising between two independent half-stacks. Every automatic value comes with the reason it was chosen. Each project has its report, which says what was taken, what was measured and what was done. The frames can come from a DSLR or mirrorless camera, a one-shot colour camera or a monochrome camera with filters. Licence: GPL v3.'}</p>
+        </div>
+      </div>
+      {hero === 'stages' ? (
+      <Figure lang={lang} n={1}>
+        <div slot="body" class="panel4 stages">
+          {stages.map((q, i) => (
+            <div>
+              <img src={q.src} width="500" height="500" alt={q.what[lang]} />
+              <p><b>({'abcd'[i]})</b> {q.what[lang]}</p>
+            </div>
+          ))}
+        </div>
+        {fr
+          ? <>La même zone de la nébuleuse de la Rosette à quatre stades du traitement ; 1000 px de côté, réduits de moitié. (a)&nbsp;à&nbsp;(c) : l’étirement automatique d’Inspection, les trois couleurs liées. (a)&nbsp;Une pose brute, sans balance des couleurs. (b)&nbsp;L’empilement de 435 poses de 15&nbsp;s. (c)&nbsp;L’image linéaire après le retrait du gradient, la balance des couleurs sur les étoiles et le débruitage. (d)&nbsp;L’image finie.</>
+          : <>The same zone of the Rosette Nebula at four stages of the processing; 1000 px across, reduced by half. (a)&nbsp;to&nbsp;(c): the automatic stretch of Inspect, the three colours linked. (a)&nbsp;One raw frame, without colour balance. (b)&nbsp;The stack of 435 frames of 15&nbsp;s. (c)&nbsp;The linear image after gradient removal, colour balance on the stars and denoising. (d)&nbsp;The finished image.</>}
+      </Figure>
+      ) : (
+      <Figure lang={lang} n={1}>
+        <div slot="body" class="panel4">
+          {panels.map((q, i) => (
+            <div>
+              <p><b>({'abcd'[i]})</b> {blockHref(q.key) ? <a href={blockHref(q.key)!}>{blockName(q.key)}</a> : blockName(q.key)} : {q.what[lang]}</p>
+              <Chart {...q.fig} />
+            </div>
+          ))}
+        </div>
+        {fr
+          ? <>Ce que quatre blocs mesurent sur une même nuit : les Pléiades, 1348 poses de 13 s. (a) La taille des étoiles de chaque pose au fil de la nuit. (b) Le poids de chaque pose dans l’empilement, avec le minimum du mode automatique. (c) La part des échantillons de chaque pose écartés par le rejet. (d) Le rapport au vert mesuré de chaque étoile en fonction de celui attendu d’après son spectre Gaia, avec les droites ajustées. Chaque courbe est détaillée sur la page de son bloc.</>
+          : <>What four blocks measure on one night: the Pleiades, 1348 frames of 13 s. (a) The star size of each frame through the night. (b) The weight of each frame in the stack, with the minimum of the automatic mode. (c) The share of the samples of each frame left out by the rejection. (d) The ratio to green measured for each star against the one expected from its Gaia spectrum, with the fitted lines. Each curve is detailed on the page of its block.</>}
+      </Figure>
+      )}
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">1</span>{fr ? 'Le graphe de traitement' : 'The processing graph'}</h2>
+      <p class="measure">{fr
+        ? 'Chaque étape, de la calibration au post-traitement, est un bloc, et la chaîne se dessine comme un graphe.'
+        : 'Each step, from calibration to post-processing, is a block, and the chain is drawn as a graph.'}</p>
+      <div id="try">
+        <p class="measure gt-intro">{fr
+          ? <>Ci-dessous, une reproduction de la page Graphe et de Post, guidée pas à pas. Rien n’est calculé ici ; les noms, les gestes et les états sont ceux de FLOAT.</>
+          : <>Below, a replica of the Graph page and of Post, guided step by step. Nothing is computed here; the names, actions and states are those of FLOAT.</>}</p>
+        <GraphTour lang={lang} home />
+      </div>
+      <div class="gt-only-narrow">
+        <p class="measure">{fr ? 'Les blocs d’une chaîne typique, de la calibration au post-traitement :' : 'The blocks of a typical chain, from calibration to post-processing:'}</p>
+        <ol class="chainlist">
+          {chain.map((k) => <li>{blockHref(k) ? <a href={blockHref(k)!}>{blockName(k)}</a> : blockName(k)}</li>)}
+        </ol>
+        <figure>
+          <div class="plate"><Picture src="/images/graph_simple.png" width={1686} height={233} zoom="/images/graph_simple.png" title={fr ? 'Cliquer pour ouvrir en taille réelle' : 'Click to open at full size'}
+            alt={fr ? 'Le graphe d’un workflow, bloc après bloc' : 'The graph of one workflow, block after block'} /></div>
+          <figcaption>{fr ? 'Le graphe d’un workflow, à ouvrir en taille réelle.' : 'The graph of one workflow, to open at full size.'}</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">2</span>{fr ? 'Plusieurs workflows sur un même graphe' : 'Several workflows on one graph'}</h2>
+      <p class="measure">{fr
+        ? 'Un workflow peut partir de n’importe quel bloc d’un autre, pour essayer un autre réglage ou une autre méthode. Les branches se rejoignent dans Post, comme versions à comparer ou comme calques à combiner.'
+        : 'A workflow can branch from any block of another, to try a different setting or method. The branches meet in Post, as versions to compare or as layers to combine.'}</p>
+      <Figure lang={lang} n={2} src={`/tutorials/ngc7000-graph/${lang}/02.png`} plate zoom width={1596} height={896}
+        alt={fr ? 'Le graphe du projet NGC 7000 : plusieurs workflows réunis dans une combinaison S-H-O, puis dans Post' : 'The graph of the NGC 7000 project: several workflows joined in an S-H-O combination, then in Post'}>
+        {fr
+          ? <>Le graphe d’un vrai projet : NGC 7000 en S-H-O, avec une caméra couleur et deux filtres bi-bandes (trois sessions, une combinaison S-H-O). <a href={routes.learn.fr! + 'ngc7000-graphe/'}>Le tutoriel de ce projet</a></>
+          : <>The graph of a real project: NGC 7000 in S-H-O, with a colour camera and two dual-band filters (three sessions, an S-H-O combination). <a href={routes.learn.en! + 'ngc7000-graph/'}>The tutorial of this project</a></>}
+      </Figure>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">3</span>Post</h2>
+      <div class="split">
+        <div>
+          <p>{fr
+            ? 'Post reprend le modèle des calques des éditeurs d’images comme GIMP.'
+            : 'Post follows the layer model of image editors such as GIMP.'}</p>
+          <ul>
+            {fr ? <>
+              <li><strong>Calques, masques, modes de fusion, opacité.</strong> L’image de chaque workflow, et le résultat de n’importe quel bloc, peut devenir un calque.</li>
+              <li><strong>Non destructif.</strong> Chaque réglage est un filtre sur son calque : on peut le couper, le modifier ou le retirer seul, à tout moment.</li>
+              <li><strong>Outils.</strong> Courbes, étirement arcsinh, contraste local, netteté et réduction du bruit multi-échelles, couleur, recadrage, tampon correcteur, plusieurs versions d’une même retouche.</li>
+            </> : <>
+              <li><strong>Layers, masks, blend modes, opacity.</strong> Each workflow’s image, and any block’s result, can be a layer.</li>
+              <li><strong>Non-destructive.</strong> Each adjustment is a filter on its layer, which can be switched off, changed or removed on its own at any time.</li>
+              <li><strong>Tools.</strong> Curves, arcsinh stretch, local contrast, multiscale sharpening and noise reduction, colour, crop, spot healing, and several versions of the same edit.</li>
+            </>}
+          </ul>
+        </div>
+        <Figure lang={lang} n={3} src="/images/post.png" plate zoom width={1920} height={1080}
+          alt={fr ? 'La page Post de FLOAT' : 'FLOAT’s Post page'}>
+          {fr
+            ? 'Post sur le projet de la Rosette : les trois workflows en calques, étoiles et image sans étoiles séparées, chaque réglage en filtre.'
+            : 'Post on the Rosette project: the three workflows as layers, stars and starless image apart, each adjustment a filter.'}
+        </Figure>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">4</span>{fr ? 'Méthodes' : 'Methods'}</h2>
+      <p class="measure">{fr
+        ? <>La page de chaque bloc détaille sa méthode, ses réglages et ses limites : voir <a href={r('blocks')}>Blocs</a>.</>
+        : <>Each block’s page details its method, settings and limits: see <a href={r('blocks')}>Blocks</a>.</>}</p>
+      <div class="tbl-wrap">
+        <table class="tbl stack">
+          <caption><b>{fr ? 'Tableau 1.' : 'Table 1.'}</b>{fr ? 'Les étapes du traitement, leur méthode et sa publication.' : 'The processing steps, their method and its publication.'}</caption>
+          <thead><tr><th>{fr ? 'Bloc' : 'Block'}</th><th>{fr ? 'Méthode' : 'Method'}</th><th>{fr ? 'Référence' : 'Reference'}</th></tr></thead>
+          <tbody>
+            {methods.map(([step, method, ref, url], i) => (
+              <tr>
+                <th scope="row">{blockHref(rowBlocks[i]) ? <a href={blockHref(rowBlocks[i])!}>{step}</a> : step}</th>
+                <td>{method}</td>
+                <td>{url ? <a href={url as string}>{ref}</a> : ref}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">5</span>{fr ? 'Le rapport' : 'The report'}</h2>
+      <div class="split">
+        <div>
+          <p>{fr
+            ? <>Chaque projet a son rapport, présenté comme un court rapport scientifique : ce qui a été pris, ce qui a été mesuré, ce qui a été fait. Il sert à comprendre l’image et à savoir quels traitements lui ont été appliqués : la fiche de prise de vue, la taille des étoiles et le niveau du ciel de chaque pose au fil de la nuit, les valeurs mesurées par chaque bloc, les réglages modifiés. Il s’exporte en PDF ou en PNG, sans aucun chemin ni nom de dossier, pour être gardé avec le projet ou publié avec l’image. La page <a href={blockUrl(blocks.find((b) => b.key === 'Report')!, lang)}>Rapport</a> le décrit section par section.</>
+            : <>Each project has its report, laid out as a short scientific report: what was taken, what was measured, what was done. It serves to understand the image and to know which processing was applied to it: the acquisition sheet, the star size and the sky level of each frame through the night, the values measured by each block, the settings changed. It is exported as a PDF or a PNG, with no path and no folder name, to be kept with the project or published with the image. The <a href={blockUrl(blocks.find((b) => b.key === 'Report')!, lang)}>Report</a> page describes it section by section.</>}</p>
+        </div>
+        <Figure lang={lang} n={4} src={`/images/report/rosette-report-page1-${lang}.png`} zoom width={1600} height={2264}
+          alt={fr ? 'La première page du rapport de traitement de la nébuleuse de la Rosette' : 'The first page of the processing report of the Rosette Nebula'}>
+          {fr
+            ? <>La première page du rapport d’un projet, la nébuleuse de la Rosette : l’image finale, la fiche d’acquisition et les valeurs mesurées, chacune avec sa méthode de mesure.</>
+            : <>The first page of a project’s report, the Rosette Nebula: the final image, the acquisition sheet and the values measured, each with its method of measurement.</>}
+        </Figure>
+      </div>
+    </section>
+
+  </div>
+</Base>

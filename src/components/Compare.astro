@@ -1,0 +1,88 @@
+---
+// A before/after figure: two images of the same size stacked, a vertical divider (a real range input over the image,
+// so the mouse, a finger and the arrow keys all move it) shows the first on its left and the second on its right.
+// Without JavaScript, or in print, the two images are shown side by side.
+import { ui, type Lang } from '../i18n/ui';
+interface Props { lang: Lang; n: number; before: string; after: string; width: number; height: number; alt: string }
+const { lang, n, before, after, width, height, alt } = Astro.props;
+const t = ui[lang];
+const fr = lang === 'fr';
+const lbBefore = fr ? 'Avant' : 'Before';
+const lbAfter = fr ? 'Après' : 'After';
+const hint = fr ? 'Curseur de comparaison : avant à gauche, après à droite' : 'Comparison slider: before on the left, after on the right';
+const noscript = '<style>.cmp .cmp-stage{max-width:none!important;aspect-ratio:auto!important;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}'
+  + '.cmp .cmp-before{order:-1}.cmp .cmp-pane{position:relative!important;clip-path:none!important;aspect-ratio:' + width + '/' + height + '}.cmp .cmp-line,.cmp .cmp-range{display:none!important}</style>';
+---
+<figure class="cmp wide" id={`fig-${n}`} style={`--p:50%`}>
+  <div class="plate">
+    <div class="cmp-stage" style={`max-width:${width}px;aspect-ratio:${width}/${height}`}>
+      <span class="cmp-pane cmp-after">
+        <img src={after} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+        <span class="cmp-lab cmp-lab-r">{lbAfter}</span>
+      </span>
+      <span class="cmp-pane cmp-before">
+        <img src={before} alt="" width={width} height={height} loading="lazy" decoding="async" />
+        <span class="cmp-lab cmp-lab-l">{lbBefore}</span>
+      </span>
+      <span class="cmp-line" aria-hidden="true"><span class="cmp-handle"></span></span>
+      <input class="cmp-range" type="range" min="0" max="100" step="1" value="50" aria-label={hint} />
+    </div>
+  </div>
+  <noscript set:html={noscript} />
+  <figcaption><b>{t.figure} {n}.</b><slot /></figcaption>
+</figure>
+
+<style is:global>
+  .cmp .plate { padding: clamp(0.5rem, 1vw, 1rem); }
+  .cmp-stage { position: relative; margin: 0 auto; width: 100%; overflow: hidden; line-height: 0; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+  .cmp-pane { position: absolute; inset: 0; display: block; }
+  .cmp-pane img { display: block; width: 100%; height: 100%; image-rendering: auto; }
+  .cmp-before { clip-path: inset(0 calc(100% - var(--p)) 0 0); }
+  .cmp-lab {
+    position: absolute; top: 0.6rem; font-family: var(--sans); font-size: 0.75rem; line-height: 1; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--plate-ink); background: rgba(15, 17, 20, 0.72);
+    padding: 0.3rem 0.5rem;
+  }
+  .cmp-lab-l { left: 0.6rem; }
+  .cmp-lab-r { right: 0.6rem; }
+  .cmp-line { position: absolute; top: 0; bottom: 0; left: var(--p); width: 2px; margin-left: -1px; background: var(--orange); pointer-events: none; }
+  .cmp-handle {
+    position: absolute; top: 50%; left: 50%; width: 0.9rem; height: 2.2rem; transform: translate(-50%, -50%);
+    background: var(--orange); border-radius: 2px;
+  }
+  .cmp-handle::before, .cmp-handle::after {
+    content: ''; position: absolute; top: 50%; margin-top: -0.2rem; border: 0.2rem solid transparent;
+  }
+  .cmp-handle::before { left: 0.05rem; border-right-color: var(--plate); border-left-width: 0; }
+  .cmp-handle::after { right: 0.05rem; border-left-color: var(--plate); border-right-width: 0; }
+  .cmp-range {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; opacity: 0; cursor: ew-resize;
+    -webkit-appearance: none; appearance: none; background: transparent;
+  }
+  .cmp-range::-webkit-slider-thumb { -webkit-appearance: none; width: 1px; height: 100vh; }
+  .cmp-range::-moz-range-thumb { width: 1px; height: 100vh; border: 0; background: transparent; }
+  .cmp-stage:has(.cmp-range:focus-visible) { outline: 2px solid var(--orange); outline-offset: -2px; }
+  .cmp-stage:has(.cmp-range:focus-visible) .cmp-handle { box-shadow: 0 0 0 2px var(--plate), 0 0 0 4px var(--orange); }
+
+  @media print {
+    .cmp .cmp-stage { max-width: none !important; aspect-ratio: auto !important; display: grid; grid-template-columns: 1fr 1fr; gap: 0.3cm; overflow: visible; }
+    .cmp .cmp-before { order: -1; }
+    .cmp .cmp-pane { position: relative; clip-path: none; }
+    .cmp .cmp-line, .cmp .cmp-range { display: none; }
+    .cmp .cmp-pane img { height: auto; max-height: none; }
+    .cmp .cmp-lab { color: #000; background: rgba(255, 255, 255, 0.85); }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('figure.cmp').forEach((fig) => {
+    const input = fig.querySelector<HTMLInputElement>('.cmp-range');
+    if (!input) return;
+    const set = () => {
+      fig.style.setProperty('--p', input.value + '%');
+      input.setAttribute('aria-valuetext', input.value + ' %');
+    };
+    input.addEventListener('input', set);
+    set();
+  });
+</script>

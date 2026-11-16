@@ -1,0 +1,45 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:08.000
+Open the project
+
+2
+00:00:08.000 --> 00:00:19.000
+The diagnosis, before any gesture
+
+3
+00:00:19.000 --> 00:00:28.000
+Name the first version
+
+4
+00:00:28.000 --> 00:00:37.000
+A second version
+
+5
+00:00:37.000 --> 00:00:57.000
+Dehaze under a luminance mask
+
+6
+00:00:57.000 --> 00:01:09.000
+Saturation and Multiscale sharpening
+
+7
+00:01:09.000 --> 00:01:22.000
+Switch between the versions
+
+8
+00:01:22.000 --> 00:01:31.000
+Undo inside a version
+
+9
+00:01:31.000 --> 00:01:40.000
+Delete a version and take it back
+
+10
+00:01:40.000 --> 00:01:51.000
+Export each version to its own file
+
+11
+00:01:51.000 --> 00:02:07.000
+Save, close and reopen

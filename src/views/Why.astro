@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import TutorialClip from '../components/TutorialClip.astro';
+import { blocks, blockUrl, release, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const stacking = blockUrl(blocks.find((b) => b.key === 'Stacking')!, lang);
+---
+<Base lang={lang} page="why" title={fr ? 'Pourquoi FLOAT' : 'Why FLOAT'}
+  description={fr ? 'D’où vient FLOAT : garder le fil entre les brutes et l’image finale, jusqu’à la retouche, dans une suite libre et utilisable par d’autres.' : 'Where FLOAT comes from: keeping the thread between the raw frames and the final image, all the way to retouching, in a free suite that others can use.'}>
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <p class="kicker">{fr ? 'Le projet' : 'The project'}</p>
+    <h1>{fr ? 'Pourquoi FLOAT' : 'Why FLOAT'}</h1>
+
+    <section class="sec" style="margin-top: 1.5rem">
+      <h2><span class="secnum">1</span>{fr ? 'Garder le fil, des brutes à l’image finale' : 'Keeping the thread, from the raw frames to the final image'}</h2>
+      <div class="split">
+        <div>
+          {fr ? <>
+            <p>FLOAT est parti d’une envie : ne plus perdre le fil entre les brutes et l’image finale.</p>
+            <p>D’habitude, on enchaîne des opérations sur des fichiers : empiler, retirer le gradient, appliquer un filtre. Six mois plus tard, impossible de dire ce qui a été fait. Des Ctrl+Z, une pile d’historique au mieux. Il y a les scripts, c’est vrai. Mais un script ne se règle pas en regardant l’image, et il sert souvent de point de départ avant de reprendre à la main.</p>
+            <p>Dans FLOAT, le traitement est un graphe de blocs. Il reste ouvert : on change un réglage au milieu, et seule la suite est recalculée. On tire une branche pour essayer autre chose, et les deux résultats restent côte à côte.</p>
+          </> : <>
+            <p>FLOAT began with one wish: to stop losing the thread between the raw frames and the final image.</p>
+            <p>The usual way is a succession of operations on files: stack, remove the gradient, apply a filter. Six months later, nobody can say what was done. Ctrl+Z, a history stack at best. There are scripts, true. But a script cannot be tuned while looking at the image, and it is often only a starting point before carrying on by hand.</p>
+            <p>In FLOAT, the processing is a graph of blocks. It stays open: change a setting in the middle, and only what follows is computed again. Draw a branch to try something else, and both results stay side by side.</p>
+          </>}
+        </div>
+        <TutorialClip lang={lang} n={1} slug="adjust-a-block">
+          {fr ? 'Un réglage du bloc Gradient change : seuls Gradient et Couleur sont recalculés, les blocs qui précèdent sont gardés.' : 'A setting of the Gradient block changes: only Gradient and Color are computed again, the blocks before them are kept.'}
+          <Figure slot="fallback" lang={lang} n={1} src="/images/graph.png" plate zoom width={1640} height={357}
+          alt={fr ? 'Trois workflows partant d’un même empilement' : 'Three workflows from one stack'}>
+          {fr
+            ? 'La nébuleuse de la Rosette : un empilement, trois workflows (classique, étoiles de synthèse, déconvolution neuronale), chacun envoyé dans Post comme calque.'
+            : 'The Rosette nebula: one stack, three workflows (classic, synthetic stars, neural deconvolution), each sent to Post as a layer.'}
+        </Figure>
+        </TutorialClip>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">2</span>{fr ? 'Jusqu’à la retouche' : 'All the way to retouching'}</h2>
+      <div class="split">
+        <div>
+          {fr
+            ? <p>Le principe va jusqu’au post-traitement esthétique. Calques, masques, courbes : chaque réglage est un filtre qu’on coupe, modifie ou retire seul, à tout moment. Rien n’est écrit dans l’image avant l’export.</p>
+            : <p>The principle extends to aesthetic post-processing. Layers, masks, curves: each adjustment is a filter that can be switched off, changed or removed on its own, at any time. Nothing is written into the image before export.</p>}
+        </div>
+        <TutorialClip lang={lang} n={2} slug="post-layers-filters">
+          {fr ? 'Dans Post, deux filtres sont ajoutés au calque, coupés puis rallumés, et modifiés après coup.' : 'In Post, two filters are added to the layer, switched off and on again, and changed afterwards.'}
+          <Figure slot="fallback" lang={lang} n={2} src="/images/post.png" plate zoom width={1920} height={1080}
+          alt={fr ? 'La page Post de FLOAT' : 'FLOAT’s Post page'}>
+          {fr
+            ? 'Post sur le projet de la Rosette : les trois workflows en calques, étoiles et image sans étoiles séparées, chaque réglage en filtre.'
+            : 'Post on the Rosette project: the three workflows as layers, stars and starless image apart, each adjustment a filter.'}
+        </Figure>
+        </TutorialClip>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">3</span>{fr ? 'Une suite cohérente, utilisable par d’autres' : 'One coherent suite, usable by others'}</h2>
+      <div class="cols2">
+        {fr
+          ? <p>FLOAT part aussi d’une autre envie : réunir de manière organisée, dans une suite cohérente et utilisable par d’autres, les logiciels et les bouts de code que nous développons depuis des années pour nos propres images.</p>
+          : <p>FLOAT also comes from a second wish: to gather, in an organised way, the programs and pieces of code we have been developing for years for our own images into one coherent suite that others can use.</p>}
+        <ul>
+          {fr ? <>
+            <li><strong>Licence GPL v3.</strong> Le code peut être utilisé, lu, modifié et redistribué.</li>
+            <li><strong>Poids ouverts.</strong> Les réseaux du débruitage, de la déconvolution et de la séparation des étoiles sont livrés avec le programme, et le code qui les a entraînés est dans <a href={release.repo}>le dépôt</a>.</li>
+            <li><strong>Aucune dépendance fermée.</strong> Chaque bibliothèque sur laquelle FLOAT repose est à code ouvert.</li>
+          </> : <>
+            <li><strong>GPL v3 licence.</strong> The code can be used, read, modified and redistributed.</li>
+            <li><strong>Open weights.</strong> The networks used for denoising, deconvolution and star separation ship with the program, and the code that trained them is in <a href={release.repo}>the repository</a>.</li>
+            <li><strong>No closed-source dependency.</strong> Every library FLOAT is built on is open source.</li>
+          </>}
+        </ul>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">4</span>{fr ? 'Des méthodes publiées' : 'Published methods'}</h2>
+      <p class="measure">{fr
+        ? <>Chaque méthode est une méthode publiée, citée dans l’interface à côté de ses réglages, et chaque valeur automatique est donnée avec la raison de son choix. La page de chaque bloc donne la méthode, sa source et ses limites : par exemple <a href={stacking}>l’empilement</a>.</>
+        : <>Every method is a published one, cited in the interface next to its settings, and every automatic value comes with the reason it was chosen. Each block’s page gives the method, its source and its limits: for instance <a href={stacking}>stacking</a>.</>}</p>
+    </section>
+  </div>
+</Base>
