@@ -26,7 +26,7 @@ const t = ui[lang];
 const other: Lang = lang === 'en' ? 'fr' : 'en';
 const here = paths?.[lang] ?? routes[page][lang]!;
 const there = paths?.[other] ?? routes[page][other] ?? routes.home[other]!;
-const site = 'https://astro-float.org';
+const site = 'https://float-astro.org';
 const pageTitle = page === 'home' && !bare ? `FLOAT · ${t.tagline}` : `${title} · FLOAT`;
 const ogImage = site + '/og-card.jpg';
 const ogAlt = lang === 'fr' ? 'Les Pléiades, image traitée dans FLOAT' : 'The Pleiades, an image processed in FLOAT';
@@ -96,7 +96,7 @@ const ogAlt = lang === 'fr' ? 'Les Pléiades, image traitée dans FLOAT' : 'The 
     <footer class="site-foot">
       <div class="in">
         <span>FLOAT {version}, {t.betaOf} {release.date[lang]} · {t.licence}</span>
-        <span><a href={routes.download[lang]}>{t.download}</a> · <a href={release.repo}>{t.source}</a> · <a href={`${release.repo}/issues`}>{t.report}</a> · astro-float.org</span>
+        <span><a href={routes.download[lang]}>{t.download}</a> · <a href={release.repo}>{t.source}</a> · <a href={`${release.repo}/issues`}>{t.report}</a> · float-astro.org</span>
       </div>
     </footer>
 

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const dist = path.resolve(import.meta.dirname, '..', 'dist');
-const site = 'https://astro-float.org';
+const site = 'https://float-astro.org';
 const pages = new Map();            // url -> { lang, alternates: {hreflang: url} }
 
 function* walk(d) {

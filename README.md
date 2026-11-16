@@ -1,4 +1,4 @@
-# astro-float.org
+# float-astro.org
 
 Public website of FLOAT. Astro 5, static output, English at the root, French under `/fr/` with translated addresses. Hosted on Vercel (`vercel.json` sets trailing slashes).
 

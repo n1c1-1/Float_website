@@ -1,4 +1,4 @@
-/* astro-float.org: a research article, not a showcase.
+/* float-astro.org: a research article, not a showcase.
    Flat, two colours (the icon's orange first, its deep blue second), no glow, no gradient, no rounded cards. */
 
 :root {
@@ -336,7 +336,7 @@ dialog.viewer button { position: fixed; top: 0.8rem; right: 1.2rem; font-family:
   /* the address of a link, where it leads outside the site or to a reference */
   a, a:hover { color: #000; text-decoration: underline; }
   main a[href^='http']::after, .refs a[href]::after { content: ' (' attr(href) ')'; font-family: var(--sans); font-size: 0.8em; color: #333; word-break: break-all; }
-  .refs a[href^='/']::after { content: ' (https://astro-float.org' attr(href) ')'; }
+  .refs a[href^='/']::after { content: ' (https://float-astro.org' attr(href) ')'; }
   .cite::after, .note.toc a::after, a.cite[href]::after { content: none !important; }
   .secnum, .kicker, .abstract p:first-child::before { color: #000; }
 }
