@@ -27,31 +27,20 @@ const methods = fr
       ['Stars/background', 'NAFNet, Chen et al. 2022', A + '2204.04676'],
       ['Post', 'arcsinh stretch, Lupton et al. 2004; guided filter, He et al. 2013; wavelets, Starck & Murtagh 2006; CLAHE, Zuiderveld 1994; spot healing, Barnes et al. 2009', A + 'astro-ph/0312483'],
     ];
-const ack = fr
-  ? [
-      ['Siril', 'rejet à l’empilement, pondération des images, ajustement des étoiles, extraction du fond, étirement hyperbolique généralisé'],
-      ['GIMP', 'calques et filtres'],
-      ['RawTherapee, darktable', 'dématriçage'],
-      ['DrizzlePac', 'drizzle et sa règle de couverture'],
-      ['Astrometry.net, Asterion', 'astrométrie à l’aveugle'],
-      ['Astroalign', 'appariement de triangles'],
-      ['Source Extractor', 'estimation du fond'],
-      ['GraXpert', 'retrait du gradient'],
-      ['DeepSkyStacker', 'images brutes'],
-      ['NAFNet', 'architecture du réseau'],
-    ]
-  : [
-      ['Siril', 'stacking rejection, frame weighting, star fitting, background extraction, the generalised hyperbolic stretch'],
-      ['GIMP', 'layers and filters'],
-      ['RawTherapee, darktable', 'demosaicing'],
-      ['DrizzlePac', 'drizzle and its coverage rule'],
-      ['Astrometry.net, Asterion', 'blind plate solving'],
-      ['Astroalign', 'triangle matching'],
-      ['Source Extractor', 'background estimation'],
-      ['GraXpert', 'gradient removal'],
-      ['DeepSkyStacker', 'raw frames'],
-      ['NAFNet', 'network architecture'],
-    ];
+// each project read: its name(s) with the page of each, then what it informed (fr, en)
+const ack: { names: [string, string][]; fr: string; en: string }[] = [
+  { names: [['Siril', 'https://siril.org/']], fr: 'rejet à l’empilement, pondération des images, ajustement des étoiles, extraction du fond, étirement hyperbolique généralisé', en: 'stacking rejection, frame weighting, star fitting, background extraction, the generalised hyperbolic stretch' },
+  { names: [['GIMP', 'https://www.gimp.org/']], fr: 'calques et filtres', en: 'layers and filters' },
+  { names: [['RawTherapee', 'https://rawtherapee.com/'], ['darktable', 'https://www.darktable.org/']], fr: 'dématriçage', en: 'demosaicing' },
+  { names: [['DrizzlePac', 'https://github.com/spacetelescope/drizzlepac']], fr: 'drizzle et sa règle de couverture', en: 'drizzle and its coverage rule' },
+  { names: [['Astrometry.net', 'https://astrometry.net/']], fr: 'astrométrie à l’aveugle', en: 'blind plate solving' },
+  { names: [['Asterion', 'https://github.com/asterion-solver/asterion']], fr: 'astrométrie à l’aveugle', en: 'blind plate solving' },
+  { names: [['Astroalign', 'https://github.com/quatrope/astroalign']], fr: 'appariement de triangles', en: 'triangle matching' },
+  { names: [['Source Extractor', 'https://github.com/astromatic/sextractor']], fr: 'estimation du fond', en: 'background estimation' },
+  { names: [['GraXpert', 'https://github.com/Steffenhir/GraXpert']], fr: 'retrait du gradient', en: 'gradient removal' },
+  { names: [['DeepSkyStacker', 'https://github.com/deepskystacker/DSS']], fr: 'images brutes', en: 'raw frames' },
+  { names: [['NAFNet', 'https://github.com/megvii-research/NAFNet']], fr: 'architecture du réseau', en: 'network architecture' },
+];
 const issues = `${release.repo}/issues`;
 ---
 <Base lang={lang} page="project" title={fr ? 'Projet' : 'Project'}
@@ -80,7 +69,7 @@ const issues = `${release.repo}/issues`;
           <caption><b>{fr ? 'Tableau 1.' : 'Table 1.'}</b>{fr ? 'Les projets libres lus, et ce qu’ils ont éclairé.' : 'The open-source projects read, and what each informed.'}</caption>
           <thead><tr><th>{fr ? 'Projet' : 'Project'}</th><th>{fr ? 'Ce qu’il a éclairé' : 'What it informed'}</th></tr></thead>
           <tbody>
-            {ack.map(([a, b]) => <tr><th scope="row">{a}</th><td>{b}</td></tr>)}
+            {ack.map((r) => <tr><th scope="row">{r.names.map(([n, u], i) => <>{i > 0 && ', '}<a href={u}>{n}</a></>)}</th><td>{r[lang]}</td></tr>)}
           </tbody>
         </table>
       </div>
