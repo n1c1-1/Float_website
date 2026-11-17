@@ -15,3 +15,6 @@ src/data/tutorials/mono-sho.json
 
 .vercel
 .env*
+
+# the videos are in the R2 bucket float (see videoUrl in src/data/tutorials.ts)
+public/tutorials/**/*.mp4

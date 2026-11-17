@@ -34,11 +34,15 @@ const files = import.meta.glob('../data/tutorials/*.json', { eager: true, import
 const keep = ([path]: [string, Tutorial]) => !(import.meta.env.PROD && /\/_[^/]*$/.test(path));
 
 const rank = (t: Tutorial) => (t.section === 'path' ? t.level ?? 1 : 9) * 1000 + t.order;
-// A tutorial is shown once it is complete: its video exists in both languages (one being recorded has a manifest
+// The videos are served from the R2 bucket `float` (too large for the repository); their path in the manifest is
+// their key in the bucket. Posters, captions and screenshots stay in public/.
+export const MEDIA = 'https://pub-7e934645c502451783a2a17449d8713f.r2.dev';
+export const videoUrl = (src: string) => (import.meta.env.PROD ? MEDIA + src : src);
+// A tutorial is shown once it is complete: its poster exists in both languages (one being recorded has a manifest
 // but no media yet, and must not appear half-made).
 const onDisk = (src?: string) => !!src && existsSync(join(process.cwd(), 'public', src));
 // `draft: true` in a manifest keeps a tutorial off the site (one filmed on an image that is to be replaced).
-const ready = (t: Tutorial) => !(t as Tutorial & { draft?: boolean }).draft && (['en', 'fr'] as Lang[]).every((l) => onDisk(t.video?.[l]?.src) && t.steps?.length > 0);
+const ready = (t: Tutorial) => !(t as Tutorial & { draft?: boolean }).draft && (['en', 'fr'] as Lang[]).every((l) => onDisk(t.video?.[l]?.poster) && t.steps?.length > 0);
 export const tutorials: Tutorial[] = Object.entries(files).filter(keep).map(([, t]) => t).filter(ready).sort((a, b) => rank(a) - rank(b));
 
 /** A text of the data credit, given once for both languages or once per language. */

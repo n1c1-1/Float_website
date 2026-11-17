@@ -1,7 +1,7 @@
 ---
 // A tutorial's video shown as a numbered figure on another page (the Why page), with a link to the tutorial.
 // While the tutorial is not complete, the `fallback` slot is shown instead.
-import { bySlug, tutorialUrl } from '../data/tutorials';
+import { bySlug, tutorialUrl, videoUrl } from '../data/tutorials';
 import { ui, type Lang } from '../i18n/ui';
 interface Props { lang: Lang; n: number; slug: string }
 const { lang, n, slug } = Astro.props;
@@ -13,7 +13,7 @@ const fr = lang === 'fr';
 {t && v
   ? <figure id={`fig-${n}`} class="clip">
       <div class="plate">
-        <video controls preload="metadata" playsinline poster={v.poster} src={v.src}
+        <video controls preload="metadata" playsinline poster={v.poster} src={videoUrl(v.src)}
                style={first ? `aspect-ratio: ${first.w} / ${first.h}` : undefined}>
           {v.captions && <track kind="subtitles" default srclang={lang} label={fr ? 'Français' : 'English'} src={v.captions} />}
         </video>
