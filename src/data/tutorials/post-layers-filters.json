@@ -36,14 +36,31 @@
       "en": "the authors of FLOAT",
       "fr": "les auteurs de FLOAT"
     },
-    "size": {
-      "en": "6.9 GB",
-      "fr": "6,9 Go"
-    },
-    "note": {
-      "en": "The frames will be offered for download; the link will be given here",
-      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
-    }
+    "licence": "CC BY 4.0",
+    "files": [
+      {
+        "what": {
+          "en": "lights, 29 December 2024",
+          "fr": "brutes, 29 décembre 2024"
+        },
+        "file": "rosette-2024-12-29-lights.zip",
+        "size": {
+          "en": "5.5 GB",
+          "fr": "5,5 Go"
+        }
+      },
+      {
+        "what": {
+          "en": "darks and flats",
+          "fr": "darks et flats"
+        },
+        "file": "rosette-calibration.zip",
+        "size": {
+          "en": "1.4 GB",
+          "fr": "1,4 Go"
+        }
+      }
+    ]
   },
   "steps": [
     {

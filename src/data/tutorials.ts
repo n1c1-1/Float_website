@@ -22,7 +22,9 @@ export interface Tutorial {
   slug: string; slugFr: string; section: 'path' | 'post'; level?: 1 | 2 | 3 | 4; order: number;
   title: L; summary: L; duration: L; needs: L<string[]>;
   /** `url`, `licence` and `size` may be absent (our own frames before their download exists); `note` adds a sentence. */
-  data: { name: string | L; author: string | L; licence?: string | L; url?: string; size?: string | L; note?: L };
+  data: { name: string | L; author: string | L; licence?: string | L; url?: string; size?: string | L; note?: L;
+    /** Archives of the frames, in the R2 bucket: `file` is the key under /data/. */
+    files?: { what: L; file: string; size: L }[] };
   video: Partial<Record<Lang, VideoFile>>;
   steps: Step[]; blocks?: string[]; next?: string | null;
   /** The finished image, shown at the top of the page (an export, not a screenshot). */
@@ -37,6 +39,7 @@ const rank = (t: Tutorial) => (t.section === 'path' ? t.level ?? 1 : 9) * 1000 +
 // The videos are served from the R2 bucket `float` (too large for the repository); their path in the manifest is
 // their key in the bucket. Posters, captions and screenshots stay in public/.
 export const MEDIA = 'https://pub-7e934645c502451783a2a17449d8713f.r2.dev';
+export const dataUrl = (file: string) => `${MEDIA}/data/${file}`;
 export const videoUrl = (src: string) => (import.meta.env.PROD ? MEDIA + src : src);
 // A tutorial is shown once it is complete: its poster exists in both languages (one being recorded has a manifest
 // but no media yet, and must not appear half-made).

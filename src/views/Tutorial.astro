@@ -5,7 +5,7 @@ import Base from '../layouts/Base.astro';
 import Figure from '../components/Figure.astro';
 import Picture from '../components/Picture.astro';
 import { blocks, blockUrl, routes, type Lang } from '../i18n/ui';
-import { bySlug, tutorialUrl, neighbours, levelNames, tr, videoUrl } from '../data/tutorials';
+import { bySlug, tutorialUrl, neighbours, levelNames, tr, videoUrl, dataUrl } from '../data/tutorials';
 interface Props { lang: Lang; slug: string }
 const { lang, slug } = Astro.props;
 const fr = lang === 'fr';
@@ -45,7 +45,7 @@ const L = fr
           <tr><th scope="row">{L.dur}</th><td>{t.duration[lang]}</td></tr>
           <tr><th scope="row">{L.needs}</th><td><ul class="plain-list">{t.needs[lang].map((n) => <li>{n}</li>)}</ul></td></tr>
           <tr><th scope="row">{L.data}</th><td>
-            {t.data.url ? <a href={t.data.url}>{tr(t.data.name, lang)}</a> : tr(t.data.name, lang)}, {tr(t.data.author, lang)}{t.data.licence && `; ${L.licence} ${tr(t.data.licence, lang)}`}{t.data.size && `; ${L.size} ${tr(t.data.size, lang)}`}{t.data.note && `. ${tr(t.data.note, lang)}`}
+            {t.data.url ? <a href={t.data.url}>{tr(t.data.name, lang)}</a> : tr(t.data.name, lang)}, {tr(t.data.author, lang)}{t.data.licence && `${fr ? ' ;' : ';'} ${L.licence} ${tr(t.data.licence, lang)}`}{t.data.size && `${fr ? ' ;' : ';'} ${L.size} ${tr(t.data.size, lang)}`}{t.data.note && `. ${tr(t.data.note, lang)}`}{t.data.files && <>. {fr ? 'Téléchargement : ' : 'Download: '}{t.data.files.map((f, i) => <>{i > 0 && ' · '}<a href={dataUrl(f.file)} download>{tr(f.what, lang)}</a> ({tr(f.size, lang)})</>)}</>}
           </td></tr>
         </tbody>
       </table>

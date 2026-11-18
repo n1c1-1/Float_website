@@ -1,506 +1,523 @@
 {
- "slug": "three-views",
- "slugFr": "trois-vues",
- "section": "path",
- "level": 2,
- "order": 4,
- "title": {
-  "en": "The three views of a project: Blocks, Folded, Table",
-  "fr": "Les trois vues d’un projet : Blocs, Replié, Tableau"
- },
- "summary": {
-  "en": "The finished project of the second tutorial is looked at in its three views: Blocks shows the processing chain, Folded shows many workflows at once and Table manages the files. A session is added and undone, then the settings panel, the GPU list and Run are found.",
-  "fr": "Le projet terminé du deuxième tutoriel est regardé dans ses trois vues : Blocs montre la chaîne de traitement, Replié montre beaucoup de workflows à la fois et Tableau gère les fichiers. Une session est ajoutée puis annulée, puis le panneau de réglages, la liste GPU et Exécuter sont repérés."
- },
- "duration": {
-  "en": "About 10 min, without any computing run",
-  "fr": "Environ 10 min, sans aucune exécution de calcul"
- },
- "needs": {
-  "en": [
-   "FLOAT installed",
-   "The tutorial The full processing: stars apart done: its finished project (about 1.8 GB) is the starting point"
+  "slug": "three-views",
+  "slugFr": "trois-vues",
+  "section": "path",
+  "level": 2,
+  "order": 4,
+  "title": {
+    "en": "The three views of a project: Blocks, Folded, Table",
+    "fr": "Les trois vues d’un projet : Blocs, Replié, Tableau"
+  },
+  "summary": {
+    "en": "The finished project of the second tutorial is looked at in its three views: Blocks shows the processing chain, Folded shows many workflows at once and Table manages the files. A session is added and undone, then the settings panel, the GPU list and Run are found.",
+    "fr": "Le projet terminé du deuxième tutoriel est regardé dans ses trois vues : Blocs montre la chaîne de traitement, Replié montre beaucoup de workflows à la fois et Tableau gère les fichiers. Une session est ajoutée puis annulée, puis le panneau de réglages, la liste GPU et Exécuter sont repérés."
+  },
+  "duration": {
+    "en": "About 10 min, without any computing run",
+    "fr": "Environ 10 min, sans aucune exécution de calcul"
+  },
+  "needs": {
+    "en": [
+      "FLOAT installed",
+      "The tutorial The full processing: stars apart done: its finished project (about 1.8 GB) is the starting point"
+    ],
+    "fr": [
+      "FLOAT installé",
+      "Le tutoriel Le traitement complet : les étoiles à part fait : son projet terminé (environ 1,8 Go) est le point de départ"
+    ]
+  },
+  "data": {
+    "name": {
+      "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
+      "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
+    },
+    "author": {
+      "en": "the authors of FLOAT",
+      "fr": "les auteurs de FLOAT"
+    },
+    "licence": "CC BY 4.0",
+    "files": [
+      {
+        "what": {
+          "en": "lights, 29 December 2024",
+          "fr": "brutes, 29 décembre 2024"
+        },
+        "file": "rosette-2024-12-29-lights.zip",
+        "size": {
+          "en": "5.5 GB",
+          "fr": "5,5 Go"
+        }
+      },
+      {
+        "what": {
+          "en": "darks and flats",
+          "fr": "darks et flats"
+        },
+        "file": "rosette-calibration.zip",
+        "size": {
+          "en": "1.4 GB",
+          "fr": "1,4 Go"
+        }
+      }
+    ]
+  },
+  "video": {
+    "en": {
+      "src": "/tutorials/three-views/en/video.mp4",
+      "captions": "/tutorials/three-views/en/captions.vtt",
+      "chapters": "/tutorials/three-views/en/chapters.vtt",
+      "poster": "/tutorials/three-views/en/poster.jpg",
+      "seconds": 129.0
+    },
+    "fr": {
+      "src": "/tutorials/three-views/fr/video.mp4",
+      "captions": "/tutorials/three-views/fr/captions.vtt",
+      "chapters": "/tutorials/three-views/fr/chapters.vtt",
+      "poster": "/tutorials/three-views/fr/poster.jpg",
+      "seconds": 129.0
+    }
+  },
+  "steps": [
+    {
+      "id": "home",
+      "title": {
+        "en": "Open a finished project",
+        "fr": "Ouvrir un projet terminé"
+      },
+      "text": {
+        "en": "On the Home screen, click <b>Open project…</b> and choose the finished project of the second tutorial, or a copy of its folder. Nothing is computed in this tutorial.",
+        "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez le projet terminé du deuxième tutoriel, ou une copie de son dossier. Rien n’est calculé dans ce tutoriel."
+      },
+      "why": {
+        "en": "A project opens in the state in which it was saved, so the views below show a real processing and not an empty page.",
+        "fr": "Un projet s’ouvre dans l’état où il a été enregistré : les vues ci-dessous montrent un vrai traitement et non une page vide."
+      },
+      "check": {
+        "en": "The project opens, and the title bar names it.",
+        "fr": "Le projet s’ouvre, et la barre de titre le nomme."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/01.png",
+        "fr": "/tutorials/three-views/fr/01.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 0.0,
+        "fr": 0.0
+      }
+    },
+    {
+      "id": "opened",
+      "title": {
+        "en": "One project, three views",
+        "fr": "Un projet, trois vues"
+      },
+      "text": {
+        "en": "The project opens on the <b>Graph</b> page. Above the graph, <b>Blocks</b>, <b>Folded</b> and <b>Table</b> are three views of the same project: only the way it is drawn changes.",
+        "fr": "Le projet s’ouvre sur la page <b>Graphe</b>. Au-dessus du graphe, <b>Blocs</b>, <b>Replié</b> et <b>Tableau</b> sont trois vues du même projet : seule la façon de le dessiner change."
+      },
+      "why": {
+        "en": "Each view answers a different question: the chain of the processing, many workflows at once, or the files.",
+        "fr": "Chaque vue répond à une question différente : la chaîne du traitement, beaucoup de workflows à la fois, ou les fichiers."
+      },
+      "check": {
+        "en": "<b>Blocks</b> is underlined, and the status bar reads all up to date.",
+        "fr": "<b>Blocs</b> est souligné, et la barre d’état indique tout à jour."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/02.png",
+        "fr": "/tutorials/three-views/fr/02.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 4.0,
+        "fr": 4.0
+      }
+    },
+    {
+      "id": "chain",
+      "title": {
+        "en": "Blocks: the chain",
+        "fr": "Blocs : la chaîne"
+      },
+      "text": {
+        "en": "Click the arrow at the top right of the window to fold the settings panel. <b>Blocks</b> draws every block of the chain from left to right, in three bands: <b>Preprocessing</b>, <b>Linear processing</b> and <b>Composition</b>. Post comes last.",
+        "fr": "Cliquez sur la flèche en haut à droite de la fenêtre pour replier le panneau de réglages. <b>Blocs</b> dessine chaque bloc de la chaîne de gauche à droite, en trois bandes : <b>Prétraitement</b>, <b>Traitement linéaire</b> et <b>Composition</b>. Post vient en dernier."
+      },
+      "why": {
+        "en": "Blocks is the view for following the processing in order: the picture goes through each block from the left to Post.",
+        "fr": "Blocs est la vue pour suivre le traitement dans l’ordre : l’image passe par chaque bloc, de la gauche jusqu’à Post."
+      },
+      "check": {
+        "en": "The whole chain is on the screen, and every card has a green bar on its left edge.",
+        "fr": "Toute la chaîne est à l’écran, et chaque carte a une barre verte sur son bord gauche."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/03.png",
+        "fr": "/tutorials/three-views/fr/03.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 10.0,
+        "fr": 10.0
+      }
+    },
+    {
+      "id": "card",
+      "title": {
+        "en": "A block’s card",
+        "fr": "La carte d’un bloc"
+      },
+      "text": {
+        "en": "Click a card to select it. A block is a card: its name, a summary line of its settings, and a bar on its left edge whose colour is the block’s state. Green means that the block is up to date.",
+        "fr": "Cliquez sur une carte pour la sélectionner. Un bloc est une carte : son nom, une ligne de résumé de ses réglages, et une barre sur son bord gauche dont la couleur est l’état du bloc. Vert veut dire que le bloc est à jour."
+      },
+      "why": {
+        "en": "The bar tells at a glance which blocks are up to date and which would be computed again after a change.",
+        "fr": "La barre dit d’un coup d’œil quels blocs sont à jour et lesquels seraient recalculés après une modification."
+      },
+      "check": {
+        "en": "The selected card has a light outline.",
+        "fr": "La carte sélectionnée a un contour clair."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/04.png",
+        "fr": "/tutorials/three-views/fr/04.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 20.0,
+        "fr": 20.0
+      }
+    },
+    {
+      "id": "palette",
+      "title": {
+        "en": "The palette",
+        "fr": "La palette"
+      },
+      "text": {
+        "en": "The palette on the left lists the blocks that can be added, in groups: Sources, Frames, Image, Post and Composition. A block is dragged onto the chain or double-clicked, and a block that cannot be added at this point is greyed.",
+        "fr": "La palette à gauche liste les blocs que l’on peut ajouter, par groupes : Sources, Brutes, Image, Post et Composition. Un bloc se fait glisser sur la chaîne ou se double-clique, et un bloc qui ne peut pas être ajouté à ce point est grisé."
+      },
+      "why": {
+        "en": "The palette is where a workflow is extended: its header names the workflow that is selected, and the blocks that fit it are active.",
+        "fr": "La palette sert à prolonger un workflow : son en-tête nomme le workflow sélectionné, et les blocs qui lui conviennent sont actifs."
+      },
+      "check": {
+        "en": "The palette header reads for “Color minimal”.",
+        "fr": "L’en-tête de la palette indique pour « Couleur minimal »."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/05.png",
+        "fr": "/tutorials/three-views/fr/05.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 27.0,
+        "fr": 27.0
+      }
+    },
+    {
+      "id": "zoom",
+      "title": {
+        "en": "Zoom and Show all",
+        "fr": "Zoom et Tout afficher"
+      },
+      "text": {
+        "en": "Click the zoom box: it offers fixed sizes, and <b>Show all</b>. Ctrl and the mouse wheel zoom the graph, and the scroll bars move it when it is larger than the window. Click <b>Show all</b> to fit the whole graph in the window.",
+        "fr": "Cliquez sur la case de zoom : elle propose des tailles fixes, et <b>Tout afficher</b>. Ctrl et la molette zooment le graphe, et les barres de défilement le déplacent quand il est plus grand que la fenêtre. Cliquez sur <b>Tout afficher</b> pour faire tenir tout le graphe dans la fenêtre."
+      },
+      "why": {
+        "en": "A long chain or many workflows do not fit at a readable size: zoom to read a card, and Show all to see the whole.",
+        "fr": "Une longue chaîne ou beaucoup de workflows ne tiennent pas à une taille lisible : zoomer pour lire une carte, et Tout afficher pour voir l’ensemble."
+      },
+      "check": {
+        "en": "After Show all, the whole chain is visible again.",
+        "fr": "Après Tout afficher, toute la chaîne est de nouveau visible."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/06.png",
+        "fr": "/tutorials/three-views/fr/06.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 35.0,
+        "fr": 35.0
+      }
+    },
+    {
+      "id": "folded",
+      "title": {
+        "en": "Folded",
+        "fr": "Replié"
+      },
+      "text": {
+        "en": "Click <b>Folded</b>. Each stack is drawn as one card: its name, its number of sessions and lights, its stacking method and a row of dots. Astrometry, Gradient, Denoise, Color, Stars/background and Post are drawn as before.",
+        "fr": "Cliquez sur <b>Replié</b>. Chaque empilement est dessiné comme une seule carte : son nom, son nombre de sessions et de brutes, sa méthode d’empilement et une rangée de points. Astrométrie, Gradient, Débruitage, Couleur, Étoiles/fond et Post sont dessinés comme avant."
+      },
+      "why": {
+        "en": "Folded is for a project that holds several workflows at once, as after a variant or with several filters: the frame blocks of each workflow fit in a single card, so that many workflows fit in the window.",
+        "fr": "Replié sert pour un projet qui contient plusieurs workflows à la fois, comme après une variante ou avec plusieurs filtres : les blocs d’images de chaque workflow tiennent dans une seule carte, si bien que beaucoup de workflows tiennent dans la fenêtre."
+      },
+      "check": {
+        "en": "The Color minimal card reads 1 session · 436 lights · drizzle auto.",
+        "fr": "La carte Couleur minimal indique 1 session · 436 brutes · drizzle auto."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/07.png",
+        "fr": "/tutorials/three-views/fr/07.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 46.0,
+        "fr": 46.0
+      }
+    },
+    {
+      "id": "table",
+      "title": {
+        "en": "Table: rows and columns",
+        "fr": "Tableau : lignes et colonnes"
+      },
+      "text": {
+        "en": "Click <b>Table</b>. It shows the preprocessing as a table, one row per session, under the name of its stack. The <b>Lights</b>, <b>Darks</b>, <b>Flats</b> and <b>Bias</b> columns hold the session’s files, and <b>Calibration</b>, <b>Registration</b>, <b>Selection</b> and <b>Stacking</b> show the settings of the stack. The <b>Common</b> row on top is used when there are several sessions.",
+        "fr": "Cliquez sur <b>Tableau</b>. Il montre le prétraitement sous forme de tableau, une ligne par session, sous le nom de son empilement. Les colonnes <b>Brutes</b>, <b>Darks</b>, <b>Flats</b> et <b>Offsets</b> contiennent les fichiers de la session, et <b>Calibration</b>, <b>Alignement</b>, <b>Sélection</b> et <b>Empilement</b> montrent les réglages de l’empilement. La ligne <b>Commun</b>, en haut, sert quand il y a plusieurs sessions."
+      },
+      "why": {
+        "en": "Table is for the files, session by session: what each night holds, with its exposure and ISO, and what serves every session.",
+        "fr": "Tableau sert pour les fichiers, session par session : ce que contient chaque nuit, avec sa pose et son ISO, et ce qui sert à toutes les sessions."
+      },
+      "check": {
+        "en": "Session 1 reads 436 lights, 48 darks and 62 flats.",
+        "fr": "Session 1 indique 436 brutes, 48 darks et 62 flats."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/08.png",
+        "fr": "/tutorials/three-views/fr/08.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 57.0,
+        "fr": 57.0
+      }
+    },
+    {
+      "id": "add-session",
+      "title": {
+        "en": "Add session",
+        "fr": "Ajouter session"
+      },
+      "text": {
+        "en": "Click <b>Add session</b>: a second row arrives, empty, with no lights, darks, flats or bias. With two sessions, the Common row offers cells for darks, flats and bias.",
+        "fr": "Cliquez sur <b>Ajouter session</b> : une seconde ligne arrive, vide, sans brutes, darks, flats ni offsets. Avec deux sessions, la ligne Commun offre des cases pour les darks, les flats et les offsets."
+      },
+      "why": {
+        "en": "Several nights of the same target are stacked together, and each night is a session. Files placed in the Common cells serve both sessions, and files placed in a session’s own cell serve that session alone.",
+        "fr": "Plusieurs nuits d’une même cible s’empilent ensemble, et chaque nuit est une session. Les fichiers placés dans les cases Commun servent aux deux sessions, et ceux placés dans la case propre d’une session ne servent qu’à elle."
+      },
+      "check": {
+        "en": "The status bar reads 2 sessions, and a notice offers Undo.",
+        "fr": "La barre d’état indique 2 sessions, et une notification propose Annuler."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/09.png",
+        "fr": "/tutorials/three-views/fr/09.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 68.0,
+        "fr": 68.0
+      }
+    },
+    {
+      "id": "undo",
+      "title": {
+        "en": "Undo",
+        "fr": "Annuler"
+      },
+      "text": {
+        "en": "Click <b>Undo</b> in the notice that appears: the session is removed and the table is as it was.",
+        "fr": "Cliquez sur <b>Annuler</b> dans la notification qui apparaît : la session est retirée et le tableau est comme avant."
+      },
+      "why": {
+        "en": "A change to a project can be taken back at once. Here it leaves the project of the second tutorial as it was opened.",
+        "fr": "Une modification d’un projet peut être reprise aussitôt. Ici, elle laisse le projet du deuxième tutoriel comme il a été ouvert."
+      },
+      "check": {
+        "en": "The table has one row again, and the status bar reads 1 session.",
+        "fr": "Le tableau n’a de nouveau qu’une ligne, et la barre d’état indique 1 session."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/10.png",
+        "fr": "/tutorials/three-views/fr/10.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 78.0,
+        "fr": 78.0
+      }
+    },
+    {
+      "id": "add-stack",
+      "title": {
+        "en": "Add stack and the other buttons",
+        "fr": "Ajouter empilement et les autres boutons"
+      },
+      "text": {
+        "en": "<b>Add stack</b> adds a stack at the bottom of the table, with one session of its own: each stack is one workflow. <b>+ columns</b> adds columns, the <b>Files</b> list chooses which files are shown, and <b>Only differences</b> keeps the rows that have something of their own.",
+        "fr": "<b>Ajouter empilement</b> ajoute un empilement en bas du tableau, avec une session à lui : chaque empilement est un workflow. <b>+ colonnes</b> ajoute des colonnes, la liste <b>Fichiers</b> choisit quels fichiers sont montrés, et <b>Écarts seulement</b> garde les lignes qui ont quelque chose de propre."
+      },
+      "why": {
+        "en": "This is how a project holds several workflows: one stack per workflow, each with its own sessions.",
+        "fr": "C’est ainsi qu’un projet contient plusieurs workflows : un empilement par workflow, chacun avec ses sessions."
+      },
+      "check": {
+        "en": "The four buttons sit above the table, left of Only differences.",
+        "fr": "Les quatre boutons sont au-dessus du tableau, à gauche de Écarts seulement."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/11.png",
+        "fr": "/tutorials/three-views/fr/11.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 81.0,
+        "fr": 81.0
+      }
+    },
+    {
+      "id": "session-panel",
+      "title": {
+        "en": "Open frames",
+        "fr": "Ouvrir images"
+      },
+      "text": {
+        "en": "Click a session’s cell, then the settings button on the right edge. The panel lists the session’s lights, darks, flats, bias and dark flats and its filter, and <b>Open frames</b> adds or changes its frames.",
+        "fr": "Cliquez sur la case d’une session, puis sur le bouton de réglages au bord droit. Le panneau liste les brutes, darks, flats, offsets et darks de flat de la session et son filtre, et <b>Ouvrir images</b> ajoute ou change ses images."
+      },
+      "why": {
+        "en": "The panel is where a session’s frames are managed; the cells of the table serve to see them and to drop files onto them.",
+        "fr": "Le panneau sert à gérer les images d’une session ; les cases du tableau servent à les voir et à y déposer des fichiers."
+      },
+      "check": {
+        "en": "The panel reads Lights · 436 / 436 used, Darks · 48 and Flats · 62.",
+        "fr": "Le panneau indique Brutes · 436 / 436 utilisées, Darks · 48 et Flats · 62."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/12.png",
+        "fr": "/tutorials/three-views/fr/12.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 89.0,
+        "fr": 89.0
+      }
+    },
+    {
+      "id": "back-blocks",
+      "title": {
+        "en": "Back to Blocks",
+        "fr": "Retour à Blocs"
+      },
+      "text": {
+        "en": "Click <b>Blocks</b> again: it is the same project and the same chain.",
+        "fr": "Cliquez de nouveau sur <b>Blocs</b> : c’est le même projet et la même chaîne."
+      },
+      "why": {
+        "en": "Switching views changes only the display. The session that was added was undone, so the chain is as it was opened.",
+        "fr": "Changer de vue ne change que l’affichage. La session ajoutée a été annulée, donc la chaîne est comme à l’ouverture."
+      },
+      "check": {
+        "en": "The chain is the same as at the start.",
+        "fr": "La chaîne est la même qu’au départ."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/13.png",
+        "fr": "/tutorials/three-views/fr/13.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 99.0,
+        "fr": 99.0
+      }
+    },
+    {
+      "id": "block-panel",
+      "title": {
+        "en": "The settings panel",
+        "fr": "Le panneau de réglages"
+      },
+      "text": {
+        "en": "Click a block, then the settings button on the right edge: the panel shows the settings of the selected block, here the rule and the thresholds of Selection.",
+        "fr": "Cliquez sur un bloc, puis sur le bouton de réglages au bord droit : le panneau montre les réglages du bloc sélectionné, ici la règle et les seuils de Sélection."
+      },
+      "why": {
+        "en": "Every block has its settings in this one panel, so the graph itself stays readable.",
+        "fr": "Chaque bloc a ses réglages dans ce seul panneau, si bien que le graphe lui-même reste lisible."
+      },
+      "check": {
+        "en": "The panel reads 435 of 436 frames kept.",
+        "fr": "Le panneau indique 435 images sur 436 gardées."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/14.png",
+        "fr": "/tutorials/three-views/fr/14.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 108.0,
+        "fr": 108.0
+      }
+    },
+    {
+      "id": "gpu-run",
+      "title": {
+        "en": "GPU and Run",
+        "fr": "GPU et Exécuter"
+      },
+      "text": {
+        "en": "Click the <b>GPU</b> list above the graph: it chooses what computes, <b>Automatic</b> or <b>CPU only</b>. <b>Run</b> starts the computation; it is greyed here because everything is up to date.",
+        "fr": "Cliquez sur la liste <b>GPU</b> au-dessus du graphe : elle choisit ce qui calcule, <b>Automatique</b> ou <b>Processeur seul</b>. <b>Exécuter</b> lance le calcul ; il est grisé ici parce que tout est à jour."
+      },
+      "why": {
+        "en": "Run computes only what is not up to date, and the GPU list is where to choose between the graphics card and the processor alone.",
+        "fr": "Exécuter ne calcule que ce qui n’est pas à jour, et la liste GPU sert à choisir entre la carte graphique et le processeur seul."
+      },
+      "check": {
+        "en": "The Run button is greyed, and the status bar reads all up to date.",
+        "fr": "Le bouton Exécuter est grisé, et la barre d’état indique tout à jour."
+      },
+      "shot": {
+        "en": "/tutorials/three-views/en/15.png",
+        "fr": "/tutorials/three-views/fr/15.png"
+      },
+      "w": 1596,
+      "h": 896,
+      "at": {
+        "en": 118.0,
+        "fr": 118.0
+      }
+    }
   ],
-  "fr": [
-   "FLOAT installé",
-   "Le tutoriel Le traitement complet : les étoiles à part fait : son projet terminé (environ 1,8 Go) est le point de départ"
-  ]
- },
- "data": {
-  "name": {
-   "en": "Rosette Nebula (NGC 2237) · Sony A7S, 15 s at ISO 4000 · 130/900 Newtonian · 436 lights (1.8 h), 48 darks, 62 flats",
-   "fr": "Nébuleuse de la Rosette (NGC 2237) · Sony A7S, 15 s à 4000 ISO · Newton 130/900 · 436 brutes (1,8 h), 48 darks, 62 flats"
-  },
-  "author": {
-   "en": "the authors of FLOAT",
-   "fr": "les auteurs de FLOAT"
-  },
-  "size": {
-   "en": "6.9 GB",
-   "fr": "6,9 Go"
-  },
-  "note": {
-   "en": "The frames will be offered for download; the link will be given here",
-   "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
-  }
- },
- "video": {
-  "en": {
-   "src": "/tutorials/three-views/en/video.mp4",
-   "captions": "/tutorials/three-views/en/captions.vtt",
-   "chapters": "/tutorials/three-views/en/chapters.vtt",
-   "poster": "/tutorials/three-views/en/poster.jpg",
-   "seconds": 129.0
-  },
-  "fr": {
-   "src": "/tutorials/three-views/fr/video.mp4",
-   "captions": "/tutorials/three-views/fr/captions.vtt",
-   "chapters": "/tutorials/three-views/fr/chapters.vtt",
-   "poster": "/tutorials/three-views/fr/poster.jpg",
-   "seconds": 129.0
-  }
- },
- "steps": [
-  {
-   "id": "home",
-   "title": {
-    "en": "Open a finished project",
-    "fr": "Ouvrir un projet terminé"
-   },
-   "text": {
-    "en": "On the Home screen, click <b>Open project…</b> and choose the finished project of the second tutorial, or a copy of its folder. Nothing is computed in this tutorial.",
-    "fr": "Sur l’écran d’accueil, cliquez sur <b>Ouvrir projet…</b> et choisissez le projet terminé du deuxième tutoriel, ou une copie de son dossier. Rien n’est calculé dans ce tutoriel."
-   },
-   "why": {
-    "en": "A project opens in the state in which it was saved, so the views below show a real processing and not an empty page.",
-    "fr": "Un projet s’ouvre dans l’état où il a été enregistré : les vues ci-dessous montrent un vrai traitement et non une page vide."
-   },
-   "check": {
-    "en": "The project opens, and the title bar names it.",
-    "fr": "Le projet s’ouvre, et la barre de titre le nomme."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/01.png",
-    "fr": "/tutorials/three-views/fr/01.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 0.0,
-    "fr": 0.0
-   }
-  },
-  {
-   "id": "opened",
-   "title": {
-    "en": "One project, three views",
-    "fr": "Un projet, trois vues"
-   },
-   "text": {
-    "en": "The project opens on the <b>Graph</b> page. Above the graph, <b>Blocks</b>, <b>Folded</b> and <b>Table</b> are three views of the same project: only the way it is drawn changes.",
-    "fr": "Le projet s’ouvre sur la page <b>Graphe</b>. Au-dessus du graphe, <b>Blocs</b>, <b>Replié</b> et <b>Tableau</b> sont trois vues du même projet : seule la façon de le dessiner change."
-   },
-   "why": {
-    "en": "Each view answers a different question: the chain of the processing, many workflows at once, or the files.",
-    "fr": "Chaque vue répond à une question différente : la chaîne du traitement, beaucoup de workflows à la fois, ou les fichiers."
-   },
-   "check": {
-    "en": "<b>Blocks</b> is underlined, and the status bar reads all up to date.",
-    "fr": "<b>Blocs</b> est souligné, et la barre d’état indique tout à jour."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/02.png",
-    "fr": "/tutorials/three-views/fr/02.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 4.0,
-    "fr": 4.0
-   }
-  },
-  {
-   "id": "chain",
-   "title": {
-    "en": "Blocks: the chain",
-    "fr": "Blocs : la chaîne"
-   },
-   "text": {
-    "en": "Click the arrow at the top right of the window to fold the settings panel. <b>Blocks</b> draws every block of the chain from left to right, in three bands: <b>Preprocessing</b>, <b>Linear processing</b> and <b>Composition</b>. Post comes last.",
-    "fr": "Cliquez sur la flèche en haut à droite de la fenêtre pour replier le panneau de réglages. <b>Blocs</b> dessine chaque bloc de la chaîne de gauche à droite, en trois bandes : <b>Prétraitement</b>, <b>Traitement linéaire</b> et <b>Composition</b>. Post vient en dernier."
-   },
-   "why": {
-    "en": "Blocks is the view for following the processing in order: the picture goes through each block from the left to Post.",
-    "fr": "Blocs est la vue pour suivre le traitement dans l’ordre : l’image passe par chaque bloc, de la gauche jusqu’à Post."
-   },
-   "check": {
-    "en": "The whole chain is on the screen, and every card has a green bar on its left edge.",
-    "fr": "Toute la chaîne est à l’écran, et chaque carte a une barre verte sur son bord gauche."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/03.png",
-    "fr": "/tutorials/three-views/fr/03.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 10.0,
-    "fr": 10.0
-   }
-  },
-  {
-   "id": "card",
-   "title": {
-    "en": "A block’s card",
-    "fr": "La carte d’un bloc"
-   },
-   "text": {
-    "en": "Click a card to select it. A block is a card: its name, a summary line of its settings, and a bar on its left edge whose colour is the block’s state. Green means that the block is up to date.",
-    "fr": "Cliquez sur une carte pour la sélectionner. Un bloc est une carte : son nom, une ligne de résumé de ses réglages, et une barre sur son bord gauche dont la couleur est l’état du bloc. Vert veut dire que le bloc est à jour."
-   },
-   "why": {
-    "en": "The bar tells at a glance which blocks are up to date and which would be computed again after a change.",
-    "fr": "La barre dit d’un coup d’œil quels blocs sont à jour et lesquels seraient recalculés après une modification."
-   },
-   "check": {
-    "en": "The selected card has a light outline.",
-    "fr": "La carte sélectionnée a un contour clair."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/04.png",
-    "fr": "/tutorials/three-views/fr/04.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 20.0,
-    "fr": 20.0
-   }
-  },
-  {
-   "id": "palette",
-   "title": {
-    "en": "The palette",
-    "fr": "La palette"
-   },
-   "text": {
-    "en": "The palette on the left lists the blocks that can be added, in groups: Sources, Frames, Image, Post and Composition. A block is dragged onto the chain or double-clicked, and a block that cannot be added at this point is greyed.",
-    "fr": "La palette à gauche liste les blocs que l’on peut ajouter, par groupes : Sources, Brutes, Image, Post et Composition. Un bloc se fait glisser sur la chaîne ou se double-clique, et un bloc qui ne peut pas être ajouté à ce point est grisé."
-   },
-   "why": {
-    "en": "The palette is where a workflow is extended: its header names the workflow that is selected, and the blocks that fit it are active.",
-    "fr": "La palette sert à prolonger un workflow : son en-tête nomme le workflow sélectionné, et les blocs qui lui conviennent sont actifs."
-   },
-   "check": {
-    "en": "The palette header reads for “Color minimal”.",
-    "fr": "L’en-tête de la palette indique pour « Couleur minimal »."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/05.png",
-    "fr": "/tutorials/three-views/fr/05.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 27.0,
-    "fr": 27.0
-   }
-  },
-  {
-   "id": "zoom",
-   "title": {
-    "en": "Zoom and Show all",
-    "fr": "Zoom et Tout afficher"
-   },
-   "text": {
-    "en": "Click the zoom box: it offers fixed sizes, and <b>Show all</b>. Ctrl and the mouse wheel zoom the graph, and the scroll bars move it when it is larger than the window. Click <b>Show all</b> to fit the whole graph in the window.",
-    "fr": "Cliquez sur la case de zoom : elle propose des tailles fixes, et <b>Tout afficher</b>. Ctrl et la molette zooment le graphe, et les barres de défilement le déplacent quand il est plus grand que la fenêtre. Cliquez sur <b>Tout afficher</b> pour faire tenir tout le graphe dans la fenêtre."
-   },
-   "why": {
-    "en": "A long chain or many workflows do not fit at a readable size: zoom to read a card, and Show all to see the whole.",
-    "fr": "Une longue chaîne ou beaucoup de workflows ne tiennent pas à une taille lisible : zoomer pour lire une carte, et Tout afficher pour voir l’ensemble."
-   },
-   "check": {
-    "en": "After Show all, the whole chain is visible again.",
-    "fr": "Après Tout afficher, toute la chaîne est de nouveau visible."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/06.png",
-    "fr": "/tutorials/three-views/fr/06.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 35.0,
-    "fr": 35.0
-   }
-  },
-  {
-   "id": "folded",
-   "title": {
-    "en": "Folded",
-    "fr": "Replié"
-   },
-   "text": {
-    "en": "Click <b>Folded</b>. Each stack is drawn as one card: its name, its number of sessions and lights, its stacking method and a row of dots. Astrometry, Gradient, Denoise, Color, Stars/background and Post are drawn as before.",
-    "fr": "Cliquez sur <b>Replié</b>. Chaque empilement est dessiné comme une seule carte : son nom, son nombre de sessions et de brutes, sa méthode d’empilement et une rangée de points. Astrométrie, Gradient, Débruitage, Couleur, Étoiles/fond et Post sont dessinés comme avant."
-   },
-   "why": {
-    "en": "Folded is for a project that holds several workflows at once, as after a variant or with several filters: the frame blocks of each workflow fit in a single card, so that many workflows fit in the window.",
-    "fr": "Replié sert pour un projet qui contient plusieurs workflows à la fois, comme après une variante ou avec plusieurs filtres : les blocs d’images de chaque workflow tiennent dans une seule carte, si bien que beaucoup de workflows tiennent dans la fenêtre."
-   },
-   "check": {
-    "en": "The Color minimal card reads 1 session · 436 lights · drizzle auto.",
-    "fr": "La carte Couleur minimal indique 1 session · 436 brutes · drizzle auto."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/07.png",
-    "fr": "/tutorials/three-views/fr/07.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 46.0,
-    "fr": 46.0
-   }
-  },
-  {
-   "id": "table",
-   "title": {
-    "en": "Table: rows and columns",
-    "fr": "Tableau : lignes et colonnes"
-   },
-   "text": {
-    "en": "Click <b>Table</b>. It shows the preprocessing as a table, one row per session, under the name of its stack. The <b>Lights</b>, <b>Darks</b>, <b>Flats</b> and <b>Bias</b> columns hold the session’s files, and <b>Calibration</b>, <b>Registration</b>, <b>Selection</b> and <b>Stacking</b> show the settings of the stack. The <b>Common</b> row on top is used when there are several sessions.",
-    "fr": "Cliquez sur <b>Tableau</b>. Il montre le prétraitement sous forme de tableau, une ligne par session, sous le nom de son empilement. Les colonnes <b>Brutes</b>, <b>Darks</b>, <b>Flats</b> et <b>Offsets</b> contiennent les fichiers de la session, et <b>Calibration</b>, <b>Alignement</b>, <b>Sélection</b> et <b>Empilement</b> montrent les réglages de l’empilement. La ligne <b>Commun</b>, en haut, sert quand il y a plusieurs sessions."
-   },
-   "why": {
-    "en": "Table is for the files, session by session: what each night holds, with its exposure and ISO, and what serves every session.",
-    "fr": "Tableau sert pour les fichiers, session par session : ce que contient chaque nuit, avec sa pose et son ISO, et ce qui sert à toutes les sessions."
-   },
-   "check": {
-    "en": "Session 1 reads 436 lights, 48 darks and 62 flats.",
-    "fr": "Session 1 indique 436 brutes, 48 darks et 62 flats."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/08.png",
-    "fr": "/tutorials/three-views/fr/08.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 57.0,
-    "fr": 57.0
-   }
-  },
-  {
-   "id": "add-session",
-   "title": {
-    "en": "Add session",
-    "fr": "Ajouter session"
-   },
-   "text": {
-    "en": "Click <b>Add session</b>: a second row arrives, empty, with no lights, darks, flats or bias. With two sessions, the Common row offers cells for darks, flats and bias.",
-    "fr": "Cliquez sur <b>Ajouter session</b> : une seconde ligne arrive, vide, sans brutes, darks, flats ni offsets. Avec deux sessions, la ligne Commun offre des cases pour les darks, les flats et les offsets."
-   },
-   "why": {
-    "en": "Several nights of the same target are stacked together, and each night is a session. Files placed in the Common cells serve both sessions, and files placed in a session’s own cell serve that session alone.",
-    "fr": "Plusieurs nuits d’une même cible s’empilent ensemble, et chaque nuit est une session. Les fichiers placés dans les cases Commun servent aux deux sessions, et ceux placés dans la case propre d’une session ne servent qu’à elle."
-   },
-   "check": {
-    "en": "The status bar reads 2 sessions, and a notice offers Undo.",
-    "fr": "La barre d’état indique 2 sessions, et une notification propose Annuler."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/09.png",
-    "fr": "/tutorials/three-views/fr/09.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 68.0,
-    "fr": 68.0
-   }
-  },
-  {
-   "id": "undo",
-   "title": {
-    "en": "Undo",
-    "fr": "Annuler"
-   },
-   "text": {
-    "en": "Click <b>Undo</b> in the notice that appears: the session is removed and the table is as it was.",
-    "fr": "Cliquez sur <b>Annuler</b> dans la notification qui apparaît : la session est retirée et le tableau est comme avant."
-   },
-   "why": {
-    "en": "A change to a project can be taken back at once. Here it leaves the project of the second tutorial as it was opened.",
-    "fr": "Une modification d’un projet peut être reprise aussitôt. Ici, elle laisse le projet du deuxième tutoriel comme il a été ouvert."
-   },
-   "check": {
-    "en": "The table has one row again, and the status bar reads 1 session.",
-    "fr": "Le tableau n’a de nouveau qu’une ligne, et la barre d’état indique 1 session."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/10.png",
-    "fr": "/tutorials/three-views/fr/10.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 78.0,
-    "fr": 78.0
-   }
-  },
-  {
-   "id": "add-stack",
-   "title": {
-    "en": "Add stack and the other buttons",
-    "fr": "Ajouter empilement et les autres boutons"
-   },
-   "text": {
-    "en": "<b>Add stack</b> adds a stack at the bottom of the table, with one session of its own: each stack is one workflow. <b>+ columns</b> adds columns, the <b>Files</b> list chooses which files are shown, and <b>Only differences</b> keeps the rows that have something of their own.",
-    "fr": "<b>Ajouter empilement</b> ajoute un empilement en bas du tableau, avec une session à lui : chaque empilement est un workflow. <b>+ colonnes</b> ajoute des colonnes, la liste <b>Fichiers</b> choisit quels fichiers sont montrés, et <b>Écarts seulement</b> garde les lignes qui ont quelque chose de propre."
-   },
-   "why": {
-    "en": "This is how a project holds several workflows: one stack per workflow, each with its own sessions.",
-    "fr": "C’est ainsi qu’un projet contient plusieurs workflows : un empilement par workflow, chacun avec ses sessions."
-   },
-   "check": {
-    "en": "The four buttons sit above the table, left of Only differences.",
-    "fr": "Les quatre boutons sont au-dessus du tableau, à gauche de Écarts seulement."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/11.png",
-    "fr": "/tutorials/three-views/fr/11.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 81.0,
-    "fr": 81.0
-   }
-  },
-  {
-   "id": "session-panel",
-   "title": {
-    "en": "Open frames",
-    "fr": "Ouvrir images"
-   },
-   "text": {
-    "en": "Click a session’s cell, then the settings button on the right edge. The panel lists the session’s lights, darks, flats, bias and dark flats and its filter, and <b>Open frames</b> adds or changes its frames.",
-    "fr": "Cliquez sur la case d’une session, puis sur le bouton de réglages au bord droit. Le panneau liste les brutes, darks, flats, offsets et darks de flat de la session et son filtre, et <b>Ouvrir images</b> ajoute ou change ses images."
-   },
-   "why": {
-    "en": "The panel is where a session’s frames are managed; the cells of the table serve to see them and to drop files onto them.",
-    "fr": "Le panneau sert à gérer les images d’une session ; les cases du tableau servent à les voir et à y déposer des fichiers."
-   },
-   "check": {
-    "en": "The panel reads Lights · 436 / 436 used, Darks · 48 and Flats · 62.",
-    "fr": "Le panneau indique Brutes · 436 / 436 utilisées, Darks · 48 et Flats · 62."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/12.png",
-    "fr": "/tutorials/three-views/fr/12.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 89.0,
-    "fr": 89.0
-   }
-  },
-  {
-   "id": "back-blocks",
-   "title": {
-    "en": "Back to Blocks",
-    "fr": "Retour à Blocs"
-   },
-   "text": {
-    "en": "Click <b>Blocks</b> again: it is the same project and the same chain.",
-    "fr": "Cliquez de nouveau sur <b>Blocs</b> : c’est le même projet et la même chaîne."
-   },
-   "why": {
-    "en": "Switching views changes only the display. The session that was added was undone, so the chain is as it was opened.",
-    "fr": "Changer de vue ne change que l’affichage. La session ajoutée a été annulée, donc la chaîne est comme à l’ouverture."
-   },
-   "check": {
-    "en": "The chain is the same as at the start.",
-    "fr": "La chaîne est la même qu’au départ."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/13.png",
-    "fr": "/tutorials/three-views/fr/13.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 99.0,
-    "fr": 99.0
-   }
-  },
-  {
-   "id": "block-panel",
-   "title": {
-    "en": "The settings panel",
-    "fr": "Le panneau de réglages"
-   },
-   "text": {
-    "en": "Click a block, then the settings button on the right edge: the panel shows the settings of the selected block, here the rule and the thresholds of Selection.",
-    "fr": "Cliquez sur un bloc, puis sur le bouton de réglages au bord droit : le panneau montre les réglages du bloc sélectionné, ici la règle et les seuils de Sélection."
-   },
-   "why": {
-    "en": "Every block has its settings in this one panel, so the graph itself stays readable.",
-    "fr": "Chaque bloc a ses réglages dans ce seul panneau, si bien que le graphe lui-même reste lisible."
-   },
-   "check": {
-    "en": "The panel reads 435 of 436 frames kept.",
-    "fr": "Le panneau indique 435 images sur 436 gardées."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/14.png",
-    "fr": "/tutorials/three-views/fr/14.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 108.0,
-    "fr": 108.0
-   }
-  },
-  {
-   "id": "gpu-run",
-   "title": {
-    "en": "GPU and Run",
-    "fr": "GPU et Exécuter"
-   },
-   "text": {
-    "en": "Click the <b>GPU</b> list above the graph: it chooses what computes, <b>Automatic</b> or <b>CPU only</b>. <b>Run</b> starts the computation; it is greyed here because everything is up to date.",
-    "fr": "Cliquez sur la liste <b>GPU</b> au-dessus du graphe : elle choisit ce qui calcule, <b>Automatique</b> ou <b>Processeur seul</b>. <b>Exécuter</b> lance le calcul ; il est grisé ici parce que tout est à jour."
-   },
-   "why": {
-    "en": "Run computes only what is not up to date, and the GPU list is where to choose between the graphics card and the processor alone.",
-    "fr": "Exécuter ne calcule que ce qui n’est pas à jour, et la liste GPU sert à choisir entre la carte graphique et le processeur seul."
-   },
-   "check": {
-    "en": "The Run button is greyed, and the status bar reads all up to date.",
-    "fr": "Le bouton Exécuter est grisé, et la barre d’état indique tout à jour."
-   },
-   "shot": {
-    "en": "/tutorials/three-views/en/15.png",
-    "fr": "/tutorials/three-views/fr/15.png"
-   },
-   "w": 1596,
-   "h": 896,
-   "at": {
-    "en": 118.0,
-    "fr": 118.0
-   }
-  }
- ],
- "blocks": [
-  "Calibration",
-  "Stacking",
-  "Post"
- ],
- "next": null
+  "blocks": [
+    "Calibration",
+    "Stacking",
+    "Post"
+  ],
+  "next": null
 }

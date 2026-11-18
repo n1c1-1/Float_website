@@ -37,14 +37,20 @@
       "en": "the authors of FLOAT",
       "fr": "les auteurs de FLOAT"
     },
-    "size": {
-      "en": "7.1 GB",
-      "fr": "7,1 Go"
-    },
-    "note": {
-      "en": "The frames will be offered for download; the link will be given here",
-      "fr": "Les images seront proposées au téléchargement ; le lien sera donné ici"
-    }
+    "licence": "CC BY 4.0",
+    "files": [
+      {
+        "what": {
+          "en": "lights",
+          "fr": "brutes"
+        },
+        "file": "north-america-lights.zip",
+        "size": {
+          "en": "7.6 GB",
+          "fr": "7,6 Go"
+        }
+      }
+    ]
   },
   "video": {
     "fr": {
