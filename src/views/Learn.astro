@@ -5,6 +5,7 @@ import GraphTour from '../components/GraphTour.astro';
 import type { Lang } from '../i18n/ui';
 import TutorialItem from '../components/TutorialItem.astro';
 import { tutorials, inSection, levelNames } from '../data/tutorials';
+import { datasets, datasetUrl } from '../data/datasets';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const fr = lang === 'fr';
@@ -68,6 +69,24 @@ const steps = fr
 
 
     {hasTutorials && (<>
+      <section class="sec">
+        <h2>{fr ? 'Les jeux d’images des tutoriels' : 'The frame sets of the tutorials'}</h2>
+        <p class="measure">{fr
+          ? 'Les poses brutes et les images de calibration sur lesquelles les tutoriels sont faits, à télécharger pour refaire chaque geste sur les mêmes images. Licence CC BY 4.0.'
+          : 'The raw frames and calibration frames the tutorials are made on, to download and repeat each step on the same frames. CC BY 4.0 licence.'}</p>
+        <ul class="sets">
+          {datasets.map((d) => (
+            <li>
+              <a href={datasetUrl(d, lang)} tabindex="-1" aria-hidden="true"><img src={d.image.src} alt="" loading="lazy" width="320" height="180" /></a>
+              <div>
+                <h3><a href={datasetUrl(d, lang)}>{d.title[lang]}</a></h3>
+                <p>{d.summary[lang]}</p>
+                <p class="meta">{d.archives.length} {fr ? (d.archives.length > 1 ? 'archives' : 'archive') : (d.archives.length > 1 ? 'archives' : 'archive')} · {d.archives.map((x) => x.size[lang]).join(' + ')}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
       {levels.length > 0 && (
         <section class="sec">
           <h2>{fr ? 'Le parcours, du débutant à l’expert' : 'The path, from beginner to expert'}</h2>
@@ -118,5 +137,12 @@ const steps = fr
 <style>
   .level { margin-top: 1.6rem; }
   .level h3 { font-family: var(--sans); margin-top: 0; }
+  .sets { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.2rem; max-width: 60rem; }
+  .sets li { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1rem; align-items: start; border-top: 1px solid var(--rule); padding-top: 0.9rem; }
+  .sets img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: var(--plate); }
+  .sets h3 { font-family: var(--serif); font-size: 1.125rem; margin: 0 0 0.3rem; }
+  .sets p { margin: 0 0 0.3rem; }
+  .sets .meta { margin: 0; }
+  @media (max-width: 30rem) { .sets li { grid-template-columns: 1fr; } }
   .tlist { list-style: none; padding: 0; margin: 0 0 1rem; max-width: 60rem; }
 </style>

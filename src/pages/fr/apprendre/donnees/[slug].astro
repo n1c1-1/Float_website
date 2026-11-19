@@ -1,0 +1,9 @@
+---
+// Une page par jeu d'images (src/data/datasets.ts).
+import V from '../../../../views/Dataset.astro';
+import { datasets } from '../../../../data/datasets';
+export function getStaticPaths() {
+  return datasets.map((d) => ({ params: { slug: d.slugFr }, props: { slug: d.slug } }));
+}
+---
+<V lang="fr" slug={Astro.props.slug} />

@@ -5,7 +5,8 @@ import Base from '../layouts/Base.astro';
 import Figure from '../components/Figure.astro';
 import Picture from '../components/Picture.astro';
 import { blocks, blockUrl, routes, type Lang } from '../i18n/ui';
-import { bySlug, tutorialUrl, neighbours, levelNames, tr, videoUrl, dataUrl } from '../data/tutorials';
+import { datasetBySlug, datasetUrl } from '../data/datasets';
+import { bySlug, tutorialUrl, neighbours, levelNames, tr, videoUrl } from '../data/tutorials';
 interface Props { lang: Lang; slug: string }
 const { lang, slug } = Astro.props;
 const fr = lang === 'fr';
@@ -15,6 +16,7 @@ const { prev, next } = neighbours(t);
 // a media file is used only when it exists: the page never shows a broken player or a broken image
 const has = (p?: string) => !!p && existsSync(join(process.cwd(), 'public', p));
 const v = t.video[lang];
+const set = t.data.set ? datasetBySlug(t.data.set) : undefined;
 const hasVideo = !!v?.src && has(v?.poster); // the video itself is in the R2 bucket, see videoUrl
 const poster = has(v?.poster) ? v!.poster : undefined;
 const captions = has(v?.captions) ? v!.captions : undefined;
@@ -45,8 +47,9 @@ const L = fr
           <tr><th scope="row">{L.dur}</th><td>{t.duration[lang]}</td></tr>
           <tr><th scope="row">{L.needs}</th><td><ul class="plain-list">{t.needs[lang].map((n) => <li>{n}</li>)}</ul></td></tr>
           <tr><th scope="row">{L.data}</th><td>
-            {t.data.url ? <a href={t.data.url}>{tr(t.data.name, lang)}</a> : tr(t.data.name, lang)}, {tr(t.data.author, lang)}{t.data.licence && `${fr ? ' ;' : ';'} ${L.licence} ${tr(t.data.licence, lang)}`}{t.data.size && `${fr ? ' ;' : ';'} ${L.size} ${tr(t.data.size, lang)}`}{t.data.note && `. ${tr(t.data.note, lang)}`}{t.data.files && <>. {fr ? 'Téléchargement : ' : 'Download: '}{t.data.files.map((f, i) => <>{i > 0 && ' · '}<a href={dataUrl(f.file)} download>{tr(f.what, lang)}</a> ({tr(f.size, lang)})</>)}</>}
+            {set ? <a href={datasetUrl(set, lang)}>{tr(t.data.name, lang)}</a> : t.data.url ? <a href={t.data.url}>{tr(t.data.name, lang)}</a> : tr(t.data.name, lang)}, {tr(t.data.author, lang)}{t.data.licence && `${fr ? ' ;' : ';'} ${L.licence} ${tr(t.data.licence, lang)}`}{t.data.size && `${fr ? ' ;' : ';'} ${L.size} ${tr(t.data.size, lang)}`}{t.data.note && `. ${tr(t.data.note, lang)}`}
           </td></tr>
+          {set && <tr><th scope="row">{fr ? 'Télécharger' : 'Download'}</th><td><a href={datasetUrl(set, lang)}>{fr ? 'Les images de ce tutoriel' : 'The frames of this tutorial'}</a>, {fr ? 'licence' : 'licence'} CC BY 4.0</td></tr>}
         </tbody>
       </table>
     </div>

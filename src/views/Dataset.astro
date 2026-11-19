@@ -1,0 +1,70 @@
+---
+// The page of one frame set: what it is, the archives to download, the licence, and the tutorials that use it.
+import Base from '../layouts/Base.astro';
+import Picture from '../components/Picture.astro';
+import TutorialItem from '../components/TutorialItem.astro';
+import { datasetBySlug, datasetUrl, archiveUrl } from '../data/datasets';
+import { tutorials } from '../data/tutorials';
+import { routes, type Lang } from '../i18n/ui';
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+const fr = lang === 'fr';
+const d = datasetBySlug(slug)!;
+const used = tutorials.filter((t) => (t.data as { set?: string }).set === d.slug);
+---
+<Base lang={lang} page="learn" title={d.title[lang]} description={d.summary[lang]}
+  paths={{ en: datasetUrl(d, 'en'), fr: datasetUrl(d, 'fr') }}>
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <p class="kicker"><a href={routes.learn[lang]}>{fr ? 'Apprendre' : 'Learn'}</a> · {fr ? 'Jeu d’images' : 'Frame set'}</p>
+    <h1>{d.title[lang]}</h1>
+    <p class="measure lead">{d.summary[lang]}</p>
+
+    <div class="split even ds">
+      <div>
+        <section aria-label={fr ? 'Télécharger' : 'Download'}>
+          <h2>{fr ? 'Télécharger' : 'Download'}</h2>
+          <ul class="dl">
+            {d.archives.map((a) => (
+              <li><a class="btn" href={archiveUrl(a)} download>{a.what[lang]}</a> <span class="meta">{a.file} · {a.size[lang]}</span></li>
+            ))}
+          </ul>
+          {d.note && <p>{d.note[lang]}</p>}
+          <p>{fr
+            ? <>Licence <a href="https://creativecommons.org/licenses/by/4.0/deed.fr">CC BY 4.0</a> : les images peuvent être réutilisées, y compris à des fins commerciales, en citant « FLOAT, <span class="nw">float-astro.org</span> ». Chaque archive contient un fichier README.txt qui le rappelle.</>
+            : <>Licence <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>: the frames can be reused, commercial use included, with the credit “FLOAT, <span class="nw">float-astro.org</span>”. Each archive holds a README.txt that says so.</>}</p>
+        </section>
+        <div class="tbl-wrap">
+          <table class="tbl sheet">
+            <caption><b>{fr ? 'Tableau 1.' : 'Table 1.'}</b>{fr ? 'Les prises de vue.' : 'The acquisition.'}</caption>
+            <tbody>{d.rows.map(([k, v]) => <tr><th scope="row">{k[lang]}</th><td>{v[lang]}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <p class="meta">{fr ? 'L’horloge de l’appareil n’était pas réglée : les dates enregistrées dans les fichiers sont fausses.' : 'The camera clock was not set: the dates recorded in the files are wrong.'}</p>
+      </div>
+      <figure>
+        <div class="plate"><Picture src={d.image.src} alt={d.title[lang]} width={d.image.w} height={d.image.h} eager zoom={d.image.src} /></div>
+        <figcaption><b>{fr ? 'Figure 1.' : 'Figure 1.'}</b>{fr ? ' L’image finie, traitée dans FLOAT.' : ' The finished image, processed in FLOAT.'}</figcaption>
+      </figure>
+    </div>
+
+    {used.length > 0 && (
+      <section class="sec">
+        <h2>{fr ? 'Les tutoriels sur ces images' : 'The tutorials on these frames'}</h2>
+        <ol class="tlist">{used.map((t) => <TutorialItem t={t} lang={lang} />)}</ol>
+      </section>
+    )}
+  </div>
+</Base>
+
+<style>
+  .ds { align-items: start; margin-top: 1.5rem; }
+  .ds > * { min-width: 0; }
+  .dl .btn { margin: 0; }
+  .dl .meta { overflow-wrap: anywhere; }
+  .ds h2 { margin-top: 0; }
+  .nw { white-space: nowrap; }
+  .dl { list-style: none; padding: 0; margin: 0 0 1rem; }
+  .dl li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 0.8rem; padding: 0.5rem 0; border-top: 1px solid var(--rule); }
+  .dl li:last-child { border-bottom: 1px solid var(--rule); }
+  .tlist { list-style: none; padding: 0; margin: 0 0 1rem; max-width: 60rem; }
+</style>

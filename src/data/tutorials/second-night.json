@@ -20,12 +20,12 @@
     "en": [
       "FLOAT installed",
       "The tutorial My first image done: its finished project is the starting point",
-      "The frames of the second night: 358 lights of 15 s, 4.3 GB"
+      "The frames of the second night: 358 lights of 15 s, 4.5 GB"
     ],
     "fr": [
       "FLOAT installé",
       "Le tutoriel Ma première image fait : son projet terminé est le point de départ",
-      "Les images de la seconde nuit : 358 brutes de 15 s, 4,3 Go"
+      "Les images de la seconde nuit : 358 brutes de 15 s, 4,5 Go"
     ]
   },
   "data": {
@@ -37,42 +37,7 @@
       "en": "the authors of FLOAT",
       "fr": "les auteurs de FLOAT"
     },
-    "licence": "CC BY 4.0",
-    "files": [
-      {
-        "what": {
-          "en": "lights, 29 December 2024",
-          "fr": "brutes, 29 décembre 2024"
-        },
-        "file": "rosette-2024-12-29-lights.zip",
-        "size": {
-          "en": "5.5 GB",
-          "fr": "5,5 Go"
-        }
-      },
-      {
-        "what": {
-          "en": "darks and flats",
-          "fr": "darks et flats"
-        },
-        "file": "rosette-calibration.zip",
-        "size": {
-          "en": "1.4 GB",
-          "fr": "1,4 Go"
-        }
-      },
-      {
-        "what": {
-          "en": "second night, 28 December 2024",
-          "fr": "seconde nuit, 28 décembre 2024"
-        },
-        "file": "rosette-2024-12-28-lights.zip",
-        "size": {
-          "en": "4.5 GB",
-          "fr": "4,5 Go"
-        }
-      }
-    ]
+    "set": "rosette"
   },
   "video": {
     "en": {
