@@ -8,6 +8,7 @@ export const routes: Record<string, Record<Lang, string | null>> = {
   images: { en: '/images/', fr: '/fr/images/' },
   learn: { en: '/learn/', fr: '/fr/apprendre/' },
   blocks: { en: '/blocks/', fr: '/fr/blocs/' },
+  notes: { en: '/notes/', fr: '/fr/notes/' },
   project: { en: '/project/', fr: '/fr/projet/' },
 };
 
@@ -16,6 +17,7 @@ export const nav: { key: string; en: string; fr: string }[] = [
   { key: 'download', en: 'Download', fr: 'Télécharger' },
   { key: 'learn', en: 'Learn', fr: 'Apprendre' },
   { key: 'blocks', en: 'Blocks', fr: 'Blocs' },
+  { key: 'notes', en: 'Notes', fr: 'Notes' },
   { key: 'project', en: 'Project', fr: 'Projet' },
 ];
 

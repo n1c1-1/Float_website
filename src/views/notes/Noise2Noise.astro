@@ -1,0 +1,260 @@
+---
+// Technical note 1: Noise2Noise on half-stacks. Figures and numbers: docs/chantiers/debruitage.md of the FLOAT repository
+// (bench of 4 November 2026, model v2) and the Rosette project of the tutorials (figure 2, star check).
+import Base from '../../layouts/Base.astro';
+import Figure from '../../components/Figure.astro';
+import { notes, noteUrl } from '../../data/notes';
+import { release, routes, version, type Lang } from '../../i18n/ui';
+import { datasets, datasetUrl } from '../../data/datasets';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const note = notes.find((x) => x.slug === 'noise2noise')!;
+const rosette = datasetUrl(datasets.find((d) => d.slug === 'rosette')!, lang);
+const A = 'https://arxiv.org/abs/';
+const refs: [string, string][] = [
+  ['Lehtinen J., Munkberg J., Hasselgren J., Laine S., Karras T., Aittala M., Aila T. 2018, Noise2Noise: learning image restoration without clean data, ICML', A + '1803.04189'],
+  ['Guo Y., Zhang H., Li M., et al. 2026, Deeper detection limits in astronomical imaging using self-supervised spatiotemporal denoising, Science', 'https://doi.org/10.1126/science.ady9404'],
+  ['Vaheb O., Fabbro S., Draper S. 2026, AstroSURE: learning to remove noise from astronomical images without ground truth data', A + '2604.16793'],
+  ['Zhang Y., Nord B., Pagul A., Lepori M. 2022, Noise2Astro: astronomical image denoising with self-supervised neural networks, RNAAS', A + '2209.07071'],
+  ['Krull A., Buchholz T.-O., Jug F. 2019, Noise2Void: learning denoising from single noisy images, CVPR', A + '1811.10980'],
+  ['Batson J., Royer L. 2019, Noise2Self: blind denoising by self-supervision, ICML', A + '1901.11365'],
+  ['Mansour Y., Heckel R. 2023, Zero-Shot Noise2Noise: efficient image denoising without any data, CVPR', A + '2303.11253'],
+  ['Mohan S., Vincent J. L., Manzorro R., Crozier P. A., Fernandez-Granda C., Simoncelli E. P. 2021, Adaptive denoising via GainTuning, NeurIPS', A + '2107.12815'],
+  ['Zhang K., Zuo W., Zhang L. 2018, FFDNet: toward a fast and flexible solution for CNN-based image denoising, IEEE TIP', A + '1710.04026'],
+  ['Ronneberger O., Fischer P., Brox T. 2015, U-Net: convolutional networks for biomedical image segmentation, MICCAI', A + '1505.04597'],
+  ['Fruchter A. S., Hook R. N. 2002, Drizzle: a method for the linear reconstruction of undersampled images, PASP 114, 144', A + 'astro-ph/9808087'],
+  ['Lim B., Son S., Kim H., Nah S., Lee K. M. 2017, Enhanced deep residual networks for single image super-resolution, CVPR Workshops', A + '1707.02921'],
+  ['Loshchilov I., Hutter F. 2019, Decoupled weight decay regularization, ICLR', A + '1711.05101'],
+];
+// bench of 4 November 2026, model v2, held-out zone: the weighted Noise2Noise loss (lower is better)
+const rows: [string, string, string, string, string, string, string][] = [
+  ['IC 1805', '3.159', '2.194', '1.975', '1.982', '', '2.102'],
+  ['NGC 7023', '2.730', '1.453', '1.437', '', '', '1.449'],
+  ['M51', '1.189', '0.631', '0.632', '', '', '0.668'],
+  ['M8', '2.051', '1.488', '1.131', '0.843', '0.722', '0.885'],
+  ['NGC 2237', '1.943', '1.063', '1.000', '1.075', '', '1.124'],
+  ['M31 (Seestar S50)', '1.574', '0.801', '0.800', '', '', '0.813'],
+];
+const num = (s: string) => (fr ? s.replace('.', ',') : s);
+const best = (r: string[]) => Math.min(...r.slice(2).filter(Boolean).map(Number));
+---
+<Base lang={lang} page="notes" title={note.title[lang]} description={note.summary[lang]}
+  paths={{ en: noteUrl(note, 'en'), fr: noteUrl(note, 'fr') }}>
+  <article class="wide-page paper" style="padding-top: 2.6rem">
+    <p class="kicker"><a href={routes.notes[lang]}>{fr ? 'Notes techniques' : 'Technical notes'}</a> · {fr ? 'Note' : 'Note'} {note.n}</p>
+    <h1>{note.title[lang]}</h1>
+    <p class="meta">FLOAT · {note.date[lang]} · {fr ? 'logiciel' : 'software'} {version}</p>
+
+    <div class="abstract measure">
+      <p data-label={fr ? 'Résumé' : 'Abstract'}>{fr
+        ? 'Un débruiteur appris a besoin d’images propres pour s’entraîner, et le ciel profond n’en fournit pas. Noise2Noise lève cette contrainte : un réseau qui apprend à prédire une observation bruitée à partir d’une autre observation de la même scène, de bruit indépendant, ne peut apprendre que le signal. FLOAT écrit chaque empilement en deux demi-empilements, formés de blocs de poses en alternance ; la paire d’entraînement existe ainsi pour chaque projet, sans pose ni calcul de plus. Un U-Net de 5,8 millions de paramètres, pré-entraîné en Noise2Noise sur 76 paires issues de 28 jeux d’images amateurs, s’adapte ensuite en 500 pas (40 s sur une carte graphique grand public) aux demi-empilements de l’image traitée. Sur six cas tenus à l’écart de l’entraînement, avec la durée d’adaptation choisie automatiquement, le réseau adapté atteint ou dépasse un apprentissage complet sur chaque image, de quatre à trente fois plus long. La corrélation du bruit entre pixels voisins, mesurée sur la différence des deux demi-empilements, repère les séances sans décalage entre les poses, pour lesquelles une adaptation longue est nécessaire.'
+        : 'A learned denoiser needs clean images to train on, and the deep sky offers none. Noise2Noise removes that constraint: a network that learns to predict one noisy observation from another observation of the same scene, with independent noise, can only learn the signal. FLOAT writes every stack as two half-stacks made of alternating blocks of frames, so the training pair exists for every project with no extra frame and no extra computation. A U-Net of 5.8 million parameters, pretrained with Noise2Noise on 76 pairs from 28 amateur data sets, then adapts in 500 steps (40 s on a consumer graphics card) to the half-stacks of the image being processed. On six cases held out of the training, with the adaptation length chosen automatically, the adapted network matches or beats a full training on each image, four to thirty times longer. The noise correlation between neighbouring pixels, measured on the difference of the two half-stacks, detects sessions without dithering, for which a long adaptation is needed.'}</p>
+    </div>
+
+    <section class="sec">
+      <h2><span class="secnum">1</span>Introduction</h2>
+      <div class="measure">
+        {fr ? <>
+          <p>Un empilement de poses du ciel profond garde un bruit que l’on cherche à réduire sans toucher au signal faible : les extensions des nébuleuses, les étoiles à la limite de détection. Les débruiteurs appris le font mieux que les filtres classiques, mais s’entraînent sur des paires image bruitée / image propre. En astrophotographie amateur, l’image propre n’existe pas : il faudrait des centaines d’heures de pose sur le même champ, avec le même instrument.</p>
+          <p>Les méthodes qui apprennent sur une seule image bruitée <a href="#ref-5">[5]</a><a href="#ref-6">[6]</a><a href="#ref-7">[7]</a> supposent un bruit indépendant d’un pixel à l’autre. L’alignement des poses et le drizzle <a href="#ref-11">[11]</a> rééchantillonnent chaque pose et mélangent les pixels voisins : le bruit d’un empilement est corrélé dans l’espace, et ces méthodes y prennent le bruit pour du signal.</p>
+          <p>Noise2Noise <a href="#ref-1">[1]</a> demande deux observations de la même scène aux bruits indépendants. En astronomie, ASTERIS <a href="#ref-2">[2]</a> répartit les poses d’un champ en deux groupes indépendants, sur des données JWST et Subaru, et gagne une magnitude de limite de détection en préservant la photométrie ; AstroSURE <a href="#ref-3">[3]</a> trouve Noise2Noise aussi bon qu’un apprentissage supervisé sur des images HST et CFHT. Cette note décrit comment FLOAT applique le principe aux empilements amateurs et ce que l’on mesure. Ses apports :</p>
+          <ol>
+            <li>les deux demi-empilements, écrits par l’étape d’empilement à chaque exécution, drizzle compris : la paire Noise2Noise de chaque projet, gratuite ;</li>
+            <li>un réseau pré-entraîné sur des données amateurs variées, puis adapté aux demi-empilements de l’image traitée : la qualité d’un apprentissage sur l’image en une fraction de son temps ;</li>
+            <li>la mesure de la corrélation du bruit sur la différence des demi-empilements, qui repère les séances sans décalage entre les poses (dithering) et règle la durée de l’adaptation.</li>
+          </ol>
+        </> : <>
+          <p>A stack of deep-sky frames keeps a noise one wants to reduce without touching the faint signal: the outskirts of nebulae, the stars at the detection limit. Learned denoisers do this better than classical filters, but they train on pairs of a noisy and a clean image. In amateur astrophotography the clean image does not exist: it would take hundreds of hours of exposure on the same field with the same instrument.</p>
+          <p>The methods that learn from a single noisy image <a href="#ref-5">[5]</a><a href="#ref-6">[6]</a><a href="#ref-7">[7]</a> assume a noise independent from one pixel to the next. Registration and drizzle <a href="#ref-11">[11]</a> resample every frame and mix neighbouring pixels: the noise of a stack is spatially correlated, and these methods take it for signal.</p>
+          <p>Noise2Noise <a href="#ref-1">[1]</a> needs two observations of the same scene with independent noise. In astronomy, ASTERIS <a href="#ref-2">[2]</a> splits the frames of a field into two independent groups, on JWST and Subaru data, and gains one magnitude of detection limit while preserving photometry; AstroSURE <a href="#ref-3">[3]</a> finds Noise2Noise as good as supervised training on HST and CFHT images. This note describes how FLOAT applies the principle to amateur stacks and what is measured. Its contributions:</p>
+          <ol>
+            <li>the two half-stacks, written by the stacking stage on every run, drizzle included: the Noise2Noise pair of every project, at no cost;</li>
+            <li>a network pretrained on varied amateur data, then adapted to the half-stacks of the image being processed: the quality of a training on the image in a fraction of its time;</li>
+            <li>the noise correlation measured on the difference of the half-stacks, which detects sessions without dithering and sets the length of the adaptation.</li>
+          </ol>
+        </>}
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">2</span>{fr ? 'Méthode' : 'Method'}</h2>
+      <div class="measure">
+        <h3>2.1 {fr ? 'Les demi-empilements' : 'The half-stacks'}</h3>
+        {fr ? <>
+          <p>Les poses, dans l’ordre de leur prise, sont groupées en blocs de <i>h</i> = max(1, min(20, ⌊<i>n</i>/4⌋)) poses ; les blocs pairs vont au demi-empilement A, les impairs à B. Les deux sont faits avec le même rejet des valeurs aberrantes, les mêmes poids et le même rééchantillonnage que l’empilement complet. Leurs bruits viennent de poses différentes et sont indépendants l’un de l’autre ; la corrélation spatiale à l’intérieur de chacun ne gêne pas Noise2Noise, qui ne demande que l’indépendance entre l’entrée et la cible. Les blocs, plutôt qu’une alternance pose par pose, répartissent dans les deux moitiés les changements lents de la nuit (hauteur de la cible, fond de ciel, mise au point).</p>
+        </> : <>
+          <p>The frames, in the order they were taken, are grouped in blocks of <i>h</i> = max(1, min(20, ⌊<i>n</i>/4⌋)) frames; even blocks go to half-stack A, odd ones to B. Both are made with the same outlier rejection, the same weights and the same resampling as the full stack. Their noises come from different frames and are independent of each other; the spatial correlation within each does not hinder Noise2Noise, which only needs independence between input and target. Blocks, rather than alternating frame by frame, spread the slow changes of the night (target altitude, sky background, focus) over both halves.</p>
+        </>}
+
+        <h3>2.2 {fr ? 'Le réseau et la perte' : 'Network and loss'}</h3>
+        {fr ? <>
+          <p>Un U-Net <a href="#ref-10">[10]</a> à quatre niveaux (48, 96, 192 et 320 canaux ; blocs de deux convolutions 3×3 avec connexion résiduelle ; 5,79 millions de paramètres). L’entrée a quatre plans : les trois couleurs normalisées, <i>a</i><sub>c</sub> = (<i>x</i><sub>c</sub> − <i>b</i><sub>c</sub>)/<i>σ</i><sub>c</sub> avec <i>b</i><sub>c</sub> le fond et <i>σ</i><sub>c</sub> le bruit du demi-empilement, comprimées par asinh(<i>a</i>/8) ; et une carte du bruit relatif <i>n</i> = (<i>w</i><sub>méd</sub>/<i>w</i>)<sup>1/2</sup> tirée des poids <i>w</i> du drizzle, qui dit où moins de poses ont couvert le champ, comme la carte de bruit de FFDNet <a href="#ref-9">[9]</a>. Le réseau prédit une correction <i>o</i> ajoutée à l’entrée normalisée. La perte est l’écart quadratique pondéré par le bruit attendu :</p>
+          <p class="eq">ℒ = moyenne[ (<i>a</i> + <i>o</i> − <i>b</i>)² / (max(<i>n</i>², 0,25) + <i>ā</i><sup>+</sup>/40) ]</p>
+          <p>où <i>a</i> et <i>b</i> sont l’entrée et la cible normalisées et <i>ā</i><sup>+</sup> la moyenne de <i>a</i> sur 5 pixels, bornée à zéro : les pixels plus bruités ou plus brillants (bruit de photons) pèsent moins.</p>
+        </> : <>
+          <p>A four-level U-Net <a href="#ref-10">[10]</a> (48, 96, 192 and 320 channels; blocks of two 3×3 convolutions with a residual connection; 5.79 million parameters). The input has four planes: the three colours normalised, <i>a</i><sub>c</sub> = (<i>x</i><sub>c</sub> − <i>b</i><sub>c</sub>)/<i>σ</i><sub>c</sub> with <i>b</i><sub>c</sub> the background and <i>σ</i><sub>c</sub> the noise of the half-stack, compressed by asinh(<i>a</i>/8); and a relative noise map <i>n</i> = (<i>w</i><sub>med</sub>/<i>w</i>)<sup>1/2</sup> from the drizzle weights <i>w</i>, which tells where fewer frames covered the field, like the noise map of FFDNet <a href="#ref-9">[9]</a>. The network predicts a correction <i>o</i> added to the normalised input. The loss is the squared error weighted by the expected noise:</p>
+          <p class="eq">ℒ = mean[ (<i>a</i> + <i>o</i> − <i>b</i>)² / (max(<i>n</i>², 0.25) + <i>ā</i><sup>+</sup>/40) ]</p>
+          <p>where <i>a</i> and <i>b</i> are the normalised input and target and <i>ā</i><sup>+</sup> the 5-pixel mean of <i>a</i> clipped at zero: noisier or brighter pixels (photon noise) weigh less.</p>
+        </>}
+
+        <h3>2.3 {fr ? 'Le pré-entraînement' : 'Pretraining'}</h3>
+        {fr ? <>
+          <p>28 jeux d’images couleur à matrice de Bayer, de capteurs et d’optiques variés (reflex et hybrides Canon, Nikon, Pentax, Fujifilm ; caméras ZWO ASI2600, ASI294, ASI533 ; Seestar S50 et S30, Stellina, Celestron Origin, DWARF), et des projets de l’auteur, sont empilés par la chaîne de FLOAT elle-même, pour que le réseau voie le bruit corrélé qu’elle produit. Chaque jeu est empilé avec toutes ses poses, la moitié, le quart et le huitième (un niveau n’est gardé qu’avec au moins 10 poses), pour couvrir des rapports signal sur bruit variés. Les sources des six cas d’évaluation sont écartées : 76 paires. Entraînement Noise2Noise sur des zones de 256 pixels tirées au hasard ; le modèle livré est le meilleur point de validation (pas 52 500), en demi-précision.</p>
+        </> : <>
+          <p>28 colour Bayer-matrix data sets from varied sensors and optics (Canon, Nikon, Pentax and Fujifilm DSLR and mirrorless cameras; ZWO ASI2600, ASI294 and ASI533 cameras; Seestar S50 and S30, Stellina, Celestron Origin, DWARF), and projects of the author, are stacked by FLOAT’s own chain, so that the network sees the correlated noise it produces. Each set is stacked with all its frames, a half, a quarter and an eighth (a level is kept only with at least 10 frames), to cover varied signal-to-noise ratios. The sources of the six evaluation cases are left out: 76 pairs. Noise2Noise training on random 256-pixel tiles; the shipped model is the best validation point (step 52,500), in half precision.</p>
+        </>}
+
+        <h3>2.4 {fr ? 'L’adaptation à l’image' : 'Adaptation to the image'}</h3>
+        {fr ? <>
+          <p>Tous les poids du modèle pré-entraîné sont ensuite entraînés en Noise2Noise sur les demi-empilements de l’image traitée : 500 pas (taux 2·10<sup>−4</sup>) pour l’adaptation courte, 4 000 (taux 3·10<sup>−4</sup>) pour la longue ; AdamW <a href="#ref-13">[13]</a> et un cycle unique ; à chaque pas, 12 zones de 192 pixels tirées au hasard, l’entrée et la cible échangées au hasard, tournées d’un multiple de 90°.</p>
+        </> : <>
+          <p>All the weights of the pretrained model are then trained with Noise2Noise on the half-stacks of the image being processed: 500 steps (rate 2·10<sup>−4</sup>) for the short adaptation, 4,000 (rate 3·10<sup>−4</sup>) for the long one; AdamW <a href="#ref-13">[13]</a> with a one-cycle schedule; at each step, 12 random 192-pixel tiles, input and target swapped at random, rotated by a multiple of 90°.</p>
+        </>}
+
+        <h3>2.5 {fr ? 'Le choix de l’adaptation par la corrélation du bruit' : 'Choosing the adaptation from the noise correlation'}</h3>
+        {fr ? <>
+          <p>Sur la différence <i>d</i> = A − B, qui ne contient que du bruit, restreinte au fond de ciel (écarts de moins de 6 sigmas robustes) sur le plan vert :</p>
+          <p class="eq"><i>ρ</i> = Σ <i>d</i><sub>y,x</sub> <i>d</i><sub>y,x+1</sub> / Σ <i>d</i><sub>y,x</sub>²</p>
+          <p>Une séance avec décalage entre les poses donne <i>ρ</i> ≈ 0,15 à 0,4 : le rééchantillonnage étale chaque pixel sur ses voisins, et les paires d’entraînement couvrent cet intervalle. Sous <i>ρ</i> = 0,08, le bruit est presque indépendant d’un pixel à l’autre, ce que le modèle pré-entraîné n’a pas vu : l’adaptation longue est proposée, avec la valeur mesurée comme raison.</p>
+        </> : <>
+          <p>On the difference <i>d</i> = A − B, which holds only noise, restricted to the sky background (deviations under 6 robust sigmas) on the green plane:</p>
+          <p class="eq"><i>ρ</i> = Σ <i>d</i><sub>y,x</sub> <i>d</i><sub>y,x+1</sub> / Σ <i>d</i><sub>y,x</sub>²</p>
+          <p>A dithered session gives <i>ρ</i> ≈ 0.15 to 0.4: resampling spreads each pixel over its neighbours, and the training pairs cover that range. Below <i>ρ</i> = 0.08 the noise is nearly independent from pixel to pixel, which the pretrained model has not seen: the long adaptation is proposed, with the measured value as the reason.</p>
+        </>}
+
+        <h3>2.6 {fr ? 'L’application' : 'Application'}</h3>
+        {fr ? <>
+          <p>Le réseau est appliqué à l’empilement complet, normalisé avec le fond et le bruit des demi-empilements, la carte du bruit divisée par √2. L’image est traitée par tuiles de 512 pixels avec une marge de contexte de 48 pixels, dont seul le centre est gardé. Quatre passes décalées d’un pixel (0 ou 1 en x et en y) sont moyennées, un auto-ensemble <a href="#ref-12">[12]</a> qui efface le motif périodique des sous-échantillonnages du réseau. Le niveau du fond de chaque couleur est enfin remis à celui de l’entrée (médiane robuste de l’écart).</p>
+        </> : <>
+          <p>The network is applied to the full stack, normalised with the background and noise of the half-stacks, the noise map divided by √2. The image is processed in 512-pixel tiles with a 48-pixel context margin, of which only the centre is kept. Four passes shifted by one pixel (0 or 1 in x and y) are averaged, a self-ensemble <a href="#ref-12">[12]</a> that cancels the periodic pattern of the network’s downsamplings. The background level of each colour is finally set back to the input’s (robust median of the difference).</p>
+        </>}
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">3</span>{fr ? 'Mesures' : 'Measures'}</h2>
+      <div class="measure">
+        <h3>3.1 {fr ? 'Protocole' : 'Protocol'}</h3>
+        <p>{fr
+          ? 'Six cas tenus à l’écart du pré-entraînement : IC 1805, NGC 7023, M51, M8, NGC 2237 et M31 pris avec un Seestar S50. Pour chacun, la paire de demi-empilements est coupée en deux : les méthodes qui apprennent sur l’image n’en voient que les 80 % de gauche, et toutes sont mesurées sur les 20 % de droite, jamais vus (avec une marge de 192 pixels de contexte). La mesure est la perte de l’entraînement, dans les deux sens : un demi-empilement débruité comparé à l’autre. Son espérance est l’erreur au vrai ciel plus le bruit propre de la cible, le même pour toutes les méthodes : ses différences sont celles des méthodes. Plus bas vaut mieux ; aucune image de référence n’est nécessaire.'
+          : 'Six cases held out of the pretraining: IC 1805, NGC 7023, M51, M8, NGC 2237 and M31 taken with a Seestar S50. For each, the half-stack pair is cut in two: the methods that learn on the image see only the left 80 %, and all are measured on the right 20 %, never seen (with a 192-pixel context margin). The measure is the training loss, both ways: one half-stack denoised compared with the other. Its expectation is the error to the true sky plus the target’s own noise, the same for every method: its differences are the methods’ differences. Lower is better; no reference image is needed.'}</p>
+      </div>
+      <div class="tbl-wrap measure" style="max-width: 62rem">
+        <table class="tbl num">
+          <caption><b>{fr ? 'Tableau 1.' : 'Table 1.'}</b>{fr
+            ? 'Perte Noise2Noise sur la zone tenue à l’écart (plus bas vaut mieux). « De zéro » : un réseau entraîné sur l’image seule, 16 000 pas. En gras, la meilleure valeur de chaque ligne.'
+            : 'Noise2Noise loss on the held-out zone (lower is better). “From scratch”: a network trained on the image alone, 16,000 steps. In bold, the best value of each row.'}</caption>
+          <thead><tr>
+            <th>{fr ? 'Cas' : 'Case'}</th><th>{fr ? 'Sans débruitage' : 'No denoising'}</th><th>{fr ? 'Pré-entraîné seul' : 'Pretrained only'}</th>
+            <th>+ 500 {fr ? 'pas' : 'steps'}</th><th>+ 4 000 {fr ? 'pas' : 'steps'}</th><th>+ 8 000 {fr ? 'pas' : 'steps'}</th><th>{fr ? 'De zéro' : 'From scratch'}</th>
+          </tr></thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr><th scope="row">{r[0]}</th>{r.slice(1).map((v, i) => <td>{v === '' ? '–' : i > 0 && Number(v) === best(r) ? <b>{num(v)}</b> : num(v)}</td>)}</tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl-wrap measure" style="max-width: 46rem">
+        <table class="tbl num">
+          <caption><b>{fr ? 'Tableau 2.' : 'Table 2.'}</b>{fr ? 'Temps pour une image de 12 Mpx ; carte graphique NVIDIA RTX 4060 Ti, processeur à 8 fils.' : 'Time for a 12 Mpx image; NVIDIA RTX 4060 Ti graphics card, 8-thread processor.'}</caption>
+          <thead><tr><th>{fr ? 'Méthode' : 'Method'}</th><th>{fr ? 'Carte graphique' : 'Graphics card'}</th><th>{fr ? 'Processeur' : 'Processor'}</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">{fr ? 'Pré-entraîné seul' : 'Pretrained only'}</th><td>≈ 3 s</td><td>≈ 40 s</td></tr>
+            <tr><th scope="row">+ 500 {fr ? 'pas' : 'steps'}</th><td>≈ 40 s</td><td>≈ 30 min</td></tr>
+            <tr><th scope="row">+ 4 000 {fr ? 'pas' : 'steps'}</th><td>≈ 5 min</td><td>–</td></tr>
+            <tr><th scope="row">{fr ? 'De zéro' : 'From scratch'}</th><td>≈ 21 min</td><td>≈ 16 h</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="measure">
+        <p>{fr
+          ? 'Le pré-entraîné adapté en 500 pas atteint ou dépasse l’apprentissage de zéro sur cinq cas sur six, en 40 s au lieu de 21 min ; sur quatre cas (NGC 7023, M51, NGC 2237, M31), le pré-entraîné seul, en 3 s, fait déjà à peu près aussi bien ou mieux. Allonger l’adaptation n’aide pas une séance ordinaire : sur NGC 2237, 4 000 pas font moins bien que 500 (1,075 contre 1,000), le réseau commençant à suivre les particularités de l’image.'
+          : 'The pretrained network adapted in 500 steps matches or beats training from scratch on five cases out of six, in 40 s instead of 21 min; on four cases (NGC 7023, M51, NGC 2237, M31) the pretrained network alone, in 3 s, already does about as well or better. A longer adaptation does not help an ordinary session: on NGC 2237, 4,000 steps do worse than 500 (1.075 against 1.000), the network starting to follow the particulars of the image.'}</p>
+
+        <h3>3.2 {fr ? 'Les séances sans décalage entre les poses' : 'Sessions without dithering'}</h3>
+        <p>{fr
+          ? 'M8 est le seul cas pris sans décalage volontaire entre les poses : la dérive totale du champ y est de 4,4 pixels, contre 80 à 115 pour les autres. Le rééchantillonnage ne mélange presque pas les pixels voisins, et la corrélation du bruit vaut 0,03, contre 0,15 à 0,35 pour les autres cas. Le pré-entraîné seul y est le plus loin de l’apprentissage de zéro (1,488 contre 0,885). Avec l’adaptation longue, que la mesure de ρ propose d’elle-même, il descend à 0,843 en 4 000 pas et à 0,722 en 8 000 : l’entraînement de zéro, à 16 000 pas, n’avait pas fini d’apprendre ce bruit.'
+          : 'M8 is the only case taken without deliberate dithering: the total drift of the field is 4.4 pixels, against 80 to 115 for the others. Resampling hardly mixes neighbouring pixels, and the noise correlation is 0.03, against 0.15 to 0.35 for the other cases. The pretrained network alone is furthest from training from scratch there (1.488 against 0.885). With the long adaptation, which the measure of ρ proposes on its own, it falls to 0.843 in 4,000 steps and 0.722 in 8,000: training from scratch, at 16,000 steps, had not finished learning this noise.'}</p>
+
+        <h3>3.3 {fr ? 'Une image entière : la nébuleuse de la Rosette' : 'A whole image: the Rosette Nebula'}</h3>
+        <p>{fr
+          ? <>Le projet des tutoriels (NGC 2237, 436 poses de 15 s, <a href={rosette}>jeu d’images téléchargeable</a>), débruité par le modèle pré-entraîné seul, ρ = 0,22 : 13 s pour l’image de 4256 × 2848 pixels, quatre passes comprises. La figure 1 compare l’entrée, la sortie, ce qui a été retiré, et le bruit de l’empilement estimé indépendamment par (A − B)/2.</>
+          : <>The tutorials’ project (NGC 2237, 436 frames of 15 s, <a href={rosette}>downloadable data set</a>), denoised by the pretrained model alone, ρ = 0.22: 13 s for the 4256 × 2848 pixel image, four passes included. Figure 1 compares the input, the output, what was removed, and the noise of the stack estimated independently as (A − B)/2.</>}</p>
+      </div>
+      <Figure lang={lang} n={1}>
+        <div slot="body" class="panel4 stages">
+          {[['a-input', fr ? 'entrée : l’empilement, gradient retiré' : 'input: the stack, gradient removed'],
+            ['b-denoised', fr ? 'sortie du débruitage' : 'output of the denoising'],
+            ['c-residual', fr ? 'résidu (a) − (b)' : 'residual (a) − (b)'],
+            ['d-noise', fr ? 'bruit de l’empilement, (A − B)/2' : 'noise of the stack, (A − B)/2']].map(([f, t], i) => (
+            <div>
+              <a href={`/notes/noise2noise/${f}.jpg`}><img src={`/notes/noise2noise/${f}.jpg`} width="500" height="500" alt={t} loading="lazy" /></a>
+              <p><b>({'abcd'[i]})</b> {t}</p>
+            </div>
+          ))}
+        </div>
+        {fr
+          ? <>Une zone de 500 × 500 pixels de NGC 2237, à l’échelle 1. (a) et (b) : même étirement automatique de l’affichage, chaque couleur étirée séparément (le débruitage précède la balance des couleurs). (c) et (d) : luminance, même échelle de −4 à +4 fois le bruit. (c) est l’empilement moins la sortie, son niveau à grande échelle (le fond de ciel retiré par le bloc Gradient) ôté.</>
+          : <>A 500 × 500 pixel zone of NGC 2237, at scale 1. (a) and (b): the same automatic display stretch, each colour stretched separately (denoising comes before colour balance). (c) and (d): luminance, the same scale from −4 to +4 times the noise. (c) is the stack minus the output, its large-scale level (the sky background removed by the Gradient block) taken off.</>}
+      </Figure>
+      <div class="measure">
+        <p>{fr
+          ? 'Sur le fond de ciel, ce qui a été retiré a un écart type de 1,06 fois le bruit de l’empilement estimé par (A − B)/2, et ne montre pas les structures de la nébuleuse : le réseau retire du bruit, à peu près tout le bruit, et pas le signal. Le bruit à haute fréquence du plan vert passe de 0,95 à 0,12 (un facteur 7,8 en écart type).'
+          : 'On the sky background, what was removed has a standard deviation of 1.06 times the noise of the stack estimated as (A − B)/2, and shows none of the structures of the nebula: the network removes noise, nearly all of it, and not the signal. The high-frequency noise of the green plane goes from 0.95 to 0.12 (a factor of 7.8 in standard deviation).'}</p>
+        <p>{fr
+          ? 'Le résidu n’est pas nul aux étoiles. Une première vérification, sur 244 étoiles de quatre zones de l’image : le centre des étoiles se déplace de moins de 0,02 pixel en médiane, et leur flux dans une ouverture de 4 pixels de rayon (après retrait du fond local) change de +0,1 à +1 % en médiane selon la zone. Les marques sombres de (c) sont cette légère hausse au cœur des étoiles brillantes ; sur IC 1805, avec une première version du modèle, 88 % de l’écart à la meilleure méthode se trouvait dans le 1 % de pixels les plus brillants.'
+          : 'The residual is not zero at the stars. A first check, on 244 stars in four zones of the image: the star centres move by less than 0.02 pixel in median, and their flux in a 4-pixel-radius aperture (local background removed) changes by +0.1 to +1 % in median depending on the zone. The dark marks of (c) are this slight rise in the cores of bright stars; on IC 1805, with a first version of the model, 88 % of the gap to the best method lay in the brightest 1 % of pixels.'}</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">4</span>{fr ? 'Limites et travaux à venir' : 'Limitations and future work'}</h2>
+      <div class="measure">
+        <ul>
+          {fr ? <>
+            <li><b>Le bruit commun aux deux moitiés n’est pas retiré.</b> Ce que A et B partagent (le bruit des darks et des flats maîtres, le motif fixe du capteur, le bruit en rayures d’un suivi qui dérive) est, pour Noise2Noise, du signal. Le réseau le garde : il n’invente rien, mais ne corrige pas non plus ces défauts.</li>
+            <li><b>La mesure porte sur des demi-empilements, l’image livrée est l’empilement complet</b>, de variance de bruit deux fois moindre, débruité avec une carte du bruit divisée par √2. Cette extrapolation n’est pas mesurée ; un protocole à quatre groupes de poses (deux quarts débruités contre les deux autres) la mesurerait.</li>
+            <li><b>La photométrie et l’astrométrie</b> ne sont vérifiées qu’au §3.3, sur un seul champ. Une mesure systématique sur les étoiles du catalogue Gaia que résout déjà le bloc Astrométrie, et une mesure de la limite de détection comme celle d’ASTERIS, sont à faire.</li>
+            <li><b>Le gain exprimé en temps de pose équivalent</b> reste à établir.</li>
+            <li><b>Le banc est petit</b> (six cas). Les jeux d’images publiés pour les tutoriels l’élargiront ; une première version de l’entraînement comptait des sources communes avec le banc, écartées depuis.</li>
+            <li><b>L’adaptation n’ajuste que des poids complets.</b> GainTuning <a href="#ref-8">[8]</a>, qui n’ajuste qu’un gain par canal, est une piste pour une adaptation plus rapide sur processeur.</li>
+          </> : <>
+            <li><b>Noise common to both halves is not removed.</b> What A and B share (the noise of the master darks and flats, the sensor’s fixed pattern, the walking noise of a drifting mount) is signal to Noise2Noise. The network keeps it: it invents nothing, but does not correct these defects either.</li>
+            <li><b>The measure is on half-stacks; the image delivered is the full stack</b>, with half the noise variance, denoised with a noise map divided by √2. This extrapolation is not measured; a protocol with four groups of frames (two quarters denoised against the other two) would measure it.</li>
+            <li><b>Photometry and astrometry</b> are checked only in §3.3, on one field. A systematic measure on the Gaia catalogue stars that the Astrometry block already resolves, and a detection-limit measure like that of ASTERIS, are to be done.</li>
+            <li><b>The gain expressed as equivalent exposure time</b> remains to be established.</li>
+            <li><b>The bench is small</b> (six cases). The data sets published for the tutorials will widen it; a first version of the training shared sources with the bench, since removed.</li>
+            <li><b>The adaptation tunes full weights.</b> GainTuning <a href="#ref-8">[8]</a>, which tunes only a gain per channel, is a lead for a faster adaptation on the processor.</li>
+          </>}
+        </ul>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">5</span>{fr ? 'Disponibilité' : 'Availability'}</h2>
+      <p class="measure">{fr
+        ? <>Le code (étapes d’empilement et de débruitage, outils du banc) est dans le <a href={release.repo}>dépôt de FLOAT</a>, sous licence GPL v3 ; le modèle pré-entraîné est livré avec le logiciel. Le jeu d’images de la Rosette est <a href={rosette}>téléchargeable</a> sous licence CC BY 4.0.</>
+        : <>The code (stacking and denoising stages, bench tools) is in the <a href={release.repo}>FLOAT repository</a>, under the GPL v3 licence; the pretrained model ships with the software. The Rosette data set is <a href={rosette}>downloadable</a> under the CC BY 4.0 licence.</>}</p>
+    </section>
+
+    <section class="sec">
+      <h2>{fr ? 'Références' : 'References'}</h2>
+      <ol class="refs measure">
+        {refs.map(([t, u], i) => <li id={`ref-${i + 1}`}>{t}. <a href={u}>{u.replace('https://', '')}</a></li>)}
+      </ol>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .paper h3 { font-family: var(--sans); font-size: 1rem; margin: 1.6rem 0 0.4rem; }
+  .eq { text-align: center; font-family: var(--serif); margin: 0.8rem 0; overflow-x: auto; }
+  .refs { font-size: 0.95rem; padding-left: 1.6rem; }
+  .refs li { margin: 0.35rem 0; overflow-wrap: anywhere; }
+  .tbl.num td { text-align: right; font-variant-numeric: tabular-nums; }
+  .tbl.num thead th:not(:first-child) { text-align: right; }
+  .paper :global(figure:has(.panel4)) { max-width: 44rem; }
+  .panel4.stages img { width: 100%; height: auto; display: block; }
+</style>

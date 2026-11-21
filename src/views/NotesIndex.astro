@@ -1,0 +1,34 @@
+---
+// The list of the technical notes.
+import Base from '../layouts/Base.astro';
+import { notes, noteUrl } from '../data/notes';
+import type { Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+---
+<Base lang={lang} page="notes" title={fr ? 'Notes techniques' : 'Technical notes'}
+  description={fr ? 'Les méthodes de FLOAT décrites comme de courts articles : la méthode publiée, ce que FLOAT en fait, les mesures et les limites.' : 'FLOAT’s methods written up as short papers: the published method, what FLOAT does with it, the measures and the limits.'}>
+  <div class="wide-page" style="padding-top: 2.6rem">
+    <p class="kicker">{fr ? 'Méthodes' : 'Methods'}</p>
+    <h1>{fr ? 'Notes techniques' : 'Technical notes'}</h1>
+    <p class="measure lead">{fr
+      ? 'Chaque note décrit une méthode de FLOAT comme un court article : la méthode publiée sur laquelle elle repose, ce que FLOAT en fait, ce qui a été mesuré, et ce qui reste à mesurer.'
+      : 'Each note describes one of FLOAT’s methods as a short paper: the published method it rests on, what FLOAT does with it, what was measured, and what remains to be measured.'}</p>
+    <ol class="notes">
+      {notes.map((x) => (
+        <li>
+          <p class="meta">{fr ? 'Note' : 'Note'} {x.n} · {x.date[lang]}</p>
+          <h2><a href={noteUrl(x, lang)}>{x.title[lang]}</a></h2>
+          <p>{x.summary[lang]}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</Base>
+<style>
+  .notes { list-style: none; padding: 0; margin: 2rem 0 0; max-width: 46rem; }
+  .notes li { border-top: 2px solid var(--ink); padding: 0.9rem 0 1.2rem; }
+  .notes h2 { font-size: 1.35rem; margin: 0.2rem 0 0.5rem; }
+  .notes .meta { margin: 0; }
+</style>
