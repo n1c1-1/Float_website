@@ -1,0 +1,171 @@
+---
+// Technical note 2: what star spectra can tell about a camera's spectral response. Numbers: the measures of
+// 21 November 2026 on the Rosette project of the tutorials (work folder with its journal and results.json kept apart).
+import Base from '../../layouts/Base.astro';
+import Figure from '../../components/Figure.astro';
+import { notes, noteUrl } from '../../data/notes';
+import { release, routes, version, type Lang } from '../../i18n/ui';
+import { datasets, datasetUrl } from '../../data/datasets';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const note = notes.find((x) => x.slug === 'sensor-curve')!;
+const rosette = datasetUrl(datasets.find((d) => d.slug === 'rosette')!, lang);
+const n1 = noteUrl(notes.find((x) => x.slug === 'noise2noise')!, lang);
+const refs: [string, string][] = [
+  ['Finlayson G. D., Hordley S., Hubel P. M. 1998, Recovering device sensitivities with quadratic programming, IS&T/SID Color Imaging Conference', 'https://doi.org/10.2352/CIC.1998.6.1.art00020'],
+  ['Jiang J., Liu D., Gu J., Süsstrunk S. 2013, What is the space of spectral sensitivity functions for digital color cameras?, IEEE WACV', 'https://doi.org/10.1109/WACV.2013.6475015'],
+  ['De Angeli F., Weiler M., Montegriffo P., et al. 2023, Gaia Data Release 3: processing and validation of BP/RP low-resolution spectral data, A&A 674, A2', 'https://arxiv.org/abs/2206.06143'],
+  ['Montegriffo P., De Angeli F., Andrae R., et al. 2023, Gaia Data Release 3: external calibration of BP/RP low-resolution spectroscopic data, A&A 674, A3', 'https://arxiv.org/abs/2206.06205'],
+  ['Huang B., Yuan H., Xiang M., et al. 2024, A comprehensive correction of the Gaia DR3 XP spectra, ApJS 271, 13', 'https://arxiv.org/abs/2401.12006'],
+  ['Lawson C. L., Hanson R. J. 1974, Solving Least Squares Problems, Prentice-Hall (non-negative least squares)', 'https://doi.org/10.1137/1.9781611971217'],
+  ['Buil C., Sony A7s and spectrography (measured relative RGB sensitivity of a modified A7s)', 'http://www.astrosurf.com/buil/fringes/index.html'],
+  ['Spectral measurements of camera sensors (monochromator, integrating sphere): Sony A7 II and A7', 'https://github.com/ilia3101/SpectralMeasurements'],
+  ['Rakić A. D., Djurišić A. B., Elazar J. M., Majewski M. L. 1998, Optical properties of metallic films for vertical-cavity optoelectronic devices, Applied Optics 37, 5271', 'https://doi.org/10.1364/AO.37.005271'],
+  ['ESO, La Silla atmospheric extinction table', 'https://www.eso.org/sci/observing/tools/Extinction.html'],
+];
+const ref = (i: number) => `#ref-${i}`;
+// synthetic test, response at the line in units of the channel's own peak: truth, reconstruction without noise,
+// reconstruction with the measured noise (mean ± sd of 20 draws)
+const lines: [string, string, string, string][] = [
+  ['[O III] 501 nm', '0.07 / 0.60 / 0.66', '0.23 / 0.89 / 0.81', '0.07 ± 0.06 / 0.86 ± 0.07 / 0.81 ± 0.02'],
+  ['Hα 656 nm', '0.24 / 0.02 / 0.01', '0.64 / 0.03 / 0.00', '0.39 ± 0.13 / 0.01 ± 0.01 / 0.00'],
+  ['[S II] 672 nm', '0.14 / 0.01 / 0.01', '0.45 / 0.00 / 0.00', '0.21 ± 0.12 / 0.00 / 0.00'],
+];
+const num = (s: string) => (fr ? s.replace(/(\d)\.(\d)/g, '$1,$2') : s);
+---
+<Base lang={lang} page="notes" title={note.title[lang]} description={note.summary[lang]}
+  paths={{ en: noteUrl(note, 'en'), fr: noteUrl(note, 'fr') }}>
+  <article class="wide-page paper" style="padding-top: 2.6rem">
+    <p class="kicker"><a href={routes.notes[lang]}>{fr ? 'Notes techniques' : 'Technical notes'}</a> · Note {note.n}</p>
+    <h1>{note.title[lang]}</h1>
+    <p class="meta">FLOAT · {note.date[lang]} · {fr ? 'logiciel' : 'software'} {version}</p>
+
+    <div class="abstract measure">
+      <p data-label={fr ? 'Résumé' : 'Abstract'}>{fr
+        ? 'Les spectres Gaia XP de quelques centaines d’étoiles du champ, comparés aux flux que l’appareil a mesurés, permettent d’estimer la courbe de sensibilité de chaque couleur du capteur, sans banc de mesure. FLOAT en affiche une estimation. Cette note mesure ce que cette estimation vaut et où elle s’arrête, sur les 730 étoiles d’une image de la nébuleuse de la Rosette. Les spectres d’étoiles, larges et semblables, ne contraignent que six à huit combinaisons indépendantes de la courbe ; une raie d’émission fine n’a que 0,6 à 2,7 % de son énergie dans l’espace qu’elles décrivent. La réponse à une raie est donc fixée par le lissage imposé, non par les données : sur un test de synthèse à vérité connue, la réponse du rouge à H-alpha sort 1,6 à 2,7 fois trop forte, et la teinte d’une raie [O III] dévie de 17°. La courbe reconstruite est utile comme vue d’ensemble ; elle ne peut pas servir à calibrer la couleur des nébuleuses à émission, ce qui a conduit FLOAT à une calibration par un seul facteur par couleur.'
+        : 'The Gaia XP spectra of a few hundred stars in the field, compared with the fluxes the camera measured, allow the sensitivity curve of each colour of the sensor to be estimated, without a test bench. FLOAT displays such an estimate. This note measures what it is worth and where it stops, on the 730 stars of an image of the Rosette Nebula. Star spectra, broad and alike, constrain only six to eight independent combinations of the curve; a narrow emission line has only 0.6 to 2.7 % of its energy in the space they span. The response to a line is therefore set by the imposed smoothness, not by the data: in a synthetic test with known truth, the red response at H-alpha comes out 1.6 to 2.7 times too strong, and the hue of an [O III] line is off by 17°. The reconstructed curve is useful as an overview; it cannot calibrate the colour of emission nebulae, which led FLOAT to a calibration by a single factor per colour.'}</p>
+    </div>
+
+    <section class="sec">
+      <h2><span class="secnum">1</span>Introduction</h2>
+      <div class="measure">
+        {fr ? <>
+          <p>La couleur d’une image du ciel dépend de la courbe de sensibilité de chaque couleur du capteur, filtres compris. Les fabricants d’appareils photo ne la publient pas ; la mesurer demande un monochromateur. Les étoiles du champ offrent une autre voie : Gaia DR3 donne le spectre de basse résolution de centaines de millions d’étoiles <a href={ref(3)}>[3]</a><a href={ref(4)}>[4]</a>, et l’appareil a mesuré leur flux dans chaque couleur. Le flux mesuré est l’intégrale du spectre par la courbe : connaissant l’un et l’autre, on peut chercher la courbe. C’est un problème inverse connu en vision par ordinateur, résolu avec des cibles de couleur et une contrainte de positivité et de douceur <a href={ref(1)}>[1]</a>.</p>
+          <p>FLOAT montre cette courbe reconstruite dans la page Couleur d’Inspection, à titre de diagnostic. La tentation est de s’en servir pour prédire la couleur des raies d’émission (H-alpha, [O III], [S II]), que la balance des blancs sur les étoiles ne règle pas. Une version antérieure de FLOAT le faisait, par une matrice 3 × 3 ajustée sur les étoiles et ancrée sur un spectre de région H II : l’H-alpha de deux grandes nébuleuses sortait magenta. Cette note mesure pourquoi.</p>
+        </> : <>
+          <p>The colour of a sky image depends on the sensitivity curve of each colour of the sensor, filters included. Camera makers do not publish it; measuring it takes a monochromator. The stars in the field offer another way: Gaia DR3 gives the low-resolution spectrum of hundreds of millions of stars <a href={ref(3)}>[3]</a><a href={ref(4)}>[4]</a>, and the camera measured their flux in each colour. The measured flux is the integral of the spectrum times the curve: knowing both, one can look for the curve. It is a known inverse problem in computer vision, solved with colour targets and a positivity and smoothness constraint <a href={ref(1)}>[1]</a>.</p>
+          <p>FLOAT shows this reconstructed curve on the Colour page of Inspect, as a diagnostic. The temptation is to use it to predict the colour of emission lines (H-alpha, [O III], [S II]), which a white balance on the stars does not settle. An earlier version of FLOAT did so, with a 3 × 3 matrix fitted on the stars and anchored on the spectrum of an H II region: the H-alpha of two large nebulae came out magenta. This note measures why.</p>
+        </>}
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">2</span>{fr ? 'Méthode et données' : 'Method and data'}</h2>
+      <div class="measure">
+        {fr ? <>
+          <p>Pour chaque couleur <i>c</i>, le modèle est <i>F</i><sub>i,c</sub> = Σ<sub>λ</sub> <i>s</i><sub>i</sub>(λ) <i>S</i><sub>c</sub>(λ) Δλ, avec <i>s</i><sub>i</sub> le spectre XP de l’étoile <i>i</i> et <i>S</i><sub>c</sub> une somme de gaussiennes de 12 nm d’écart type, centrées tous les 15 nm de 380 à 1000 nm, à coefficients positifs. Une pénalité sur la différence seconde des coefficients (poids 3) impose la douceur ; chaque équation est divisée par le flux de son étoile (erreurs relatives) ; le système est résolu par moindres carrés non négatifs <a href={ref(6)}>[6]</a>, en quatre passes qui écartent les étoiles à plus de 4 sigmas. C’est la méthode de <a href={ref(1)}>[1]</a>, code de FLOAT inchangé.</p>
+          <p>Données : le projet des tutoriels, NGC 2237, Sony A7S défiltré puis refiltré avec un filtre UV/IR Astrodon, Newton 130/900 (<a href={rosette}>jeu d’images téléchargeable</a>). Les flux de l’appareil sont ceux que le bloc Couleur a mesurés ; 730 étoiles sont retenues. L’écart médian entre flux mesurés et flux du modèle est de 13 %.</p>
+        </> : <>
+          <p>For each colour <i>c</i>, the model is <i>F</i><sub>i,c</sub> = Σ<sub>λ</sub> <i>s</i><sub>i</sub>(λ) <i>S</i><sub>c</sub>(λ) Δλ, with <i>s</i><sub>i</sub> the XP spectrum of star <i>i</i> and <i>S</i><sub>c</sub> a sum of Gaussians of 12 nm standard deviation, centred every 15 nm from 380 to 1000 nm, with positive coefficients. A penalty on the second difference of the coefficients (weight 3) imposes smoothness; each equation is divided by its star’s flux (relative errors); the system is solved by non-negative least squares <a href={ref(6)}>[6]</a>, in four passes that set aside the stars beyond 4 sigmas. This is the method of <a href={ref(1)}>[1]</a>, FLOAT’s code unchanged.</p>
+          <p>Data: the tutorials’ project, NGC 2237, a Sony A7S with its stock filter removed and replaced by an Astrodon UV/IR filter, 130/900 Newtonian (<a href={rosette}>downloadable data set</a>). The camera fluxes are those the Colour block measured; 730 stars are kept. The median difference between measured and model fluxes is 13 %.</p>
+        </>}
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">3</span>{fr ? 'Résultats' : 'Results'}</h2>
+      <div class="measure">
+        <h3>3.1 {fr ? 'Ce que les étoiles contraignent' : 'What the stars constrain'}</h3>
+        <p>{fr
+          ? 'La décomposition en valeurs singulières de la matrice des spectres (chaque étoile ramenée à un flux unité) dit combien de combinaisons indépendantes de la courbe les étoiles mesurent. Au-dessus de 1 % de la première valeur singulière, il en reste 8 sur une grille de 2 nm, et 6 dans la base de gaussiennes du modèle (figure 1, à gauche). Une courbe de capteur a des dizaines de degrés de liberté. La part d’une raie fine (largeur à mi-hauteur 1 nm) dans l’espace décrit par les k premières composantes vaut 0,6 % pour k = 3, 0,6 à 0,9 % pour k = 5, et 2,1 % (H-alpha) à 2,7 % ([O III]) pour k = 10 (figure 1, à droite). Les étoiles ne disent presque rien de la réponse du capteur à une longueur d’onde précise : ce que la reconstruction y donne vient du lissage.'
+          : 'The singular value decomposition of the matrix of spectra (each star brought to unit flux) tells how many independent combinations of the curve the stars measure. Above 1 % of the first singular value, 8 remain on a 2 nm grid, and 6 in the model’s Gaussian basis (figure 1, left). A sensor curve has dozens of degrees of freedom. The share of a narrow line (full width at half maximum 1 nm) in the space spanned by the first k components is 0.6 % for k = 3, 0.6 to 0.9 % for k = 5, and 2.1 % (H-alpha) to 2.7 % ([O III]) for k = 10 (figure 1, right). The stars say almost nothing about the sensor’s response at one precise wavelength: what the reconstruction gives there comes from the smoothing.'}</p>
+      </div>
+      <Figure lang={lang} n={1} src="/notes/sensor-curve/fig1-span.png" zoom width={1200} height={576}
+        alt={fr ? 'Valeurs singulières des spectres et part d’une raie dans leur espace' : 'Singular values of the spectra and share of a line in their span'}>
+        {fr
+          ? ' À gauche : valeurs singulières de la matrice des 730 spectres, relatives à la première, sur une grille de 2 nm (noir) et telles que le modèle les voit (orange). À droite : part de l’énergie d’une raie dans l’espace des k premières composantes, pour une raie de 1 nm à 656 et 501 nm et une bande de 30 nm à 656 nm.'
+          : ' Left: singular values of the matrix of the 730 spectra, relative to the first, on a 2 nm grid (black) and as the model sees them (orange). Right: share of a line’s energy in the space of the first k components, for a 1 nm line at 656 and 501 nm and a 30 nm band at 656 nm.'}
+      </Figure>
+      <div class="measure">
+        <h3>3.2 {fr ? 'Un test à vérité connue' : 'A test with known truth'}</h3>
+        <p>{fr
+          ? 'Pour séparer la limite de la méthode des erreurs de mesure, les flux sont fabriqués : les 730 spectres réels multipliés par une courbe de capteur réelle et connue, celle d’un Sony A7 II mesurée au monochromateur [8] (aucune courbe mesurée couleur par couleur de l’A7S n’a été trouvée), puis bruités au niveau mesuré sur les vraies étoiles (14 %, une borne haute, car il inclut l’erreur du modèle). La reconstruction suit la forme générale de chaque couleur (figure 2) ; elle adoucit les fronts raides et prolonge les ailes, et c’est précisément là que tombent les raies (tableau 1).'
+          : 'To separate the method’s limit from measurement errors, the fluxes are made up: the 730 real spectra multiplied by a real, known sensor curve, that of a Sony A7 II measured with a monochromator [8] (no colour-by-colour measured curve of the A7S was found), then made noisy at the level measured on the real stars (14 %, an upper bound, as it includes the model’s error). The reconstruction follows the general shape of each colour (figure 2); it softens steep edges and extends the wings, and that is exactly where the lines fall (table 1).'}</p>
+      </div>
+      <Figure lang={lang} n={2} src="/notes/sensor-curve/fig2-synthetic.png" zoom width={1200} height={1008}
+        alt={fr ? 'Courbes vraies et reconstruites du test de synthèse' : 'True and reconstructed curves of the synthetic test'}>
+        {fr
+          ? ' Test de synthèse. Traits pleins : la courbe vraie (Sony A7 II, monochromateur) ; tirets : la moyenne de 20 reconstructions bruitées, avec leur dispersion en bande. Chaque couleur ramenée à son propre maximum. En bas, la même figure en échelle logarithmique. Lignes pointillées : [O III] 501, H-alpha 656 et [S II] 672 nm.'
+          : ' Synthetic test. Solid lines: the true curve (Sony A7 II, monochromator); dashes: the mean of 20 noisy reconstructions, with their spread as a band. Each colour brought to its own maximum. Below, the same on a logarithmic scale. Dotted lines: [O III] 501, H-alpha 656 and [S II] 672 nm.'}
+      </Figure>
+      <div class="tbl-wrap measure" style="max-width: 60rem">
+        <table class="tbl num">
+          <caption><b>{fr ? 'Tableau 1.' : 'Table 1.'}</b>{fr
+            ? 'Test de synthèse : réponse rouge / vert / bleu à chaque raie, en fraction du maximum de chaque couleur.'
+            : 'Synthetic test: red / green / blue response at each line, as a fraction of each colour’s maximum.'}</caption>
+          <thead><tr><th>{fr ? 'Raie' : 'Line'}</th><th>{fr ? 'Vraie' : 'True'}</th><th>{fr ? 'Reconstruite, sans bruit' : 'Reconstructed, no noise'}</th><th>{fr ? 'Reconstruite, bruit mesuré (20 tirages)' : 'Reconstructed, measured noise (20 draws)'}</th></tr></thead>
+          <tbody>{lines.map((r) => <tr><th scope="row">{r[0]}</th>{r.slice(1).map((v) => <td>{num(v)}</td>)}</tr>)}</tbody>
+        </table>
+      </div>
+      <div class="measure">
+        <p>{fr
+          ? 'À H-alpha, le rouge sort à 0,64 au lieu de 0,24 sans bruit, et à 0,39 ± 0,13 avec le bruit mesuré : la valeur change avec le tirage du bruit et reste au-dessus de la vérité, signe qu’elle n’est pas fixée par les données. À [O III], qui tombe au croisement du vert et du bleu, le vert sort à 0,86–0,89 au lieu de 0,60.'
+          : 'At H-alpha, red comes out at 0.64 instead of 0.24 without noise, and at 0.39 ± 0.13 with the measured noise: the value changes with the noise draw and stays above the truth, a sign that the data do not set it. At [O III], which falls where green and blue cross, green comes out at 0.86–0.89 instead of 0.60.'}</p>
+
+        <h3>3.3 {fr ? 'Sur l’appareil réel' : 'On the real camera'}</h3>
+        <p>{fr
+          ? <>Faute de courbe mesurée de l’A7S, un seul point de comparaison existe : Christian Buil a mesuré la sensibilité relative rouge / vert / bleu d’un A7S modifié à 650 nm, 1,00 / 0,21 / 0,11 <a href={ref(7)}>[7]</a>. La reconstruction sur les étoiles de la Rosette donne à la même longueur d’onde 1,00 / 0,08 / 0,03 ; l’A7 II d’origine du test, 1,00 / 0,11 / 0,04. Comme sur synthèse, la reconstruction écrase les ailes du vert et du bleu dans le rouge, d’un facteur 2,7 et 4 ici. Les deux appareils ne sont pas le même exemplaire, et le filtre UV/IR est transparent à 650 nm : la comparaison est indicative.</>
+          : <>Lacking a measured A7S curve, a single point of comparison exists: Christian Buil measured the relative red / green / blue sensitivity of a modified A7S at 650 nm, 1.00 / 0.21 / 0.11 <a href={ref(7)}>[7]</a>. The reconstruction from the Rosette’s stars gives at the same wavelength 1.00 / 0.08 / 0.03; the stock A7 II of the test, 1.00 / 0.11 / 0.04. As in the synthetic test, the reconstruction crushes the wings of green and blue in the red, by a factor of 2.7 and 4 here. The two cameras are not the same unit, and the UV/IR filter is transparent at 650 nm: the comparison is indicative.</>}</p>
+
+        <h3>3.4 {fr ? 'La conséquence sur la couleur des nébuleuses' : 'The consequence for the colour of nebulae'}</h3>
+        <p>{fr
+          ? 'Sur le test de synthèse, après la même balance des blancs, la couleur d’une raie pure calculée avec la courbe reconstruite s’écarte de la vraie de 9° en teinte pour H-alpha (le vert y vaut 0,17 du rouge au lieu de 0,05) et de 17,5° pour [O III] ; [S II], au fond du rouge, ne bouge pas (0,3°). Une calibration qui mélange les couleurs du capteur à partir de cette courbe hérite de ces écarts : c’est la teinte magenta de l’ancienne matrice. FLOAT calibre donc par un seul facteur par couleur, mesuré sur les étoiles, qui ne prétend rien sur les raies, et présente la courbe reconstruite comme une approximation, sans bande d’erreur : les deux bandes essayées (rééchantillonner les étoiles, faire varier le lissage) ne contenaient pas la vérité.'
+          : 'In the synthetic test, after the same white balance, the colour of a pure line computed with the reconstructed curve differs from the true one by 9° in hue for H-alpha (green there is 0.17 of red instead of 0.05) and by 17.5° for [O III]; [S II], deep in the red, does not move (0.3°). A calibration that mixes the sensor’s colours from this curve inherits these errors: that is the magenta hue of the old matrix. FLOAT therefore calibrates with a single factor per colour, measured on the stars, which claims nothing about the lines, and presents the reconstructed curve as an approximation, without an error band: the two bands tried (resampling the stars, varying the smoothing) did not contain the truth.'}</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">4</span>{fr ? 'Limites et travaux à venir' : 'Limitations and future work'}</h2>
+      <div class="measure">
+        <ul>
+          {fr ? <>
+            <li><b>Pas de courbe mesurée de l’appareil étudié.</b> Aucune courbe de l’A7S couleur par couleur n’a été trouvée ; celle du test est celle d’un A7 II. Mesurer l’appareil lui-même, par exemple sur le spectre d’une source continue pris avec un réseau sans fente, comme le fait <a href={ref(7)}>[7]</a>, donnerait la vraie comparaison.</li>
+            <li><b>Contraindre par l’espace des courbes réelles.</b> Les courbes des appareils photo occupent un espace de faible dimension : deux composantes principales par couleur en décrivent la plupart <a href={ref(2)}>[2]</a>. Remplacer le lissage par cet espace fixerait la réponse aux raies par ce que l’on sait des capteurs, et non par une douceur arbitraire. C’est la piste qui pourrait faire de la reconstruction une mesure.</li>
+            <li><b>Les erreurs des spectres XP</b>, de 1 à 2 % après correction <a href={ref(5)}>[5]</a>, ne sont pas propagées.</li>
+            <li><b>L’atmosphère et les miroirs</b> (extinction de La Silla à une masse d’air de 1,2 à 2, deux réflexions sur l’aluminium <a href={ref(9)}>[9]</a><a href={ref(10)}>[10]</a>) changent la courbe du système d’environ 3 %, loin des écarts mesurés aux raies ; la courbe exacte du filtre Astrodon, inconnue, ne change rien aux trois raies, qui tombent dans sa bande passante (moins de 0,2 % en déplaçant ses bords de ± 20 nm).</li>
+            <li><b>Un seul champ.</b> Un champ plus riche en étoiles chaudes ou froides étend un peu l’espace décrit ; l’effet sur le rang est à mesurer.</li>
+          </> : <>
+            <li><b>No measured curve of the camera studied.</b> No colour-by-colour curve of the A7S was found; the test’s is that of an A7 II. Measuring the camera itself, for example on the spectrum of a continuous source taken with a slitless grating, as <a href={ref(7)}>[7]</a> does, would give the real comparison.</li>
+            <li><b>Constraining with the space of real curves.</b> Camera curves occupy a low-dimensional space: two principal components per colour describe most of them <a href={ref(2)}>[2]</a>. Replacing the smoothing with that space would set the response at the lines by what is known of sensors, not by an arbitrary smoothness. This is the lead that could turn the reconstruction into a measurement.</li>
+            <li><b>The errors of the XP spectra</b>, 1 to 2 % after correction <a href={ref(5)}>[5]</a>, are not propagated.</li>
+            <li><b>The atmosphere and the mirrors</b> (La Silla extinction at airmass 1.2 to 2, two aluminium reflections <a href={ref(9)}>[9]</a><a href={ref(10)}>[10]</a>) change the system’s curve by about 3 %, far from the differences measured at the lines; the exact curve of the Astrodon filter, unknown, changes nothing at the three lines, which fall inside its passband (under 0.2 % when its edges move by ± 20 nm).</li>
+            <li><b>A single field.</b> A field richer in hot or cool stars widens the span a little; the effect on the rank is to be measured.</li>
+          </>}
+        </ul>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="secnum">5</span>{fr ? 'Disponibilité' : 'Availability'}</h2>
+      <p class="measure">{fr
+        ? <>La reconstruction est dans le <a href={release.repo}>dépôt de FLOAT</a> (GPL v3), affichée dans Inspection › Couleur. Le jeu d’images de la Rosette est <a href={rosette}>téléchargeable</a> (CC BY 4.0). Voir aussi la <a href={n1}>note 1</a>.</>
+        : <>The reconstruction is in the <a href={release.repo}>FLOAT repository</a> (GPL v3), shown in Inspect › Colour. The Rosette data set is <a href={rosette}>downloadable</a> (CC BY 4.0). See also <a href={n1}>note 1</a>.</>}</p>
+    </section>
+
+    <section class="sec">
+      <h2>{fr ? 'Références' : 'References'}</h2>
+      <ol class="refs measure">
+        {refs.map(([t, u], i) => <li id={`ref-${i + 1}`}>{t}. <a href={u}>{u.replace(/^https?:\/\//, '')}</a></li>)}
+      </ol>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .paper h3 { font-family: var(--sans); font-size: 1rem; margin: 1.6rem 0 0.4rem; }
+  .refs { font-size: 0.95rem; padding-left: 1.6rem; }
+  .refs li { margin: 0.35rem 0; overflow-wrap: anywhere; }
+  .tbl.num td { font-variant-numeric: tabular-nums; }
+  .paper :global(figure:has(img[src*='/notes/sensor-curve/'])) { max-width: 48rem; }
+</style>
