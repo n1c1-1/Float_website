@@ -1,13 +1,13 @@
 {
-  "tag": "beta-2026-11-15",
+  "tag": "beta-2026-11-21",
   "date": {
-    "en": "15 November 2026",
-    "fr": "15 novembre 2026"
+    "en": "21 November 2026",
+    "fr": "21 novembre 2026"
   },
   "file": "FLOAT-Setup.exe",
-  "sizeBytes": 482801243,
+  "sizeBytes": 482918865,
   "sizeMB": 483,
-  "sha256": "8afa4f16891e66efc074b85026c1337814ca9099fec269963833d5ee4a6bf3c4",
+  "sha256": "cb65a13ecfec6b99c7fbe55025b39125c03eec7c2eb54bf8fd05e48e35556a87",
   "url": "https://github.com/n1c1-1/FLOAT/releases/latest/download/FLOAT-Setup.exe",
   "repo": "https://github.com/n1c1-1/FLOAT"
 }
